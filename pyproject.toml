@@ -1,0 +1,40 @@
+[project]
+name = "airline-agent"
+version = "0.1.0"
+description = "A demo agent for an airline"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+]
+
+[tool.ruff]
+line-length = 120
+lint.select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # whitespace at EOL
+    "W291",
+]
+
+[dependency-groups]
+dev = [
+    "beautifulsoup4>=4.14.2",
+    "html5lib>=1.1",
+    "mypy>=1.18.2",
+    "pydantic>=2.11.9",
+    "requests>=2.32.5",
+    "ruff>=0.13.2",
+    "tqdm>=4.67.1",
+    "types-requests>=2.32.4.20250913",
+    "types-tqdm>=4.67.0.20250809",
+]
