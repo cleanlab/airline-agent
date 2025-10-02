@@ -9,13 +9,13 @@ jobs:
     name: Type check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-      - run: cd src && uv run mypy --strict --package airline_agent
+      - uses: actions/checkout@v5
+      - uses: pypa/hatch@install
+      - run: hatch run types:check
   fmt:
     name: Format and lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
-      - run: uv run ruff check
+      - uses: actions/checkout@v5
+      - uses: pypa/hatch@install
+      - run: hatch fmt --check
