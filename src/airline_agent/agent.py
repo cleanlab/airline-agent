@@ -21,12 +21,12 @@ def create_agent(kb: KnowledgeBase) -> Agent:
 def run_agent(agent: Agent) -> None:
     message_history: list[ModelMessage] = []
     while True:
-        user_input = input("You: ").strip()
+        user_input = input("\033[96mYou:\033[0m ").strip()
         if not user_input:
             continue
 
         result = agent.run_sync(user_input, message_history=message_history)
-        print(f"Agent: {result.output}\n")  # noqa: T201
+        print(f"\033[92mAgent:\033[0m {result.output}\n")  # noqa: T201
 
         message_history.extend(result.new_messages())
 
