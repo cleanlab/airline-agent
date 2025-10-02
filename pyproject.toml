@@ -9,13 +9,14 @@ description = "A demo agent for an airline"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+  "beautifulsoup4>=4.14.2",
+  "html5lib>=1.1",
   "llama-index-core>=0.14.3",
   "llama-index-embeddings-openai>=0.5.1",
   "llama-index-llms-openai>=0.6.1",
   "llama-index-retrievers-bm25>=0.6.5",
+  "pydantic-ai>=1.0.13",
   "pydantic>=2.11.9",
-  "beautifulsoup4>=4.14.2",
-  "html5lib>=1.1",
   "tqdm>=4.67.1",
 ]
 

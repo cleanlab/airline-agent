@@ -1,10 +1,6 @@
 # Airline Support Agent
 
-## Setup
-
-TODO provide `kb.json` directly for testers, but don't include in the repo, because it's Frontier Airlines's content.
-
-1. Fetch raw FAQs:
+1. Fetch raw FAQs (or get this file from someone):
 
     ```bash
     hatch run python src/airline_agent/data_preparation/fetch_faqs.py --path data/kb.json
@@ -14,4 +10,10 @@ TODO provide `kb.json` directly for testers, but don't include in the repo, beca
 
     ```bash
     hatch run python src/airline_agent/preprocessing/create_vector_database.py --data-path data/kb.json --vector-db-path data/vector-db
+    ```
+
+3. Query the agent:
+
+    ```bash
+    hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db --query "What can I do to save money if I fly a lot?"
     ```

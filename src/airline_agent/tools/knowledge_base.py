@@ -1,10 +1,13 @@
 import json
+import logging
 
 from llama_index.core import StorageContext, VectorStoreIndex, load_index_from_storage
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
 
 from airline_agent.constants import RAG_EMBED_MODEL
 from airline_agent.types.knowledge_base import DirectoryEntry, KBEntry, SearchResult
+
+logger = logging.getLogger(__name__)
 
 
 class KnowledgeBase:
@@ -31,6 +34,7 @@ class KnowledgeBase:
         Returns:
             The contents of the knowledge base entry.
         """
+        logger.info("getting knowledge base entry: %r", path)
         if path not in self._kb:
             msg = f"knowledge base entry not found: {path}"
             raise ValueError(msg)
@@ -50,6 +54,7 @@ class KnowledgeBase:
         Returns:
             A list of search results.
         """
+        logger.info("searching knowledge base for query: %r (max results=%d)", query, max_results)
         if max_results < 1 or max_results > self._MAX_RESULTS_LIMIT:
             msg = f"max_results must be between 1 and {self._MAX_RESULTS_LIMIT}: {max_results}"
             raise ValueError(msg)
@@ -80,6 +85,7 @@ class KnowledgeBase:
         # Our kb doesn't really have a directory structure, individual items have paths that may contain `/` characters
         # (e.g., like S3), so we simulate the directory structure. The KB is small enough that we can do O(n) operations
         # over the whole KB.
+        logger.info("listing directory: %r", directory)
         if not directory.startswith("/"):
             msg = f"directory must be an absolute path starting with '/': {directory}"
             raise ValueError(msg)
