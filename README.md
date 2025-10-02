@@ -1,5 +1,7 @@
 # Airline Support Agent
 
+This repo uses the [Hatch](https://hatch.pypa.io/) project manager ([installation instructions](https://hatch.pypa.io/latest/install/)).
+
 1. Fetch raw FAQs (or get this file from someone):
 
     ```bash
