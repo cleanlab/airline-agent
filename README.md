@@ -12,8 +12,13 @@
     hatch run python src/airline_agent/preprocessing/create_vector_database.py --data-path data/kb.json --vector-db-path data/vector-db
     ```
 
-3. Query the agent:
+3. Run the agent:
 
     ```bash
-    hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db --query "What can I do to save money if I fly a lot?"
+    hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db
     ```
+
+## Example queries
+
+- What can I do to save money if I fly a lot?
+- What is 1 + 1?

@@ -7,7 +7,7 @@ class Metadata(BaseModel, frozen=True):
     title: str = Field(..., description="Title of the document")
 
 
-class KBEntry(BaseModel, frozen=True):
+class KBArticle(BaseModel, frozen=True):
     path: str = Field(..., description="Absolute path of the document")
     metadata: Metadata = Field(..., description="Metadata of the document")
     content: str = Field(..., description="Content of the document")

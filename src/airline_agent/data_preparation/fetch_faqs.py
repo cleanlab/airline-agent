@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 from tqdm.auto import tqdm
 
-from airline_agent.types.knowledge_base import KBEntry, Metadata
+from airline_agent.types.knowledge_base import KBArticle, Metadata
 
 TOP_URL = "https://faq.flyfrontier.com/help"
 
@@ -18,7 +18,7 @@ def main() -> None:
     args = parser.parse_args()
 
     all_faq_urls = get_all_faq_urls()
-    entries: list[KBEntry] = []
+    entries: list[KBArticle] = []
     for url in tqdm(all_faq_urls, desc="fetching faqs"):
         entries.append(fetch_faq(url))  # noqa: PERF401
 
@@ -26,7 +26,7 @@ def main() -> None:
         json.dump([entry.model_dump() for entry in entries], f, indent=2)
 
 
-def fetch_faq(url: str) -> KBEntry:
+def fetch_faq(url: str) -> KBArticle:
     html = requests.get(url).text  # noqa: S113
     soup = BeautifulSoup(html, "html5lib")
     title_elem = soup.select_one(".hg-article-title")
@@ -45,7 +45,7 @@ def fetch_faq(url: str) -> KBEntry:
     body_content = proc.stdout
     content = f"# {title}\n\n{body_content}".strip()
     path = urllib.parse.urlparse(url).path
-    return KBEntry(path=path, metadata=Metadata(title=title), content=content)
+    return KBArticle(path=path, metadata=Metadata(title=title), content=content)
 
 
 def rel_to_abs_url(rel_url: str) -> str:

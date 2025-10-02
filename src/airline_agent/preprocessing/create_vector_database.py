@@ -6,7 +6,7 @@ from llama_index.core.node_parser import SentenceSplitter
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
 
 from airline_agent.constants import RAG_CHUNK_OVERLAP, RAG_CHUNK_SIZE, RAG_EMBED_BATCH_SIZE, RAG_EMBED_MODEL
-from airline_agent.types.knowledge_base import KBEntry
+from airline_agent.types.knowledge_base import KBArticle
 
 
 def main() -> None:
@@ -16,7 +16,7 @@ def main() -> None:
     args = parser.parse_args()
 
     with open(args.data_path) as f:
-        data: list[KBEntry] = [KBEntry(**entry) for entry in json.load(f)]
+        data: list[KBArticle] = [KBArticle(**entry) for entry in json.load(f)]
 
     documents = to_documents(data)
 
@@ -25,7 +25,7 @@ def main() -> None:
     save_index(index, args.vector_db_path)
 
 
-def to_documents(data: list[KBEntry]) -> list[Document]:
+def to_documents(data: list[KBArticle]) -> list[Document]:
     documents: list[Document] = []
     for entry in data:
         doc = Document(

@@ -5,7 +5,7 @@ from llama_index.core import StorageContext, VectorStoreIndex, load_index_from_s
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
 
 from airline_agent.constants import RAG_EMBED_MODEL
-from airline_agent.types.knowledge_base import DirectoryEntry, KBEntry, SearchResult
+from airline_agent.types.knowledge_base import DirectoryEntry, KBArticle, SearchResult
 
 logger = logging.getLogger(__name__)
 
@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 class KnowledgeBase:
     def __init__(self, kb_path: str, vector_index_path: str):
         with open(kb_path) as f:
-            kb_entries: list[KBEntry] = [KBEntry(**entry) for entry in json.load(f)]
-        self._kb: dict[str, KBEntry] = {entry.path: entry for entry in kb_entries}
+            kb_entries: list[KBArticle] = [KBArticle(**article) for article in json.load(f)]
+        self._kb: dict[str, KBArticle] = {article.path: article for article in kb_entries}
 
         storage_context = StorageContext.from_defaults(persist_dir=vector_index_path)
         self._vector_index = load_index_from_storage(
@@ -24,19 +24,19 @@ class KnowledgeBase:
             msg = "index is not a VectorStoreIndex"
             raise TypeError(msg)
 
-    def get_entry(self, path: str) -> str:
+    def get_article(self, path: str) -> str:
         """
-        Get a knowledge base entry by its path.
+        Get a knowledge base article by its path.
 
         Args:
-            path: The absolute path of the knowledge base entry.
+            path: The absolute path of the knowledge base article.
 
         Returns:
-            The contents of the knowledge base entry.
+            The contents of the knowledge base article.
         """
-        logger.info("getting knowledge base entry: %r", path)
+        logger.info("getting knowledge base article: %r", path)
         if path not in self._kb:
-            msg = f"knowledge base entry not found: {path}"
+            msg = f"knowledge base article not found: {path}"
             raise ValueError(msg)
         return self._kb[path].content
 
