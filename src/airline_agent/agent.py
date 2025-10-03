@@ -46,7 +46,7 @@ def main() -> None:
 
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
     agent = create_agent(kb)
-    with contextlib.suppress(KeyboardInterrupt):
+    with contextlib.suppress(KeyboardInterrupt, EOFError):
         run_agent(agent)
 
 
