@@ -3,6 +3,7 @@ import logging
 
 from llama_index.core import StorageContext, VectorStoreIndex, load_index_from_storage
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
+from pydantic_ai import ModelRetry
 
 from airline_agent.constants import RAG_EMBED_MODEL
 from airline_agent.types.knowledge_base import DirectoryEntry, KBArticle, SearchResult
@@ -37,7 +38,7 @@ class KnowledgeBase:
         logger.info("getting knowledge base article: %r", path)
         if path not in self._kb:
             msg = f"knowledge base article not found: {path}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
         return self._kb[path].content
 
     _DEFAULT_MAX_RESULTS = 5
