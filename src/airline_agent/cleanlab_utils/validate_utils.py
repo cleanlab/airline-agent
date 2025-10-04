@@ -1,22 +1,21 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Optional, cast
+from typing import TYPE_CHECKING, Any, cast
 
-from openai.types.chat import ChatCompletionMessageParam, ChatCompletionAssistantMessageParam
+if TYPE_CHECKING:
+    from cleanlab_codex import Project
+    from codex.types.project_validate_response import ProjectValidateResponse
+    from pydantic_ai.agent import AgentRunResult
 
-from pydantic_ai.messages import ModelResponse, ModelMessage
-from pydantic_ai.agent import AgentRunResult
+from openai.types.chat import ChatCompletionAssistantMessageParam, ChatCompletionMessageParam
+from pydantic_ai.messages import ModelMessage, ModelResponse
 
-from cleanlab_codex import Project
-
-from airline_agent.cleanlab_utils.conversion_utils import convert_string_to_response_message
-from airline_agent.cleanlab_utils.conversion_utils import convert_to_openai_messages
-from airline_agent.constants import CONTEXT_RETRIEVAL_TOOLS, FALLBACK_RESPONSE, AGENT_SYSTEM_PROMPT
-
-from codex.types.project_validate_response import ProjectValidateResponse
+from airline_agent.cleanlab_utils.conversion_utils import convert_string_to_response_message, convert_to_openai_messages
+from airline_agent.constants import AGENT_SYSTEM_PROMPT, CONTEXT_RETRIEVAL_TOOLS, FALLBACK_RESPONSE
 
 logger = logging.getLogger(__name__)
+
 
 def _get_tool_result_as_text(messages: list[ChatCompletionMessageParam], tool_name: str) -> str:
     """
@@ -71,6 +70,7 @@ def _get_tool_result_as_text(messages: list[ChatCompletionMessageParam], tool_na
 
     return "\n\n".join(texts)
 
+
 def _get_context_as_string(messages: list[ChatCompletionMessageParam]) -> str:
     """Extract context from tool results in the agent's messages."""
     context_parts = ""
@@ -81,9 +81,10 @@ def _get_context_as_string(messages: list[ChatCompletionMessageParam]) -> str:
 
     return context_parts
 
+
 def _get_final_response_message(
     response: ModelResponse, validation_result: ProjectValidateResponse
-) -> tuple[ModelResponse, Optional[str]]:
+) -> tuple[ModelResponse, str | None]:
     """
     Determine the final response content based on cleanlab validation results.
 
@@ -106,8 +107,8 @@ def _get_final_response_message(
 
     if replacement_text:
         return convert_string_to_response_message(replacement_text), replacement_text
-    else:
-        return response, None
+    return response, None
+
 
 def run_cleanlab_validation(
     project: Project,
@@ -140,18 +141,20 @@ def run_cleanlab_validation(
         query=query,
         response=result.output,
         messages=openai_messages,
-        context=_get_context_as_string(convert_to_openai_messages(result.new_messages())),  # Convert this turns tool calls to text
+        context=_get_context_as_string(
+            convert_to_openai_messages(result.new_messages())
+        ),  # Convert this turns tool calls to text
         metadata={"thread_id": thread_id} if thread_id else None,
     )
     logger.info("[cleanlab] Validation result: %s", validation_result)
 
-    latest_agent_response = result.new_messages()[-1] # TODO: Handle finding latest response smarter
+    latest_agent_response = result.new_messages()[-1]  # TODO: Handle finding latest response smarter
     if isinstance(latest_agent_response, ModelResponse):
         final_response, final_response_str = _get_final_response_message(latest_agent_response, validation_result)
     else:
         msg = "latest agent message is not a ModelResponse"
-        raise ValueError(msg)
-    
+        raise TypeError(msg)
+
     if final_response_str is not None:
         logger.info("[cleanlab] Response was replaced by cleanlab...")
         user_query = result.new_messages()[0]
@@ -159,7 +162,7 @@ def run_cleanlab_validation(
         message_history.append(final_response)
         # TODO: Here we would doctor the message history to remove tool calls for the current turn if needed
     else:
-        message_history.extend(result.new_messages()) 
+        message_history.extend(result.new_messages())
         final_response_str = result.output  # No change, use original output
 
     return message_history, final_response_str

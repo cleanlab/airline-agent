@@ -75,7 +75,7 @@ class KnowledgeBase:
 
     def list_directory(self, directory: str) -> list[DirectoryEntry]:
         """
-        List all the files and directories in a given directory. 
+        List all the files and directories in a given directory.
 
         Args:
             directory: The absolute path of the directory to list.
