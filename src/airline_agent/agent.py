@@ -2,6 +2,7 @@ import argparse
 import contextlib
 import logging
 import os
+import sys
 import uuid
 from typing import TYPE_CHECKING
 
@@ -9,8 +10,7 @@ from cleanlab_codex import Client, Project
 from dotenv import load_dotenv
 from pydantic_ai import Agent
 
-from airline_agent.cleanlab_utils.conversion_utils import str_to_bool
-from airline_agent.cleanlab_utils.validate_utils import run_cleanlab_validation
+from airline_agent.cleanlab_utils.validate_utils import run_cleanlab_validation, run_cleanlab_validation_logging_tools
 from airline_agent.constants import AGENT_MODEL, AGENT_SYSTEM_PROMPT
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
@@ -32,17 +32,25 @@ def get_cleanlab_project() -> Project:
     return Client().get_project(cleanlab_project_id)
 
 
-def run_agent(agent: Agent, *, use_cleanlab: bool) -> None:
+def run_agent(agent: Agent, *, validation_mode: str) -> None:
     message_history: list[ModelMessage] = []
-    project: Project = get_cleanlab_project()
+    project: Project | None = None
+    if validation_mode != "none":
+        project = get_cleanlab_project()
     thread_id = str(uuid.uuid4())
+
     while True:
         user_input = input("\033[96mYou:\033[0m ").strip()
         if not user_input:
             continue
 
         result = agent.run_sync(user_input, message_history=message_history)
-        if use_cleanlab:
+
+        if validation_mode == "cleanlab":
+            if project is None:
+                msg = "CLEANLAB_PROJECT_ID environment variable is not set"
+                raise ValueError(msg)
+
             message_history, final_response = run_cleanlab_validation(
                 project=project,
                 query=user_input,
@@ -50,11 +58,25 @@ def run_agent(agent: Agent, *, use_cleanlab: bool) -> None:
                 message_history=message_history,
                 thread_id=thread_id,
             )
-        else:
+        elif validation_mode == "cleanlab_log_tools":
+            if project is None:
+                msg = "CLEANLAB_PROJECT_ID environment variable is not set"
+                raise ValueError(msg)
+
+            message_history, final_response = run_cleanlab_validation_logging_tools(
+                project=project,
+                query=user_input,
+                result=result,
+                message_history=message_history,
+                thread_id=thread_id,
+            )
+        else:  # validation_mode == "none"
             message_history.extend(result.new_messages())
             final_response = result.output
 
-        print(f"\033[92mAgent:\033[0m {final_response}\n")  # noqa: T201
+        print(f"\033[92mAgent:\033[0m {final_response}")  # noqa: T201
+        sys.stdout.flush()
+        sys.stderr.flush()
 
 
 def main() -> None:
@@ -71,7 +93,10 @@ def main() -> None:
     parser.add_argument("--kb-path", type=str, required=True, help="Path to the knowledge base JSON file.")
     parser.add_argument("--vector-db-path", type=str, required=True, help="Path to the vector database directory.")
     parser.add_argument(
-        "--use-cleanlab", type=str_to_bool, required=True, help="Whether to use Cleanlab for validation."
+        "--validation-mode",
+        choices=["none", "cleanlab", "cleanlab_log_tools"],
+        default="none",
+        help="Validation mode: 'none' (no validation), 'cleanlab' (run_cleanlab_validation), 'cleanlab_log_tools' (run_cleanlab_validation_logging_tools)",
     )
 
     args = parser.parse_args()
@@ -79,7 +104,7 @@ def main() -> None:
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
     agent = create_agent(kb)
     with contextlib.suppress(KeyboardInterrupt, EOFError):
-        run_agent(agent, use_cleanlab=args.use_cleanlab)
+        run_agent(agent, validation_mode=args.validation_mode)
 
 
 if __name__ == "__main__":

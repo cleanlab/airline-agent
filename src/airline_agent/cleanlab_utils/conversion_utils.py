@@ -110,10 +110,24 @@ def convert_to_openai_messages(message_history: list[ModelMessage]) -> list[Chat
             if tool_calls:
                 assistant_message["tool_calls"] = tool_calls
 
+            if message.finish_reason:
+                assistant_message["finish_reason"] = message.finish_reason
+
             openai_messages.append(assistant_message)
 
     # Return the messages - they're already compatible with ChatCompletionMessageParam
     return openai_messages  # type: ignore[return-value]
+
+
+def convert_pydantic_message_history_to_cleanlab_format(
+    message_history: list[ModelMessage], query: str, system_prompt: str
+) -> list[ChatCompletionMessageParam]:
+    """Build Pydantic message history into OpenAI message history with system prompt and user query."""
+    openai_messages = convert_to_openai_messages(message_history)
+    openai_messages.append({"role": "user", "content": query})
+    if len(message_history) == 0:  # NOTE: system prompt needs to be added manually if no prior message history
+        openai_messages.insert(0, {"role": "system", "content": system_prompt})
+    return openai_messages
 
 
 def _convert_user_prompt(part: UserPromptPart) -> dict[str, Any]:
