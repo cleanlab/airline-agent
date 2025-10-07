@@ -20,7 +20,12 @@ from airline_agent.cleanlab_utils.conversion_utils import (
     convert_string_to_response_message,
     convert_to_openai_messages,
 )
-from airline_agent.constants import AGENT_SYSTEM_PROMPT, CONTEXT_RETRIEVAL_TOOLS, FALLBACK_RESPONSE, PERFECT_EVAL_SCORES
+from airline_agent.constants import (
+    AGENT_SYSTEM_PROMPT,
+    CONTEXT_RETRIEVAL_TOOLS,
+    FALLBACK_RESPONSE,
+    get_perfect_eval_scores,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -82,13 +87,7 @@ def _get_latest_agent_response(messages: list[ModelMessage]) -> tuple[ModelRespo
     maybe_latest_agent_response = messages[-1]
     if isinstance(maybe_latest_agent_response, ModelResponse):
         return maybe_latest_agent_response, len(messages) - 1
-    logger.warning("Latest message is not a ModelResponse, searching for the latest one...")
-    latest_agent_response_idx = None
-    for i, message in enumerate(reversed(messages)):
-        if isinstance(message, ModelResponse):
-            latest_agent_response_idx = len(messages) - 1 - i
-            return message, latest_agent_response_idx
-    msg = "No ModelResponse found in message history"
+    msg = "Latest message is not a ModelResponse."
     raise ValueError(msg)
 
 
@@ -110,12 +109,11 @@ def _get_final_response_message(
     Determine the final response content based on cleanlab validation results.
 
     Checks validation results for expert answers or guardrail triggers,
-    returning either the original response or a replacement.
+    returning either the final response and replacement text.
 
     Args:
-        results: Validation results from cleanlab
-        initial_response: Original model response content
-        fallback_response: Fallback text for guardrailed responses
+        validation_results: Validation results from cleanlab
+        response: Original model response content
 
     Returns:
         Final response as a ModelResponse object and replacement text if applicable
@@ -205,6 +203,8 @@ def run_cleanlab_validation_logging_tools(
     Sends the user input, agent response, and conversation messages to cleanlab
     for validation, then updates the message history with any modifications.
 
+    This function logs tool calls into Codex (bypassing validation with perfect scores) before running validation on final output.
+
     Args:
         project: Cleanlab Project instance
         query: Latest user input string
@@ -226,7 +226,7 @@ def run_cleanlab_validation_logging_tools(
                 messages=messages,
                 context=_get_context_as_string(openai_new_messages),
                 metadata={"thread_id": thread_id} if thread_id else None,
-                eval_scores=PERFECT_EVAL_SCORES,
+                eval_scores=get_perfect_eval_scores(),
             )
             logger.info("[cleanlab] Logging function call, automatic validation pass.")
 

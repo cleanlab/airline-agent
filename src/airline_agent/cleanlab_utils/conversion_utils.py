@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import argparse
 import base64
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any, Literal
@@ -29,16 +28,6 @@ from pydantic_ai.messages import (
     VideoUrl,
 )
 from pydantic_ai.usage import RequestUsage
-
-
-def str_to_bool(v: str) -> bool:
-    """Convert string to boolean for argparse."""
-    if v.lower() in ("yes", "true", "t", "y", "1"):
-        return True
-    if v.lower() in ("no", "false", "f", "n", "0"):
-        return False
-    msg = "Boolean value expected."
-    raise argparse.ArgumentTypeError(msg)
 
 
 def convert_to_openai_messages(message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:

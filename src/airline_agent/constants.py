@@ -1,3 +1,4 @@
+import functools
 import logging
 
 logger = logging.getLogger(__name__)
@@ -36,9 +37,9 @@ documents about the airline's services, policies, and procedures.
 FALLBACK_RESPONSE = "I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance."
 
 
-def _get_perfect_eval_scores() -> dict[str, float] | None:
-    """Retrieves all custom and non-custom evals from a project and returns an eval scores dictionary to 1.0 for all."""
-
+@functools.cache
+def get_perfect_eval_scores() -> dict[str, float]:
+    """Get perfect eval scores, cached after first call."""
     import os
 
     from codex import Codex
@@ -50,7 +51,7 @@ def _get_perfect_eval_scores() -> dict[str, float] | None:
 
     if not api_key or not project_id:
         logger.warning("CODEX_API_KEY or CLEANLAB_PROJECT_ID environment variable is not set")
-        return None
+        return {}
 
     client = Codex(api_key=api_key)
     project = client.projects.retrieve(project_id)
@@ -58,7 +59,7 @@ def _get_perfect_eval_scores() -> dict[str, float] | None:
 
     if not eval_config:
         logger.warning("No eval_config found in project")
-        return None
+        return {}
 
     eval_keys = []
 
@@ -74,6 +75,3 @@ def _get_perfect_eval_scores() -> dict[str, float] | None:
 
     logger.info("Retrieved evals: %s", eval_keys)
     return {eval_key: 1.0 for eval_key in eval_keys}
-
-
-PERFECT_EVAL_SCORES: dict[str, float] | None = _get_perfect_eval_scores()

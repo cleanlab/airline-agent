@@ -19,7 +19,7 @@ dependencies = [
   "pydantic>=2.11.9",
   "python-dotenv>=1.0.0",
   "tqdm>=4.67.1",
-  "cleanlab_codex",
+  "cleanlab_codex>=1.0.29",
 ]
 
 [tool.hatch.envs.default]
