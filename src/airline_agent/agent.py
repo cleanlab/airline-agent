@@ -67,8 +67,6 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
             final_response = result.output
 
         print(f"\033[92mAgent:\033[0m {final_response}")  # noqa: T201
-        sys.stdout.flush()
-        sys.stderr.flush()
 
 
 def main() -> None:
