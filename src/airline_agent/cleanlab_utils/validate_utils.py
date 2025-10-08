@@ -16,6 +16,7 @@ from openai.types.chat import ChatCompletionAssistantMessageParam, ChatCompletio
 from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, UserPromptPart
 
 from airline_agent.cleanlab_utils.conversion_utils import (
+    convert_message_to_chat_completion,
     convert_pydantic_message_history_to_cleanlab_format,
     convert_string_to_response_message,
     convert_to_openai_messages,
@@ -217,13 +218,16 @@ def run_cleanlab_validation_logging_tools(
     messages = convert_pydantic_message_history_to_cleanlab_format(message_history, query, AGENT_SYSTEM_PROMPT)
     openai_new_messages = convert_to_openai_messages(result.new_messages())
 
-    for openai_newest_message in openai_new_messages:  # Go through new messages and log all assistant calls
+    for index, openai_newest_message in enumerate(
+        openai_new_messages
+    ):  # Go through new messages and log all assistant calls
         if openai_newest_message.get("role") == "assistant" and openai_newest_message.get("finish_reason") != "stop":
-            response_str = _form_response_string_from_message(openai_newest_message)
+            openai_response = convert_message_to_chat_completion(openai_newest_message)
+
             _ = project.validate(
                 query=query,
-                response=response_str,
-                messages=messages,
+                response=openai_response,
+                messages=messages + openai_new_messages[:index],
                 context=_get_context_as_string(openai_new_messages),
                 metadata={"thread_id": thread_id} if thread_id else None,
                 eval_scores=get_perfect_eval_scores(),

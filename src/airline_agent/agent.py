@@ -4,7 +4,7 @@ import logging
 import os
 import sys
 import uuid
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from cleanlab_codex import Client, Project
 from dotenv import load_dotenv
@@ -34,7 +34,7 @@ def get_cleanlab_project() -> Project:
 
 def run_agent(agent: Agent, *, validation_mode: str) -> None:
     message_history: list[ModelMessage] = []
-    project: Project | None = None
+    project = None
     if validation_mode != "none":
         project = get_cleanlab_project()
     thread_id = str(uuid.uuid4())
@@ -47,24 +47,16 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
         result = agent.run_sync(user_input, message_history=message_history)
 
         if validation_mode == "cleanlab":
-            if project is None:
-                msg = "CLEANLAB_PROJECT_ID environment variable is not set"
-                raise ValueError(msg)
-
             message_history, final_response = run_cleanlab_validation(
-                project=project,
+                project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
                 query=user_input,
                 result=result,
                 message_history=message_history,
                 thread_id=thread_id,
             )
         elif validation_mode == "cleanlab_log_tools":
-            if project is None:
-                msg = "CLEANLAB_PROJECT_ID environment variable is not set"
-                raise ValueError(msg)
-
             message_history, final_response = run_cleanlab_validation_logging_tools(
-                project=project,
+                project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
                 query=user_input,
                 result=result,
                 message_history=message_history,

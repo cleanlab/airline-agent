@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import base64
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, cast
+
+from openai.types.chat import ChatCompletion
 
 if TYPE_CHECKING:
     from openai.types.chat import ChatCompletionMessageParam
@@ -191,6 +193,64 @@ def _convert_user_prompt(part: UserPromptPart) -> dict[str, Any]:
                 content.append({"type": "text", "text": f"Document: {item.url}"})
 
     return {"role": "user", "content": content}
+
+
+def convert_message_to_chat_completion(message: ChatCompletionMessageParam) -> ChatCompletion:
+    """Convert an OpenAI message (like tool call) to a mock OpenAI ChatCompletion object.
+
+    Args:
+        message: OpenAI message dict (e.g., assistant message with tool calls)
+
+    Returns:
+        Mock OpenAI ChatCompletion object
+    """
+    # Determine finish_reason from message
+    raw_finish_reason = message.get("finish_reason", "tool_calls" if message.get("tool_calls") else "stop")
+    # Map 'tool_call' to 'tool_calls' to match ChatCompletion API
+    finish_reason = "tool_calls" if raw_finish_reason == "tool_call" else raw_finish_reason
+
+    # Build the message dict for the choice
+    choice_message = {
+        "content": message.get("content"),
+        "refusal": None,
+        "role": message.get("role", "assistant"),
+        "annotations": [],
+        "audio": None,
+        "function_call": None,
+        "tool_calls": message.get("tool_calls"),
+    }
+
+    return cast(
+        ChatCompletion,
+        {
+            "id": "chatcmpl-mock",
+            "choices": [
+                {
+                    "finish_reason": finish_reason,
+                    "index": 0,
+                    "logprobs": None,
+                    "message": choice_message,
+                }
+            ],
+            "created": int(datetime.now(UTC).timestamp()),
+            "model": "mock-agent",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": None,
+            "usage": {
+                "completion_tokens": 0,
+                "prompt_tokens": 0,
+                "total_tokens": 0,
+                "completion_tokens_details": {
+                    "accepted_prediction_tokens": 0,
+                    "audio_tokens": 0,
+                    "reasoning_tokens": 0,
+                    "rejected_prediction_tokens": 0,
+                },
+                "prompt_tokens_details": {"audio_tokens": 0, "cached_tokens": 0},
+            },
+        },
+    )
 
 
 def convert_string_to_response_message(
