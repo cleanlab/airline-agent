@@ -17,17 +17,13 @@ dependencies = [
   "llama-index-retrievers-bm25>=0.6.5",
   "pydantic-ai>=1.0.13",
   "pydantic>=2.11.9",
+  "python-dotenv>=1.0.0",
   "tqdm>=4.67.1",
+  "cleanlab_codex>=1.0.29",
 ]
 
 [tool.hatch.envs.default]
 installer = "uv"
-
-[dependency-groups]
-dev = [
-  "mypy>=1.18.2",
-  "requests>=2.32.5",
-]
 
 [tool.hatch.envs.types]
 extra-dependencies = [
