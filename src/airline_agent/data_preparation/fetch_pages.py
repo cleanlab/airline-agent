@@ -100,7 +100,7 @@ def get_home_urls() -> list[str]:
     home_urls = set()
     for link in all_links:
         href = link.get("href", "")
-        if not href:
+        if not href or not isinstance(href, str):
             continue
 
         _, netloc, _, _, _ = urllib.parse.urlsplit(href)
