@@ -1,13 +1,14 @@
 import argparse
 import json
 import subprocess
-import urllib.parse
 import time
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+import urllib.parse
 
 import requests
 from bs4 import BeautifulSoup
+from requests.exceptions import MissingSchema
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from tqdm.auto import tqdm
 
 from airline_agent.types.knowledge_base import KBArticle, Metadata
@@ -24,13 +25,12 @@ def main() -> None:
     faq_urls = get_all_faq_urls()
     home_urls = get_home_urls()
     all_urls = faq_urls + home_urls
-    
+
     entries: list[KBArticle] = []
     for url in tqdm(all_urls, desc="fetching pages"):
         try:
-            entries.append(fetch_page(url))  # noqa: PERF401
-        except Exception as e:
-            print(f"Failed to fetch {url}: {e}")
+            entries.append(fetch_page(url))
+        except MissingSchema:
             continue
 
     with open(args.path, "w") as f:
@@ -46,16 +46,16 @@ def fetch_page(url: str) -> KBArticle:
     else:
         title_selector = "title"
         body_selector = ".main-torso"
-    
+
     html = requests.get(url).text  # noqa: S113
     soup = BeautifulSoup(html, "html5lib")
-    
+
     title_elem = soup.select_one(title_selector)
     if title_elem is None:
         msg = f"title not found for URL: {url}"
         raise ValueError(msg)
     title = title_elem.text.strip()
-    
+
     body = soup.select_one(body_selector)
     proc = subprocess.run(
         ["pandoc", "-f", "html", "-t", "gfm-raw_html", "--wrap=none"],  # noqa: S607
