@@ -17,12 +17,10 @@ from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, User
 
 from airline_agent.cleanlab_utils.conversion_utils import (
     convert_message_to_chat_completion,
-    convert_pydantic_message_history_to_cleanlab_format,
     convert_string_to_response_message,
     convert_to_openai_messages,
 )
 from airline_agent.constants import (
-    AGENT_SYSTEM_PROMPT,
     CONTEXT_RETRIEVAL_TOOLS,
     FALLBACK_RESPONSE,
     get_perfect_eval_scores,
@@ -83,12 +81,25 @@ def _get_context_as_string(messages: list[ChatCompletionMessageParam]) -> str:
     return _get_tool_result_as_text(messages, CONTEXT_RETRIEVAL_TOOLS)
 
 
-def _get_latest_agent_response(messages: list[ModelMessage]) -> tuple[ModelResponse, int]:
-    """Get the latest ModelResponse from a list of ModelMessage objects and idx of response."""
-    maybe_latest_agent_response = messages[-1]
-    if isinstance(maybe_latest_agent_response, ModelResponse):
-        return maybe_latest_agent_response, len(messages) - 1
-    msg = "Latest message is not a ModelResponse."
+def _get_latest_agent_response_pydantic(messages: list[ModelMessage]) -> tuple[ModelResponse, int]:
+    """Get the latest AI assistant response with stop finish_reason."""
+    for i in range(len(messages) - 1, -1, -1):
+        message = messages[i]
+        if isinstance(message, ModelResponse) and message.finish_reason == "stop":
+            return message, i
+    msg = "No AI assistant response with 'stop' finish_reason found."
+    raise ValueError(msg)
+
+
+def _get_latest_agent_response_openai(
+    openai_messages: list[ChatCompletionMessageParam],
+) -> tuple[ChatCompletionMessageParam, int]:
+    """Get index of latest AI assistant response with stop finish_reason in OpenAI format."""
+    for i in range(len(openai_messages) - 1, -1, -1):
+        message = openai_messages[i]
+        if message.get("role") == "assistant" and message.get("finish_reason") == "stop":
+            return message, i
+    msg = "No AI assistant response with 'stop' finish_reason found."
     raise ValueError(msg)
 
 
@@ -164,14 +175,14 @@ def run_cleanlab_validation(
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = convert_pydantic_message_history_to_cleanlab_format(message_history, query, AGENT_SYSTEM_PROMPT)
+    messages = convert_to_openai_messages(message_history)
     openai_new_messages = convert_to_openai_messages(result.new_messages())
-    latest_agent_response, latest_agent_response_idx = _get_latest_agent_response(result.new_messages())
-
+    latest_agent_response, _ = _get_latest_agent_response_pydantic(result.new_messages())
+    _, latest_agent_response_idx_openai = _get_latest_agent_response_openai(openai_new_messages)
     validation_result = project.validate(
         query=query,
         response=result.output,
-        messages=messages + openai_new_messages[:latest_agent_response_idx],
+        messages=messages + openai_new_messages[:latest_agent_response_idx_openai],
         context=_get_context_as_string(openai_new_messages),
         metadata={"thread_id": thread_id} if thread_id else None,
     )
@@ -215,7 +226,7 @@ def run_cleanlab_validation_logging_tools(
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = convert_pydantic_message_history_to_cleanlab_format(message_history, query, AGENT_SYSTEM_PROMPT)
+    messages = convert_to_openai_messages(message_history)
     openai_new_messages = convert_to_openai_messages(result.new_messages())
 
     for index, openai_newest_message in enumerate(
