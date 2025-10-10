@@ -8,17 +8,23 @@ from typing import TYPE_CHECKING, Any, cast
 if TYPE_CHECKING:
     from cleanlab_codex import Project
     from codex.types.project_validate_response import ProjectValidateResponse
-    from pydantic_ai.agent import AgentRunResult
+    from pydantic_ai.agent import Agent, AgentRunResult
+    from pydantic_ai.tools import ToolDefinition
 
 from cleanlab_tlm.utils.chat import _ASSISTANT_PREFIX as ASSISTANT_PREFIX
 from cleanlab_tlm.utils.chat import _form_prompt_chat_completions_api as form_prompt_chat_completions_api
-from openai.types.chat import ChatCompletionAssistantMessageParam, ChatCompletionMessageParam
+from openai.types.chat import (
+    ChatCompletionAssistantMessageParam,
+    ChatCompletionFunctionToolParam,
+    ChatCompletionMessageParam,
+)
 from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, UserPromptPart
 
 from airline_agent.cleanlab_utils.conversion_utils import (
     convert_message_to_chat_completion,
+    convert_messages_to_openai_format,
     convert_string_to_response_message,
-    convert_to_openai_messages,
+    convert_tools_to_openai_format,
 )
 from airline_agent.constants import (
     CONTEXT_RETRIEVAL_TOOLS,
@@ -153,11 +159,43 @@ def _form_response_string_from_message(message: ChatCompletionMessageParam) -> s
     return re.sub(trailing_assistant_prefix_pattern, "", response_str)
 
 
+def _get_tools_from_agent(agent: Agent) -> list[ToolDefinition]:
+    """Get tool definitions from an agent.
+
+    This works for simple agents where tools are defined directly on the agent
+    (e.g., via @agent.tool decorators or tools=[...] in constructor).
+
+    Args:
+        agent: The pydantic-ai Agent instance
+
+    Returns:
+        List of ToolDefinition objects
+    """
+    tool_definitions = []
+
+    # Get tools from the function toolset (tools defined on the agent directly)
+    function_toolset = getattr(agent, "_function_toolset", None)
+    if function_toolset and getattr(function_toolset, "tools", None):
+        tool_definitions.extend([tool.tool_def for tool in getattr(function_toolset, "tools", {}).values()])
+    # Get tools from simple toolsets that don't require RunContext
+    for toolset in agent.toolsets:
+        if hasattr(toolset, "tools") and isinstance(toolset.tools, dict):
+            tool_definitions.extend([tool.tool_def for tool in toolset.tools.values() if hasattr(tool, "tool_def")])
+    return tool_definitions
+
+
+def get_tools_in_openai_format(agent: Agent) -> list[ChatCompletionFunctionToolParam]:
+    """Get tool definitions from an agent in OpenAI ChatCompletion function format."""
+    tool_definitions = _get_tools_from_agent(agent)
+    return convert_tools_to_openai_format(tool_definitions)
+
+
 def run_cleanlab_validation(
     project: Project,
     query: str,
     result: AgentRunResult,
     message_history: list[ModelMessage],
+    tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
 ) -> tuple[list[ModelMessage], str]:
     """
@@ -171,12 +209,13 @@ def run_cleanlab_validation(
         query: Latest user input string
         result: Latest agent response
         message_history: Current conversation message history
+        tools: Optional list of tools in OpenAI function format for context
         thread_id: Optional thread ID for metadata
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = convert_to_openai_messages(message_history)
-    openai_new_messages = convert_to_openai_messages(result.new_messages())
+    messages = convert_messages_to_openai_format(message_history)
+    openai_new_messages = convert_messages_to_openai_format(result.new_messages())
     latest_agent_response, _ = _get_latest_agent_response_pydantic(result.new_messages())
     _, latest_agent_response_idx_openai = _get_latest_agent_response_openai(openai_new_messages)
     validation_result = project.validate(
@@ -184,6 +223,7 @@ def run_cleanlab_validation(
         response=result.output,
         messages=messages + openai_new_messages[:latest_agent_response_idx_openai],
         context=_get_context_as_string(openai_new_messages),
+        tools=tools,
         metadata={"thread_id": thread_id} if thread_id else None,
     )
     logger.info("[cleanlab] Validation result: %s", validation_result)
@@ -207,6 +247,7 @@ def run_cleanlab_validation_logging_tools(
     query: str,
     result: AgentRunResult,
     message_history: list[ModelMessage],
+    tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
 ) -> tuple[list[ModelMessage], str]:
     """
@@ -222,12 +263,13 @@ def run_cleanlab_validation_logging_tools(
         query: Latest user input string
         result: Latest agent response
         message_history: Current conversation message history
+        tools: Optional list of tools in OpenAI function format for context
         thread_id: Optional thread ID for metadata
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = convert_to_openai_messages(message_history)
-    openai_new_messages = convert_to_openai_messages(result.new_messages())
+    messages = convert_messages_to_openai_format(message_history)
+    openai_new_messages = convert_messages_to_openai_format(result.new_messages())
 
     for index, openai_newest_message in enumerate(
         openai_new_messages
@@ -240,6 +282,7 @@ def run_cleanlab_validation_logging_tools(
                 response=openai_response,
                 messages=messages + openai_new_messages[:index],
                 context=_get_context_as_string(openai_new_messages),
+                tools=tools,
                 metadata={"thread_id": thread_id} if thread_id else None,
                 eval_scores=get_perfect_eval_scores(),
             )

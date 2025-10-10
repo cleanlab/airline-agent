@@ -10,6 +10,9 @@ from openai.types.chat import ChatCompletion
 
 if TYPE_CHECKING:
     from openai.types.chat import ChatCompletionMessageParam
+    from pydantic_ai.tools import ToolDefinition
+
+from openai.types.chat import ChatCompletionFunctionToolParam
 from pydantic_ai.messages import (
     AudioUrl,
     BinaryContent,
@@ -32,7 +35,7 @@ from pydantic_ai.messages import (
 from pydantic_ai.usage import RequestUsage
 
 
-def convert_to_openai_messages(message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
+def convert_messages_to_openai_format(message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
     """Convert pydantic-ai message history to OpenAI Chat Completions format.
 
     Args:
@@ -182,6 +185,31 @@ def _convert_user_prompt(part: UserPromptPart) -> dict[str, Any]:
                 content.append({"type": "text", "text": f"Document: {item.url}"})
 
     return {"role": "user", "content": content}
+
+
+def convert_tools_to_openai_format(tools: list[ToolDefinition]) -> list[ChatCompletionFunctionToolParam]:
+    """Convert pydantic-ai ToolDefinition objects to OpenAI tools format."""
+    openai_tools: list[ChatCompletionFunctionToolParam] = []
+
+    for tool in tools:
+        function_spec: dict[str, Any] = {
+            "name": tool.name,
+            "parameters": tool.parameters_json_schema,
+        }
+        if tool.description:
+            function_spec["description"] = tool.description
+        if tool.strict is not None:
+            function_spec["strict"] = tool.strict
+
+        openai_tool = cast(
+            ChatCompletionFunctionToolParam,
+            {
+                "type": "function",
+                "function": function_spec,
+            },
+        )
+        openai_tools.append(openai_tool)
+    return openai_tools
 
 
 def convert_message_to_chat_completion(message: ChatCompletionMessageParam) -> ChatCompletion:
