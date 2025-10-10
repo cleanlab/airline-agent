@@ -15,7 +15,7 @@ SITEMAP_URLS = [CITY_TO_CITY_SITEMAP_URL, FLIGHTS_FROM_CITY_SITEMAP_URL]
 
 
 class Flights:
-    def __init__(self):
+    def __init__(self) -> None:
         self.city_to_city_urls = self._fetch_urls(CITY_TO_CITY_SITEMAP_URL)
         self.flights_from_city_urls = self._fetch_urls(FLIGHTS_FROM_CITY_SITEMAP_URL)
 
@@ -48,10 +48,13 @@ class Flights:
         soup = BeautifulSoup(html, "html5lib")
         main_div = soup.find("div", id="main")
 
+        if not main_div:
+            return []
+
         all_uls = main_div.find_all("ul")
         ul = all_uls[1]
         all_rel_urls = [
-            str(li.find("a").attrs["href"]) for li in ul.find_all("li") if li.find("a") and "href" in li.find("a").attrs
+            str(a.attrs["href"]) for li in ul.find_all("li") if (a := li.find("a")) and "href" in a.attrs
         ]
         return [self._rel_to_abs_url(rel_url) for rel_url in all_rel_urls]
 
@@ -70,7 +73,7 @@ class Flights:
 
         # Find the __NEXT_DATA__ script tag containing JSON data
         script_tag = soup.find("script", {"id": "__NEXT_DATA__", "type": "application/json"})
-        if not script_tag:
+        if not script_tag or not script_tag.string:
             return []
 
         try:
