@@ -113,7 +113,7 @@ def search_flights(url: str) -> list[FlightInfo]:
         fare_type = f"{flight_type} / {travel_class}" if flight_type and travel_class else travel_class or flight_type
 
         departure_date = fare.get("formattedDepartureDate", "")
-        dates = f"Departing {departure_date}" if departure_date else ""
+        departure_date_string = f"Departing {departure_date}" if departure_date else ""
 
         starting_price = fare.get("formattedTotalPrice", "")
 
@@ -130,7 +130,7 @@ def search_flights(url: str) -> list[FlightInfo]:
                 origin=origin,
                 destination=destination,
                 fare_type=fare_type,
-                dates=dates,
+                departure_date=departure_date_string,
                 starting_price=starting_price,
                 last_seen=last_seen,
             )
@@ -165,7 +165,6 @@ def create_database(db_path: str) -> sqlite3.Connection:
         )
     """)
 
-    # Create index on origin and destination for searches
     cursor.execute("""
         CREATE INDEX IF NOT EXISTS idx_origin_dest ON flights(origin, destination)
     """)
@@ -198,7 +197,7 @@ def save_flights(conn: sqlite3.Connection, flights: list[FlightInfo]) -> int:
                     flight.origin,
                     flight.destination,
                     flight.fare_type,
-                    flight.dates,
+                    flight.departure_date,
                     flight.starting_price,
                     flight.last_seen,
                 ),

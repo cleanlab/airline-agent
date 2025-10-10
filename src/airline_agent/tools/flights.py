@@ -1,9 +1,12 @@
 """Tools for querying flight data from the SQLite database."""
 
+import logging
 import sqlite3
 from pathlib import Path
 
 from airline_agent.types.flights import FlightInfo
+
+logger = logging.getLogger(__name__)
 
 
 class Flights:
@@ -26,16 +29,14 @@ class Flights:
         self,
         origin: str | None = None,
         destination: str | None = None,
-        fare_type: str | None = None,
         departure_date: str | None = None,
     ) -> list[FlightInfo]:
-        """Search for flights matching the given criteria.
+        """Search for available flights matching the given criteria.
 
         Args:
-            origin: Filter by origin city/airport (partial match)
-            destination: Filter by destination city/airport (partial match)
-            fare_type: Filter by fare type (partial match)
-            departure_date: Filter by departure date (partial match)
+            origin: Filter by origin city/airport
+            destination: Filter by destination city/airport
+            departure_date: Filter by departure date
 
         Returns:
             List of FlightInfo objects matching the criteria
@@ -51,15 +52,12 @@ class Flights:
             query += " AND destination LIKE ?"
             params.append(f"%{destination}%")
 
-        if fare_type:
-            query += " AND fare_type LIKE ?"
-            params.append(f"%{fare_type}%")
-
         if departure_date:
             query += " AND departure_date LIKE ?"
             params.append(f"%{departure_date}%")
 
         # Create a new connection for each query to avoid threading issues
+        logger.info("searching for flights with params: %r", params)
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
 
@@ -74,7 +72,7 @@ class Flights:
                     origin=row["origin"],
                     destination=row["destination"],
                     fare_type=row["fare_type"] or "",
-                    dates=row["departure_date"] or "",
+                    departure_date=row["departure_date"] or "",
                     starting_price=row["starting_price"],
                     last_seen=row["last_seen"] or "",
                 )
