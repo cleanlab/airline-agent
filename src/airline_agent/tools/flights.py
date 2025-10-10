@@ -53,9 +53,7 @@ class Flights:
 
         all_uls = main_div.find_all("ul")
         ul = all_uls[1]
-        all_rel_urls = [
-            str(a.attrs["href"]) for li in ul.find_all("li") if (a := li.find("a")) and "href" in a.attrs
-        ]
+        all_rel_urls = [str(a.attrs["href"]) for li in ul.find_all("li") if (a := li.find("a")) and "href" in a.attrs]
         return [self._rel_to_abs_url(rel_url) for rel_url in all_rel_urls]
 
     def list_city_to_city_flights(self) -> list[str]:
