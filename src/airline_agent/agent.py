@@ -26,8 +26,6 @@ def create_agent(kb: KnowledgeBase, flights: Flights) -> Agent:
             kb.get_article,
             kb.search,
             kb.list_directory,
-            flights.list_city_to_city_flights,
-            flights.list_flights_from_city,
             flights.search_flights,
         ],
     )

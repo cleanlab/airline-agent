@@ -1,137 +1,85 @@
-import json
-import time
-import urllib.parse
+"""Tools for querying flight data from the SQLite database."""
 
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+import sqlite3
+from pathlib import Path
 
 from airline_agent.types.flights import FlightInfo
 
-FLIGHTS_URL = "https://flights.flyfrontier.com"
-CITY_TO_CITY_SITEMAP_URL = "https://flights.flyfrontier.com/en/sitemap/city-to-city-flights/page-1"
-FLIGHTS_FROM_CITY_SITEMAP_URL = "https://flights.flyfrontier.com/en/sitemap/flights-from-city/page-1"
-SITEMAP_URLS = [CITY_TO_CITY_SITEMAP_URL, FLIGHTS_FROM_CITY_SITEMAP_URL]
-
 
 class Flights:
-    def __init__(self) -> None:
-        self.city_to_city_urls = self._fetch_urls(CITY_TO_CITY_SITEMAP_URL)
-        self.flights_from_city_urls = self._fetch_urls(FLIGHTS_FROM_CITY_SITEMAP_URL)
+    """Tool for querying flight information from the database."""
 
-    def _rel_to_abs_url(self, rel_url: str) -> str:
-        """Convert a relative URL to an absolute URL."""
-        return urllib.parse.urljoin(FLIGHTS_URL, rel_url)
-
-    def _fetch_html_with_js(self, url: str) -> str:
-        """Fetch HTML from a URL using Selenium to render JavaScript.
+    def __init__(self, db_path: str = "data/flights.db") -> None:
+        """Initialize the Flights tool with a database connection.
 
         Args:
-            url: The URL to fetch
-            sleep_time: Time to wait for JavaScript to render (in seconds)
+            db_path: Path to the SQLite database file
+        """
+        self.db_path = db_path
+
+        # Check if database exists
+        if not Path(db_path).exists():
+            msg = f"Database not found at {db_path}. Please run fetch_flights.py first to populate the database."
+            raise FileNotFoundError(msg)
+
+    def search_flights(
+        self,
+        origin: str | None = None,
+        destination: str | None = None,
+        fare_type: str | None = None,
+        departure_date: str | None = None,
+    ) -> list[FlightInfo]:
+        """Search for flights matching the given criteria.
+
+        Args:
+            origin: Filter by origin city/airport (partial match)
+            destination: Filter by destination city/airport (partial match)
+            fare_type: Filter by fare type (partial match)
+            departure_date: Filter by departure date (partial match)
 
         Returns:
-            str: The rendered HTML page source
+            List of FlightInfo objects matching the criteria
         """
-        options = Options()
-        options.add_argument("--headless")
-        driver = webdriver.Chrome(options=options)
-        driver.get(url)
-        time.sleep(1)
-        html = driver.page_source
-        driver.quit()
-        return html
+        query = "SELECT * FROM flights WHERE 1=1"
+        params = []
 
-    def _fetch_urls(self, url: str) -> list[str]:
-        """Fetch sitemap URLs from a page using Selenium to render JavaScript."""
-        html = self._fetch_html_with_js(url)
-        soup = BeautifulSoup(html, "html5lib")
-        main_div = soup.find("div", id="main")
+        if origin:
+            query += " AND origin LIKE ?"
+            params.append(f"%{origin}%")
 
-        if not main_div:
-            return []
+        if destination:
+            query += " AND destination LIKE ?"
+            params.append(f"%{destination}%")
 
-        all_uls = main_div.find_all("ul")
-        ul = all_uls[1]
-        all_rel_urls = [str(a.attrs["href"]) for li in ul.find_all("li") if (a := li.find("a")) and "href" in a.attrs]
-        return [self._rel_to_abs_url(rel_url) for rel_url in all_rel_urls]
+        if fare_type:
+            query += " AND fare_type LIKE ?"
+            params.append(f"%{fare_type}%")
 
-    def list_city_to_city_flights(self) -> list[str]:
-        """List all city-to-city flight URLs e.g. https://flights.flyfrontier.com/en/flights-from-aguadilla-to-miami"""
-        return self.city_to_city_urls
+        if departure_date:
+            query += " AND departure_date LIKE ?"
+            params.append(f"%{departure_date}%")
 
-    def list_flights_from_city(self) -> list[str]:
-        """List all flights from city URLs e.g. https://flights.flyfrontier.com/en/flights-from-aguadilla"""
-        return self.flights_from_city_urls
-
-    def search_flights(self, url: str) -> list[FlightInfo]:
-        """Search for flights on the given URL and return a list of FlightInfo objects. Returns maximum 20 flights."""
-        html = self._fetch_html_with_js(url)
-        soup = BeautifulSoup(html, "html5lib")
-
-        # Find the __NEXT_DATA__ script tag containing JSON data
-        script_tag = soup.find("script", {"id": "__NEXT_DATA__", "type": "application/json"})
-        if not script_tag or not script_tag.string:
-            return []
+        # Create a new connection for each query to avoid threading issues
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
 
         try:
-            json_data = json.loads(script_tag.string)
-        except json.JSONDecodeError:
-            return []
+            cursor = conn.cursor()
+            cursor.execute(query, params)
+            rows = cursor.fetchall()
 
-        apollo_state = json_data.get("props", {}).get("pageProps", {}).get("apolloState", {})
-        if not apollo_state or "data" not in apollo_state:
-            return []
-
-        data = apollo_state["data"]
-
-        fares_data = None
-        for key, value in data.items():
-            if key.startswith("StandardFareModule:") and isinstance(value, dict) and "fares" in value:
-                fares_data = value["fares"]
-                break
-
-        if not fares_data:
-            return []
-
-        flights = []
-        for fare in fares_data:
-            origin_city = fare.get("originCity", "")
-            origin_code = fare.get("originAirportCode", "")
-            origin = f"{origin_city} ({origin_code})" if origin_code else origin_city
-
-            destination_city = fare.get("destinationCity", "")
-            destination_code = fare.get("destinationAirportCode", "")
-            destination = f"{destination_city} ({destination_code})" if destination_code else destination_city
-
-            flight_type = fare.get("formattedFlightType", "")
-            travel_class = fare.get("formattedTravelClass", "")
-            fare_type = (
-                f"{flight_type} / {travel_class}" if flight_type and travel_class else travel_class or flight_type
-            )
-
-            departure_date = fare.get("formattedDepartureDate", "")
-            dates = f"Departing {departure_date}" if departure_date else ""
-
-            starting_price = fare.get("formattedTotalPrice", "")
-
-            price_last_seen = fare.get("priceLastSeen", {})
-            if price_last_seen:
-                value = price_last_seen.get("value", "")
-                unit = price_last_seen.get("unit", "")
-                last_seen = f"{value} {unit} ago" if value and unit else ""
-            else:
-                last_seen = ""
-
-            if origin and destination and starting_price:
-                flight_info = FlightInfo(
-                    origin=origin,
-                    destination=destination,
-                    fare_type=fare_type,
-                    dates=dates,
-                    starting_price=starting_price,
-                    last_seen=last_seen,
+            flights = []
+            for row in rows:
+                flight = FlightInfo(
+                    origin=row["origin"],
+                    destination=row["destination"],
+                    fare_type=row["fare_type"] or "",
+                    dates=row["departure_date"] or "",
+                    starting_price=row["starting_price"],
+                    last_seen=row["last_seen"] or "",
                 )
-                flights.append(flight_info)
+                flights.append(flight)
 
-        return flights
+            return flights
+        finally:
+            conn.close()
