@@ -11,14 +11,14 @@ from pydantic_ai import Agent
 
 from airline_agent.cleanlab_utils.validate_utils import run_cleanlab_validation, run_cleanlab_validation_logging_tools
 from airline_agent.constants import AGENT_MODEL, AGENT_SYSTEM_PROMPT
-from airline_agent.tools.flights import Flights
+from airline_agent.tools.flight_deals import FlightDeals
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
 if TYPE_CHECKING:
     from pydantic_ai.messages import ModelMessage
 
 
-def create_agent(kb: KnowledgeBase, flights: Flights) -> Agent:
+def create_agent(kb: KnowledgeBase, flight_deals: FlightDeals) -> Agent:
     return Agent(
         model=AGENT_MODEL,
         system_prompt=AGENT_SYSTEM_PROMPT,
@@ -26,7 +26,7 @@ def create_agent(kb: KnowledgeBase, flights: Flights) -> Agent:
             kb.get_article,
             kb.search,
             kb.list_directory,
-            flights.search_flights,
+            flight_deals.search_flight_deals,
         ],
     )
 
@@ -99,8 +99,8 @@ def main() -> None:
     args = parser.parse_args()
 
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
-    flights = Flights()
-    agent = create_agent(kb, flights)
+    flight_deals = FlightDeals()
+    agent = create_agent(kb, flight_deals)
     with contextlib.suppress(KeyboardInterrupt, EOFError):
         run_agent(agent, validation_mode=args.validation_mode)
 
