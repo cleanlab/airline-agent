@@ -293,5 +293,6 @@ def run_cleanlab_validation_logging_tools(
         query=query,
         result=result,
         message_history=message_history,
+        tools=tools,
         thread_id=thread_id,
     )  # Run real validation on the final output
