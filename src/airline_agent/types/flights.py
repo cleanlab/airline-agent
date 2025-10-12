@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 
-class FlightInfo(BaseModel, frozen=True):
+class FlightDealInfo(BaseModel, frozen=True):
     """Flight information extracted from the website."""
 
     origin: str = Field(..., description="Origin city and airport code (e.g., 'Denver, CO (DEN)')")
