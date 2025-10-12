@@ -15,7 +15,7 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options
 
-from airline_agent.types.flights import FlightInfo
+from airline_agent.types.flights import FlightDealInfo
 
 # Constants
 FLIGHTS_URL = "https://flights.flyfrontier.com"
@@ -61,14 +61,14 @@ def fetch_city_to_city_urls() -> list[str]:
     return [_rel_to_abs_url(rel_url) for rel_url in all_rel_urls]
 
 
-def search_flights(url: str) -> list[FlightInfo]:
+def search_flights(url: str) -> list[FlightDealInfo]:
     """Search for flights on the given URL and return a list of FlightInfo objects.
 
     Args:
         url: The URL to search for flights
 
     Returns:
-        List of FlightInfo objects found on the page
+        List of FlightDealInfo objects found on the page
     """
     html = _fetch_html_with_js(url)
     soup = BeautifulSoup(html, "html5lib")
@@ -126,7 +126,7 @@ def search_flights(url: str) -> list[FlightInfo]:
             last_seen = ""
 
         if origin and destination and starting_price:
-            flight_info = FlightInfo(
+            flight_info = FlightDealInfo(
                 origin=origin,
                 destination=destination,
                 fare_type=fare_type,
@@ -173,12 +173,12 @@ def create_database(db_path: str) -> sqlite3.Connection:
     return conn
 
 
-def save_flights(conn: sqlite3.Connection, flights: list[FlightInfo]) -> int:
+def save_flights(conn: sqlite3.Connection, flights: list[FlightDealInfo]) -> int:
     """Save flight information to the database.
 
     Args:
         conn: SQLite database connection
-        flights: List of FlightInfo objects
+        flights: List of FlightDealInfo objects
 
     Returns:
         int: Number of flights inserted (not counting duplicates)
@@ -211,7 +211,7 @@ def save_flights(conn: sqlite3.Connection, flights: list[FlightInfo]) -> int:
     return inserted
 
 
-def process_url(url: str) -> tuple[str, list[FlightInfo] | None, str | None]:
+def process_url(url: str) -> tuple[str, list[FlightDealInfo] | None, str | None]:
     """Process a single URL and return the results.
 
     Args:
