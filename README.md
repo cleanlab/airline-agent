@@ -13,6 +13,13 @@ Before running the agent, you need to configure the following API keys either in
 - **CODEX_API_KEY**: Your Cleanlab Codex API key  
 - **CLEANLAB_PROJECT_ID**: Your Cleanlab project ID
 
+**Note:** To create a new Cleanlab demo project, run:
+
+```bash
+hatch run create-demo-project
+```
+
+This will create a project with all latest configured guardrails/evals for the walkthrough below.
 
 ### Usage
 
