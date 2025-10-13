@@ -20,6 +20,7 @@ dependencies = [
   "python-dotenv>=1.0.0",
   "tqdm>=4.67.1",
   "cleanlab_codex>=1.0.29",
+  "pandas>=2.2.3",
 ]
 
 [tool.hatch.envs.default]
@@ -31,6 +32,7 @@ extra-dependencies = [
   "pytest",
   "types-requests>=2.32.4.20250913",
   "types-tqdm>=4.67.0.20250809",
+  "pandas-stubs>=2.2.0.240528",
 ]
 
 [tool.hatch.envs.types.scripts]

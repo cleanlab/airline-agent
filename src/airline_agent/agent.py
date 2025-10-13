@@ -9,8 +9,12 @@ from cleanlab_codex import Client, Project
 from dotenv import load_dotenv
 from pydantic_ai import Agent
 
-from airline_agent.cleanlab_utils.validate_utils import run_cleanlab_validation, run_cleanlab_validation_logging_tools
-from airline_agent.constants import AGENT_MODEL, AGENT_SYSTEM_PROMPT
+from airline_agent.cleanlab_utils.validate_utils import (
+    get_tools_in_openai_format,
+    run_cleanlab_validation,
+    run_cleanlab_validation_logging_tools,
+)
+from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
 if TYPE_CHECKING:
@@ -19,7 +23,7 @@ if TYPE_CHECKING:
 
 def create_agent(kb: KnowledgeBase) -> Agent:
     return Agent(
-        model=AGENT_MODEL, system_prompt=AGENT_SYSTEM_PROMPT, tools=[kb.get_article, kb.search, kb.list_directory]
+        model=AGENT_MODEL, instructions=AGENT_INSTRUCTIONS, tools=[kb.get_article, kb.search, kb.list_directory]
     )
 
 
@@ -37,6 +41,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
     if validation_mode != "none":
         project = get_cleanlab_project()
     thread_id = str(uuid.uuid4())
+    openai_tools = get_tools_in_openai_format(agent)
 
     while True:
         user_input = input("\033[96mYou:\033[0m ").strip()
@@ -51,6 +56,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
                 query=user_input,
                 result=result,
                 message_history=message_history,
+                tools=openai_tools,
                 thread_id=thread_id,
             )
         elif validation_mode == "cleanlab_log_tools":
@@ -59,6 +65,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
                 query=user_input,
                 result=result,
                 message_history=message_history,
+                tools=openai_tools,
                 thread_id=thread_id,
             )
         else:  # validation_mode == "none"

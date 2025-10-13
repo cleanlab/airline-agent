@@ -8,8 +8,9 @@ RAG_EMBED_BATCH_SIZE = 100
 RAG_CHUNK_SIZE = 1024
 RAG_CHUNK_OVERLAP = 200
 CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory"]
-AGENT_MODEL = "openai:gpt-5"
-AGENT_SYSTEM_PROMPT = (
+AGENT_MODEL = "openai:gpt-4o"
+YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TIMEZONE = 2025, 10, 1, 9, 0, 0, "UTC"
+AGENT_INSTRUCTIONS = (
     """You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
 documents about the airline's services, policies, and procedures.
 
@@ -29,6 +30,8 @@ documents about the airline's services, policies, and procedures.
 - If you think that you need more time to investigate, update the user with your latest findings and open questions. You can proceed if the user confirms.
 - Discuss any airline-related topics with the user.
 - If the user asks about anything unrelated to the airline, politely inform them that you can only assist with airline-related inquiries.
+
+The current date and time is {YEAR}-{MONTH}-{DAY} {HOUR}:{MINUTE}:{SECOND} {TIMEZONE}.
 """.strip()
     .replace("\n", " ")
     .replace("  ", " ")
