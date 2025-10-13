@@ -1,2 +1,4 @@
+__pycache__/
 scratch/
 .env
+.DS_Store

@@ -25,7 +25,13 @@ Before running the agent, you need to configure the following API keys either in
     hatch run python src/airline_agent/preprocessing/create_vector_database.py --data-path data/kb.json --vector-db-path data/vector-db
     ```
 
-3. Run the agent:
+3. Create synthetic flights DB:
+
+    ```bash
+    hatch run python src/airline_agent/data_preparation/generate_flights.py --routes-path static/routes.csv --airports-path static/airports.csv --db-path data/flights.db
+    ```
+
+4. Run the agent:
 
     ```bash
     hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db --validation-mode cleanlab
