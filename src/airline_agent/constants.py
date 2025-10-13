@@ -8,7 +8,7 @@ RAG_EMBED_BATCH_SIZE = 100
 RAG_CHUNK_SIZE = 1024
 RAG_CHUNK_OVERLAP = 200
 CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory"]
-AGENT_MODEL = "openai:gpt-5"
+AGENT_MODEL = "openai:gpt-4o"
 AGENT_SYSTEM_PROMPT = (
     """You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
 documents about the airline's services, policies, and procedures.
