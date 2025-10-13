@@ -87,6 +87,7 @@ def main() -> None:
     logging.getLogger("llama_index.core.indices.loading").setLevel(logging.WARNING)
 
     parser = argparse.ArgumentParser(description="Run the airline support agent.")
+    parser.add_argument("--db-path", type=str, required=True, help="Path to the SQLite flightdatabase file.")
     parser.add_argument("--kb-path", type=str, required=True, help="Path to the knowledge base JSON file.")
     parser.add_argument("--vector-db-path", type=str, required=True, help="Path to the vector database directory.")
     parser.add_argument(
@@ -99,7 +100,7 @@ def main() -> None:
     args = parser.parse_args()
 
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
-    flight_deals = FlightDeals()
+    flight_deals = FlightDeals(args.db_path)
     agent = create_agent(kb, flight_deals)
     with contextlib.suppress(KeyboardInterrupt, EOFError):
         run_agent(agent, validation_mode=args.validation_mode)

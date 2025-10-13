@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class FlightDeals:
     """Tool for finding cheapest fare on available routes from the database."""
 
-    def __init__(self, db_path: str = "data/flights.db") -> None:
+    def __init__(self, db_path: str) -> None:
         """Initialize the FlightDeals tool with a database connection.
 
         Args:

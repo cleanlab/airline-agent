@@ -2,19 +2,14 @@
 
 import argparse
 import json
+import os
 import sqlite3
-import sys
-import time
-import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
-from threading import Lock
 
 from bs4 import BeautifulSoup
-from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.chrome.options import Options
 
+from airline_agent.data_preparation.utils import cleanup_driver, fetch_html_with_js, rel_to_abs_url
 from airline_agent.types.flights import FlightDealInfo
 
 # Constants
@@ -22,33 +17,9 @@ FLIGHTS_URL = "https://flights.flyfrontier.com"
 CITY_TO_CITY_SITEMAP_URL = "https://flights.flyfrontier.com/en/sitemap/city-to-city-flights/page-1"
 
 
-def _rel_to_abs_url(rel_url: str) -> str:
-    """Convert a relative URL to an absolute URL."""
-    return urllib.parse.urljoin(FLIGHTS_URL, rel_url)
-
-
-def _fetch_html_with_js(url: str) -> str:
-    """Fetch HTML from a URL using Selenium to render JavaScript.
-
-    Args:
-        url: The URL to fetch
-
-    Returns:
-        str: The rendered HTML page source
-    """
-    options = Options()
-    options.add_argument("--headless")
-    driver = webdriver.Chrome(options=options)
-    driver.get(url)
-    time.sleep(1)
-    html = driver.page_source
-    driver.quit()
-    return html
-
-
 def fetch_city_to_city_urls() -> list[str]:
     """Fetch all city-to-city flight URLs from the sitemap."""
-    html = _fetch_html_with_js(CITY_TO_CITY_SITEMAP_URL)
+    html = fetch_html_with_js(CITY_TO_CITY_SITEMAP_URL)
     soup = BeautifulSoup(html, "html5lib")
     main_div = soup.find("div", id="main")
 
@@ -58,11 +29,11 @@ def fetch_city_to_city_urls() -> list[str]:
     all_uls = main_div.find_all("ul")
     ul = all_uls[1]
     all_rel_urls = [str(a.attrs["href"]) for li in ul.find_all("li") if (a := li.find("a")) and "href" in a.attrs]
-    return [_rel_to_abs_url(rel_url) for rel_url in all_rel_urls]
+    return [rel_to_abs_url(rel_url, FLIGHTS_URL) for rel_url in all_rel_urls]
 
 
 def search_flights(url: str) -> list[FlightDealInfo]:
-    """Search for flights on the given URL and return a list of FlightInfo objects.
+    """Search for flights on the given URL and return a list of FlightDealInfo objects.
 
     Args:
         url: The URL to search for flights
@@ -70,7 +41,7 @@ def search_flights(url: str) -> list[FlightDealInfo]:
     Returns:
         List of FlightDealInfo objects found on the page
     """
-    html = _fetch_html_with_js(url)
+    html = fetch_html_with_js(url)
     soup = BeautifulSoup(html, "html5lib")
 
     # Find the __NEXT_DATA__ script tag containing JSON data
@@ -115,7 +86,8 @@ def search_flights(url: str) -> list[FlightDealInfo]:
         departure_date = fare.get("formattedDepartureDate", "")
         departure_date_string = f"Departing {departure_date}" if departure_date else ""
 
-        starting_price = fare.get("formattedTotalPrice", "")
+        starting_price_string = fare.get("formattedTotalPrice", "")
+        starting_price = int(starting_price_string[1:])  # Remove $ and convert to int
 
         price_last_seen = fare.get("priceLastSeen", {})
         if price_last_seen:
@@ -125,7 +97,7 @@ def search_flights(url: str) -> list[FlightDealInfo]:
         else:
             last_seen = ""
 
-        if origin and destination and starting_price:
+        if origin and destination:
             flight_info = FlightDealInfo(
                 origin=origin,
                 destination=destination,
@@ -148,6 +120,10 @@ def create_database(db_path: str) -> sqlite3.Connection:
     Returns:
         sqlite3.Connection: Database connection object
     """
+    # Delete existing database if it exists
+    if os.path.exists(db_path):
+        os.remove(db_path)
+
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
@@ -159,7 +135,7 @@ def create_database(db_path: str) -> sqlite3.Connection:
             destination TEXT NOT NULL,
             fare_type TEXT,
             departure_date TEXT,
-            starting_price TEXT NOT NULL,
+            starting_price INTEGER NOT NULL,
             last_seen TEXT,
             UNIQUE(origin, destination, fare_type, departure_date, starting_price)
         )
@@ -173,42 +149,32 @@ def create_database(db_path: str) -> sqlite3.Connection:
     return conn
 
 
-def save_flights(conn: sqlite3.Connection, flights: list[FlightDealInfo]) -> int:
+def save_flights_to_db(conn: sqlite3.Connection, flights: list[FlightDealInfo]) -> None:
     """Save flight information to the database.
 
     Args:
         conn: SQLite database connection
         flights: List of FlightDealInfo objects
-
-    Returns:
-        int: Number of flights inserted (not counting duplicates)
     """
     cursor = conn.cursor()
-    inserted = 0
 
     for flight in flights:
-        try:
-            cursor.execute(
-                """
-                INSERT INTO flights (origin, destination, fare_type, departure_date, starting_price, last_seen)
-                VALUES (?, ?, ?, ?, ?, ?)
-            """,
-                (
-                    flight.origin,
-                    flight.destination,
-                    flight.fare_type,
-                    flight.departure_date,
-                    flight.starting_price,
-                    flight.last_seen,
-                ),
-            )
-            inserted += 1
-        except sqlite3.IntegrityError:
-            # Skip duplicate entries
-            pass
+        cursor.execute(
+            """
+            INSERT INTO flights (origin, destination, fare_type, departure_date, starting_price, last_seen)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """,
+            (
+                flight.origin,
+                flight.destination,
+                flight.fare_type,
+                flight.departure_date,
+                flight.starting_price,
+                flight.last_seen,
+            ),
+        )
 
     conn.commit()
-    return inserted
 
 
 def process_url(url: str) -> tuple[str, list[FlightDealInfo] | None, str | None]:
@@ -237,35 +203,39 @@ def fetch_and_save_all_flights(db_path: str) -> None:
     print("Fetching city-to-city flight URLs...")  # noqa: T201
     urls = fetch_city_to_city_urls()
     print(f"Found {len(urls)} city-to-city flight URLs to process")  # noqa: T201
-    print("Using maximum available concurrent workers")  # noqa: T201
 
     print(f"Creating/connecting to database at {db_path}")  # noqa: T201
     conn = create_database(db_path)
 
     total_flights = 0
-    total_inserted = 0
     failed_urls = []
     completed = 0
 
-    db_lock = Lock()
-
+    all_flights = []
     try:
-        with ThreadPoolExecutor() as executor:
+        num_workers = min(32, (os.cpu_count() or 1) + 4)
+        with ThreadPoolExecutor(max_workers=num_workers) as executor:
             future_to_url = {executor.submit(process_url, url): url for url in urls}
 
             for future in as_completed(future_to_url):
                 url, flights, error = future.result()
 
-                with db_lock:
-                    completed += 1
-                    print(f"Processing {completed}/{len(urls)}...", end="\r")  # noqa: T201
+                completed += 1
+                print(f"Processing {completed}/{len(urls)}...", end="\r")  # noqa: T201
 
-                    if error:
-                        failed_urls.append((url, error))
-                    elif flights:
-                        inserted = save_flights(conn, flights)
-                        total_flights += len(flights)
-                        total_inserted += inserted
+                if flights:
+                    all_flights.extend(flights)
+                    total_flights += len(flights)
+                elif error:
+                    failed_urls.append((url, error))
+
+        # Clean up drivers
+        with ThreadPoolExecutor(max_workers=num_workers) as cleanup_executor:
+            for _ in range(num_workers):
+                cleanup_executor.submit(cleanup_driver)
+
+        # Save all flights to database
+        save_flights_to_db(conn, all_flights)
 
         print()  # noqa: T201 # New line after progress indicator
 
@@ -274,7 +244,6 @@ def fetch_and_save_all_flights(db_path: str) -> None:
         print("=" * 60)  # noqa: T201
         print(f"Total URLs processed: {len(urls)}")  # noqa: T201
         print(f"Total flights found: {total_flights}")  # noqa: T201
-        print(f"New records inserted: {total_inserted}")  # noqa: T201
         print(f"Failed URLs: {len(failed_urls)}")  # noqa: T201
 
         if failed_urls:
@@ -282,8 +251,6 @@ def fetch_and_save_all_flights(db_path: str) -> None:
             for url, error in failed_urls:
                 print(f"  - {url}")  # noqa: T201
                 print(f"    Error: {error}")  # noqa: T201
-
-        print(f"\nDatabase saved to: {db_path}")  # noqa: T201
 
     finally:
         conn.close()
@@ -294,24 +261,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Fetch flight data from all city-to-city URLs and save to SQLite database"
     )
-    parser.add_argument(
-        "--path", type=str, default="data/flights.db", help="Path to save the SQLite database of flight data"
-    )
+    parser.add_argument("--path", type=str, help="Path to save the SQLite database of flight data", required=True)
 
     args = parser.parse_args()
 
-    # Ensure the data directory exists
-    db_path = Path(args.path)
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-
-    try:
-        fetch_and_save_all_flights(str(db_path))
-    except KeyboardInterrupt:
-        print("\n\nProcess interrupted by user")  # noqa: T201
-        sys.exit(1)
-    except Exception as e:  # noqa: BLE001
-        print(f"\nError: {e}", file=sys.stderr)  # noqa: T201
-        sys.exit(1)
+    fetch_and_save_all_flights(args.path)
 
 
 if __name__ == "__main__":
