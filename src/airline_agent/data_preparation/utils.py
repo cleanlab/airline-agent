@@ -5,16 +5,28 @@ import urllib
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-thread_local = threading.local()
+_thread_data = threading.local()
+_all_drivers = set()
 
 
-def get_driver() -> webdriver.Chrome:
-    """Get or create a WebDriver instance for the current thread."""
-    if not hasattr(thread_local, "driver"):
+def get_driver():
+    if not hasattr(_thread_data, "driver") or _thread_data.driver is None:
         options = Options()
         options.add_argument("--headless")
-        thread_local.driver = webdriver.Chrome(options=options)
-    return thread_local.driver  # type: ignore[no-any-return]
+        driver = webdriver.Chrome(options=options)
+        _thread_data.driver = driver
+        _all_drivers.add(driver)
+    return _thread_data.driver
+
+
+def close_drivers():
+    for driver in list(_all_drivers):
+        try:
+            driver.quit()
+        except Exception:
+            pass
+        finally:
+            _all_drivers.discard(driver)
 
 
 def fetch_html_with_js(url: str) -> str:
@@ -23,13 +35,6 @@ def fetch_html_with_js(url: str) -> str:
     driver.get(url)
     time.sleep(1)
     return driver.page_source
-
-
-def cleanup_driver() -> None:
-    """Clean up the WebDriver for the current thread."""
-    if hasattr(thread_local, "driver"):
-        thread_local.driver.quit()
-        delattr(thread_local, "driver")
 
 
 def rel_to_abs_url(rel_url: str, base_url: str) -> str:

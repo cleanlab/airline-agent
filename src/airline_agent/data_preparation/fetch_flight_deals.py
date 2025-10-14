@@ -5,11 +5,12 @@ import json
 import os
 import sqlite3
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import contextmanager
 
 from bs4 import BeautifulSoup
 from selenium.common.exceptions import WebDriverException
 
-from airline_agent.data_preparation.utils import cleanup_driver, fetch_html_with_js, rel_to_abs_url
+from airline_agent.data_preparation.utils import close_drivers, fetch_html_with_js, rel_to_abs_url
 from airline_agent.types.flights import FlightDealInfo
 
 # Constants
@@ -27,6 +28,8 @@ def fetch_city_to_city_urls() -> list[str]:
         return []
 
     all_uls = main_div.find_all("ul")
+    if len(all_uls) < 2:  
+        return [] # no flights found
     ul = all_uls[1]
     all_rel_urls = [str(a.attrs["href"]) for li in ul.find_all("li") if (a := li.find("a")) and "href" in a.attrs]
     return [rel_to_abs_url(rel_url, FLIGHTS_URL) for rel_url in all_rel_urls]
@@ -194,6 +197,16 @@ def process_url(url: str) -> tuple[str, list[FlightDealInfo] | None, str | None]
         return (url, flights, None)
 
 
+@contextmanager
+def selenium_pool(num_workers):
+    """Manages ThreadPoolExecutor and Selenium driver lifecycle."""
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
+        try:
+            yield executor
+        finally:
+            close_drivers()
+
+
 def fetch_and_save_all_flights(db_path: str) -> None:
     """Fetch flights from all city-to-city URLs and save to database using concurrent processing.
 
@@ -214,7 +227,7 @@ def fetch_and_save_all_flights(db_path: str) -> None:
     all_flights = []
     try:
         num_workers = min(32, (os.cpu_count() or 1) + 4)
-        with ThreadPoolExecutor(max_workers=num_workers) as executor:
+        with selenium_pool(num_workers) as executor:
             future_to_url = {executor.submit(process_url, url): url for url in urls}
 
             for future in as_completed(future_to_url):
@@ -228,11 +241,6 @@ def fetch_and_save_all_flights(db_path: str) -> None:
                     total_flights += len(flights)
                 elif error:
                     failed_urls.append((url, error))
-
-        # Clean up drivers
-        with ThreadPoolExecutor(max_workers=num_workers) as cleanup_executor:
-            for _ in range(num_workers):
-                cleanup_executor.submit(cleanup_driver)
 
         # Save all flights to database
         save_flights_to_db(conn, all_flights)
