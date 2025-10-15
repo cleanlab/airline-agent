@@ -11,8 +11,7 @@ if TYPE_CHECKING:
     from codex.types.projects import ProjectRetrieveResponse
 
 # Official demo project ID to copy configuration from
-OFFICIAL_DEMO_PROJECT_ID = ""  # To be filled in
-
+OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"
 logger = logging.getLogger(__name__)
 
 
@@ -21,12 +20,10 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO)
     load_dotenv()
 
-    # Validate that the official demo project ID is set
     if not OFFICIAL_DEMO_PROJECT_ID:
         missing_id_msg = "OFFICIAL_DEMO_PROJECT_ID must be set in the script"
         raise ValueError(missing_id_msg)
 
-    # Get codex API key from environment
     codex_api_key = os.getenv("CODEX_API_KEY")
     if not codex_api_key:
         missing_key_msg = "CODEX_API_KEY environment variable is not set"
