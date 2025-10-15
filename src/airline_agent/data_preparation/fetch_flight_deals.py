@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from tqdm.auto import tqdm
 
 from airline_agent.data_preparation.utils import rel_to_abs_url
-from airline_agent.types.flights import FlightDealInfo
+from airline_agent.types.flight_deals import FlightDealInfo
 
 # Constants
 FLIGHTS_URL = "https://flights.flyfrontier.com"

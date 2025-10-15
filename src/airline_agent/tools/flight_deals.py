@@ -4,7 +4,7 @@ import logging
 import sqlite3
 from pathlib import Path
 
-from airline_agent.types.flights import FlightDealInfo
+from airline_agent.types.flight_deals import FlightDealInfo
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,9 @@ class FlightDeals:
 
         # Check if database exists
         if not Path(db_path).exists():
-            msg = f"Database not found at {db_path}. Please run fetch_flight_deals.py first to populate the database."
+            msg = (
+                f"Database not found at {db_path}. " "Please run fetch_flight_deals.py first to populate the database."
+            )
             raise FileNotFoundError(msg)
 
     def find_cheapest_flight(
@@ -51,19 +53,12 @@ class FlightDeals:
             msg = "At least one of origin or destination must be provided"
             raise ValueError(msg)
 
-        query = "SELECT * FROM flights WHERE 1=1"
-        params = []
+        query = "SELECT * FROM flights WHERE origin LIKE ? AND destination LIKE ?"
+        origin_param = f"%{origin}%" if origin else "%"
+        destination_param = f"%{destination}%" if destination else "%"
+        params = [origin_param, destination_param]
 
-        if origin:
-            query += " AND origin LIKE ?"
-            params.append(f"%{origin}%")
-
-        if destination:
-            query += " AND destination LIKE ?"
-            params.append(f"%{destination}%")
-
-        # Create a new connection for each query to avoid threading issues
-        logger.info("searching for flights with params: %r", params)
+        logger.info("Searching for flights with params: %r", params)
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
 
