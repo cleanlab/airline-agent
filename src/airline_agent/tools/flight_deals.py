@@ -73,6 +73,9 @@ class FlightDeals:
         destination_param = f"%{destination}%" if destination else "%"
         params = [origin_param, destination_param]
 
+        # Pydantic AI invokes tool calls in separate threads.
+        # SQLite connection objects cannot be shared across threads,
+        # so we open a new connection for each query to prevent threading errors.
         logger.info("Searching for flights with params: %r", params)
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
