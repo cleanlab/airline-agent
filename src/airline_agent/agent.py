@@ -87,7 +87,7 @@ def main() -> None:
     logging.getLogger("llama_index.core.indices.loading").setLevel(logging.WARNING)
 
     parser = argparse.ArgumentParser(description="Run the airline support agent.")
-    parser.add_argument("--db-path", type=str, required=True, help="Path to the SQLite flightdatabase file.")
+    parser.add_argument("--db-path", type=str, required=True, help="Path to the SQLite flight database file.")
     parser.add_argument("--kb-path", type=str, required=True, help="Path to the knowledge base JSON file.")
     parser.add_argument("--vector-db-path", type=str, required=True, help="Path to the vector database directory.")
     parser.add_argument(
