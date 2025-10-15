@@ -24,7 +24,9 @@ if TYPE_CHECKING:
 
 def create_agent(kb: KnowledgeBase, flight_deals: FlightDeals) -> Agent:
     return Agent(
-        model=AGENT_MODEL, instructions=AGENT_INSTRUCTIONS, tools=[kb.get_article, kb.search, kb.list_directory, flight_deals.find_flight_deals]
+        model=AGENT_MODEL,
+        instructions=AGENT_INSTRUCTIONS,
+        tools=[kb.get_article, kb.search, kb.list_directory, flight_deals.find_flight_deals],
     )
 
 
