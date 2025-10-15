@@ -1,0 +1,668 @@
+"""Cleanlab Agent that integrates cleanlab validation directly into pydantic-ai."""
+
+from __future__ import annotations
+
+import base64
+import functools
+import logging
+import os
+import re
+import warnings
+from collections.abc import Sequence
+from datetime import datetime
+from typing import TYPE_CHECKING, Any, Literal, cast, overload
+
+# For Python 3.10 compatibility
+try:
+    from datetime import UTC
+except ImportError:
+    UTC = UTC
+
+if TYPE_CHECKING:
+    from cleanlab_codex import Project
+    from codex.types.project_validate_response import ProjectValidateResponse
+
+from cleanlab_tlm.utils.chat import _ASSISTANT_PREFIX as ASSISTANT_PREFIX
+from cleanlab_tlm.utils.chat import _form_prompt_chat_completions_api as form_prompt_chat_completions_api
+from codex import Codex
+from openai.types.chat import (
+    ChatCompletion,
+    ChatCompletionAssistantMessageParam,
+    ChatCompletionFunctionToolParam,
+    ChatCompletionMessageParam,
+)
+from pydantic_ai import models
+from pydantic_ai.agent.abstract import AbstractAgent, AgentDepsT, OutputDataT, RunOutputDataT
+from pydantic_ai.agent.wrapper import WrapperAgent
+from pydantic_ai.messages import (
+    AudioUrl,
+    BinaryContent,
+    BuiltinToolCallPart,
+    BuiltinToolReturnPart,
+    DocumentUrl,
+    ImageUrl,
+    ModelMessage,
+    ModelRequest,
+    ModelResponse,
+    RetryPromptPart,
+    SystemPromptPart,
+    TextPart,
+    ThinkingPart,
+    ToolCallPart,
+    ToolReturnPart,
+    UserContent,
+    UserPromptPart,
+    VideoUrl,
+)
+from pydantic_ai.output import OutputSpec
+from pydantic_ai.run import AgentRunResult
+from pydantic_ai.settings import ModelSettings
+from pydantic_ai.tools import DeferredToolResults
+from pydantic_ai.toolsets import AbstractToolset
+from pydantic_ai.usage import RequestUsage, RunUsage, UsageLimits
+
+logger = logging.getLogger(__name__)
+
+# Constants
+CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory"]  # Default common tool names
+FALLBACK_RESPONSE = "Sorry I am unsure. You can try rephrasing your request."
+
+
+class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
+    """Agent wrapper that integrates cleanlab validation into pydantic-ai."""
+
+    def __init__(
+        self,
+        wrapped: AbstractAgent[AgentDepsT, OutputDataT],
+        cleanlab_project: Project,
+        *,
+        context_retrieval_tools: list[str] | None = None,
+        thread_id: str | None = None,
+        codex_api_key: str | None = None,
+    ) -> None:
+        """Initialize the Cleanlab agent wrapper.
+        
+        Args:
+            wrapped: The original pydantic-ai Agent to wrap
+            cleanlab_project: Cleanlab Project instance for validation
+            context_retrieval_tools: List of tool names to extract context from
+            thread_id: Optional thread ID for validation metadata
+        """
+        super().__init__(wrapped)
+        self.cleanlab_project = cleanlab_project
+        self.context_retrieval_tools = context_retrieval_tools or []
+        self.thread_id = thread_id
+        self.openai_tools = self._extract_tools_to_openai_format()
+        self.codex_api_key = os.getenv("CODEX_API_KEY", None) or codex_api_key
+        if not self.codex_api_key:
+            logger.error("CODEX_API_KEY environment variable is not set.")
+        
+        self.perfect_eval_scores = self._get_perfect_eval_scores()
+
+    def _extract_tools_to_openai_format(self) -> list[ChatCompletionFunctionToolParam]:
+        """Extract tools from the wrapped agent and convert to OpenAI format."""
+        tool_definitions = []
+
+        for toolset in self.wrapped.toolsets:
+            if hasattr(toolset, 'tools') and isinstance(toolset.tools, dict):
+                for tool in toolset.tools.values():
+                    if hasattr(tool, 'tool_def'):
+                        tool_definitions.append(tool.tool_def)
+
+        openai_tools = []
+        for tool in tool_definitions:
+            openai_tool = {
+                "type": "function",
+                "function": {
+                    "name": tool.name,
+                    "parameters": tool.parameters_json_schema,
+                }
+            }
+            if tool.description:
+                openai_tool["function"]["description"] = tool.description
+            if tool.strict is not None:
+                openai_tool["function"]["strict"] = tool.strict
+
+            openai_tools.append(openai_tool)
+
+        return openai_tools
+
+    def _extract_user_query(
+        self,
+        user_prompt: str | Sequence[UserContent] | None,
+        message_history: list[ModelMessage] | None = None,
+    ) -> str:
+        """Extract the user query string from the run parameters."""
+        if isinstance(user_prompt, str):
+            return user_prompt
+        elif user_prompt is not None:
+            # Handle multimodal content - extract text parts
+            text_parts = []
+            for content in user_prompt:
+                if isinstance(content, str):
+                    text_parts.append(content)
+            return " ".join(text_parts)
+        elif message_history:
+            # Extract from latest user message in history
+            for message in reversed(message_history):
+                if isinstance(message, ModelRequest):
+                    for part in message.parts:
+                        if isinstance(part, UserPromptPart):
+                            if isinstance(part.content, str):
+                                return part.content
+                            else:
+                                # Handle multimodal content
+                                text_parts = []
+                                for item in part.content:
+                                    if isinstance(item, str):
+                                        text_parts.append(item)
+                                return " ".join(text_parts)
+        return ""
+
+    def _convert_to_openai_messages(self, message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
+        """Convert pydantic-ai message history to OpenAI Chat Completions format."""
+        openai_messages: list[dict[str, Any]] = []
+
+        for message in message_history:
+            if isinstance(message, ModelRequest):
+                # Handle request messages (sent TO the model)
+                # Extract instructions and add as system message if present
+                if hasattr(message, 'instructions') and message.instructions:
+                    openai_messages.append({"role": "system", "content": message.instructions})
+                
+                for part in message.parts:
+                    if isinstance(part, SystemPromptPart):
+                        openai_messages.append({"role": "system", "content": part.content})
+                    elif isinstance(part, UserPromptPart):
+                        openai_messages.append(self._convert_user_prompt(part))
+                    elif isinstance(part, ToolReturnPart):
+                        openai_messages.append(
+                            {"role": "tool", "tool_call_id": part.tool_call_id, "content": part.model_response_str()}
+                        )
+                    elif isinstance(part, RetryPromptPart):
+                        if part.tool_name is None:
+                            # Retry as user message
+                            openai_messages.append({"role": "user", "content": part.model_response()})
+                        else:
+                            # Retry as tool message
+                            openai_messages.append(
+                                {"role": "tool", "tool_call_id": part.tool_call_id, "content": part.model_response()}
+                            )
+            elif isinstance(message, ModelResponse):
+                # Handle response messages (received FROM the model)
+                texts: list[str] = []
+                tool_calls: list[dict[str, Any]] = []
+
+                for response_part in message.parts:
+                    if isinstance(response_part, TextPart):
+                        texts.append(response_part.content)
+                    elif isinstance(response_part, ThinkingPart):
+                        # Include thinking in <think> tags
+                        texts.append(f"<think>\n{response_part.content}\n</think>")
+                    elif isinstance(response_part, ToolCallPart):
+                        tool_calls.append(
+                            {
+                                "id": response_part.tool_call_id,
+                                "type": "function",
+                                "function": {
+                                    "name": response_part.tool_name,
+                                    "arguments": response_part.args_as_json_str(),
+                                },
+                            }
+                        )
+                    # Skip built-in tool calls as OpenAI doesn't return them
+                    elif isinstance(response_part, BuiltinToolCallPart | BuiltinToolReturnPart):
+                        pass
+
+                # Create assistant message
+                assistant_message: dict[str, Any] = {"role": "assistant"}
+
+                if texts:
+                    assistant_message["content"] = "\n\n".join(texts)
+                else:
+                    assistant_message["content"] = None
+
+                if tool_calls:
+                    assistant_message["tool_calls"] = tool_calls
+
+                if message.finish_reason:
+                    assistant_message["finish_reason"] = message.finish_reason
+
+                openai_messages.append(assistant_message)
+
+        return openai_messages  # type: ignore[return-value]
+
+    def _convert_user_prompt(self, part: UserPromptPart) -> dict[str, Any]:
+        """Convert a UserPromptPart to OpenAI format."""
+        if isinstance(part.content, str):
+            return {"role": "user", "content": part.content}
+
+        content: list[dict[str, Any]] = []
+
+        for item in part.content:
+            if isinstance(item, str):
+                content.append({"type": "text", "text": item})
+            elif isinstance(item, ImageUrl):
+                image_content = {"type": "image_url", "image_url": {"url": item.url}}
+                # Add detail if specified in vendor_metadata
+                if item.vendor_metadata and "detail" in item.vendor_metadata:
+                    image_url_dict = image_content["image_url"]
+                    if not isinstance(image_url_dict, dict):
+                        msg = "Expected image_url to be a dict"
+                        raise TypeError(msg)
+                    image_url_dict["detail"] = item.vendor_metadata["detail"]
+                content.append(image_content)
+            elif isinstance(item, BinaryContent):
+                if item.is_image:
+                    # Convert binary image to base64 data URL
+                    base64_data = base64.b64encode(item.data).decode("utf-8")
+                    image_content = {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:{item.media_type};base64,{base64_data}"},
+                    }
+                    # Add detail if specified in vendor_metadata
+                    if item.vendor_metadata and "detail" in item.vendor_metadata:
+                        image_url_dict = image_content["image_url"]
+                        if not isinstance(image_url_dict, dict):
+                            msg = "Expected image_url to be a dict"
+                            raise TypeError(msg)
+                        image_url_dict["detail"] = item.vendor_metadata["detail"]
+                    content.append(image_content)
+                elif item.is_audio and item.format in ("wav", "mp3"):
+                    # Handle audio content
+                    base64_data = base64.b64encode(item.data).decode("utf-8")
+                    content.append({"type": "input_audio", "input_audio": {"data": base64_data, "format": item.format}})
+                elif item.is_document or item.media_type.startswith("text/"):
+                    # Inline text-like content
+                    try:
+                        text_content = item.data.decode("utf-8")
+                        content.append({"type": "text", "text": f"File {item.identifier}:\n{text_content}"})
+                    except UnicodeDecodeError:
+                        # Fall back to binary description
+                        content.append(
+                            {
+                                "type": "text",
+                                "text": f"Binary file {item.identifier} ({item.media_type}, {len(item.data)} bytes)",
+                            }
+                        )
+                else:
+                    # Other binary content - describe it
+                    content.append(
+                        {
+                            "type": "text",
+                            "text": f"Binary content {item.identifier} ({item.media_type}, {len(item.data)} bytes)",
+                        }
+                    )
+            elif isinstance(item, AudioUrl | VideoUrl | DocumentUrl):
+                # Handle URL-based media
+                if isinstance(item, AudioUrl):
+                    content.append({"type": "text", "text": f"Audio file: {item.url}"})
+                elif isinstance(item, VideoUrl):
+                    content.append({"type": "text", "text": f"Video file: {item.url}"})
+                elif isinstance(item, DocumentUrl):
+                    content.append({"type": "text", "text": f"Document: {item.url}"})
+
+        return {"role": "user", "content": content}
+
+    def _convert_message_to_chat_completion(self, message: ChatCompletionMessageParam) -> ChatCompletion:
+        """Convert an OpenAI message (like tool call) to a mock OpenAI ChatCompletion object."""
+        raw_finish_reason = message.get("finish_reason", "tool_calls" if message.get("tool_calls") else "stop")
+        finish_reason = "tool_calls" if raw_finish_reason == "tool_call" else raw_finish_reason
+
+        choice_message = {
+            "content": message.get("content"),
+            "refusal": None,
+            "role": message.get("role", "assistant"),
+            "annotations": [],
+            "audio": None,
+            "function_call": None,
+            "tool_calls": message.get("tool_calls"),
+        }
+
+        return cast(
+            ChatCompletion,
+            {
+                "id": "chatcmpl-mock",
+                "choices": [
+                    {
+                        "finish_reason": finish_reason,
+                        "index": 0,
+                        "logprobs": None,
+                        "message": choice_message,
+                    }
+                ],
+                "created": int(datetime.now(UTC).timestamp()),
+                "model": "mock-agent",
+                "object": "chat.completion",
+                "service_tier": "default",
+                "system_fingerprint": None,
+                "usage": {
+                    "completion_tokens": 0,
+                    "prompt_tokens": 0,
+                    "total_tokens": 0,
+                    "completion_tokens_details": {
+                        "accepted_prediction_tokens": 0,
+                        "audio_tokens": 0,
+                        "reasoning_tokens": 0,
+                        "rejected_prediction_tokens": 0,
+                    },
+                    "prompt_tokens_details": {"audio_tokens": 0, "cached_tokens": 0},
+                },
+            },
+        )
+
+    def _convert_string_to_response_message(
+        self,
+        content: str,
+        *,
+        timestamp: datetime | None = None,
+    ) -> ModelResponse:
+        """Convert an arbitrary string into a pydantic ModelResponse object."""
+        finish_reason: Literal["stop", "length", "content_filter", "tool_call", "error"] = "stop"
+        provider_name: str = "cleanlab"
+        model_name = None
+
+        if timestamp is None:
+            timestamp = datetime.now(UTC)
+        text_part = TextPart(content=content)
+        usage = RequestUsage(input_tokens=0, output_tokens=0)
+        return ModelResponse(
+            parts=[text_part],
+            usage=usage,
+            model_name=model_name,
+            timestamp=timestamp,
+            provider_name=provider_name,
+            finish_reason=finish_reason,
+        )
+
+    def _get_perfect_eval_scores(self) -> dict[str, float]:
+        """Get perfect eval scores, cached after first call."""
+        client = Codex(api_key=self.codex_api_key)
+        project = client.projects.retrieve(self.cleanlab_project.id)
+        eval_config = project.config.eval_config
+
+        if not eval_config:
+            logger.warning("No eval_config found in project")
+            return {
+                "trustworthiness": 1.0,
+                "response_helpfulness": 1.0,
+                "context_sufficiency": 1.0,
+                "response_groundedness": 1.0,
+                "query_ease": 1.0,
+            }
+
+        eval_keys = []
+
+        # Add default evals if they exist
+        if eval_config.default_evals:
+            default_evals_dump = eval_config.default_evals.model_dump()
+            if default_evals_dump:
+                eval_keys.extend([evaluation["eval_key"] for evaluation in default_evals_dump.values()])
+
+        # Add custom evals if they exist
+        if eval_config.custom_evals and eval_config.custom_evals.evals:
+            eval_keys.extend([evaluation.eval_key for evaluation in eval_config.custom_evals.evals.values()])
+
+        logger.info("Retrieved evals: %s", eval_keys)
+        return {eval_key: 1.0 for eval_key in eval_keys}
+
+    def _get_tool_result_as_text(self, messages: list[ChatCompletionMessageParam], tool_names: list[str]) -> str:
+        """Extract tool results as text for specified tool names from all messages."""
+        # 1. Build mapping of tool call ID to tool name from all assistant messages
+        tool_call_to_name = {}
+        for msg in messages:
+            if msg.get("role") == "assistant" and msg.get("tool_calls"):
+                assistant_msg = cast(ChatCompletionAssistantMessageParam, msg)
+                for tool_call in assistant_msg["tool_calls"]:
+                    # Only handle function tool calls, skip custom tool calls
+                    if tool_call.get("type") == "function":
+                        # Type narrow to function tool call
+                        func_tool_call = cast(Any, tool_call)  # Use Any to avoid union issues
+                        if (
+                            func_tool_call.get("function")
+                            and func_tool_call["function"].get("name") in tool_names
+                            and func_tool_call.get("id")
+                        ):
+                            tool_call_to_name[func_tool_call["id"]] = func_tool_call["function"]["name"]
+
+        # 2. Collect tool results in message order
+        results = []
+        for msg in messages:
+            if msg.get("role") == "tool":
+                tool_msg = cast(Any, msg)  # Cast to avoid TypedDict union issues
+                if "tool_call_id" in tool_msg and tool_msg["tool_call_id"] in tool_call_to_name:
+                    content = tool_msg.get("content", "")
+                    if content:
+                        tool_name_for_result = tool_call_to_name[tool_msg["tool_call_id"]]
+                    results.append(
+                        f"<context from tool: {tool_name_for_result}>\n{content}\n</context from tool: {tool_name_for_result}>\n"
+                    )
+
+        return "\n\n".join(results)
+
+    def _get_context_as_string(self, messages: list[ChatCompletionMessageParam]) -> str:
+        """Extract context from tool results in the agent's messages."""
+        return self._get_tool_result_as_text(messages, self.context_retrieval_tools or CONTEXT_RETRIEVAL_TOOLS)
+
+    def _get_latest_agent_response_pydantic(self, messages: list[ModelMessage]) -> tuple[ModelResponse, int]:
+        """Get the latest AI assistant response with stop finish_reason."""
+        for i in range(len(messages) - 1, -1, -1):
+            message = messages[i]
+            if isinstance(message, ModelResponse) and message.finish_reason == "stop":
+                return message, i
+        msg = "No AI assistant response with 'stop' finish_reason found."
+        raise ValueError(msg)
+
+    def _get_latest_agent_response_openai(
+        self, openai_messages: list[ChatCompletionMessageParam]
+    ) -> tuple[ChatCompletionMessageParam, int]:
+        """Get index of latest AI assistant response with stop finish_reason in OpenAI format."""
+        for i in range(len(openai_messages) - 1, -1, -1):
+            message = openai_messages[i]
+            if message.get("role") == "assistant" and message.get("finish_reason") == "stop":
+                return message, i
+        msg = "No AI assistant response with 'stop' finish_reason found."
+        raise ValueError(msg)
+
+    def _get_latest_user_query_message(self, messages: list[ModelMessage]) -> ModelMessage:
+        """Get the latest user query message from the message history."""
+        for message in reversed(messages):
+            if isinstance(message, ModelRequest):
+                for part in message.parts:
+                    if isinstance(part, UserPromptPart):
+                        return message
+        msg = "No user query message found in message history"
+        raise ValueError(msg)
+
+    def _get_final_response_message(
+        self, response: ModelResponse, validation_result: ProjectValidateResponse
+    ) -> tuple[ModelResponse, str | None]:
+        """Determine the final response content based on cleanlab validation results."""
+        replacement_text = None
+        if validation_result.expert_answer:
+            replacement_text = validation_result.expert_answer
+        elif validation_result.should_guardrail:
+            replacement_text = FALLBACK_RESPONSE
+
+        if replacement_text:
+            return self._convert_string_to_response_message(replacement_text), replacement_text
+        return response, None
+
+    def _form_response_string_from_message(self, message: ChatCompletionMessageParam) -> str:
+        """Form a response string from a ChatCompletionMessageParam, stripping trailing assistant prefixes."""
+        # Suppress the trustworthiness scoring warning from cleanlab_tlm
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message=".*trustworthiness scoring.*")
+            response_str = form_prompt_chat_completions_api([message])
+
+        trailing_assistant_prefix_pattern = rf"\s*{ASSISTANT_PREFIX.strip()}\s*$"
+        return re.sub(trailing_assistant_prefix_pattern, "", response_str)
+
+    def _run_cleanlab_validation(
+        self,
+        project: Project,
+        query: str,
+        result: AgentRunResult,
+        message_history: list[ModelMessage],
+        tools: list[ChatCompletionFunctionToolParam] | None = None,
+        thread_id: str | None = None,
+    ) -> tuple[list[ModelMessage], str]:
+        """Run cleanlab validation on the latest agent response and update message history."""
+        messages = self._convert_to_openai_messages(message_history)
+        openai_new_messages = self._convert_to_openai_messages(result.new_messages())
+        _, latest_agent_response_idx_openai = self._get_latest_agent_response_openai(openai_new_messages)
+
+        validation_result = project.validate(
+            query=query,
+            response=result.output,
+            messages=messages + openai_new_messages[:latest_agent_response_idx_openai],
+            context=self._get_context_as_string(openai_new_messages),
+            tools=tools,
+            metadata={"thread_id": thread_id} if thread_id else None,
+        )
+        logger.info("[cleanlab] Validation result: %s", validation_result)
+
+        latest_agent_response, _ = self._get_latest_agent_response_pydantic(result.new_messages())
+        final_response_message, final_response_str = self._get_final_response_message(latest_agent_response, validation_result)
+
+        if final_response_str is not None:
+            logger.info("[cleanlab] Response was replaced by cleanlab...")
+            user_query_message = self._get_latest_user_query_message(result.new_messages())
+            message_history.append(user_query_message)
+            message_history.append(final_response_message)
+        else:
+            message_history.extend(result.new_messages())
+            final_response_str = result.output  # No change, use original output
+
+        return message_history, final_response_str
+
+    def _run_cleanlab_validation_logging_tools(
+        self,
+        project: Project,
+        query: str,
+        result: AgentRunResult,
+        message_history: list[ModelMessage],
+        tools: list[ChatCompletionFunctionToolParam] | None = None,
+        thread_id: str | None = None,
+    ) -> tuple[list[ModelMessage], str]:
+        """Run cleanlab validation with tool call logging."""
+        messages = self._convert_to_openai_messages(message_history)
+        openai_new_messages = self._convert_to_openai_messages(result.new_messages())
+
+        for index, openai_newest_message in enumerate(openai_new_messages):
+            if openai_newest_message.get("role") == "assistant" and openai_newest_message.get("finish_reason") != "stop":
+                openai_response = self._convert_message_to_chat_completion(openai_newest_message)
+
+                _ = project.validate(
+                    query=query,
+                    response=openai_response,
+                    messages=messages + openai_new_messages[:index],
+                    context=self._get_context_as_string(openai_new_messages),
+                    tools=tools,
+                    metadata={"thread_id": thread_id} if thread_id else None,
+                    eval_scores=self.perfect_eval_scores,
+                )
+                logger.info("[cleanlab] Logging function call, automatic validation pass.")
+
+        return self._run_cleanlab_validation(
+            project=project,
+            query=query,
+            result=result,
+            message_history=message_history,
+            tools=tools,
+            thread_id=thread_id,
+        )
+
+    @overload
+    async def run(
+        self,
+        user_prompt: str | Sequence[UserContent] | None = None,
+        *,
+        output_type: None = None,
+        message_history: list[ModelMessage] | None = None,
+        deferred_tool_results: DeferredToolResults | None = None,
+        model: models.Model | models.KnownModelName | str | None = None,
+        deps: AgentDepsT = None,
+        model_settings: ModelSettings | None = None,
+        usage_limits: UsageLimits | None = None,
+        usage: RunUsage | None = None,
+        infer_name: bool = True,
+        toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
+        event_stream_handler = None,
+    ) -> AgentRunResult[OutputDataT]: ...
+
+    @overload
+    async def run(
+        self,
+        user_prompt: str | Sequence[UserContent] | None = None,
+        *,
+        output_type: OutputSpec[RunOutputDataT],
+        message_history: list[ModelMessage] | None = None,
+        deferred_tool_results: DeferredToolResults | None = None,
+        model: models.Model | models.KnownModelName | str | None = None,
+        deps: AgentDepsT = None,
+        model_settings: ModelSettings | None = None,
+        usage_limits: UsageLimits | None = None,
+        usage: RunUsage | None = None,
+        infer_name: bool = True,
+        toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
+        event_stream_handler = None,
+    ) -> AgentRunResult[RunOutputDataT]: ...
+
+    async def run(
+        self,
+        user_prompt: str | Sequence[UserContent] | None = None,
+        *,
+        output_type = None,
+        message_history: list[ModelMessage] | None = None,
+        deferred_tool_results: DeferredToolResults | None = None,
+        model: models.Model | models.KnownModelName | str | None = None,
+        deps: AgentDepsT = None,
+        model_settings: ModelSettings | None = None,
+        usage_limits: UsageLimits | None = None,
+        usage: RunUsage | None = None,
+        infer_name: bool = True,
+        toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
+        event_stream_handler = None,
+    ) -> AgentRunResult[Any]:
+        """Run the agent with Cleanlab validation."""
+
+        user_query = self._extract_user_query(user_prompt, message_history)
+
+        result = await self.wrapped.run(
+            user_prompt=user_prompt,
+            output_type=output_type,
+            message_history=message_history,
+            deferred_tool_results=deferred_tool_results,
+            model=model,
+            deps=deps,
+            model_settings=model_settings,
+            usage_limits=usage_limits,
+            usage=usage,
+            infer_name=infer_name,
+            toolsets=toolsets,
+        )
+
+        logger.info("[cleanlab] Running validation and cleanup...")
+        current_history = list(message_history) if message_history else []
+
+        updated_history, final_response_str = self._run_cleanlab_validation_logging_tools(
+            project=self.cleanlab_project,
+            query=user_query,
+            result=result,
+            message_history=current_history,
+            tools=self.openai_tools,
+            thread_id=self.thread_id
+        )
+        
+        result._state.message_history[:] = updated_history
+        logger.info(f"[cleanlab] Updated result's internal message history: {len(updated_history)} messages")
+        if final_response_str is not None:
+            result.output = final_response_str
+            logger.info(f"[cleanlab] Response replaced with: {final_response_str[:50]}...")
+
+        return result
+
+    def get_tools_openai_format(self) -> list[ChatCompletionFunctionToolParam]:
+        """Get the agent's tools in OpenAI format."""
+        return self.openai_tools

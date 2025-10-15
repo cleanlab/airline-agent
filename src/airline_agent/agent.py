@@ -14,6 +14,7 @@ from airline_agent.cleanlab_utils.validate_utils import (
     run_cleanlab_validation,
     run_cleanlab_validation_logging_tools,
 )
+from airline_agent.cleanlab_utils.cleanlab_agent import CleanlabAgent
 from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
@@ -38,19 +39,26 @@ def get_cleanlab_project() -> Project:
 def run_agent(agent: Agent, *, validation_mode: str) -> None:
     message_history: list[ModelMessage] = []
     project = None
-    if validation_mode != "none":
-        project = get_cleanlab_project()
     thread_id = str(uuid.uuid4())
     openai_tools = get_tools_in_openai_format(agent)
+
+    if validation_mode != "none":
+        project = get_cleanlab_project()
+    if validation_mode == "agent":
+        agent = CleanlabAgent(
+            wrapped=agent,
+            cleanlab_project = cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
+            context_retrieval_tools=["search", "get_article"],
+            thread_id=thread_id,            
+        )
 
     while True:
         user_input = input("\033[96mYou:\033[0m ").strip()
         if not user_input:
             continue
 
-        result = agent.run_sync(user_input, message_history=message_history)
-
         if validation_mode == "cleanlab":
+            result = agent.run_sync(user_input, message_history=message_history)
             message_history, final_response = run_cleanlab_validation(
                 project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
                 query=user_input,
@@ -60,6 +68,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
                 thread_id=thread_id,
             )
         elif validation_mode == "cleanlab_log_tools":
+            result = agent.run_sync(user_input, message_history=message_history)
             message_history, final_response = run_cleanlab_validation_logging_tools(
                 project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
                 query=user_input,
@@ -68,8 +77,11 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
                 tools=openai_tools,
                 thread_id=thread_id,
             )
-        else:  # validation_mode == "none"
+        else:  # validation_mode == "none" or "agent" where agent is wrapped with CleanlabAgent above
+            print("MESSAGE HISTORY LENGTH B4:", len(message_history))  # noqa: T201
+            result = agent.run_sync(user_input, message_history=message_history)
             message_history.extend(result.new_messages())
+            print("MESSAGE HISTORY LENGTH:", len(message_history))  # noqa: T201
             final_response = result.output
 
         print(f"\033[92mAgent:\033[0m {final_response}")  # noqa: T201
@@ -90,9 +102,9 @@ def main() -> None:
     parser.add_argument("--vector-db-path", type=str, required=True, help="Path to the vector database directory.")
     parser.add_argument(
         "--validation-mode",
-        choices=["none", "cleanlab", "cleanlab_log_tools"],
+        choices=["none", "cleanlab", "cleanlab_log_tools", "agent"],
         default="none",
-        help="Validation mode: 'none' (no validation), 'cleanlab' (run_cleanlab_validation), 'cleanlab_log_tools' (run_cleanlab_validation_logging_tools)",
+        help="Validation mode: 'none' (no validation), 'cleanlab' (run_cleanlab_validation), 'cleanlab_log_tools' (run_cleanlab_validation_logging_tools), 'agent' (use CleanlabAgent wrapper)",
     )
 
     args = parser.parse_args()

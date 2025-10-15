@@ -49,6 +49,10 @@ def convert_messages_to_openai_format(message_history: list[ModelMessage]) -> li
     for message in message_history:
         if isinstance(message, ModelRequest):
             # Handle request messages (sent TO the model)
+            # Extract instructions and add as system message if present
+            if hasattr(message, 'instructions') and message.instructions:
+                openai_messages.append({"role": "system", "content": message.instructions})
+            
             for part in message.parts:
                 if isinstance(part, SystemPromptPart):
                     openai_messages.append({"role": "system", "content": part.content})
