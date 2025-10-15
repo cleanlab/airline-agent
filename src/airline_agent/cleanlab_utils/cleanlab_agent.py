@@ -3,24 +3,12 @@
 from __future__ import annotations
 
 import base64
-import functools
 import logging
 import os
 import re
 import warnings
-from collections.abc import Sequence
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Literal, cast, overload
-
-# For Python 3.10 compatibility
-try:
-    from datetime import UTC
-except ImportError:
-    UTC = UTC
-
-if TYPE_CHECKING:
-    from cleanlab_codex import Project
-    from codex.types.project_validate_response import ProjectValidateResponse
+from typing import TYPE_CHECKING, Any, Literal, TypeVar, cast, overload
 
 from cleanlab_tlm.utils.chat import _ASSISTANT_PREFIX as ASSISTANT_PREFIX
 from cleanlab_tlm.utils.chat import _form_prompt_chat_completions_api as form_prompt_chat_completions_api
@@ -31,8 +19,6 @@ from openai.types.chat import (
     ChatCompletionFunctionToolParam,
     ChatCompletionMessageParam,
 )
-from pydantic_ai import models
-from pydantic_ai.agent.abstract import AbstractAgent, AgentDepsT, OutputDataT, RunOutputDataT
 from pydantic_ai.agent.wrapper import WrapperAgent
 from pydantic_ai.messages import (
     AudioUrl,
@@ -54,12 +40,31 @@ from pydantic_ai.messages import (
     UserPromptPart,
     VideoUrl,
 )
-from pydantic_ai.output import OutputSpec
-from pydantic_ai.run import AgentRunResult
-from pydantic_ai.settings import ModelSettings
-from pydantic_ai.tools import DeferredToolResults
-from pydantic_ai.toolsets import AbstractToolset
 from pydantic_ai.usage import RequestUsage, RunUsage, UsageLimits
+
+# For Python 3.10 compatibility
+try:
+    from datetime import UTC
+except ImportError:
+    UTC = UTC  # noqa: PLW0127
+
+# Define type variables
+AgentDepsT = TypeVar("AgentDepsT")
+OutputDataT = TypeVar("OutputDataT")
+RunOutputDataT = TypeVar("RunOutputDataT")
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from cleanlab_codex import Project
+    from codex.types.project_validate_response import ProjectValidateResponse
+    from pydantic_ai import models
+    from pydantic_ai.agent.abstract import AbstractAgent
+    from pydantic_ai.output import OutputSpec
+    from pydantic_ai.run import AgentRunResult
+    from pydantic_ai.settings import ModelSettings
+    from pydantic_ai.tools import DeferredToolResults
+    from pydantic_ai.toolsets import AbstractToolset
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +86,7 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         codex_api_key: str | None = None,
     ) -> None:
         """Initialize the Cleanlab agent wrapper.
-        
+
         Args:
             wrapped: The original pydantic-ai Agent to wrap
             cleanlab_project: Cleanlab Project instance for validation
@@ -96,33 +101,37 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         self.codex_api_key = os.getenv("CODEX_API_KEY", None) or codex_api_key
         if not self.codex_api_key:
             logger.error("CODEX_API_KEY environment variable is not set.")
-        
+
         self.perfect_eval_scores = self._get_perfect_eval_scores()
 
     def _extract_tools_to_openai_format(self) -> list[ChatCompletionFunctionToolParam]:
         """Extract tools from the wrapped agent and convert to OpenAI format."""
-        tool_definitions = []
+        tool_definitions = [
+            tool.tool_def
+            for toolset in self.wrapped.toolsets
+            if hasattr(toolset, "tools") and isinstance(toolset.tools, dict)
+            for tool in toolset.tools.values()
+            if hasattr(tool, "tool_def")
+        ]
 
-        for toolset in self.wrapped.toolsets:
-            if hasattr(toolset, 'tools') and isinstance(toolset.tools, dict):
-                for tool in toolset.tools.values():
-                    if hasattr(tool, 'tool_def'):
-                        tool_definitions.append(tool.tool_def)
-
-        openai_tools = []
+        openai_tools: list[ChatCompletionFunctionToolParam] = []
         for tool in tool_definitions:
-            openai_tool = {
-                "type": "function",
-                "function": {
-                    "name": tool.name,
-                    "parameters": tool.parameters_json_schema,
-                }
+            function_spec: dict[str, Any] = {
+                "name": tool.name,
+                "parameters": tool.parameters_json_schema,
             }
             if tool.description:
-                openai_tool["function"]["description"] = tool.description
+                function_spec["description"] = tool.description
             if tool.strict is not None:
-                openai_tool["function"]["strict"] = tool.strict
+                function_spec["strict"] = tool.strict
 
+            openai_tool = cast(
+                ChatCompletionFunctionToolParam,
+                {
+                    "type": "function",
+                    "function": function_spec,
+                },
+            )
             openai_tools.append(openai_tool)
 
         return openai_tools
@@ -135,14 +144,13 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         """Extract the user query string from the run parameters."""
         if isinstance(user_prompt, str):
             return user_prompt
-        elif user_prompt is not None:
+
+        if user_prompt is not None:
             # Handle multimodal content - extract text parts
-            text_parts = []
-            for content in user_prompt:
-                if isinstance(content, str):
-                    text_parts.append(content)
+            text_parts = [content for content in user_prompt if isinstance(content, str)]
             return " ".join(text_parts)
-        elif message_history:
+
+        if message_history:
             # Extract from latest user message in history
             for message in reversed(message_history):
                 if isinstance(message, ModelRequest):
@@ -150,13 +158,9 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
                         if isinstance(part, UserPromptPart):
                             if isinstance(part.content, str):
                                 return part.content
-                            else:
-                                # Handle multimodal content
-                                text_parts = []
-                                for item in part.content:
-                                    if isinstance(item, str):
-                                        text_parts.append(item)
-                                return " ".join(text_parts)
+                            # Handle multimodal content
+                            text_parts = [item for item in part.content if isinstance(item, str)]
+                            return " ".join(text_parts)
         return ""
 
     def _convert_to_openai_messages(self, message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
@@ -167,9 +171,9 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
             if isinstance(message, ModelRequest):
                 # Handle request messages (sent TO the model)
                 # Extract instructions and add as system message if present
-                if hasattr(message, 'instructions') and message.instructions:
+                if hasattr(message, "instructions") and message.instructions:
                     openai_messages.append({"role": "system", "content": message.instructions})
-                
+
                 for part in message.parts:
                     if isinstance(part, SystemPromptPart):
                         openai_messages.append({"role": "system", "content": part.content})
@@ -523,7 +527,9 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         logger.info("[cleanlab] Validation result: %s", validation_result)
 
         latest_agent_response, _ = self._get_latest_agent_response_pydantic(result.new_messages())
-        final_response_message, final_response_str = self._get_final_response_message(latest_agent_response, validation_result)
+        final_response_message, final_response_str = self._get_final_response_message(
+            latest_agent_response, validation_result
+        )
 
         if final_response_str is not None:
             logger.info("[cleanlab] Response was replaced by cleanlab...")
@@ -532,7 +538,7 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
             message_history.append(final_response_message)
         else:
             message_history.extend(result.new_messages())
-            final_response_str = result.output  # No change, use original output
+            final_response_str = result.output
 
         return message_history, final_response_str
 
@@ -550,7 +556,10 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         openai_new_messages = self._convert_to_openai_messages(result.new_messages())
 
         for index, openai_newest_message in enumerate(openai_new_messages):
-            if openai_newest_message.get("role") == "assistant" and openai_newest_message.get("finish_reason") != "stop":
+            if (
+                openai_newest_message.get("role") == "assistant"
+                and openai_newest_message.get("finish_reason") != "stop"
+            ):
                 openai_response = self._convert_message_to_chat_completion(openai_newest_message)
 
                 _ = project.validate(
@@ -582,13 +591,13 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         message_history: list[ModelMessage] | None = None,
         deferred_tool_results: DeferredToolResults | None = None,
         model: models.Model | models.KnownModelName | str | None = None,
-        deps: AgentDepsT = None,
+        deps: AgentDepsT | None = None,
         model_settings: ModelSettings | None = None,
         usage_limits: UsageLimits | None = None,
         usage: RunUsage | None = None,
         infer_name: bool = True,
         toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
-        event_stream_handler = None,
+        event_stream_handler: Any = None,
     ) -> AgentRunResult[OutputDataT]: ...
 
     @overload
@@ -600,48 +609,53 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         message_history: list[ModelMessage] | None = None,
         deferred_tool_results: DeferredToolResults | None = None,
         model: models.Model | models.KnownModelName | str | None = None,
-        deps: AgentDepsT = None,
+        deps: AgentDepsT | None = None,
         model_settings: ModelSettings | None = None,
         usage_limits: UsageLimits | None = None,
         usage: RunUsage | None = None,
         infer_name: bool = True,
         toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
-        event_stream_handler = None,
+        event_stream_handler: Any = None,
     ) -> AgentRunResult[RunOutputDataT]: ...
 
     async def run(
         self,
         user_prompt: str | Sequence[UserContent] | None = None,
         *,
-        output_type = None,
+        output_type: Any = None,
         message_history: list[ModelMessage] | None = None,
         deferred_tool_results: DeferredToolResults | None = None,
         model: models.Model | models.KnownModelName | str | None = None,
-        deps: AgentDepsT = None,
+        deps: AgentDepsT | None = None,
         model_settings: ModelSettings | None = None,
         usage_limits: UsageLimits | None = None,
         usage: RunUsage | None = None,
         infer_name: bool = True,
         toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
-        event_stream_handler = None,
+        event_stream_handler: Any = None,  # noqa: ARG002
     ) -> AgentRunResult[Any]:
         """Run the agent with Cleanlab validation."""
 
         user_query = self._extract_user_query(user_prompt, message_history)
 
-        result = await self.wrapped.run(
-            user_prompt=user_prompt,
-            output_type=output_type,
-            message_history=message_history,
-            deferred_tool_results=deferred_tool_results,
-            model=model,
-            deps=deps,
-            model_settings=model_settings,
-            usage_limits=usage_limits,
-            usage=usage,
-            infer_name=infer_name,
-            toolsets=toolsets,
-        )
+        # Run initial agent loop
+        run_kwargs: dict[str, Any] = {
+            "user_prompt": user_prompt,
+            "output_type": output_type,
+            "message_history": message_history,
+            "deferred_tool_results": deferred_tool_results,
+            "model": model,
+            "model_settings": model_settings,
+            "usage_limits": usage_limits,
+            "usage": usage,
+            "infer_name": infer_name,
+            "toolsets": toolsets,
+        }
+
+        if deps is not None:
+            run_kwargs["deps"] = deps
+
+        result = await self.wrapped.run(**run_kwargs)
 
         logger.info("[cleanlab] Running validation and cleanup...")
         current_history = list(message_history) if message_history else []
@@ -652,16 +666,16 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
             result=result,
             message_history=current_history,
             tools=self.openai_tools,
-            thread_id=self.thread_id
+            thread_id=self.thread_id,
         )
-        
-        result._state.message_history[:] = updated_history
-        logger.info(f"[cleanlab] Updated result's internal message history: {len(updated_history)} messages")
+
+        # Update message history
+        result._state.message_history[:] = updated_history  # noqa: SLF001
+        logger.info("[cleanlab] Updated result's internal message history: %d messages", len(updated_history))
         if final_response_str is not None:
             result.output = final_response_str
-            logger.info(f"[cleanlab] Response replaced with: {final_response_str[:50]}...")
 
-        return result
+        return cast("AgentRunResult[Any]", result)
 
     def get_tools_openai_format(self) -> list[ChatCompletionFunctionToolParam]:
         """Get the agent's tools in OpenAI format."""

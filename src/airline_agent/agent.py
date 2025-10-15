@@ -9,12 +9,12 @@ from cleanlab_codex import Client, Project
 from dotenv import load_dotenv
 from pydantic_ai import Agent
 
+from airline_agent.cleanlab_utils.cleanlab_agent import CleanlabAgent
 from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
     run_cleanlab_validation,
     run_cleanlab_validation_logging_tools,
 )
-from airline_agent.cleanlab_utils.cleanlab_agent import CleanlabAgent
 from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
@@ -45,11 +45,16 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
     if validation_mode != "none":
         project = get_cleanlab_project()
     if validation_mode == "agent":
-        agent = CleanlabAgent(
-            wrapped=agent,
-            cleanlab_project = cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
-            context_retrieval_tools=["search", "get_article"],
-            thread_id=thread_id,            
+        agent = cast(
+            Agent,
+            CleanlabAgent(
+                wrapped=agent,
+                cleanlab_project=cast(
+                    Project, project
+                ),  # project cannot be None since get_cleanlab_project raises if not found
+                context_retrieval_tools=["search", "get_article"],
+                thread_id=thread_id,
+            ),
         )
 
     while True:
@@ -78,10 +83,8 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
                 thread_id=thread_id,
             )
         else:  # validation_mode == "none" or "agent" where agent is wrapped with CleanlabAgent above
-            print("MESSAGE HISTORY LENGTH B4:", len(message_history))  # noqa: T201
             result = agent.run_sync(user_input, message_history=message_history)
             message_history.extend(result.new_messages())
-            print("MESSAGE HISTORY LENGTH:", len(message_history))  # noqa: T201
             final_response = result.output
 
         print(f"\033[92mAgent:\033[0m {final_response}")  # noqa: T201
