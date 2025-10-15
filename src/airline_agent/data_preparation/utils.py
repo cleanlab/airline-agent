@@ -1,37 +1,35 @@
 import threading
 import time
 import urllib
+from typing import cast
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.remote.webdriver import WebDriver
 
-_thread_data = threading.local()
-_all_drivers = set()
+_thread_local = threading.local()
+_all_drivers: set[WebDriver] = set()
 
 
-def get_driver():
-    if not hasattr(_thread_data, "driver") or _thread_data.driver is None:
+def get_driver() -> WebDriver:
+    if not hasattr(_thread_local, "driver") or _thread_local.driver is None:
         options = Options()
         options.add_argument("--headless")
-        driver = webdriver.Chrome(options=options)
-        _thread_data.driver = driver
+        driver: WebDriver = webdriver.Chrome(options=options)
+        _thread_local.driver = driver
         _all_drivers.add(driver)
-    return _thread_data.driver
+    return cast(WebDriver, _thread_local.driver)
 
 
-def close_drivers():
-    for driver in list(_all_drivers):
-        try:
-            driver.quit()
-        except Exception:
-            pass
-        finally:
-            _all_drivers.discard(driver)
+def close_driver() -> None:
+    driver: WebDriver | None = getattr(_thread_local, "driver", None)
+    if driver:
+        driver.quit()
+        del _thread_local.driver
 
 
-def fetch_html_with_js(url: str) -> str:
+def fetch_html_with_js(driver: WebDriver, url: str) -> str:
     """Fetch HTML from a URL using Selenium to render JavaScript."""
-    driver = get_driver()  # Reuse existing driver for this thread
     driver.get(url)
     time.sleep(1)
     return driver.page_source
