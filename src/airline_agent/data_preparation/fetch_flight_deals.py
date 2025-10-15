@@ -4,16 +4,13 @@ import argparse
 import json
 import os
 import sqlite3
-import threading
-from concurrent.futures import ThreadPoolExecutor
-from typing import Any
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
+import requests
 from bs4 import BeautifulSoup
-from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.remote.webdriver import WebDriver
 from tqdm.auto import tqdm
 
-from airline_agent.data_preparation.utils import close_driver, fetch_html_with_js, get_driver, rel_to_abs_url
+from airline_agent.data_preparation.utils import rel_to_abs_url
 from airline_agent.types.flights import FlightDealInfo
 
 # Constants
@@ -92,9 +89,7 @@ def save_flights_to_db(conn: sqlite3.Connection, flights: list[FlightDealInfo]) 
 
 def fetch_city_to_city_urls() -> list[str]:
     """Fetch all city-to-city flight URLs from the sitemap."""
-    driver = get_driver()
-    html = fetch_html_with_js(driver, CITY_TO_CITY_SITEMAP_URL)
-    close_driver()
+    html = requests.get(CITY_TO_CITY_SITEMAP_URL).text  # noqa: S113
     soup = BeautifulSoup(html, "html5lib")
     main_div = soup.find("div", id="main")
 
@@ -109,17 +104,16 @@ def fetch_city_to_city_urls() -> list[str]:
     return [rel_to_abs_url(rel_url, FLIGHTS_URL) for rel_url in all_rel_urls]
 
 
-def search_flights(driver: WebDriver, url: str) -> list[FlightDealInfo]:
+def search_flights(url: str) -> list[FlightDealInfo]:
     """Search for flights on the given URL and return a list of FlightDealInfo objects.
 
     Args:
-        driver: The Selenium driver to use
         url: The URL to search for flights
 
     Returns:
         List of FlightDealInfo objects found on the page
     """
-    html = fetch_html_with_js(driver, url)
+    html = requests.get(url).text  # noqa: S113
     soup = BeautifulSoup(html, "html5lib")
 
     # Find the __NEXT_DATA__ script tag containing JSON data
@@ -189,22 +183,13 @@ def search_flights(driver: WebDriver, url: str) -> list[FlightDealInfo]:
     return flights
 
 
-def process_urls(urls: list[str], pbar: tqdm[Any], lock: threading.Lock) -> tuple[list[FlightDealInfo], list[str]]:
+def process_url(url: str) -> tuple[list[FlightDealInfo], list[str]]:
     """Used in ThreadPoolExecutor to process all assigned URLs in a single thread with one shared driver."""
-    driver = get_driver()
-    all_flights = []
-    all_error_urls = []
-    for url in urls:
-        try:
-            flights = search_flights(driver, url)
-        except WebDriverException:
-            all_error_urls.append(url)
-            continue
-        with lock:
-            pbar.update(1)
-        all_flights.extend(flights)
-    close_driver()
-    return all_flights, all_error_urls
+    try:
+        flights = search_flights(url)
+    except requests.exceptions.ConnectionError:
+        return [], [url]
+    return flights, []
 
 
 def main() -> None:
@@ -226,15 +211,13 @@ def main() -> None:
     conn = create_db(db_path)
 
     total_flights = 0
-    lock = threading.Lock()
     all_flights, all_error_urls = [], []
     try:
         num_workers = min(32, (os.cpu_count() or 1) + 4)
-        chunk_size = (len(urls) + num_workers - 1) // num_workers
-        chunks = [urls[i : i + chunk_size] for i in range(0, len(urls), chunk_size)]
-        with tqdm(total=len(urls)) as pbar, ThreadPoolExecutor(max_workers=num_workers) as executor:
-            results = executor.map(lambda c: process_urls(c, pbar, lock), chunks)
-            for flights, errors in results:
+        with ThreadPoolExecutor(max_workers=num_workers) as executor:
+            future_to_url = {executor.submit(process_url, url): url for url in urls}
+            for future in tqdm(as_completed(future_to_url), total=len(urls), desc="Processing flight URLs"):
+                flights, errors = future.result()
                 if flights:
                     all_flights.extend(flights)
                     total_flights += len(flights)
