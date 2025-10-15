@@ -27,21 +27,36 @@ class FlightDeals:
             )
             raise FileNotFoundError(msg)
 
-    def find_cheapest_flight(
+    def find_flight_deals(
         self,
         origin: str | None = None,
         destination: str | None = None,
     ) -> list[FlightDealInfo]:
-        """Search the cheapest fares based on origin and/or destination filters.
+        """Search flight deals database for the cheapest fares based on origin and/or destination filters.
+
+        The database contains the single cheapest flight between each origin/destination pair.
+        Filters use SQL-style LIKE matching, so partial matches are supported.
 
         At least one parameter must be provided. Depending on what you provide:
         - If only origin is provided: Returns the cheapest fare from that origin to EACH possible destination
         - If only destination is provided: Returns the cheapest fare from EACH possible origin to that destination
-        - If both are provided: Returns the cheapest fare for that specific route (single result)
+        - If both are provided: Returns the cheapest fare for routes matching those cities (may include multiple airports per city)
+
+        Examples:
+            origin: "Atlanta, GA"
+            destination: "New York City, NY"
+            Returns:
+            - Atlanta, GA (ATL) → New York City, NY (LGA) One-way / Discount Den Basic Fare Departing Jan 13, 2026 $55
+            - Atlanta, GA (ATL) → New York City, NY (JFK) One-way / Discount Den Basic Fare Departing Jan 24, 2026 $55
+
+            origin: "Atlanta, GA"
+            destination: "New York City, NY (LGA)"
+            Returns:
+            - Atlanta, GA (ATL) → New York City, NY (LGA) One-way / Discount Den Basic Fare Departing Jan 13, 2026 $55
 
         Args:
-            origin: Optional filter by origin city/airport (partial matches supported)
-            destination: Optional filter by destination city/airport (partial matches supported)
+            origin: Optional filter by origin city/airport (partial matches supported via SQL LIKE)
+            destination: Optional filter by destination city/airport (partial matches supported via SQL LIKE)
 
         Returns:
             List of FlightDealInfo objects, one for each matching route with the cheapest fare
