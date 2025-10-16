@@ -39,7 +39,7 @@ def create_db(db_path: str) -> sqlite3.Connection:
 
     # Create flights table if it doesn't exist
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS flights (
+        CREATE TABLE flights (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             origin TEXT NOT NULL,
             destination TEXT NOT NULL,
