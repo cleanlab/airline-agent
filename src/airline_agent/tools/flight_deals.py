@@ -26,6 +26,13 @@ class FlightDeals:
             )
             raise FileNotFoundError(msg)
 
+    def _wrap_sql_like(self, value: str | None) -> str:
+        if not value:
+            return "%"
+        if "%" in value or "_" in value:
+            return value  # already contains a SQL LIKE pattern
+        return f"%{value}%"
+
     def find_flight_deals(
         self,
         origin: str | None = None,
@@ -68,9 +75,7 @@ class FlightDeals:
             raise ValueError(msg)
 
         query = "SELECT * FROM flights WHERE origin LIKE ? AND destination LIKE ?"
-        origin_param = f"%{origin}%" if origin else "%"
-        destination_param = f"%{destination}%" if destination else "%"
-        params = [origin_param, destination_param]
+        params = [self._wrap_sql_like(origin), self._wrap_sql_like(destination)]
 
         # Pydantic AI invokes tool calls in separate threads.
         # SQLite connection objects cannot be shared across threads,
