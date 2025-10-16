@@ -13,10 +13,11 @@ Before running the agent, you need to configure the following API keys either in
 
 ## Usage
 
-1. Fetch raw FAQs (or get this file from someone):
+1. Fetch data (or get these files from someone):
 
     ```bash
     hatch run python src/airline_agent/data_preparation/fetch_pages.py --path data/kb.json
+    hatch run python src/airline_agent/data_preparation/fetch_flight_deals.py --path data/flights.db
     ```
 
 2. Create the vector DB:
@@ -28,7 +29,7 @@ Before running the agent, you need to configure the following API keys either in
 3. Run the agent:
 
     ```bash
-    hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db --validation-mode cleanlab
+    hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db --db-path data/flights.db --validation-mode cleanlab
     ```
 
     **Note:** Use `--validation-mode` to control validation: `none` (default, no validation), `cleanlab` (standard validation), or `cleanlab_log_tools` (validation with post-chat-turn tool logging)

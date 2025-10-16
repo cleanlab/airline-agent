@@ -1,16 +1,15 @@
 import argparse
 import json
 import subprocess
-import time
 import urllib.parse
 
 import requests
 from bs4 import BeautifulSoup
-from requests.exceptions import MissingSchema
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from tqdm.auto import tqdm
 
+from airline_agent.data_preparation.utils import rel_to_abs_url
 from airline_agent.types.knowledge_base import KBArticle, Metadata
 
 FAQ_URL = "https://faq.flyfrontier.com/help"
@@ -26,12 +25,7 @@ def main() -> None:
     home_urls = get_home_urls()
     all_urls = faq_urls + home_urls
 
-    entries: list[KBArticle] = []
-    for url in tqdm(all_urls, desc="fetching pages"):
-        try:
-            entries.append(fetch_page(url))
-        except MissingSchema:
-            continue
+    entries: list[KBArticle] = [fetch_page(url) for url in tqdm(all_urls, desc="fetching pages")]
 
     with open(args.path, "w") as f:
         json.dump([entry.model_dump() for entry in entries], f, indent=2)
@@ -70,11 +64,6 @@ def fetch_page(url: str) -> KBArticle:
     return KBArticle(path=path, metadata=Metadata(title=title), content=content)
 
 
-def rel_to_abs_url(rel_url: str, base_url: str) -> str:
-    """Convert a relative URL to an absolute URL."""
-    return urllib.parse.urljoin(base_url, rel_url)
-
-
 def get_all_faq_urls() -> list[str]:
     """Get all FAQ article URLs from faq.flyfrontier.com."""
     html = requests.get(FAQ_URL).text  # noqa: S113
@@ -84,15 +73,17 @@ def get_all_faq_urls() -> list[str]:
 
 
 def get_home_urls() -> list[str]:
-    """Get all relevant URLs from the main www.flyfrontier.com site using Selenium."""
+    """Retrieve all relevant URLs from the main FlyFrontier website.
+
+    Uses Selenium to load the www.flyfrontier.com homepage and allow JavaScript
+    to fully render dynamic content before collecting all available URLs.
+    """
 
     options = Options()
     options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     driver.get(HOME_URL)
-    time.sleep(1)
     html = driver.page_source
-    driver.quit()
 
     soup = BeautifulSoup(html, "html5lib")
     all_links = soup.find_all("a", href=True)
@@ -106,7 +97,7 @@ def get_home_urls() -> list[str]:
         _, netloc, _, _, _ = urllib.parse.urlsplit(href)
 
         if netloc == "www.flyfrontier.com":
-            url = href.rstrip("/")
+            url = href.strip("/")
             if url != HOME_URL:
                 home_urls.add(url)
 

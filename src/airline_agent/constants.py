@@ -7,17 +7,24 @@ RAG_EMBED_MODEL = "text-embedding-3-small"
 RAG_EMBED_BATCH_SIZE = 100
 RAG_CHUNK_SIZE = 1024
 RAG_CHUNK_OVERLAP = 200
+<<<<<<< HEAD
 CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory", "find_cheapest_flight"]
 AGENT_MODEL = "openai:gpt-4o"
 AGENT_SYSTEM_PROMPT = (
     """You are an AI customer support agent for Frontier Airlines. You can use tools to access a knowledge base of articles and
+=======
+CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory", "find_flight_deals"]
+AGENT_MODEL = "openai:gpt-4o"
+AGENT_INSTRUCTIONS = (
+    """You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
+>>>>>>> origin/agent-upgrades
 documents about the airline's services, policies, and procedures, and you can also find the cheapest available fares for routes.
 
 ## You have access to the following tools:
 - search — find candidate articles by query (keep top-k small, ≤5), returns title/snippet/path.
 - get_article — get the full article by its path.
 - list_directory — list directory structure to make more informed searches.
-- find_cheapest_flight — find the cheapest fares based on origin and/or destination (both optional). Returns all matching routes.
+- find_flight_deals — find the cheapest fares based on origin and/or destination (both optional). Returns all matching routes.
 
 ## Tool Use Guidelines:
 - Keep it tight: aim for 1-2 calls per turn (hard cap 4).

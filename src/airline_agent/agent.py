@@ -14,7 +14,11 @@ from airline_agent.cleanlab_utils.validate_utils import (
     run_cleanlab_validation,
     run_cleanlab_validation_logging_tools,
 )
+<<<<<<< HEAD
 from airline_agent.constants import AGENT_MODEL, AGENT_SYSTEM_PROMPT
+=======
+from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
+>>>>>>> origin/agent-upgrades
 from airline_agent.tools.flight_deals import FlightDeals
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
@@ -25,13 +29,8 @@ if TYPE_CHECKING:
 def create_agent(kb: KnowledgeBase, flight_deals: FlightDeals) -> Agent:
     return Agent(
         model=AGENT_MODEL,
-        system_prompt=AGENT_SYSTEM_PROMPT,
-        tools=[
-            kb.get_article,
-            kb.search,
-            kb.list_directory,
-            flight_deals.find_cheapest_flight,
-        ],
+        instructions=AGENT_INSTRUCTIONS,
+        tools=[kb.get_article, kb.search, kb.list_directory, flight_deals.find_flight_deals],
     )
 
 
@@ -94,6 +93,7 @@ def main() -> None:
     logging.getLogger("llama_index.core.indices.loading").setLevel(logging.WARNING)
 
     parser = argparse.ArgumentParser(description="Run the airline support agent.")
+    parser.add_argument("--db-path", type=str, required=True, help="Path to the SQLite flight database file.")
     parser.add_argument("--kb-path", type=str, required=True, help="Path to the knowledge base JSON file.")
     parser.add_argument("--vector-db-path", type=str, required=True, help="Path to the vector database directory.")
     parser.add_argument(
@@ -106,7 +106,7 @@ def main() -> None:
     args = parser.parse_args()
 
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
-    flight_deals = FlightDeals()
+    flight_deals = FlightDeals(args.db_path)
     agent = create_agent(kb, flight_deals)
     with contextlib.suppress(KeyboardInterrupt, EOFError):
         run_agent(agent, validation_mode=args.validation_mode)
