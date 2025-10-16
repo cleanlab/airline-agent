@@ -20,7 +20,6 @@ class FlightDeals:
         """
         self.db_path = db_path
 
-        # Check if database exists
         if not Path(db_path).exists():
             msg = (
                 f"Database not found at {db_path}. " "Please run fetch_flight_deals.py first to populate the database."

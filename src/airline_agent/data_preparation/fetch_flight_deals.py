@@ -37,7 +37,6 @@ def create_db(db_path: str) -> sqlite3.Connection:
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    # Create flights table if it doesn't exist
     cursor.execute("""
         CREATE TABLE flights (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
