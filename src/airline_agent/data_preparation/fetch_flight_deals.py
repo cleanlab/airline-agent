@@ -71,7 +71,7 @@ def save_flights_to_db(conn: sqlite3.Connection, flights: list[FlightDealInfo]) 
     for flight in flights:
         cursor.execute(
             """
-            INSERT INTO flights (origin, destination, fare_type, departure_date, starting_price, last_seen)
+            INSERT OR IGNORE INTO flights (origin, destination, fare_type, departure_date, starting_price, last_seen)
             VALUES (?, ?, ?, ?, ?, ?)
         """,
             (
