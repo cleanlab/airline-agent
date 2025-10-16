@@ -52,7 +52,7 @@ def create_db(db_path: str) -> sqlite3.Connection:
     """)
 
     cursor.execute("""
-        CREATE INDEX IF NOT EXISTS idx_origin_dest ON flights(origin, destination)
+        CREATE INDEX idx_origin_dest ON flights(origin, destination)
     """)
 
     conn.commit()
