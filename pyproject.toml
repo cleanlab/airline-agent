@@ -21,7 +21,6 @@ dependencies = [
   "tqdm>=4.67.1",
   "cleanlab_codex>=1.0.29",
   "selenium>=4.10.0",
-  "webdriver-manager>=4.0.0",
 ]
 
 [tool.hatch.envs.default]

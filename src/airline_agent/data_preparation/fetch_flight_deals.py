@@ -183,7 +183,7 @@ def search_flights(url: str) -> list[FlightDealInfo]:
 
 
 def process_url(url: str) -> tuple[list[FlightDealInfo], list[str]]:
-    """Used in ThreadPoolExecutor to process all assigned URLs in a single thread with one shared driver."""
+    """Used in ThreadPoolExecutor to process all assigned URLs in a single thread."""
     try:
         flights = search_flights(url)
     except requests.exceptions.ConnectionError:
@@ -223,7 +223,6 @@ def main() -> None:
                 elif errors:
                     all_error_urls.extend(errors)
 
-        # Save all flights to database
         save_flights_to_db(conn, all_flights)
 
         print()  # noqa: T201 # New line after progress indicator
