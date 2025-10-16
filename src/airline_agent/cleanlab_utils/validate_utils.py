@@ -172,16 +172,10 @@ def _get_tools_from_agent(agent: Agent) -> list[ToolDefinition]:
         List of ToolDefinition objects
     """
     tool_definitions = []
-
-    # Get tools from the function toolset (tools defined on the agent directly)
-    function_toolset = getattr(agent, "_function_toolset", None)
-    if function_toolset and getattr(function_toolset, "tools", None):
-        tool_definitions.extend([tool.tool_def for tool in getattr(function_toolset, "tools", {}).values()])
-    # Get tools from simple toolsets that don't require RunContext
     for toolset in agent.toolsets:
         if hasattr(toolset, "tools") and isinstance(toolset.tools, dict):
             tool_definitions.extend([tool.tool_def for tool in toolset.tools.values() if hasattr(tool, "tool_def")])
-    return list({t.name: t for t in tool_definitions}.values())
+    return tool_definitions
 
 
 def get_tools_in_openai_format(agent: Agent) -> list[ChatCompletionFunctionToolParam]:
