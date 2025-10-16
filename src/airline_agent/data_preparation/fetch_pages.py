@@ -82,8 +82,11 @@ def get_home_urls() -> list[str]:
     options = Options()
     options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
-    driver.get(HOME_URL)
-    html = driver.page_source
+    try:
+        driver.get(HOME_URL)
+        html = driver.page_source
+    finally:
+        driver.quit()
 
     soup = BeautifulSoup(html, "html5lib")
     all_links = soup.find_all("a", href=True)
