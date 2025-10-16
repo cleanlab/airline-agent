@@ -1,6 +1,7 @@
 import argparse
 import json
 import subprocess
+import time
 import urllib.parse
 
 import requests
@@ -84,6 +85,7 @@ def get_home_urls() -> list[str]:
     driver = webdriver.Chrome(options=options)
     try:
         driver.get(HOME_URL)
+        time.sleep(1)
         html = driver.page_source
     finally:
         driver.quit()
@@ -97,7 +99,6 @@ def get_home_urls() -> list[str]:
         if not href or not isinstance(href, str):
             continue
 
-        # Normalize protocol-relative URLs (e.g., //www.flyfrontier.com/path) to https
         if href.startswith("//"):
             href = "https:" + href
 
@@ -108,7 +109,7 @@ def get_home_urls() -> list[str]:
             if url != HOME_URL:
                 home_urls.add(url)
 
-        return list(home_urls)
+    return list(home_urls)
 
 
 if __name__ == "__main__":
