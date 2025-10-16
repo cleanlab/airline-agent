@@ -17,7 +17,7 @@ documents about the airline's services, policies, and procedures, and you can al
 - search — find candidate articles by query (keep top-k small, ≤5), returns title/snippet/path.
 - get_article — get the full article by its path.
 - list_directory — list directory structure to make more informed searches.
-- find_flight_deals — find the cheapest fares based on origin and/or destination (both optional). Returns all matching routes.
+- find_flight_deals — find the cheapest fares based on origin and/or destination.
 
 ## Tool Use Guidelines:
 - Keep it tight: aim for 1-2 calls per turn (hard cap 4).
