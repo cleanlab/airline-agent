@@ -13,10 +13,10 @@ Before running the agent, you need to configure the following API keys either in
 
 ## Usage
 
-1. Fetch raw FAQs (or get this file from someone):
+1. Fetch data (or get these files from someone):
 
     ```bash
-    hatch run python src/airline_agent/data_preparation/fetch_faqs.py --path data/kb.json
+    hatch run python src/airline_agent/data_preparation/fetch_pages.py --path data/kb.json
     ```
 
 2. Create the vector DB:

@@ -14,7 +14,7 @@ from airline_agent.cleanlab_utils.validate_utils import (
     run_cleanlab_validation,
     run_cleanlab_validation_logging_tools,
 )
-from airline_agent.constants import AGENT_MODEL, AGENT_SYSTEM_PROMPT
+from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
 if TYPE_CHECKING:
@@ -23,7 +23,9 @@ if TYPE_CHECKING:
 
 def create_agent(kb: KnowledgeBase) -> Agent:
     return Agent(
-        model=AGENT_MODEL, system_prompt=AGENT_SYSTEM_PROMPT, tools=[kb.get_article, kb.search, kb.list_directory]
+        model=AGENT_MODEL,
+        instructions=AGENT_INSTRUCTIONS,
+        tools=[kb.get_article, kb.search, kb.list_directory],
     )
 
 
@@ -86,6 +88,7 @@ def main() -> None:
     logging.getLogger("llama_index.core.indices.loading").setLevel(logging.WARNING)
 
     parser = argparse.ArgumentParser(description="Run the airline support agent.")
+    parser.add_argument("--db-path", type=str, required=True, help="Path to the SQLite flight database file.")
     parser.add_argument("--kb-path", type=str, required=True, help="Path to the knowledge base JSON file.")
     parser.add_argument("--vector-db-path", type=str, required=True, help="Path to the vector database directory.")
     parser.add_argument(
