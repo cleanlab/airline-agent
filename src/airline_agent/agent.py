@@ -23,9 +23,7 @@ if TYPE_CHECKING:
 
 def create_agent(kb: KnowledgeBase) -> Agent:
     return Agent(
-        model=AGENT_MODEL,
-        instructions=AGENT_INSTRUCTIONS,
-        tools=[kb.get_article, kb.search, kb.list_directory],
+        model=AGENT_MODEL, instructions=AGENT_INSTRUCTIONS, tools=[kb.get_article, kb.search, kb.list_directory]
     )
 
 
