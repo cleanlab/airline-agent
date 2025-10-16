@@ -20,10 +20,6 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO)
     load_dotenv()
 
-    if not OFFICIAL_DEMO_PROJECT_ID:
-        missing_id_msg = "OFFICIAL_DEMO_PROJECT_ID must be set in the script"
-        raise ValueError(missing_id_msg)
-
     codex_api_key = os.getenv("CODEX_API_KEY")
     if not codex_api_key:
         missing_key_msg = "CODEX_API_KEY environment variable is not set"
