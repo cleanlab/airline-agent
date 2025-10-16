@@ -97,14 +97,18 @@ def get_home_urls() -> list[str]:
         if not href or not isinstance(href, str):
             continue
 
+        # Normalize protocol-relative URLs (e.g., //www.flyfrontier.com/path) to https
+        if href.startswith("//"):
+            href = "https:" + href
+
         _, netloc, _, _, _ = urllib.parse.urlsplit(href)
 
         if netloc == "www.flyfrontier.com":
-            url = href.strip("/")
+            url = href.rstrip("/")
             if url != HOME_URL:
                 home_urls.add(url)
 
-    return list(home_urls)
+        return list(home_urls)
 
 
 if __name__ == "__main__":
