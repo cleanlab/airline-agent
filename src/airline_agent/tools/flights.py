@@ -57,7 +57,7 @@ class Flights:
         Returns:
             A list of Frontier Airlines flights matching the search criteria. Each flight includes both
             standard pricing (available to all customers) and Discount Den pricing (available only to
-            Frontier's \"Discount Den\" members).
+            Frontier's \"Discount Den\" members). All prices are in USD.
         """
 
         logger.info(
