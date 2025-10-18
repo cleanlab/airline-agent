@@ -14,16 +14,19 @@ from airline_agent.cleanlab_utils.validate_utils import (
     run_cleanlab_validation,
     run_cleanlab_validation_logging_tools,
 )
-from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
+from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL, DAY, HOUR, MINUTE, MONTH, SECOND, TIMEZONE, YEAR
+from airline_agent.tools.flights import Flights
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
 if TYPE_CHECKING:
     from pydantic_ai.messages import ModelMessage
 
 
-def create_agent(kb: KnowledgeBase) -> Agent:
+def create_agent(kb: KnowledgeBase, flights: Flights) -> Agent:
     return Agent(
-        model=AGENT_MODEL, instructions=AGENT_INSTRUCTIONS, tools=[kb.get_article, kb.search, kb.list_directory]
+        model=AGENT_MODEL,
+        instructions=AGENT_INSTRUCTIONS,
+        tools=[kb.get_article, kb.search, kb.list_directory, flights.search_flights],
     )
 
 
@@ -88,6 +91,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run the airline support agent.")
     parser.add_argument("--kb-path", type=str, required=True, help="Path to the knowledge base JSON file.")
     parser.add_argument("--vector-db-path", type=str, required=True, help="Path to the vector database directory.")
+    parser.add_argument("--db-path", type=str, required=True, help="Path to the flights database file.")
     parser.add_argument(
         "--validation-mode",
         choices=["none", "cleanlab", "cleanlab_log_tools"],
@@ -98,7 +102,11 @@ def main() -> None:
     args = parser.parse_args()
 
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
-    agent = create_agent(kb)
+    flights = Flights(args.db_path)
+    agent = create_agent(kb, flights)
+
+    logging.info("agent date set to: %s-%02d-%02d %02d:%02d:%02d %s", YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TIMEZONE)
+
     with contextlib.suppress(KeyboardInterrupt, EOFError):
         run_agent(agent, validation_mode=args.validation_mode)
 
