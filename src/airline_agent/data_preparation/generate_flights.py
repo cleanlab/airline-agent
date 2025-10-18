@@ -138,7 +138,6 @@ def main() -> None:
             # Generate prices
             basic = generate_basic_price(distance_km)
             basic, econ, prem, biz = generate_bundled_prices(basic)
-            standard_prices = (basic, econ, prem, biz)
             basic_dd, econ_dd, prem_dd, biz_dd = apply_den_discount(basic, econ, prem, biz)
 
             rows.append(
@@ -148,10 +147,10 @@ def main() -> None:
                     "arrival_location": arr_airport,
                     "scheduled_departure": dep_dt.isoformat(),
                     "scheduled_arrival": arr_dt.isoformat(),
-                    "basic_price_standard": int(standard_prices[0]),
-                    "economy_price_standard": int(standard_prices[1]),
-                    "premium_price_standard": int(standard_prices[2]),
-                    "business_price_standard": int(standard_prices[3]),
+                    "basic_price_standard": basic,
+                    "economy_price_standard": econ,
+                    "premium_price_standard": prem,
+                    "business_price_standard": biz,
                     "basic_price_discount_den": basic_dd,
                     "economy_price_discount_den": econ_dd,
                     "premium_price_discount_den": prem_dd,
