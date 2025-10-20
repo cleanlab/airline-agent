@@ -7,7 +7,10 @@ import urllib.parse
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from tqdm.auto import tqdm
 
 from airline_agent.data_preparation.utils import rel_to_abs_url
@@ -85,7 +88,9 @@ def get_home_urls() -> list[str]:
     driver = webdriver.Chrome(options=options)
     try:
         driver.get(HOME_URL)
-        time.sleep(1)
+        WebDriverWait(driver, 10).until( # wait up to 10 seconds
+            EC.presence_of_element_located((By.CSS_SELECTOR, "div.nav-desktop-container.horizontal.center.around.nav-desktop"))
+        )
         html = driver.page_source
     finally:
         driver.quit()
