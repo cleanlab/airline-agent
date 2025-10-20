@@ -84,8 +84,6 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
             )
         else:  # validation_mode == "none" or "agent" where agent is wrapped with CleanlabAgent above
             result = agent.run_sync(user_input, message_history=message_history)
-            print("RESULT", result)
-            print("RESULT OUTPUT", result.output)
             message_history.extend(result.new_messages())
             final_response = result.output
 

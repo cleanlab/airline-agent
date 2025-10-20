@@ -7,10 +7,9 @@ import logging
 import os
 import re
 import warnings
-from datetime import datetime
-from typing import TYPE_CHECKING, Any, Literal, TypeVar, cast, overload
 from contextlib import asynccontextmanager
-from collections.abc import AsyncIterator, Sequence
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING, Any, Literal, TypeVar, cast, overload
 
 from cleanlab_tlm.utils.chat import _ASSISTANT_PREFIX as ASSISTANT_PREFIX
 from cleanlab_tlm.utils.chat import _form_prompt_chat_completions_api as form_prompt_chat_completions_api
@@ -42,21 +41,9 @@ from pydantic_ai.messages import (
     UserPromptPart,
     VideoUrl,
 )
+from pydantic_ai.run import AgentRunResult
 from pydantic_ai.usage import RequestUsage, RunUsage, UsageLimits
-from pydantic_ai.run import AgentRun
-from pydantic_ai.settings import ModelSettings
-from pydantic_ai.tools import DeferredToolResults
-from pydantic_ai.output import OutputSpec
-from pydantic_ai import models
-from pydantic_ai.toolsets import AbstractToolset
 from pydantic_graph import End
-
-# For Python 3.10 compatibility
-try:
-    from datetime import UTC
-except ImportError:
-    from datetime import timezone
-    UTC = timezone.utc
 
 # Define type variables
 AgentDepsT = TypeVar("AgentDepsT")
@@ -64,10 +51,17 @@ OutputDataT = TypeVar("OutputDataT")
 RunOutputDataT = TypeVar("RunOutputDataT")
 
 if TYPE_CHECKING:
+    from collections.abc import AsyncIterator, Sequence
+
     from cleanlab_codex import Project
     from codex.types.project_validate_response import ProjectValidateResponse
+    from pydantic_ai import models
     from pydantic_ai.agent.abstract import AbstractAgent
-    from pydantic_ai.run import AgentRunResult
+    from pydantic_ai.output import OutputSpec
+    from pydantic_ai.run import AgentRun
+    from pydantic_ai.settings import ModelSettings
+    from pydantic_ai.tools import DeferredToolResults
+    from pydantic_ai.toolsets import AbstractToolset
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +88,7 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
             wrapped: The original pydantic-ai Agent to wrap
             cleanlab_project: Cleanlab Project instance for validation
             context_retrieval_tools: List of tool names to extract context from. Defaults to empty list.
-            fallback_response: Response to use when cleanlab triggers guardrail. 
+            fallback_response: Response to use when cleanlab triggers guardrail.
                 Defaults to "Sorry I am unsure. You can try rephrasing your request."
             thread_id: Optional thread ID for validation metadata
             codex_api_key: Optional Codex API key, will try CODEX_API_KEY env var if not provided
@@ -503,7 +497,7 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
 
     def _form_response_string_from_message(self, message: ChatCompletionMessageParam) -> str:
         """Form a response string from a ChatCompletionMessageParam, stripping trailing assistant prefixes."""
-        # Suppress the trustworthiness scoring warning from cleanlab_tlm
+        # Suppress the trustworthiness scoring warning from cleanlab_tlm since we aren't using the string to score here
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", message=".*trustworthiness scoring.*")
             response_str = form_prompt_chat_completions_api([message])
@@ -579,7 +573,7 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         final_response_message, final_response_str = self._get_final_response_message(
             latest_agent_response, validation_result
         )
-        print("FINAL RESPONSE MESSAGE!!!", final_response_message)
+
         if final_response_str is not None:
             logger.info("[cleanlab] Response was replaced by cleanlab...")
             user_query_message = self._get_latest_user_query_message(result.new_messages())
@@ -606,7 +600,8 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         usage: RunUsage | None = None,
         infer_name: bool = True,
         toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
-    ) -> "AgentRun[AgentDepsT, OutputDataT]": ...
+        builtin_tools: Sequence[Any] | None = None,
+    ) -> AgentRun[AgentDepsT, OutputDataT]: ...
 
     @overload
     def iter(
@@ -623,7 +618,8 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         usage: RunUsage | None = None,
         infer_name: bool = True,
         toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
-    ) -> "AgentRun[AgentDepsT, RunOutputDataT]": ...
+        builtin_tools: Sequence[Any] | None = None,
+    ) -> AgentRun[AgentDepsT, RunOutputDataT]: ...
 
     @asynccontextmanager
     async def iter(
@@ -640,6 +636,7 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         usage: RunUsage | None = None,
         infer_name: bool = True,
         toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
+        builtin_tools: Sequence[Any] | None = None,
     ) -> AsyncIterator[AgentRun[AgentDepsT, Any]]:
         """A contextmanager which can be used to iterate over the agent graph's nodes with Cleanlab validation.
 
@@ -659,7 +656,7 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
             usage: Optional usage to start with, useful for resuming a conversation or agents used in tools.
             infer_name: Whether to try to infer the agent name from the call frame if it's not set.
             toolsets: Optional additional toolsets for this run.
-
+            builtin_tools: Optional built-in tools for this run.
         Returns:
             An `AgentRun` object that can be async-iterated over.
         """
@@ -678,12 +675,12 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
             usage=usage,
             infer_name=infer_name,
             toolsets=toolsets,
+            builtin_tools=builtin_tools,
         ) as agent_run:
             # Track if we've handled the final result
             handled_final_result = False
             original_result = None
 
-            # Create a wrapper that intercepts the final result
             class CleanlabAgentRun:
                 def __init__(self, wrapped_run: AgentRun, cleanlab_agent: CleanlabAgent):
                     self._wrapped = wrapped_run
@@ -693,7 +690,7 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
                 def __getattr__(self, name):
                     """Delegate all other attributes to the wrapped agent run."""
                     return getattr(self._wrapped, name)
-                
+
                 @property
                 def result(self):
                     """Override result property to return modified result if available."""
@@ -704,57 +701,51 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
                 async def __anext__(self):
                     """Override async iteration to intercept End nodes."""
                     nonlocal handled_final_result, original_result
-                    
+
                     node = await self._wrapped.__anext__()
-                    
+
                     # If this is an End node and we haven't handled the final result yet
                     if isinstance(node, End) and not handled_final_result:
                         handled_final_result = True
                         original_result = self._wrapped.result
-                        
+
                         if original_result:
-                            logger.info("[cleanlab] Running validation and cleanup...")
                             current_history = list(message_history) if message_history else []
 
-                            updated_history, final_response_str = self._cleanlab_agent._run_cleanlab_validation_logging_tools(
-                                project=self._cleanlab_agent.cleanlab_project,
-                                query=user_query,
-                                result=original_result,
-                                message_history=current_history,
-                                tools=self._cleanlab_agent.openai_tools,
-                                thread_id=self._cleanlab_agent.thread_id,
+                            updated_history, final_response_str = (
+                                self._cleanlab_agent._run_cleanlab_validation_logging_tools(  # noqa: SLF001
+                                    project=self._cleanlab_agent.cleanlab_project,
+                                    query=user_query,
+                                    result=original_result,
+                                    message_history=current_history,
+                                    tools=self._cleanlab_agent.openai_tools,
+                                    thread_id=self._cleanlab_agent.thread_id,
+                                )
                             )
 
-                            # Update the wrapped run's state with validated results
-                            if hasattr(self._wrapped, '_graph_run') and hasattr(self._wrapped._graph_run, 'state'):
-                                # Update message history in the graph state
-                                self._wrapped._graph_run.state.message_history = updated_history
-                                logger.info("[cleanlab] Updated agent run's internal message history: %d messages", len(updated_history))
+                            graph_run = getattr(self._wrapped, "_graph_run", None)
+                            if graph_run and hasattr(graph_run, "state"):
+                                graph_run.state.message_history = updated_history
+                                logger.info(
+                                    "[cleanlab] Updated agent run's internal message history: %d messages",
+                                    len(updated_history),
+                                )
 
-                            # If the response was changed, create a modified result
-                            print("ORIGINAL RESULT", original_result)
-                            print("OUTPUT", original_result.output)
-                            print("FINAL RESPONSE STR", final_response_str)
                             if final_response_str != original_result.output:
-                                logger.info("[cleanlab] Response was modified by validation - creating new result")
-                                
-                                # Create a copy of the original result with the new output
-                                from pydantic_ai.run import AgentRunResult
                                 self._modified_result = AgentRunResult(
                                     output=final_response_str,
-                                    output_tool_name=original_result._output_tool_name,
-                                    state=original_result._state,
-                                    new_message_index=original_result._new_message_index,
-                                    traceparent=original_result._traceparent,
+                                    _output_tool_name=getattr(original_result, "_output_tool_name", None),
+                                    _state=getattr(original_result, "_state", None),
+                                    _new_message_index=getattr(original_result, "_new_message_index", None),
+                                    _traceparent_value=getattr(original_result, "_traceparent_value", None),
                                 )
-                                logger.info("[cleanlab] Updated AgentRun result with corrected output")
+                                logger.info("[cleanlab] Updated final response string")
 
                     return node
 
                 def __aiter__(self):
                     return self
 
-            # Yield the wrapped agent run
             yield CleanlabAgentRun(agent_run, self)
 
     def get_tools_openai_format(self) -> list[ChatCompletionFunctionToolParam]:
