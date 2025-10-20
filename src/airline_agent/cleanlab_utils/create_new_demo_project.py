@@ -8,7 +8,7 @@ from codex import Client
 from dotenv import load_dotenv
 
 if TYPE_CHECKING:
-    from codex.types.projects import ProjectRetrieveResponse
+    from codex.types import ProjectRetrieveResponse
 
 # Official demo project ID to copy configuration from
 OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"
@@ -38,11 +38,11 @@ def main() -> None:
 
     # Create a new project with the same configuration
     new_project = client.projects.create(
-        config=existing_project.config,
+        config=existing_project.config,  # type: ignore[arg-type]
         name="(Demo) Frontier Airlines Support Chatbot",
         description=existing_project.description,
         organization_id=existing_project.organization_id,
-        auto_clustering_enabled=existing_project.auto_clustering_enabled,
+        auto_clustering_enabled=existing_project.auto_clustering_enabled or False,
     )
 
     logger.info("Created new demo project: %s (%s)", new_project.name, new_project.id)
