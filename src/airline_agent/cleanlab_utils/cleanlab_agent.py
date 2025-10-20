@@ -7,7 +7,8 @@ import logging
 import os
 import re
 import warnings
-from contextlib import asynccontextmanager
+from collections.abc import AsyncIterator
+from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any, Literal, TypeVar, cast, overload
 
@@ -41,7 +42,7 @@ from pydantic_ai.messages import (
     UserPromptPart,
     VideoUrl,
 )
-from pydantic_ai.run import AgentRunResult
+from pydantic_ai.run import AgentRun, AgentRunResult
 from pydantic_ai.usage import RequestUsage, RunUsage, UsageLimits
 from pydantic_graph import End
 
@@ -58,7 +59,6 @@ if TYPE_CHECKING:
     from pydantic_ai import models
     from pydantic_ai.agent.abstract import AbstractAgent
     from pydantic_ai.output import OutputSpec
-    from pydantic_ai.run import AgentRun
     from pydantic_ai.settings import ModelSettings
     from pydantic_ai.tools import DeferredToolResults
     from pydantic_ai.toolsets import AbstractToolset
@@ -140,7 +140,7 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
     def _extract_user_query(
         self,
         user_prompt: str | Sequence[UserContent] | None,
-        message_history: list[ModelMessage] | None = None,
+        message_history: Sequence[ModelMessage] | None = None,
     ) -> str:
         """Extract the user query string from the run parameters."""
         if isinstance(user_prompt, str):
@@ -591,17 +591,17 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         user_prompt: str | Sequence[UserContent] | None = None,
         *,
         output_type: None = None,
-        message_history: list[ModelMessage] | None = None,
+        message_history: Sequence[ModelMessage] | None = None,
         deferred_tool_results: DeferredToolResults | None = None,
         model: models.Model | models.KnownModelName | str | None = None,
-        deps: AgentDepsT = None,
+        deps: AgentDepsT | None = None,
         model_settings: ModelSettings | None = None,
         usage_limits: UsageLimits | None = None,
         usage: RunUsage | None = None,
         infer_name: bool = True,
         toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
         builtin_tools: Sequence[Any] | None = None,
-    ) -> AgentRun[AgentDepsT, OutputDataT]: ...
+    ) -> AbstractAsyncContextManager[AgentRun[AgentDepsT, OutputDataT]]: ...
 
     @overload
     def iter(
@@ -609,17 +609,17 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         user_prompt: str | Sequence[UserContent] | None = None,
         *,
         output_type: OutputSpec[RunOutputDataT],
-        message_history: list[ModelMessage] | None = None,
+        message_history: Sequence[ModelMessage] | None = None,
         deferred_tool_results: DeferredToolResults | None = None,
         model: models.Model | models.KnownModelName | str | None = None,
-        deps: AgentDepsT = None,
+        deps: AgentDepsT | None = None,
         model_settings: ModelSettings | None = None,
         usage_limits: UsageLimits | None = None,
         usage: RunUsage | None = None,
         infer_name: bool = True,
         toolsets: Sequence[AbstractToolset[AgentDepsT]] | None = None,
         builtin_tools: Sequence[Any] | None = None,
-    ) -> AgentRun[AgentDepsT, RunOutputDataT]: ...
+    ) -> AbstractAsyncContextManager[AgentRun[AgentDepsT, RunOutputDataT]]: ...
 
     @asynccontextmanager
     async def iter(
@@ -627,10 +627,10 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         user_prompt: str | Sequence[UserContent] | None = None,
         *,
         output_type: OutputSpec[RunOutputDataT] | None = None,
-        message_history: list[ModelMessage] | None = None,
+        message_history: Sequence[ModelMessage] | None = None,
         deferred_tool_results: DeferredToolResults | None = None,
         model: models.Model | models.KnownModelName | str | None = None,
-        deps: AgentDepsT = None,
+        deps: AgentDepsT | None = None,
         model_settings: ModelSettings | None = None,
         usage_limits: UsageLimits | None = None,
         usage: RunUsage | None = None,
@@ -662,43 +662,43 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         """
         user_query = self._extract_user_query(user_prompt, message_history)
 
-        # Start the wrapped agent's iteration
-        async with self.wrapped.iter(
-            user_prompt=user_prompt,
-            output_type=output_type,
-            message_history=message_history,
-            deferred_tool_results=deferred_tool_results,
-            model=model,
-            deps=deps,
-            model_settings=model_settings,
-            usage_limits=usage_limits,
-            usage=usage,
-            infer_name=infer_name,
-            toolsets=toolsets,
-            builtin_tools=builtin_tools,
-        ) as agent_run:
-            # Track if we've handled the final result
+        # Prepare kwargs for the wrapped agent excluding None values where appropriate
+        iter_kwargs: dict[str, Any] = {
+            "user_prompt": user_prompt,
+            "message_history": message_history,
+            "deferred_tool_results": deferred_tool_results,
+            "model": model,
+            "model_settings": model_settings,
+            "usage_limits": usage_limits,
+            "usage": usage,
+            "infer_name": infer_name,
+            "toolsets": toolsets,
+            "builtin_tools": builtin_tools,
+        }
+        if output_type is not None:
+            iter_kwargs["output_type"] = output_type
+        if deps is not None:
+            iter_kwargs["deps"] = deps
+
+        async with self.wrapped.iter(**iter_kwargs) as agent_run:
             handled_final_result = False
             original_result = None
 
-            class CleanlabAgentRun:
-                def __init__(self, wrapped_run: AgentRun, cleanlab_agent: CleanlabAgent):
+            class CleanlabAgentRun(AgentRun[AgentDepsT, Any]):
+                def __init__(self, wrapped_run: AgentRun[Any, Any], cleanlab_agent: CleanlabAgent[Any, Any]) -> None:
+                    super().__init__(wrapped_run._graph_run)  # noqa: SLF001
                     self._wrapped = wrapped_run
                     self._cleanlab_agent = cleanlab_agent
-                    self._modified_result = None
-
-                def __getattr__(self, name):
-                    """Delegate all other attributes to the wrapped agent run."""
-                    return getattr(self._wrapped, name)
+                    self._modified_result: AgentRunResult[Any] | None = None
 
                 @property
-                def result(self):
+                def result(self) -> AgentRunResult[Any] | None:
                     """Override result property to return modified result if available."""
                     if self._modified_result is not None:
                         return self._modified_result
                     return self._wrapped.result
 
-                async def __anext__(self):
+                async def __anext__(self) -> Any:
                     """Override async iteration to intercept End nodes."""
                     nonlocal handled_final_result, original_result
 
@@ -732,18 +732,19 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
                                 )
 
                             if final_response_str != original_result.output:
+                                # Create new result with modified output, preserving all original metadata
                                 self._modified_result = AgentRunResult(
                                     output=final_response_str,
-                                    _output_tool_name=getattr(original_result, "_output_tool_name", None),
-                                    _state=getattr(original_result, "_state", None),
-                                    _new_message_index=getattr(original_result, "_new_message_index", None),
-                                    _traceparent_value=getattr(original_result, "_traceparent_value", None),
+                                    _output_tool_name=original_result._output_tool_name,  # noqa: SLF001
+                                    _state=original_result._state,  # noqa: SLF001
+                                    _new_message_index=original_result._new_message_index,  # noqa: SLF001
+                                    _traceparent_value=original_result._traceparent_value,  # noqa: SLF001
                                 )
                                 logger.info("[cleanlab] Updated final response string")
 
                     return node
 
-                def __aiter__(self):
+                def __aiter__(self) -> CleanlabAgentRun:
                     return self
 
             yield CleanlabAgentRun(agent_run, self)
