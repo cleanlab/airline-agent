@@ -9,7 +9,7 @@ RAG_EMBED_MODEL = "text-embedding-3-small"
 RAG_EMBED_BATCH_SIZE = 100
 RAG_CHUNK_SIZE = 1024
 RAG_CHUNK_OVERLAP = 200
-CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory"]
+CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory", "search_flights"]
 YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TIMEZONE = 2025, 10, 1, 17, 0, 0, "UTC"  # universal time
 LOCAL_DT = datetime(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, tzinfo=ZoneInfo(TIMEZONE)).astimezone()  # user's local time
 AGENT_MODEL = "openai:gpt-4o"
