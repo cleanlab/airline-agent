@@ -10,7 +10,7 @@ RAG_CHUNK_OVERLAP = 200
 CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory"]
 YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TIMEZONE = 2025, 10, 1, 9, 0, 0, "UTC"
 AGENT_MODEL = "openai:gpt-4o"
-AGENT_INSTRUCTIONS = (
+AGENT_SYSTEM_PROMPT = (
     f"""You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
 documents about the airline's services, policies, and procedures, and to search for flights.
 
