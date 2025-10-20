@@ -21,6 +21,7 @@ dependencies = [
   "tqdm>=4.67.1",
   "cleanlab_codex>=1.0.29",
   "pandas>=2.2.3",
+  "timezonefinder[numba]==8.1.0",
 ]
 
 [tool.hatch.envs.default]

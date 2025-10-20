@@ -14,7 +14,7 @@ from airline_agent.cleanlab_utils.validate_utils import (
     run_cleanlab_validation,
     run_cleanlab_validation_logging_tools,
 )
-from airline_agent.constants import AGENT_SYSTEM_PROMPT, AGENT_MODEL, DAY, HOUR, MINUTE, MONTH, SECOND, TIMEZONE, YEAR
+from airline_agent.constants import AGENT_MODEL, AGENT_SYSTEM_PROMPT, LOCAL_DT
 from airline_agent.tools.flights import Flights
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
@@ -105,7 +105,7 @@ def main() -> None:
     flights = Flights(args.db_path)
     agent = create_agent(kb, flights)
 
-    logging.info("agent date set to: %s-%02d-%02d %02d:%02d:%02d %s", YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TIMEZONE)
+    logging.info("agent date set to: %s", LOCAL_DT.strftime("%Y-%m-%d %H:%M:%S %Z"))
 
     with contextlib.suppress(KeyboardInterrupt, EOFError):
         run_agent(agent, validation_mode=args.validation_mode)

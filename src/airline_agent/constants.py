@@ -1,5 +1,7 @@
 import functools
 import logging
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
 
@@ -8,7 +10,8 @@ RAG_EMBED_BATCH_SIZE = 100
 RAG_CHUNK_SIZE = 1024
 RAG_CHUNK_OVERLAP = 200
 CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory"]
-YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TIMEZONE = 2025, 10, 1, 9, 0, 0, "UTC"
+YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TIMEZONE = 2025, 10, 1, 17, 0, 0, "UTC"  # universal time
+LOCAL_DT = datetime(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, tzinfo=ZoneInfo(TIMEZONE)).astimezone()  # user's local time
 AGENT_MODEL = "openai:gpt-4o"
 AGENT_SYSTEM_PROMPT = (
     f"""You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
@@ -32,7 +35,7 @@ documents about the airline's services, policies, and procedures, and to search 
 - Discuss any airline-related topics with the user.
 - If the user asks about anything unrelated to the airline, politely inform them that you can only assist with airline-related inquiries.
 
-The current date and time is {YEAR}-{MONTH}-{DAY} {HOUR}:{MINUTE}:{SECOND} {TIMEZONE}.
+The current date and time is {LOCAL_DT.strftime("%Y-%m-%d %H:%M:%S %Z")}.
 """.strip()
     .replace("\n", " ")
     .replace("  ", " ")

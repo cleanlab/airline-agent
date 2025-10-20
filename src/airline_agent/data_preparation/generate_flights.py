@@ -9,6 +9,8 @@ from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
+import pytz
+from timezonefinder import TimezoneFinder
 from tqdm import tqdm
 
 from airline_agent.constants import DAY, HOUR, MINUTE, MONTH, SECOND, TIMEZONE, YEAR
@@ -24,12 +26,14 @@ SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
 
+tf = TimezoneFinder(in_memory=True)
 
-def calculate_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+
+def calculate_distance(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     """Calculate the distance between two points on the Earth's surface using the Haversine formula."""
     r = 6371.0
     dlat = radians(lat2 - lat1)
-    dlon = radians(lon2 - lon1)
+    dlon = radians(lng2 - lng1)
     a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
     return 2 * r * asin(sqrt(a))
 
@@ -82,6 +86,17 @@ def generate_random_datetime(start_dt: datetime, end_dt: datetime) -> datetime:
     return start_dt + timedelta(seconds=seconds)
 
 
+def convert_to_local_timezone(utc_dt: datetime, lat: float, lng: float) -> datetime:
+    """Convert UTC datetime to local airport timezone."""
+
+    timezone_str = tf.timezone_at(lat=lat, lng=lng)
+    if timezone_str is None:
+        timezone_str = "UTC"
+    local_tz = pytz.timezone(timezone_str)
+
+    return utc_dt.astimezone(local_tz)
+
+
 def parse_airport_code(text: str) -> str:
     """
     Extract the 3-letter airport code from a string like 'Atlanta, GA (ATL)'.
@@ -107,8 +122,10 @@ def main() -> None:
 
     airports = pd.read_csv(airports_file)
     airports_coords = airports.astype({"latitude": float, "longitude": float})
-    airports_coords_dict: dict[str, tuple[float, float]] = (
-        airports_coords.set_index("airport")[["latitude", "longitude"]].apply(tuple, axis=1).to_dict()
+    airports_coords_dict: dict[str, dict[str, float]] = (
+        airports_coords.set_index("airport")[["latitude", "longitude"]]
+        .apply(lambda row: {"lat": row["latitude"], "lng": row["longitude"]}, axis=1)
+        .to_dict()
     )
 
     routes = pd.read_csv(routes_file)
@@ -126,7 +143,7 @@ def main() -> None:
         dep_coords = airports_coords_dict[dep_code]
         arr_coords = airports_coords_dict[arr_code]
 
-        distance_km = calculate_distance(dep_coords[0], dep_coords[1], arr_coords[0], arr_coords[1])
+        distance_km = calculate_distance(dep_coords["lat"], dep_coords["lng"], arr_coords["lat"], arr_coords["lng"])
         flight_time_minutes = generate_flight_time(distance_km)
 
         for _ in range(FLIGHTS_PER_ROUTE):
@@ -134,6 +151,10 @@ def main() -> None:
             flight_num = generate_flight_num()
             dep_dt = generate_random_datetime(start_datetime, end_datetime)
             arr_dt = dep_dt + timedelta(minutes=flight_time_minutes)
+
+            # Convert timezones based on airport coordinates
+            dep_dt_local = convert_to_local_timezone(dep_dt, dep_coords["lat"], dep_coords["lng"])
+            arr_dt_local = convert_to_local_timezone(arr_dt, arr_coords["lat"], arr_coords["lng"])
 
             # Generate prices
             basic = generate_basic_price(distance_km)
@@ -145,8 +166,8 @@ def main() -> None:
                     "flight_num": flight_num,
                     "departure_location": dep_airport,
                     "arrival_location": arr_airport,
-                    "scheduled_departure": dep_dt.isoformat(),
-                    "scheduled_arrival": arr_dt.isoformat(),
+                    "scheduled_departure": dep_dt_local.isoformat(),
+                    "scheduled_arrival": arr_dt_local.isoformat(),
                     "basic_price_standard": basic,
                     "economy_price_standard": econ,
                     "premium_price_standard": prem,
