@@ -433,14 +433,15 @@ function useStreamMessage() {
   )
 
   const sendMessage = useCallback(
-    (messageContent: string) => {
+    (messageContent: string, urlThreadId?: string) => {
       if (isPending) {
         return
       }
       const currentThreadId = currentThread?.threadId
+      const threadIdToUse = urlThreadId || currentThreadId
 
       if (
-        currentThreadId &&
+        threadIdToUse &&
         currentThread?.messages &&
         currentThread.messages.length > 0
       ) {
@@ -451,7 +452,7 @@ function useStreamMessage() {
           content: messageContent,
           metadata: {}
         }
-        appendMessage({ threadId: currentThreadId, message: userMessage })
+        appendMessage({ threadId: threadIdToUse, message: userMessage })
 
         // Add optimistic assistant placeholder
         const assistantMessage: StoreMessage = {
@@ -462,11 +463,11 @@ function useStreamMessage() {
           isPending: true,
           isContentPending: true
         }
-        appendMessage({ threadId: currentThreadId, message: assistantMessage })
+        appendMessage({ threadId: threadIdToUse, message: assistantMessage })
 
         // Post message to backend
         postMessage({
-          threadId: currentThreadId,
+          threadId: threadIdToUse,
           localThreadId: currentThread?.localThreadId,
           messageContent: messageContent
         })

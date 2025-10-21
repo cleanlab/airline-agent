@@ -185,6 +185,7 @@ export function Chat({
                   input={input}
                   setInput={setInput}
                   promptPlaceholder={promptPlaceholder}
+                  threadId={threadId}
                 />
               </ChatInputPanel>
             </div>

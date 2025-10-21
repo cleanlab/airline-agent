@@ -9,11 +9,13 @@ import { InputMessage } from './design-system-components/InputMessage'
 export function PromptForm({
   input,
   setInput,
-  promptPlaceholder
+  promptPlaceholder,
+  threadId
 }: {
   input: string
   setInput: (value: string) => void
   promptPlaceholder: string
+  threadId?: string
 }) {
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { sendMessage: sendMessage } = useStreamMessage()
@@ -40,7 +42,7 @@ export function PromptForm({
           const value = input.trim()
           setInput('')
           if (!value) return
-          sendMessage(value)
+          sendMessage(value, threadId)
         }
       }}
     >
