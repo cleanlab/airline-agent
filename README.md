@@ -11,15 +11,15 @@ Before running the agent, you need to configure the following API keys either in
 
 - **OPENAI_API_KEY**: Your OpenAI API key for GPT model access
 - **CODEX_API_KEY**: Your Cleanlab Codex API key  
-- **CLEANLAB_PROJECT_ID**: Your Cleanlab project ID
+- **CLEANLAB_PROJECT_ID**: Your Cleanlab project ID (Access Key)
 
-**Note:** To create a new Cleanlab demo project, run:
+**Note:** To get your `CLEANLAB_PROJECT_ID`, you can create a new Cleanlab demo Project programmatically by running:
 
 ```bash
 hatch run create-demo-project
 ```
 
-This will create a project with all latest configured guardrails and evaluations for the walkthrough below.
+This will create a Project with all latest configured guardrails and evaluations for the walkthrough below. You can then obtain a Project ID by navigating to the Project's Settings page and creating an Access Key.
 
 ### Usage
 
