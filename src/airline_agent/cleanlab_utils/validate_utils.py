@@ -18,12 +18,12 @@ from openai.types.chat import (
     ChatCompletionFunctionToolParam,
     ChatCompletionMessageParam,
 )
-from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, UserPromptPart
+from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, SystemPromptPart, UserPromptPart
 
 from airline_agent.cleanlab_utils.conversion_utils import (
     convert_message_to_chat_completion,
-    convert_messages_to_openai_format,
     convert_string_to_response_message,
+    convert_to_openai_messages,
     convert_tools_to_openai_format,
 )
 from airline_agent.constants import (
@@ -147,6 +147,32 @@ def _get_final_response_message(
     return response, None
 
 
+def _get_system_messages(message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
+    """Get system messages to prepend to validation messages."""
+    system_messages: list[ChatCompletionMessageParam] = []
+    instructions_added = False
+    system_prompts_seen = set()
+
+    for message in message_history:
+        if isinstance(message, ModelRequest):
+            # Extract instructions and add as system message only once
+            if hasattr(message, "instructions") and message.instructions and not instructions_added:
+                system_messages.append(
+                    cast(ChatCompletionMessageParam, {"role": "system", "content": message.instructions})
+                )
+                instructions_added = True
+
+            # Add SystemPromptPart content from message history
+            for part in message.parts:
+                if isinstance(part, SystemPromptPart) and part.content not in system_prompts_seen:
+                    system_messages.append(
+                        cast(ChatCompletionMessageParam, {"role": "system", "content": part.content})
+                    )
+                    system_prompts_seen.add(part.content)
+
+    return system_messages
+
+
 def _form_response_string_from_message(message: ChatCompletionMessageParam) -> str:
     """Form a response string from a ChatCompletionMessageParam, stripping trailing assistant prefixes."""
 
@@ -208,8 +234,10 @@ def run_cleanlab_validation(
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = convert_messages_to_openai_format(message_history)
-    openai_new_messages = convert_messages_to_openai_format(result.new_messages())
+    messages = _get_system_messages(message_history + result.new_messages()) + convert_to_openai_messages(
+        message_history
+    )
+    openai_new_messages = convert_to_openai_messages(result.new_messages())
     latest_agent_response, _ = _get_latest_agent_response_pydantic(result.new_messages())
     _, latest_agent_response_idx_openai = _get_latest_agent_response_openai(openai_new_messages)
     validation_result = project.validate(
@@ -262,8 +290,10 @@ def run_cleanlab_validation_logging_tools(
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = convert_messages_to_openai_format(message_history)
-    openai_new_messages = convert_messages_to_openai_format(result.new_messages())
+    messages = _get_system_messages(message_history + result.new_messages()) + convert_to_openai_messages(
+        message_history
+    )
+    openai_new_messages = convert_to_openai_messages(result.new_messages())
 
     for index, openai_newest_message in enumerate(
         openai_new_messages
