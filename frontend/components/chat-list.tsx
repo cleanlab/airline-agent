@@ -53,8 +53,6 @@ const ChatMessage = ({
     }
   }, [message.role, message.isPending])
 
-  const detectionMetadata = { ...message.metadata, is_expert_answer: false }
-
   const display = (() => {
     switch (message.role) {
       case 'user':
@@ -74,11 +72,7 @@ const ChatMessage = ({
           <div className={cn('rounded-4 border border-border-2 px-6 py-7')}>
             <MessageAssistant
               data-id={message.id}
-              content={
-                cleanlabMode !== 'cleanlab-enforce'
-                  ? (message?.metadata?.original_llm_response ?? content)
-                  : content
-              }
+              content={content}
               error={message.error}
               status={
                 // Set content pending if rate limited content is still coming in to prevent trustworthiness score chip from showing up prematurely
@@ -86,11 +80,7 @@ const ChatMessage = ({
                   ? MessageAssistantStatus.ContentPending
                   : status
               }
-              messageMetadata={
-                cleanlabMode === 'cleanlab-detection'
-                  ? detectionMetadata
-                  : (message.metadata ?? null)
-              }
+              messageMetadata={message.metadata ?? null}
               showAccordion={true}
               disableScores={false}
               icon={
