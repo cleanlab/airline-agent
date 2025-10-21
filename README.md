@@ -7,7 +7,7 @@ This repo uses the [Hatch](https://hatch.pypa.io/) project manager ([installatio
 Before running the agent, you need to configure the following API keys either in a `.env` file or as environment variables.
 
 - **OPENAI_API_KEY**: Your OpenAI API key for GPT model access
-- **CODEX_API_KEY**: Your Cleanlab Codex API key  
+- **CODEX_API_KEY**: Your Cleanlab Codex API key
 - **CLEANLAB_PROJECT_ID**: Your Cleanlab project ID
 
 
@@ -25,13 +25,21 @@ Before running the agent, you need to configure the following API keys either in
     hatch run python src/airline_agent/preprocessing/create_vector_database.py --data-path data/kb.json --vector-db-path data/vector-db
     ```
 
-3. Run the agent:
+3. Run the backend:
 
     ```bash
     hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db --validation-mode agent
     ```
 
     **Note:** Use `--validation-mode` to control validation: `none` (default, no validation), `cleanlab` (standard validation), `cleanlab_log_tools` (validation with post-chat-turn tool logging), `agent` (same as cleanlab log tools but using an Agent wrapper)
+
+4. Run the frontend:
+
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
 
 ## Example queries
 
