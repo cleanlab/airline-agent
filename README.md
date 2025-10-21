@@ -19,7 +19,7 @@ Before running the agent, you need to configure the following API keys either in
 hatch run create-demo-project
 ```
 
-This will create a Project with all latest configured guardrails and evaluations for the walkthrough below. You can then obtain a Project ID by navigating to the Project's Settings page and creating an Access Key.
+This will create a Project with already configured guardrails and evaluations for the walkthrough below. You can then obtain a Project ID by navigating to the Project's Settings page and creating an Access Key.
 
 ### Usage
 
