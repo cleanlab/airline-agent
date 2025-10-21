@@ -7,7 +7,8 @@ from typing import TYPE_CHECKING, cast
 
 from cleanlab_codex import Client, Project
 from dotenv import load_dotenv
-from pydantic_ai import Agent
+from pydantic_ai import Agent, ModelSettings
+from pydantic_ai.models.openai import OpenAIChatModel
 
 from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
@@ -22,9 +23,8 @@ if TYPE_CHECKING:
 
 
 def create_agent(kb: KnowledgeBase) -> Agent:
-    return Agent(
-        model=AGENT_MODEL, instructions=AGENT_INSTRUCTIONS, tools=[kb.get_article, kb.search, kb.list_directory]
-    )
+    model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
+    return Agent(model=model, instructions=AGENT_INSTRUCTIONS, tools=[kb.get_article, kb.search, kb.list_directory])
 
 
 def get_cleanlab_project() -> Project:
