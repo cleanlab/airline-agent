@@ -188,7 +188,7 @@ This triggeres the suspicious activity guardrail we have set up. Without it, the
 
 Cleanlab also supports deterministic Guardrails: type in a natural-language description of concerning phrases you'd like to detect, and Cleanlab will intelligently compile regex patterns, which then deterministically match inputs/outputs to your AI app. Here's an example of a deterministic Guardrail.
 
-Try creating (if it doesn't already exist) this deterministic Guardrail called "Competitor mentions" and then query your AI. Here are some relevant example queries to get you started:
+Try creating (if it doesn't already exist) this deterministic Guardrail called "Competitor mentions" with the Guardrail Criteria set to "Mentions the names of competitors of Frontier Airlines" and then query your AI. Here are some relevant example queries to get you started:
 
 > *list Frontier's top competitors*
 ```text
