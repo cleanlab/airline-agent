@@ -5,7 +5,7 @@ import uvicorn
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.airline_agent.backend.routers.airline_agent import router
+from airline_agent.backend.routers.airline_agent import router
 
 API_PREFIX = "/api"
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     uvicorn.run(
         "src.airline_agent.backend.app:app",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=args.port,
         reload=args.reload,
     )

@@ -15,13 +15,8 @@ from pydantic_ai import (
 )
 from pydantic_ai.run import End
 
-from src.airline_agent.agent import create_agent, get_cleanlab_project
-from src.airline_agent.cleanlab_utils.validate_utils import (
-    get_tools_in_openai_format,
-    run_cleanlab_validation_logging_tools,
-)
-from src.airline_agent.tools.knowledge_base import KnowledgeBase
-from src.airline_agent.backend.schemas.message import (
+from airline_agent.agent import create_agent, get_cleanlab_project
+from airline_agent.backend.schemas.message import (
     AssistantMessage,
     EvalResult,
     MessageMetadata,
@@ -29,8 +24,8 @@ from src.airline_agent.backend.schemas.message import (
     ToolCallMessage,
     UserMessage,
 )
-from src.airline_agent.backend.schemas.run import Run, RunStatus
-from src.airline_agent.backend.schemas.run_event import (
+from airline_agent.backend.schemas.run import Run, RunStatus
+from airline_agent.backend.schemas.run_event import (
     RunEvent,
     RunEventObject,
     RunEventThreadMessage,
@@ -38,18 +33,19 @@ from src.airline_agent.backend.schemas.run_event import (
     RunEventThreadRunFailed,
     RunEventThreadRunInProgress,
 )
+from airline_agent.cleanlab_utils.validate_utils import (
+    get_tools_in_openai_format,
+    run_cleanlab_validation_logging_tools,
+)
+from airline_agent.tools.knowledge_base import KnowledgeBase
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
 
 kb = KnowledgeBase(
-    kb_path=str(
-        pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/kb.json"
-    ),
-    vector_index_path=str(
-        pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/vector-db"
-    ),
+    kb_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/kb.json"),
+    vector_index_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/vector-db"),
 )
 project = get_cleanlab_project()
 agent = create_agent(kb)
@@ -82,9 +78,7 @@ async def airline_chat_streaming(
     nodes = []
     original_message_history = thread_to_messages[thread_id].copy()
     try:
-        async with agent.iter(
-            user_prompt=user_prompt, message_history=original_message_history
-        ) as run:
+        async with agent.iter(user_prompt=user_prompt, message_history=original_message_history) as run:
             async for node in run:
                 nodes.append(node)
                 if isinstance(node, CallToolsNode):
@@ -101,10 +95,7 @@ async def airline_chat_streaming(
                 elif isinstance(node, ModelRequestNode) and current_tool_calls:
                     request = node.request
                     for part in request.parts:
-                        if (
-                            isinstance(part, ToolReturnPart)
-                            and part.tool_call_id in current_tool_calls
-                        ):
+                        if isinstance(part, ToolReturnPart) and part.tool_call_id in current_tool_calls:
                             yield RunEventThreadMessage(
                                 id=run_id,
                                 object=RunEventObject.THREAD_MESSAGE,
@@ -113,11 +104,7 @@ async def airline_chat_streaming(
                                     content=ToolCall(
                                         tool_call_id=part.tool_call_id,
                                         tool_name=part.tool_name,
-                                        arguments=json.dumps(
-                                            current_tool_calls[
-                                                part.tool_call_id
-                                            ].arguments
-                                        ),
+                                        arguments=json.dumps(current_tool_calls[part.tool_call_id].arguments),
                                         result=part.model_response_str(),
                                     ),
                                 ),
@@ -144,8 +131,7 @@ async def airline_chat_streaming(
                                 content=final_response,
                                 metadata=MessageMetadata(
                                     original_llm_response=run.result.output,
-                                    is_expert_answer=validation_result.expert_answer
-                                    is not None,
+                                    is_expert_answer=validation_result.expert_answer is not None,
                                     guardrailed=validation_result.should_guardrail,
                                     escalated_to_sme=validation_result.escalated_to_sme,
                                     scores=_format_eval_results(validation_result),
@@ -154,9 +140,7 @@ async def airline_chat_streaming(
                         )
                         thread_to_messages[thread_id] = updated_message_history
                     else:
-                        logger.warning(
-                            "Unable to validate response with cleanlab. Missing `run.result`."
-                        )
+                        logger.warning("Unable to validate response with cleanlab. Missing `run.result`.")
                         yield RunEventThreadMessage(
                             id=run_id,
                             object=RunEventObject.THREAD_MESSAGE,
@@ -165,9 +149,7 @@ async def airline_chat_streaming(
                                 content=final_response,
                             ),
                         )
-                        thread_to_messages[thread_id] = (
-                            run.ctx.state.message_history.copy()
-                        )
+                        thread_to_messages[thread_id] = run.ctx.state.message_history.copy()
 
         yield RunEventThreadRunCompleted(
             id=run_id,
@@ -179,8 +161,8 @@ async def airline_chat_streaming(
             ),
         )
 
-    except Exception as e:
-        logger.error("Error in airline chat streaming: %s", e)
+    except Exception:
+        logger.exception("Error in airline chat streaming")
         yield RunEventThreadRunFailed(
             id=run_id,
             object=RunEventObject.THREAD_RUN_FAILED,
@@ -190,7 +172,7 @@ async def airline_chat_streaming(
                 thread_id=thread_id,
             ),
         )
-        raise e
+        raise
 
 
 def _format_eval_results(
