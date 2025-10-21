@@ -12,18 +12,20 @@ if TYPE_CHECKING:
     from pydantic_ai.tools import ToolDefinition
 
 from cleanlab_tlm.utils.chat import _ASSISTANT_PREFIX as ASSISTANT_PREFIX
-from cleanlab_tlm.utils.chat import _form_prompt_chat_completions_api as form_prompt_chat_completions_api
+from cleanlab_tlm.utils.chat import (
+    _form_prompt_chat_completions_api as form_prompt_chat_completions_api,
+)
 from openai.types.chat import (
     ChatCompletionAssistantMessageParam,
     ChatCompletionFunctionToolParam,
     ChatCompletionMessageParam,
 )
-from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, UserPromptPart
+from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, SystemPromptPart, UserPromptPart
 
 from airline_agent.cleanlab_utils.conversion_utils import (
     convert_message_to_chat_completion,
-    convert_messages_to_openai_format,
     convert_string_to_response_message,
+    convert_to_openai_messages,
     convert_tools_to_openai_format,
 )
 from airline_agent.constants import (
@@ -35,7 +37,9 @@ from airline_agent.constants import (
 logger = logging.getLogger(__name__)
 
 
-def _get_tool_result_as_text(messages: list[ChatCompletionMessageParam], tool_names: list[str]) -> str:
+def _get_tool_result_as_text(
+    messages: list[ChatCompletionMessageParam], tool_names: list[str]
+) -> str:
     """
     Extract tool results as text for specified tool names from all messages.
 
@@ -58,20 +62,27 @@ def _get_tool_result_as_text(messages: list[ChatCompletionMessageParam], tool_na
                 # Only handle function tool calls, skip custom tool calls
                 if tool_call.get("type") == "function":
                     # Type narrow to function tool call
-                    func_tool_call = cast(Any, tool_call)  # Use Any to avoid union issues
+                    func_tool_call = cast(
+                        Any, tool_call
+                    )  # Use Any to avoid union issues
                     if (
                         func_tool_call.get("function")
                         and func_tool_call["function"].get("name") in tool_names
                         and func_tool_call.get("id")
                     ):
-                        tool_call_to_name[func_tool_call["id"]] = func_tool_call["function"]["name"]
+                        tool_call_to_name[func_tool_call["id"]] = func_tool_call[
+                            "function"
+                        ]["name"]
 
     # 2. Collect tool results in message order
     results = []
     for msg in messages:
         if msg.get("role") == "tool":
             tool_msg = cast(Any, msg)  # Cast to avoid TypedDict union issues
-            if "tool_call_id" in tool_msg and tool_msg["tool_call_id"] in tool_call_to_name:
+            if (
+                "tool_call_id" in tool_msg
+                and tool_msg["tool_call_id"] in tool_call_to_name
+            ):
                 content = tool_msg.get("content", "")
                 if content:
                     tool_name_for_result = tool_call_to_name[tool_msg["tool_call_id"]]
@@ -87,7 +98,9 @@ def _get_context_as_string(messages: list[ChatCompletionMessageParam]) -> str:
     return _get_tool_result_as_text(messages, CONTEXT_RETRIEVAL_TOOLS)
 
 
-def _get_latest_agent_response_pydantic(messages: list[ModelMessage]) -> tuple[ModelResponse, int]:
+def _get_latest_agent_response_pydantic(
+    messages: list[ModelMessage],
+) -> tuple[ModelResponse, int]:
     """Get the latest AI assistant response with stop finish_reason."""
     for i in range(len(messages) - 1, -1, -1):
         message = messages[i]
@@ -103,7 +116,10 @@ def _get_latest_agent_response_openai(
     """Get index of latest AI assistant response with stop finish_reason in OpenAI format."""
     for i in range(len(openai_messages) - 1, -1, -1):
         message = openai_messages[i]
-        if message.get("role") == "assistant" and message.get("finish_reason") == "stop":
+        if (
+            message.get("role") == "assistant"
+            and message.get("finish_reason") == "stop"
+        ):
             return message, i
     msg = "No AI assistant response with 'stop' finish_reason found."
     raise ValueError(msg)
@@ -147,6 +163,32 @@ def _get_final_response_message(
     return response, None
 
 
+def _get_system_messages(message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
+    """Get system messages to prepend to validation messages."""
+    system_messages: list[ChatCompletionMessageParam] = []
+    instructions_added = False
+    system_prompts_seen = set()
+
+    for message in message_history:
+        if isinstance(message, ModelRequest):
+            # Extract instructions and add as system message only once
+            if hasattr(message, "instructions") and message.instructions and not instructions_added:
+                system_messages.append(
+                    cast(ChatCompletionMessageParam, {"role": "system", "content": message.instructions})
+                )
+                instructions_added = True
+
+            # Add SystemPromptPart content from message history
+            for part in message.parts:
+                if isinstance(part, SystemPromptPart) and part.content not in system_prompts_seen:
+                    system_messages.append(
+                        cast(ChatCompletionMessageParam, {"role": "system", "content": part.content})
+                    )
+                    system_prompts_seen.add(part.content)
+
+    return system_messages
+
+
 def _form_response_string_from_message(message: ChatCompletionMessageParam) -> str:
     """Form a response string from a ChatCompletionMessageParam, stripping trailing assistant prefixes."""
 
@@ -174,7 +216,13 @@ def _get_tools_from_agent(agent: Agent) -> list[ToolDefinition]:
     tool_definitions = []
     for toolset in agent.toolsets:
         if hasattr(toolset, "tools") and isinstance(toolset.tools, dict):
-            tool_definitions.extend([tool.tool_def for tool in toolset.tools.values() if hasattr(tool, "tool_def")])
+            tool_definitions.extend(
+                [
+                    tool.tool_def
+                    for tool in toolset.tools.values()
+                    if hasattr(tool, "tool_def")
+                ]
+            )
     return tool_definitions
 
 
@@ -191,7 +239,7 @@ def run_cleanlab_validation(
     message_history: list[ModelMessage],
     tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
-) -> tuple[list[ModelMessage], str]:
+) -> tuple[list[ModelMessage], str, ProjectValidateResponse]:
     """
     Run cleanlab validation on the latest agent response and update message history.
 
@@ -208,8 +256,10 @@ def run_cleanlab_validation(
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = convert_messages_to_openai_format(message_history)
-    openai_new_messages = convert_messages_to_openai_format(result.new_messages())
+    messages = _get_system_messages(message_history + result.new_messages()) + convert_to_openai_messages(
+        message_history
+    )
+    openai_new_messages = convert_to_openai_messages(result.new_messages())
     latest_agent_response, _ = _get_latest_agent_response_pydantic(result.new_messages())
     _, latest_agent_response_idx_openai = _get_latest_agent_response_openai(openai_new_messages)
     validation_result = project.validate(
@@ -222,7 +272,9 @@ def run_cleanlab_validation(
     )
     logger.info("[cleanlab] Validation result: %s", validation_result)
 
-    final_response_message, final_response_str = _get_final_response_message(latest_agent_response, validation_result)
+    final_response_message, final_response_str = _get_final_response_message(
+        latest_agent_response, validation_result
+    )
 
     if final_response_str is not None:
         logger.info("[cleanlab] Response was replaced by cleanlab...")
@@ -233,7 +285,7 @@ def run_cleanlab_validation(
         message_history.extend(result.new_messages())
         final_response_str = result.output  # No change, use original output
 
-    return message_history, final_response_str
+    return message_history, final_response_str, validation_result
 
 
 def run_cleanlab_validation_logging_tools(
@@ -243,7 +295,7 @@ def run_cleanlab_validation_logging_tools(
     message_history: list[ModelMessage],
     tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
-) -> tuple[list[ModelMessage], str]:
+) -> tuple[list[ModelMessage], str, ProjectValidateResponse]:
     """
     Run cleanlab validation on the latest agent response and update message history.
 
@@ -262,13 +314,18 @@ def run_cleanlab_validation_logging_tools(
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = convert_messages_to_openai_format(message_history)
-    openai_new_messages = convert_messages_to_openai_format(result.new_messages())
+    messages = _get_system_messages(message_history + result.new_messages()) + convert_to_openai_messages(
+        message_history
+    )
+    openai_new_messages = convert_to_openai_messages(result.new_messages())
 
     for index, openai_newest_message in enumerate(
         openai_new_messages
     ):  # Go through new messages and log all assistant calls
-        if openai_newest_message.get("role") == "assistant" and openai_newest_message.get("finish_reason") != "stop":
+        if (
+            openai_newest_message.get("role") == "assistant"
+            and openai_newest_message.get("finish_reason") != "stop"
+        ):
             openai_response = convert_message_to_chat_completion(openai_newest_message)
 
             _ = project.validate(

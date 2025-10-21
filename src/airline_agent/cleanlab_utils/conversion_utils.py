@@ -35,15 +35,8 @@ from pydantic_ai.messages import (
 from pydantic_ai.usage import RequestUsage
 
 
-def convert_messages_to_openai_format(message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
-    """Convert pydantic-ai message history to OpenAI Chat Completions format.
-
-    Args:
-        message_history: List of ModelMessage objects from pydantic-ai
-
-    Returns:
-        List of OpenAI ChatCompletionMessageParam objects
-    """
+def convert_to_openai_messages(message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
+    """Convert pydantic-ai message history to OpenAI Chat Completions format."""
     openai_messages: list[dict[str, Any]] = []
 
     for message in message_history:
@@ -51,8 +44,9 @@ def convert_messages_to_openai_format(message_history: list[ModelMessage]) -> li
             # Handle request messages (sent TO the model)
             for part in message.parts:
                 if isinstance(part, SystemPromptPart):
-                    openai_messages.append({"role": "system", "content": part.content})
-                elif isinstance(part, UserPromptPart):
+                    # Skip SystemPromptPart - handled separately in _get_system_messages()
+                    continue
+                if isinstance(part, UserPromptPart):
                     openai_messages.append(_convert_user_prompt(part))
                 elif isinstance(part, ToolReturnPart):
                     openai_messages.append(
@@ -72,7 +66,7 @@ def convert_messages_to_openai_format(message_history: list[ModelMessage]) -> li
             texts: list[str] = []
             tool_calls: list[dict[str, Any]] = []
 
-            for response_part in message.parts:  # Changed from 'part' to 'response_part'
+            for response_part in message.parts:
                 if isinstance(response_part, TextPart):
                     texts.append(response_part.content)
                 elif isinstance(response_part, ThinkingPart):
@@ -109,7 +103,6 @@ def convert_messages_to_openai_format(message_history: list[ModelMessage]) -> li
 
             openai_messages.append(assistant_message)
 
-    # Return the messages - they're already compatible with ChatCompletionMessageParam
     return openai_messages  # type: ignore[return-value]
 
 
@@ -118,7 +111,6 @@ def _convert_user_prompt(part: UserPromptPart) -> dict[str, Any]:
     if isinstance(part.content, str):
         return {"role": "user", "content": part.content}
 
-    # Handle multimodal content
     content: list[dict[str, Any]] = []
 
     for item in part.content:

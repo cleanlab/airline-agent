@@ -4,7 +4,7 @@ from enum import StrEnum
 from pydantic import BaseModel
 
 from src.airline_agent.backend.schemas.message import AgentMessage
-from src.airline_agent.backend.schemas.run import Run, RunWithMessageHistory
+from src.airline_agent.backend.schemas.run import Run
 
 
 class RunEventObject(StrEnum):
@@ -41,7 +41,7 @@ class RunEventThreadMessage(RunEventBase):
 
 class RunEventThreadRunCompleted(RunEventBase):
     object: RunEventObject = RunEventObject.THREAD_RUN_COMPLETED
-    data: RunWithMessageHistory
+    data: Run
 
 
 class RunEventThreadRunFailed(RunEventBase):

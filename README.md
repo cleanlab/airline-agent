@@ -9,17 +9,21 @@ This repo uses the [Hatch](https://hatch.pypa.io/) project manager ([installatio
 
 Before running the agent, you need to configure the following API keys either in a `.env` file or as environment variables.
 
-- **OPENAI_API_KEY**: Your OpenAI API key for GPT model access
-- **CODEX_API_KEY**: Your Cleanlab Codex API key  
-- **CLEANLAB_PROJECT_ID**: Your Cleanlab project ID
+- **OPENAI_API_KEY**: Your OpenAI API key (the AI Agent in this demo uses OpenAI model)
+- **CODEX_API_KEY**: Your Cleanlab Codex API key
+- **CLEANLAB_PROJECT_ID**: Your Cleanlab Project ID
 
-**Note:** To create a new Cleanlab demo project, run:
+We've provided a `.env.sample` file that you can copy to `.env` and then fill in.
+
+To get your `CODEX_API_KEY`, navigate to the `Account` page in the lefthand sidebar. 
+
+To get your `CLEANLAB_PROJECT_ID`, you can programmatically create a new Cleanlab Project for this demo by running:
 
 ```bash
 hatch run create-demo-project
 ```
 
-This will create a project with all latest configured guardrails and evaluations for the walkthrough below.
+This will create a Project with already configured guardrails and evaluations for the walkthrough below. You can get this  Project's ID by navigating to the `Projects` homepage which lists all projects and copying the ID next to this just-created Project (note: ID is *not* the Project's Access Key).
 
 ### Usage
 
@@ -38,7 +42,7 @@ This will create a project with all latest configured guardrails and evaluations
 3. Run the agent:
 
     ```bash
-    hatch run python -m airline_agent.agent --kb-path data/kb.json --vector-db-path data/vector-db --validation-mode cleanlab_log_tools
+    hatch run agent --validation-mode cleanlab_log_tools
     ```
 
     **Note:** Use `--validation-mode` to control validation: `none` (default, no validation), `cleanlab` (standard validation), or `cleanlab_log_tools` (validation with post-chat-turn tool logging)
