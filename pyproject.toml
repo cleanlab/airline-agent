@@ -20,6 +20,7 @@ dependencies = [
   "python-dotenv>=1.0.0",
   "tqdm>=4.67.1",
   "cleanlab_codex>=1.0.29",
+  "uvicorn",
 ]
 
 [tool.hatch.envs.default]

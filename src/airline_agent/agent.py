@@ -114,8 +114,9 @@ def main() -> None:
 
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
     agent = create_agent(kb)
-    with contextlib.suppress(KeyboardInterrupt, EOFError):
-        run_agent(agent, validation_mode=args.validation_mode)
+    import uvicorn
+    uvicorn.run(agent.to_ag_ui(), host="localhost", port=8000)
+
 
 
 if __name__ == "__main__":
