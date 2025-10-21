@@ -21,9 +21,7 @@ class RunEventBase(BaseModel):
 
     def to_sse(self) -> str:
         """Render the event to a string for SSE."""
-        return (
-            f"event: {self.object}\ndata: {self.model_dump_json(exclude_none=True)}\n\n"
-        )
+        return f"event: {self.object}\ndata: {self.model_dump_json(exclude_none=True)}\n\n"
 
 
 class RunEventThreadRunInProgress(RunEventBase):
@@ -46,9 +44,4 @@ class RunEventThreadRunFailed(RunEventBase):
     data: Run
 
 
-RunEvent = (
-    RunEventThreadRunInProgress
-    | RunEventThreadMessage
-    | RunEventThreadRunCompleted
-    | RunEventThreadRunFailed
-)
+RunEvent = RunEventThreadRunInProgress | RunEventThreadMessage | RunEventThreadRunCompleted | RunEventThreadRunFailed

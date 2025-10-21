@@ -23,9 +23,7 @@ if TYPE_CHECKING:
 
 
 def create_agent(kb: KnowledgeBase) -> Agent:
-    model = OpenAIChatModel(
-        model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0)
-    )
+    model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
     return Agent(
         model=model,
         instructions=AGENT_INSTRUCTIONS,
@@ -58,9 +56,7 @@ def run_agent_sync(agent: Agent, *, validation_mode: str) -> None:
 
         if validation_mode == "cleanlab":
             message_history, final_response, _ = run_cleanlab_validation(
-                project=cast(
-                    Project, project
-                ),  # project cannot be None since get_cleanlab_project raises if not found
+                project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
                 query=user_input,
                 result=result,
                 message_history=message_history,
@@ -69,9 +65,7 @@ def run_agent_sync(agent: Agent, *, validation_mode: str) -> None:
             )
         elif validation_mode == "cleanlab_log_tools":
             message_history, final_response, _ = run_cleanlab_validation_logging_tools(
-                project=cast(
-                    Project, project
-                ),  # project cannot be None since get_cleanlab_project raises if not found
+                project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
                 query=user_input,
                 result=result,
                 message_history=message_history,
