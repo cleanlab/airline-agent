@@ -35,6 +35,7 @@ from src.airline_agent.backend.schemas.run_event import (
     RunEventObject,
     RunEventThreadMessage,
     RunEventThreadRunCompleted,
+    RunEventThreadRunFailed,
     RunEventThreadRunInProgress,
 )
 
@@ -80,98 +81,116 @@ async def airline_chat_streaming(
 
     nodes = []
     original_message_history = thread_to_messages[thread_id].copy()
-    async with agent.iter(
-        user_prompt=user_prompt, message_history=original_message_history
-    ) as run:
-        async for node in run:
-            nodes.append(node)
-            if isinstance(node, CallToolsNode):
-                response = node.model_response
-                if response.finish_reason == "tool_call":
-                    for part in response.parts:
-                        if isinstance(part, ToolCallPart):
-                            current_tool_calls[part.tool_call_id] = ToolCall(
-                                tool_call_id=part.tool_call_id,
-                                tool_name=part.tool_name,
-                                arguments=json.dumps(part.args),
-                            )
+    try:
+        async with agent.iter(
+            user_prompt=user_prompt, message_history=original_message_history
+        ) as run:
+            async for node in run:
+                nodes.append(node)
+                if isinstance(node, CallToolsNode):
+                    response = node.model_response
+                    if response.finish_reason == "tool_call":
+                        for part in response.parts:
+                            if isinstance(part, ToolCallPart):
+                                current_tool_calls[part.tool_call_id] = ToolCall(
+                                    tool_call_id=part.tool_call_id,
+                                    tool_name=part.tool_name,
+                                    arguments=json.dumps(part.args),
+                                )
 
-            elif isinstance(node, ModelRequestNode) and current_tool_calls:
-                request = node.request
-                for part in request.parts:
-                    if (
-                        isinstance(part, ToolReturnPart)
-                        and part.tool_call_id in current_tool_calls
-                    ):
+                elif isinstance(node, ModelRequestNode) and current_tool_calls:
+                    request = node.request
+                    for part in request.parts:
+                        if (
+                            isinstance(part, ToolReturnPart)
+                            and part.tool_call_id in current_tool_calls
+                        ):
+                            yield RunEventThreadMessage(
+                                id=run_id,
+                                object=RunEventObject.THREAD_MESSAGE,
+                                data=ToolCallMessage(
+                                    thread_id=thread_id,
+                                    content=ToolCall(
+                                        tool_call_id=part.tool_call_id,
+                                        tool_name=part.tool_name,
+                                        arguments=json.dumps(
+                                            current_tool_calls[
+                                                part.tool_call_id
+                                            ].arguments
+                                        ),
+                                        result=part.model_response_str(),
+                                    ),
+                                ),
+                            )
+                            del current_tool_calls[part.tool_call_id]
+
+                elif isinstance(node, End):
+                    if run.result is not None:
+                        updated_message_history, final_response, validation_result = (
+                            run_cleanlab_validation_logging_tools(
+                                project=project,
+                                query=user_prompt,
+                                result=run.result,
+                                message_history=original_message_history,
+                                tools=get_tools_in_openai_format(agent),
+                                thread_id=thread_id,
+                            )
+                        )
                         yield RunEventThreadMessage(
                             id=run_id,
                             object=RunEventObject.THREAD_MESSAGE,
-                            data=ToolCallMessage(
+                            data=AssistantMessage(
                                 thread_id=thread_id,
-                                content=ToolCall(
-                                    tool_call_id=part.tool_call_id,
-                                    tool_name=part.tool_name,
-                                    arguments=json.dumps(
-                                        current_tool_calls[part.tool_call_id].arguments
-                                    ),
-                                    result=part.model_response_str(),
+                                content=final_response,
+                                metadata=MessageMetadata(
+                                    original_llm_response=run.result.output,
+                                    is_expert_answer=validation_result.expert_answer
+                                    is not None,
+                                    guardrailed=validation_result.should_guardrail,
+                                    escalated_to_sme=validation_result.escalated_to_sme,
+                                    scores=_format_eval_results(validation_result),
                                 ),
                             ),
                         )
-                        del current_tool_calls[part.tool_call_id]
-
-            elif isinstance(node, End):
-                if run.result is not None:
-                    updated_message_history, final_response, validation_result = (
-                        run_cleanlab_validation_logging_tools(
-                            project=project,
-                            query=user_prompt,
-                            result=run.result,
-                            message_history=original_message_history,
-                            tools=get_tools_in_openai_format(agent),
-                            thread_id=thread_id,
+                        thread_to_messages[thread_id] = updated_message_history
+                    else:
+                        logger.warning(
+                            "Unable to validate response with cleanlab. Missing `run.result`."
                         )
-                    )
-                    yield RunEventThreadMessage(
-                        id=run_id,
-                        object=RunEventObject.THREAD_MESSAGE,
-                        data=AssistantMessage(
-                            thread_id=thread_id,
-                            content=final_response,
-                            metadata=MessageMetadata(
-                                original_llm_response=run.result.output,
-                                is_expert_answer=validation_result.expert_answer
-                                is not None,
-                                guardrailed=validation_result.should_guardrail,
-                                escalated_to_sme=validation_result.escalated_to_sme,
-                                scores=_format_eval_results(validation_result),
+                        yield RunEventThreadMessage(
+                            id=run_id,
+                            object=RunEventObject.THREAD_MESSAGE,
+                            data=AssistantMessage(
+                                thread_id=thread_id,
+                                content=final_response,
                             ),
-                        ),
-                    )
-                    thread_to_messages[thread_id] = updated_message_history
-                else:
-                    logger.warning(
-                        "Unable to validate response with cleanlab. Missing `run.result`."
-                    )
-                    yield RunEventThreadMessage(
-                        id=run_id,
-                        object=RunEventObject.THREAD_MESSAGE,
-                        data=AssistantMessage(
-                            thread_id=thread_id,
-                            content=final_response,
-                        ),
-                    )
-                    thread_to_messages[thread_id] = run.ctx.state.message_history.copy()
+                        )
+                        thread_to_messages[thread_id] = (
+                            run.ctx.state.message_history.copy()
+                        )
 
-    yield RunEventThreadRunCompleted(
-        id=run_id,
-        object=RunEventObject.THREAD_RUN_COMPLETED,
-        data=Run(
+        yield RunEventThreadRunCompleted(
             id=run_id,
-            status=RunStatus.COMPLETED,
-            thread_id=thread_id,
-        ),
-    )
+            object=RunEventObject.THREAD_RUN_COMPLETED,
+            data=Run(
+                id=run_id,
+                status=RunStatus.COMPLETED,
+                thread_id=thread_id,
+            ),
+        )
+
+    except Exception as e:
+        logger.error("Error in airline chat streaming: %s", e)
+        yield RunEventThreadRunFailed(
+            id=run_id,
+            object=RunEventObject.THREAD_RUN_FAILED,
+            data=Run(
+                id=run_id,
+                status=RunStatus.FAILED,
+                thread_id=thread_id,
+            ),
+        )
+        raise e
 
 
 def _format_eval_results(
