@@ -127,21 +127,38 @@ export const createMessagesSlice: StateCreator<MessagesSlice> = (set, get) => ({
         }
       } else {
         // Message doesn't already exist, but let's check if there are any optimistic messages we can replace.
-        const optimisticMessageIndex = draft.messages.findIndex(m => {
-          return !m.id && m.role === newMessage.role
-        })
-        if (optimisticMessageIndex !== -1) {
-          const existingMessage = draft.messages[optimisticMessageIndex]
-          draft.messages[optimisticMessageIndex] = {
-            ...newMessage,
-            ...(newMessage.localId || !existingMessage.localId
-              ? {}
-              : {
-                  localId: existingMessage.localId
-                })
-          }
-        } else {
+        if (newMessage.role === 'tool') {
+          // For tool calls, always add as new messages to preserve streaming order
           draft.messages.push(newMessage)
+        } else if (newMessage.role === 'assistant') {
+          // For assistant messages, remove any pending assistant message and append at end
+          const pendingAssistantIndex = draft.messages.findIndex(m => {
+            return m.role === 'assistant' && m.isPending
+          })
+          if (pendingAssistantIndex !== -1) {
+            // Remove the pending assistant message
+            draft.messages.splice(pendingAssistantIndex, 1)
+          }
+          // Always append the final assistant message at the end
+          draft.messages.push(newMessage)
+        } else {
+          // For user messages, use the old optimistic replacement logic
+          const optimisticMessageIndex = draft.messages.findIndex(m => {
+            return !m.id && m.role === newMessage.role
+          })
+          if (optimisticMessageIndex !== -1) {
+            const existingMessage = draft.messages[optimisticMessageIndex]
+            draft.messages[optimisticMessageIndex] = {
+              ...newMessage,
+              ...(newMessage.localId || !existingMessage.localId
+                ? {}
+                : {
+                    localId: existingMessage.localId
+                  })
+            }
+          } else {
+            draft.messages.push(newMessage)
+          }
         }
       }
     })
@@ -167,7 +184,7 @@ export const createMessagesSlice: StateCreator<MessagesSlice> = (set, get) => ({
     if (currentThread?.threadId !== threadId) return
     let nextCurrentThread = produce(currentThread, draft => {
       const existingMessageIndex = draft.messages.findIndex(
-        message => message.id === messageId
+        message => message.id === messageId || message.localId === messageId
       )
       if (existingMessageIndex !== -1) {
         const originalMessage = draft.messages[existingMessageIndex]

@@ -7,16 +7,7 @@ import {
 } from '@/providers/messages-store-provider'
 import { useRagAppStore } from '@/providers/rag-app-store-provider'
 import type { StoreMessage, ThreadError } from '@/stores/messages-store'
-import {
-  client as apiClient,
-  airlineAgentChatRouteApiAirlineAgentStreamPost
-} from '@/client/services.gen'
-import type {
-  AssistantMessage,
-  ToolCallMessage,
-  UserMessage
-} from '@/client/types.gen'
-import { useMutation } from '@tanstack/react-query'
+import type { UserMessage } from '@/client/types.gen'
 import ENV_VARS from '@/lib/envVars'
 import { useCallback, useMemo } from 'react'
 import { useAppSettings } from './use-app-settings'
@@ -137,51 +128,32 @@ function useStreamMessage() {
 
   const bareStore = useBareMessagesStore()
 
-  const streamMutation = useMutation({
-    mutationFn: async ({
-      content,
-      threadId,
-      onMessage
-    }: {
-      content: string
-      threadId: string
-      onMessage?: (message: AssistantMessage | ToolCallMessage) => void
-    }) => {
-      // ensure baseURL targets backend, not next server
-      const baseURL =
-        ENV_VARS.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'
-      apiClient.setConfig({ baseURL })
-
-      const userMessage: UserMessage = {
-        role: 'user',
-        content,
-        thread_id: threadId
-      }
-
-      // For now, we'll use the regular API call and process the response
-      // In a real streaming implementation, this would use Server-Sent Events or WebSockets
-      const response = await airlineAgentChatRouteApiAirlineAgentStreamPost({
-        body: [userMessage],
-        query: { thread_id: threadId }
-      })
-
-      // Process the response as if it were streamed
-      if (response.data && onMessage) {
-        // Handle the case where the response contains multiple messages
-        const messages = Array.isArray(response.data)
-          ? response.data
-          : [response.data]
-
-        for (const message of messages) {
-          if (message.role === 'tool' || message.role === 'assistant') {
-            onMessage(message as AssistantMessage | ToolCallMessage)
-          }
+  const handleStreamChunk = useCallback(
+    ({ threadId, value }: { threadId: string; value: any }) => {
+      // Handle different types of streaming chunks
+      if (value.role === 'tool') {
+        // Handle tool call messages
+        const toolMessage: StoreMessage = {
+          localId: nanoid(),
+          role: 'tool',
+          content: JSON.stringify(value.content),
+          metadata: value.metadata || {}
         }
+        appendMessage({ threadId, message: toolMessage })
+      } else if (value.role === 'assistant') {
+        // Handle assistant messages - appendMessage will automatically replace pending message
+        const assistantMessage: StoreMessage = {
+          localId: nanoid(),
+          role: 'assistant',
+          content: value.content,
+          metadata: value.metadata || {}
+        }
+        appendMessage({ threadId, message: assistantMessage })
+        // Don't set status to complete here - wait for thread.run.completed
       }
-
-      return response
-    }
-  })
+    },
+    [appendMessage, setThreadStatus]
+  )
 
   const postMessage = useCallback(
     async ({
@@ -201,60 +173,203 @@ function useStreamMessage() {
         error: undefined
       })
 
+      let response: Response | undefined
+      let finalAssistantMessage: StoreMessage | null = null
+
       try {
-        let finalAssistantMessage: StoreMessage | null = null
-
-        const response = await streamMutation.mutateAsync({
+        const baseURL =
+          ENV_VARS.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'
+        const userMessage: UserMessage = {
+          role: 'user',
           content: messageContent || '',
-          threadId,
-          onMessage: message => {
-            if (message.role === 'tool') {
-              // Handle tool call messages
-              const toolCallMessage = message as ToolCallMessage
-              const toolMessage: StoreMessage = {
-                localId: nanoid(),
-                role: 'tool',
-                content: JSON.stringify(toolCallMessage.content),
-                metadata: toolCallMessage.metadata || {}
-              }
-              appendMessage({ threadId, message: toolMessage })
-            } else if (message.role === 'assistant') {
-              // Handle final assistant message
-              const assistantMessage = message as AssistantMessage
-              finalAssistantMessage = {
-                localId: nanoid(),
-                role: 'assistant',
-                content: assistantMessage.content,
-                metadata: assistantMessage.metadata || {}
-              }
-              appendMessage({ threadId, message: finalAssistantMessage })
-            }
+          thread_id: threadId
+        }
+
+        response = await fetch(
+          `${baseURL}/api/airline-agent/stream?thread_id=${threadId}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'text/event-stream'
+            },
+            body: JSON.stringify([userMessage])
           }
-        })
+        )
 
-        // Update snapshot in history for this thread
-        if (finalAssistantMessage) {
-          const assistantContent =
-            (finalAssistantMessage as StoreMessage).content || ''
-          const assistantMetadata =
-            (finalAssistantMessage as StoreMessage).metadata || {}
+        if (!response.ok) {
+          setDone({
+            threadId,
+            error: {
+              message: `HTTP error! status: ${response.status}`,
+              canRetry: true
+            },
+            status: CurrentThreadStatus.failed
+          })
+          return
+        }
 
-          addHistoryThread({
-            title: messageContent || 'New thread',
-            assistantId:
-              appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG,
-            thread: { id: threadId } as any,
-            snapshot: {
-              user: { content: messageContent || '', metadata: {} },
-              assistant: {
-                content: assistantContent,
-                metadata: assistantMetadata
-              }
-            }
+        if (!response.body) {
+          setDone({
+            threadId,
+            error: {
+              message: 'This browser does not support streaming responses.',
+              canRetry: false
+            },
+            status: CurrentThreadStatus.failed
+          })
+          return
+        }
+
+        // Verify we're getting a streaming response
+        const contentType = response.headers.get('content-type')
+        if (!contentType || !contentType.includes('text/event-stream')) {
+          console.warn('Expected text/event-stream, got:', contentType)
+        }
+
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder()
+
+        const errHandler = (err: Error) => {
+          console.error('Error in stream reader', err)
+          setDone({
+            threadId,
+            error: getErrorFromCurrentStatus(
+              bareStore.getState().currentThread?.status
+            )
           })
         }
 
-        setDone({ threadId, localThreadId })
+        const pump = async () => {
+          try {
+            const { done, value } = await reader.read()
+
+            if (done) {
+              const currentThread = bareStore.getState().currentThread
+              if (currentThread?.status !== 'complete') {
+                const error =
+                  currentThread?.error ??
+                  getErrorFromCurrentStatus(currentThread?.status)
+                setDone({
+                  threadId,
+                  localThreadId,
+                  status: CurrentThreadStatus.failed,
+                  error: error
+                })
+              }
+              return
+            }
+
+            const chunk = decoder.decode(value, { stream: true })
+            const lines = chunk.split('\n')
+
+            let currentEvent = ''
+            let currentData = ''
+
+            for (const line of lines) {
+              if (line.startsWith('event: ')) {
+                currentEvent = line.slice(7).trim()
+              } else if (line.startsWith('data: ')) {
+                currentData = line.slice(6).trim()
+
+                if (currentEvent && currentData) {
+                  try {
+                    const eventData = JSON.parse(currentData)
+
+                    // Handle different event types
+                    if (currentEvent === 'thread.run.in_progress') {
+                      setThreadStatus({
+                        threadId,
+                        status: CurrentThreadStatus.responsePending
+                      })
+                    } else if (currentEvent === 'thread.message') {
+                      const messageData = eventData.data
+                      if (messageData.role === 'tool') {
+                        handleStreamChunk({ threadId, value: messageData })
+                      } else if (messageData.role === 'assistant') {
+                        handleStreamChunk({ threadId, value: messageData })
+                        finalAssistantMessage = {
+                          localId: nanoid(),
+                          role: 'assistant',
+                          content: messageData.content,
+                          metadata: messageData.metadata || {}
+                        }
+                      }
+                    } else if (currentEvent === 'thread.run.completed') {
+                      // Save history when stream completes
+                      // Get all messages from the current thread to save complete conversation
+                      const currentThread = bareStore.getState().currentThread
+                      if (currentThread && currentThread.messages) {
+                        // Find user and assistant messages for the snapshot
+                        const userMessage = currentThread.messages.find(
+                          m => m.role === 'user'
+                        )
+                        const assistantMessage = currentThread.messages.find(
+                          m => m.role === 'assistant'
+                        )
+
+                        if (userMessage && assistantMessage) {
+                          addHistoryThread({
+                            title: messageContent || 'New thread',
+                            assistantId:
+                              appSettings.assistantId ??
+                              AGILITY_DEFAULT_ASSISTANT_SLUG,
+                            thread: { id: threadId } as any,
+                            snapshot: {
+                              user: {
+                                content: userMessage.content,
+                                metadata: userMessage.metadata || {}
+                              },
+                              assistant: {
+                                content: assistantMessage.content,
+                                metadata: assistantMessage.metadata || {}
+                              }
+                            },
+                            messages: currentThread.messages.map(msg => ({
+                              localId: msg.localId,
+                              id: msg.id,
+                              role: msg.role,
+                              content: msg.content,
+                              metadata: msg.metadata,
+                              isPending: msg.isPending,
+                              isContentPending: msg.isContentPending,
+                              error: msg.error
+                            }))
+                          })
+                        }
+                      }
+                      setDone({ threadId, localThreadId })
+                      return
+                    } else if (currentEvent === 'thread.run.failed') {
+                      setDone({
+                        threadId,
+                        error: { message: 'Run failed', canRetry: true },
+                        status: CurrentThreadStatus.failed
+                      })
+                      return
+                    }
+                  } catch (e) {
+                    console.warn(
+                      'Failed to parse streaming data:',
+                      currentData,
+                      e
+                    )
+                  }
+
+                  // Reset for next event
+                  currentEvent = ''
+                  currentData = ''
+                }
+              }
+            }
+
+            pump()
+          } catch (err) {
+            errHandler(err as Error)
+          }
+        }
+
+        pump()
       } catch (e) {
         setDone({
           threadId,
@@ -264,10 +379,10 @@ function useStreamMessage() {
       }
     },
     [
-      appendMessage,
-      streamMutation,
-      setDone,
       setThreadStatus,
+      bareStore,
+      handleStreamChunk,
+      setDone,
       addHistoryThread,
       appSettings.assistantId
     ]

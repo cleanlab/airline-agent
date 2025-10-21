@@ -17,6 +17,16 @@ export type HistoryThread = {
       metadata?: any
     }
   }
+  messages?: Array<{
+    localId?: string
+    id?: string
+    role: 'user' | 'assistant' | 'tool'
+    content: string
+    metadata?: any
+    isPending?: boolean
+    isContentPending?: boolean
+    error?: string
+  }>
 } & (
   | {
       localThreadId?: string

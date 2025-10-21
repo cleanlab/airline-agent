@@ -15,7 +15,6 @@ import { toast } from 'sonner'
 import { CurrentThreadStatus } from '../lib/hooks/useStreamMessage'
 import type { CurrentThread } from '../stores/messages-store'
 import { PromptForm } from './prompt-form'
-import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group'
 import { ChatInputPanel } from './design-system-components/ChatInputPanel'
 import { useAssistantHistory } from '@/providers/rag-app-store-provider'
 import { useAppSettings } from '@/lib/hooks/use-app-settings'
@@ -75,26 +74,51 @@ export function Chat({
       return
     }
     if (historySnapshot) {
-      const hydrated: StoreMessage[] = [
-        {
-          localId: 'user',
-          role: 'user',
-          content: historySnapshot.user?.content ?? '',
-          metadata: historySnapshot.user?.metadata ?? {}
-        },
-        {
-          localId: 'assistant',
-          role: 'assistant',
-          content: historySnapshot.assistant?.content ?? '',
-          metadata: historySnapshot.assistant?.metadata ?? {}
-        }
-      ]
-      setCurrentThread({
-        threadId: threadId,
-        messages: hydrated,
-        status: CurrentThreadStatus.complete
-      })
-      return
+      // Check if we have complete message history saved
+      const historyItem = history?.find(
+        h => h.localThreadId === threadId || h.thread?.id === threadId
+      )
+      if (historyItem?.messages && historyItem.messages.length > 0) {
+        // Use the complete message history including tool calls
+        const hydrated: StoreMessage[] = historyItem.messages.map(msg => ({
+          localId: msg.localId,
+          id: msg.id,
+          role: msg.role,
+          content: msg.content,
+          metadata: msg.metadata || {},
+          isPending: false, // Always mark as complete when loading from history
+          isContentPending: false, // Always mark as complete when loading from history
+          error: msg.error
+        }))
+        setCurrentThread({
+          threadId: threadId,
+          messages: hydrated,
+          status: CurrentThreadStatus.complete
+        })
+        return
+      } else {
+        // Fallback to snapshot for backward compatibility
+        const hydrated: StoreMessage[] = [
+          {
+            localId: 'user',
+            role: 'user',
+            content: historySnapshot.user?.content ?? '',
+            metadata: historySnapshot.user?.metadata ?? {}
+          },
+          {
+            localId: 'assistant',
+            role: 'assistant',
+            content: historySnapshot.assistant?.content ?? '',
+            metadata: historySnapshot.assistant?.metadata ?? {}
+          }
+        ]
+        setCurrentThread({
+          threadId: threadId,
+          messages: hydrated,
+          status: CurrentThreadStatus.complete
+        })
+        return
+      }
     }
     setCurrentThread(undefined)
   }, [historySnapshot, initialMessages, setCurrentThread, threadId])
@@ -143,31 +167,6 @@ export function Chat({
               'sm:rounded-t-xl mx-auto flex w-full max-w-[680px] grow flex-col px-8 md:px-9'
             )}
           >
-            <ToggleGroup
-              type="single"
-              value={cleanlabMode}
-              onValueChange={value => setCleanlabMode(value as DemoMode)}
-              className="absolute top-5 z-50 mx-4 inline-flex w-fit justify-center self-center overflow-hidden rounded-2 border border-border-1 bg-surface-1 shadow-elev-2"
-            >
-              <ToggleGroupItem
-                value="no-cleanlab"
-                className={toggleGroupItemClasses}
-              >
-                No Cleanlab
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="cleanlab-detection"
-                className={toggleGroupItemClasses}
-              >
-                Cleanlab Detection Only
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="cleanlab-enforce"
-                className={toggleGroupItemClasses}
-              >
-                Cleanlab Safety On
-              </ToggleGroupItem>
-            </ToggleGroup>
             {messages?.length ? (
               <ChatList
                 threadId={currentThread?.threadId}

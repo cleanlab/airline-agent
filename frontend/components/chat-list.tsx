@@ -55,8 +55,6 @@ const ChatMessage = ({
 
   const detectionMetadata = { ...message.metadata, is_expert_answer: false }
 
-  const disableScores = cleanlabMode === 'no-cleanlab'
-
   const display = (() => {
     switch (message.role) {
       case 'user':
@@ -94,7 +92,7 @@ const ChatMessage = ({
                   : (message.metadata ?? null)
               }
               showAccordion={cleanlabMode === 'cleanlab-detection'}
-              disableScores={!!disableScores}
+              disableScores={true}
               icon={
                 <LogoImg
                   className="size-7"
@@ -107,6 +105,37 @@ const ChatMessage = ({
         )
       case 'tool':
         // Display tool call messages
+        const toolCallData = (() => {
+          try {
+            return JSON.parse(message.content)
+          } catch {
+            return null
+          }
+        })()
+
+        // Helper function to parse and pretty-print JSON strings
+        const parseAndPrettyPrint = (jsonString: string) => {
+          try {
+            // First try to parse as JSON
+            let parsed = JSON.parse(jsonString)
+
+            // If the result is still a string, it might be double-encoded JSON
+            if (typeof parsed === 'string') {
+              try {
+                parsed = JSON.parse(parsed)
+              } catch {
+                // If second parse fails, use the first parsed result
+              }
+            }
+
+            // Pretty print the final result
+            return JSON.stringify(parsed, null, 2)
+          } catch {
+            // If all parsing fails, return the original string
+            return jsonString
+          }
+        }
+
         return (
           <div
             className={cn(
@@ -117,15 +146,38 @@ const ChatMessage = ({
               <div className="bg-primary-1 text-primary-11 flex h-7 w-7 items-center justify-center rounded-full">
                 <span className="text-xs font-medium">🔧</span>
               </div>
-              <div className="flex-1">
-                <div className="text-sm mb-2 font-medium text-foreground">
-                  Tool Call
+              <div className="flex-1 space-y-3">
+                <div className="text-sm font-medium text-foreground">
+                  Tool Call: {toolCallData?.tool_name || 'Unknown'}
                 </div>
-                <div className="text-sm text-foreground-2">
-                  {typeof message.content === 'object'
-                    ? JSON.stringify(message.content, null, 2)
-                    : message.content}
-                </div>
+
+                {toolCallData?.arguments && (
+                  <div>
+                    <div className="type-body-100 mb-1 font-medium">
+                      Arguments:
+                    </div>
+                    <div className="type-caption-medium whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
+                      {parseAndPrettyPrint(toolCallData.arguments)}
+                    </div>
+                  </div>
+                )}
+
+                {toolCallData?.result && (
+                  <div>
+                    <div className="text-foreground-2 type-body-100 mb-1 font-medium">
+                      Result:
+                    </div>
+                    <div className="rounded max-h-32 type-caption-medium overflow-y-auto whitespace-pre-wrap rounded-2 bg-surface-2 px-5 py-4">
+                      {parseAndPrettyPrint(toolCallData.result)}
+                    </div>
+                  </div>
+                )}
+
+                {!toolCallData && (
+                  <div className="text-xs text-foreground-2 rounded break-all bg-surface-2 p-2 font-mono">
+                    {message.content}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -145,28 +197,40 @@ const ChatMessage = ({
 export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
   const allMessages = useMessagesStore(state => state.currentThread?.messages)
   const error = useMessagesStore(state => state.currentThread?.error)
+  const isPending = useMessagesStore(state => state.currentThread?.isPending)
 
-  const filteredMessages = allMessages?.filter(message => {
-    if (message?.content || message.isContentPending || message.isPending) {
-      return true
-    }
-    if (message.role === 'assistant') {
-      const md = message.metadata as any
-      return !!(
-        md &&
-        (md.guardrailed ||
-          md.original_llm_response ||
-          md.escalated_to_sme ||
-          md.is_expert_answer)
-      )
-    }
-    if (message.role === 'tool') {
-      return true // Always show tool call messages
-    }
-    return false
-  })
+  // Separate actual messages from loading messages
+  const actualMessages =
+    allMessages?.filter(message => {
+      // Show messages that have content and are not pending
+      if (message?.content && !message.isPending) {
+        return true
+      }
+      // Show tool calls that have content
+      if (message.role === 'tool' && message.content) {
+        return true
+      }
+      // Show assistant messages with metadata even if no content
+      if (message.role === 'assistant') {
+        const md = message.metadata as any
+        return !!(
+          md &&
+          (md.guardrailed ||
+            md.original_llm_response ||
+            md.escalated_to_sme ||
+            md.is_expert_answer)
+        )
+      }
+      return false
+    }) || []
 
-  if (!filteredMessages?.length) {
+  // Find any pending assistant message for the loading state
+  const pendingAssistantMessage = allMessages?.find(
+    message =>
+      message.role === 'assistant' && message.isPending && !message.content
+  )
+
+  if (!actualMessages.length && !pendingAssistantMessage) {
     return null
   }
 
@@ -176,15 +240,15 @@ export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
       data-chat-list={true}
       data-chat-id={threadId}
     >
-      {filteredMessages.map((message, index) => {
+      {actualMessages.map((message, index) => {
         const showRetryButton =
           !!error?.canRetry &&
           message?.role === 'user' &&
-          index === filteredMessages.length - 1
+          index === actualMessages.length - 1
         return (
           <div key={message.localId || message.id}>
             <ChatMessage
-              isAutoScrollEnabled={index === filteredMessages.length - 1}
+              isAutoScrollEnabled={index === actualMessages.length - 1}
               scrollRef={scrollRef}
               message={message}
               cleanlabMode={cleanlabMode}
@@ -193,6 +257,19 @@ export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
           </div>
         )
       })}
+
+      {/* Show loading message at the bottom if there's a pending assistant message */}
+      {pendingAssistantMessage && (
+        <div key="loading-message">
+          <ChatMessage
+            isAutoScrollEnabled={true}
+            scrollRef={scrollRef}
+            message={pendingAssistantMessage}
+            cleanlabMode={cleanlabMode}
+          />
+        </div>
+      )}
+
       <MessageError data-at-status={error?.atStatus} error={error?.message} />
     </div>
   )
