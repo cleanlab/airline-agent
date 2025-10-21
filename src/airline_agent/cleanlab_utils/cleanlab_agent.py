@@ -790,7 +790,6 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
 
         async with self.wrapped.iter(**iter_kwargs) as agent_run:
             async for node in agent_run:
-                breakpoint()
                 if isinstance(node, UserPromptNode):
                     # call project.consult to check for AI guidance
                     # if guidance exists, udpate user prompt
