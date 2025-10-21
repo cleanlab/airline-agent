@@ -202,6 +202,10 @@ export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
   // Separate actual messages from loading messages
   const actualMessages =
     allMessages?.filter(message => {
+      // Always show user messages
+      if (message.role === 'user' && message.content) {
+        return true
+      }
       // Show messages that have content and are not pending
       if (message?.content && !message.isPending) {
         return true

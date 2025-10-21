@@ -142,23 +142,8 @@ export const createMessagesSlice: StateCreator<MessagesSlice> = (set, get) => ({
           // Always append the final assistant message at the end
           draft.messages.push(newMessage)
         } else {
-          // For user messages, use the old optimistic replacement logic
-          const optimisticMessageIndex = draft.messages.findIndex(m => {
-            return !m.id && m.role === newMessage.role
-          })
-          if (optimisticMessageIndex !== -1) {
-            const existingMessage = draft.messages[optimisticMessageIndex]
-            draft.messages[optimisticMessageIndex] = {
-              ...newMessage,
-              ...(newMessage.localId || !existingMessage.localId
-                ? {}
-                : {
-                    localId: existingMessage.localId
-                  })
-            }
-          } else {
-            draft.messages.push(newMessage)
-          }
+          // For user messages, always append to preserve conversation order
+          draft.messages.push(newMessage)
         }
       }
     })

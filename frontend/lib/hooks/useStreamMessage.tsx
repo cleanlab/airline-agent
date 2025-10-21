@@ -221,12 +221,6 @@ function useStreamMessage() {
           return
         }
 
-        // Verify we're getting a streaming response
-        const contentType = response.headers.get('content-type')
-        if (!contentType || !contentType.includes('text/event-stream')) {
-          console.warn('Expected text/event-stream, got:', contentType)
-        }
-
         const reader = response.body.getReader()
         const decoder = new TextDecoder()
 
@@ -300,39 +294,52 @@ function useStreamMessage() {
                       // Get all messages from the current thread to save complete conversation
                       const currentThread = bareStore.getState().currentThread
                       if (currentThread && currentThread.messages) {
-                        // Find user and assistant messages for the snapshot
-                        const userMessage = currentThread.messages.find(
+                        // Find the first user message for the title
+                        const firstUserMessage = currentThread.messages.find(
                           m => m.role === 'user'
                         )
-                        const assistantMessage = currentThread.messages.find(
-                          m => m.role === 'assistant'
-                        )
+                        // Find the last assistant message for the snapshot
+                        const lastAssistantMessage = currentThread.messages
+                          .filter(m => m.role === 'assistant')
+                          .pop()
 
-                        if (userMessage && assistantMessage) {
+                        if (firstUserMessage) {
                           addHistoryThread({
-                            title: messageContent || 'New thread',
+                            title: firstUserMessage.content || 'New thread',
                             assistantId:
                               appSettings.assistantId ??
                               AGILITY_DEFAULT_ASSISTANT_SLUG,
                             thread: { id: threadId } as any,
-                            snapshot: {
-                              user: {
-                                content: userMessage.content,
-                                metadata: userMessage.metadata || {}
-                              },
-                              assistant: {
-                                content: assistantMessage.content,
-                                metadata: assistantMessage.metadata || {}
-                              }
-                            },
+                            snapshot: lastAssistantMessage
+                              ? {
+                                  user: {
+                                    content: firstUserMessage.content,
+                                    metadata: firstUserMessage.metadata || {}
+                                  },
+                                  assistant: {
+                                    content: lastAssistantMessage.content,
+                                    metadata:
+                                      lastAssistantMessage.metadata || {}
+                                  }
+                                }
+                              : {
+                                  user: {
+                                    content: firstUserMessage.content,
+                                    metadata: firstUserMessage.metadata || {}
+                                  },
+                                  assistant: {
+                                    content: '',
+                                    metadata: {}
+                                  }
+                                },
                             messages: currentThread.messages.map(msg => ({
                               localId: msg.localId,
                               id: msg.id,
                               role: msg.role,
                               content: msg.content,
                               metadata: msg.metadata,
-                              isPending: msg.isPending,
-                              isContentPending: msg.isContentPending,
+                              isPending: false, // Ensure saved messages are not pending
+                              isContentPending: false, // Ensure saved messages are not content pending
                               error: msg.error
                             }))
                           })
@@ -432,10 +439,49 @@ function useStreamMessage() {
       }
       const currentThreadId = currentThread?.threadId
 
-      // Always start a new thread for each new submission
-      createThreadAndPostMessage({ messageContent })
+      if (
+        currentThreadId &&
+        currentThread?.messages &&
+        currentThread.messages.length > 0
+      ) {
+        // Continue existing conversation - add user message to current thread
+        const userMessage: StoreMessage = {
+          localId: nanoid(),
+          role: 'user',
+          content: messageContent,
+          metadata: {}
+        }
+        appendMessage({ threadId: currentThreadId, message: userMessage })
+
+        // Add optimistic assistant placeholder
+        const assistantMessage: StoreMessage = {
+          localId: nanoid(),
+          role: 'assistant',
+          content: '',
+          metadata: {},
+          isPending: true,
+          isContentPending: true
+        }
+        appendMessage({ threadId: currentThreadId, message: assistantMessage })
+
+        // Post message to backend
+        postMessage({
+          threadId: currentThreadId,
+          localThreadId: currentThread?.localThreadId,
+          messageContent: messageContent
+        })
+      } else {
+        // Start new conversation
+        createThreadAndPostMessage({ messageContent })
+      }
     },
-    [createThreadAndPostMessage, isPending]
+    [
+      currentThread,
+      appendMessage,
+      postMessage,
+      createThreadAndPostMessage,
+      isPending
+    ]
   )
 
   const retrySendMessage = useCallback(() => {
