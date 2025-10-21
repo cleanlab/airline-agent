@@ -23,10 +23,10 @@ This will create a project with all latest configured guardrails and evaluations
 
 ### Usage
 
-1. Fetch raw FAQs (or get this file from someone):
+1. Fetch data (or get these files from someone):
 
     ```bash
-    hatch run fetch-faqs
+    hatch run fetch-pages
     ```
 
 2. Create the vector DB:
