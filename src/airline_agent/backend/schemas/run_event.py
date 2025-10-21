@@ -15,9 +15,6 @@ class RunEventObject(StrEnum):
 
 
 class RunEventBase(BaseModel):
-    # ID maps to the object
-    # for example, a message created event will have the same ID as the message
-    # a thread run completed event will have the same ID as the run
     id: uuid.UUID
     object: RunEventObject
     data: AgentMessage | Run
