@@ -15,8 +15,8 @@ from pydantic_ai import (
 )
 from pydantic_ai.run import End
 
-from src.airline_agent.agent import create_agent, get_cleanlab_project
-from src.airline_agent.backend.schemas.message import (
+from airline_agent.agent import create_agent, get_cleanlab_project
+from airline_agent.backend.schemas.message import (
     AssistantMessage,
     EvalResult,
     MessageMetadata,
@@ -24,8 +24,8 @@ from src.airline_agent.backend.schemas.message import (
     ToolCallMessage,
     UserMessage,
 )
-from src.airline_agent.backend.schemas.run import Run, RunStatus
-from src.airline_agent.backend.schemas.run_event import (
+from airline_agent.backend.schemas.run import Run, RunStatus
+from airline_agent.backend.schemas.run_event import (
     RunEvent,
     RunEventObject,
     RunEventThreadMessage,
@@ -33,11 +33,11 @@ from src.airline_agent.backend.schemas.run_event import (
     RunEventThreadRunFailed,
     RunEventThreadRunInProgress,
 )
-from src.airline_agent.cleanlab_utils.validate_utils import (
+from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
     run_cleanlab_validation_logging_tools,
 )
-from src.airline_agent.tools.knowledge_base import KnowledgeBase
+from airline_agent.tools.knowledge_base import KnowledgeBase
 
 load_dotenv()
 

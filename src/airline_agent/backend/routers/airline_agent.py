@@ -3,8 +3,8 @@ from collections.abc import AsyncGenerator
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 
-from src.airline_agent.backend.schemas.message import UserMessage
-from src.airline_agent.backend.services.airline_chat import airline_chat_streaming
+from airline_agent.backend.schemas.message import UserMessage
+from airline_agent.backend.services.airline_chat import airline_chat_streaming
 
 router = APIRouter(prefix="/airline-agent")
 

@@ -5,7 +5,7 @@ import uvicorn
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.airline_agent.backend.routers.airline_agent import router
+from airline_agent.backend.routers.airline_agent import router
 
 API_PREFIX = "/api"
 

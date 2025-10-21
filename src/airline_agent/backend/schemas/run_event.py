@@ -3,8 +3,8 @@ from enum import StrEnum
 
 from pydantic import BaseModel
 
-from src.airline_agent.backend.schemas.message import AgentMessage
-from src.airline_agent.backend.schemas.run import Run
+from airline_agent.backend.schemas.message import AgentMessage
+from airline_agent.backend.schemas.run import Run
 
 
 class RunEventObject(StrEnum):
