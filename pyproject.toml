@@ -27,9 +27,9 @@ dependencies = [
 installer = "uv"
 
 [tool.hatch.envs.default.scripts]
-create-demo-project = "python src/airline_agent/cleanlab_utils/create_new_demo_project.py"
-fetch-pages = "python src/airline_agent/data_preparation/fetch_pages.py --path {args:data/kb.json}"
-create-vector-database = "python src/airline_agent/preprocessing/create_vector_database.py --data-path {args:data/kb.json} --vector-db-path data/vector-db"
+create-demo-project = "python -m airline_agent.cleanlab_utils.create_new_demo_project"
+fetch-pages = "python -m airline_agent.data_preparation.fetch_pages --path {args:data/kb.json}"
+create-vector-database = "python -m airline_agent.preprocessing.create_vector_database --data-path {args:data/kb.json} --vector-db-path data/vector-db"
 
 
 [tool.hatch.envs.types]

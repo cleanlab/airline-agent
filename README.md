@@ -38,7 +38,7 @@ This will create a project with all latest configured guardrails and evaluations
 3. Run the agent:
 
     ```bash
-    hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db --validation-mode cleanlab_log_tools
+    hatch run python -m airline_agent.agent --kb-path data/kb.json --vector-db-path data/vector-db --validation-mode cleanlab_log_tools
     ```
 
     **Note:** Use `--validation-mode` to control validation: `none` (default, no validation), `cleanlab` (standard validation), or `cleanlab_log_tools` (validation with post-chat-turn tool logging)
