@@ -45,7 +45,7 @@ class ToolCall(BaseModel):
 
 
 class MessageBase(BaseModel):
-    thread_id: str | None = None
+    thread_id: str
     metadata: MessageMetadata = Field(default_factory=MessageMetadata)
 
 
