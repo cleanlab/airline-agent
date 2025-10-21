@@ -111,15 +111,13 @@ async def airline_chat_streaming(
                             del current_tool_calls[request_part.tool_call_id]
 
             if run.result is not None:
-                updated_message_history, final_response, validation_result = (
-                    run_cleanlab_validation_logging_tools(
-                        project=project,
-                        query=user_prompt,
-                        result=run.result,
-                        message_history=original_message_history,
-                        tools=get_tools_in_openai_format(agent),
-                        thread_id=thread_id,
-                    )
+                updated_message_history, final_response, validation_result = run_cleanlab_validation_logging_tools(
+                    project=project,
+                    query=user_prompt,
+                    result=run.result,
+                    message_history=original_message_history,
+                    tools=get_tools_in_openai_format(agent),
+                    thread_id=thread_id,
                 )
                 yield RunEventThreadMessage(
                     id=run_id,
