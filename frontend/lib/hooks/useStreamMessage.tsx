@@ -193,7 +193,7 @@ function useStreamMessage() {
               'Content-Type': 'application/json',
               Accept: 'text/event-stream'
             },
-            body: JSON.stringify([userMessage])
+            body: JSON.stringify(userMessage)
           }
         )
 
