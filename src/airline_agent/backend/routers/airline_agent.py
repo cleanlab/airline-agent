@@ -3,7 +3,7 @@ from collections.abc import AsyncGenerator
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 
-from src.airline_agent.backend.schemas.message import AgentMessage
+from src.airline_agent.backend.schemas.message import UserMessage
 from src.airline_agent.backend.services.airline_chat import airline_chat_streaming
 
 router = APIRouter(prefix="/airline-agent")
@@ -11,9 +11,9 @@ router = APIRouter(prefix="/airline-agent")
 
 @router.post("/stream")
 async def airline_agent_chat_route(
-    thread_id: str, messages: list[AgentMessage]
+    message: UserMessage,
 ) -> StreamingResponse:
-    event_generator = airline_chat_streaming(messages, thread_id=thread_id)
+    event_generator = airline_chat_streaming(message)
 
     async def sse_generator() -> AsyncGenerator[str, None]:
         async for event in event_generator:

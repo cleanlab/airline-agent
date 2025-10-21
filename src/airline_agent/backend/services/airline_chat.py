@@ -1,4 +1,3 @@
-from concurrent.futures import thread
 import json
 import logging
 import pathlib
@@ -33,7 +32,7 @@ from src.airline_agent.backend.schemas.message import (
     ToolCallMessage,
     UserMessage,
 )
-from src.airline_agent.backend.schemas.run import Run, RunStatus, RunWithMessageHistory
+from src.airline_agent.backend.schemas.run import Run, RunStatus
 from src.airline_agent.backend.schemas.run_event import (
     RunEvent,
     RunEventObject,
@@ -55,32 +54,37 @@ kb = KnowledgeBase(
     ),
 )
 project = get_cleanlab_project()
+agent = create_agent(kb)
+
+thread_to_messages: dict[str, list[ModelMessage]] = {}
 
 
 async def airline_chat_streaming(
-    messages: list[AgentMessage], thread_id: str
+    message: UserMessage,
 ) -> AsyncGenerator[RunEvent, None]:
     run_id = uuid.uuid4()
+    thread_id = message.thread_id
     yield RunEventThreadRunInProgress(
         id=run_id,
         object=RunEventObject.THREAD_RUN_IN_PROGRESS,
         data=Run(
             id=run_id,
             status=RunStatus.IN_PROGRESS,
-            thread_id=thread_id,
+            thread_id=message.thread_id,
         ),
     )
-    agent = create_agent(kb)
+
+    if thread_id not in thread_to_messages:
+        thread_to_messages[thread_id] = []
+
     current_tool_calls: dict[str, ToolCall] = {}
 
-    assert len(messages) > 0
-    user_prompt = messages[-1].content
-    assert isinstance(user_prompt, str)
-    message_history = _convert_message_history_to_pydantic_ai_messages(messages[:-1])
+    user_prompt = message.content
 
     nodes = []
+    original_message_history = thread_to_messages[thread_id].copy()
     async with agent.iter(
-        user_prompt=user_prompt, message_history=message_history
+        user_prompt=user_prompt, message_history=original_message_history
     ) as run:
         async for node in run:
             nodes.append(node)
@@ -121,12 +125,12 @@ async def airline_chat_streaming(
 
             elif isinstance(node, End):
                 if run.result is not None:
-                    message_history, final_response = (
+                    updated_message_history, final_response = (
                         run_cleanlab_validation_logging_tools(
                             project=project,
                             query=user_prompt,
                             result=run.result,
-                            message_history=message_history,
+                            message_history=original_message_history,
                             tools=get_tools_in_openai_format(agent),
                             thread_id=thread_id,
                         )
@@ -139,6 +143,17 @@ async def airline_chat_streaming(
                             content=final_response,
                         ),
                     )
+                    thread_to_messages[thread_id] = updated_message_history
+                else:
+                    yield RunEventThreadMessage(
+                        id=run_id,
+                        object=RunEventObject.THREAD_MESSAGE,
+                        data=AssistantMessage(
+                            thread_id=thread_id,
+                            content=final_response,
+                        ),
+                    )
+                    thread_to_messages[thread_id] = run.ctx.state.message_history.copy()
 
     # eval_scores = {
     #     eval_key: EvalResult.model_validate(eval_result.model_dump())
@@ -173,13 +188,10 @@ async def airline_chat_streaming(
     yield RunEventThreadRunCompleted(
         id=run_id,
         object=RunEventObject.THREAD_RUN_COMPLETED,
-        data=RunWithMessageHistory(
+        data=Run(
             id=run_id,
             status=RunStatus.COMPLETED,
             thread_id=thread_id,
-            message_history=_convert_pydantic_ai_messages_to_message_history(
-                message_history, thread_id
-            ),
         ),
     )
 
