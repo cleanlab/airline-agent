@@ -690,50 +690,31 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
                     super().__init__(wrapped_run._graph_run)  # noqa: SLF001
                     self._wrapped = wrapped_run
                     self._cleanlab_agent = cleanlab_agent
-                    self._modified_result: AgentRunResult[Any] | None = None
-                    self._node_buffer: list[Any] = []
-                    self._buffer_index = 0
-                    self._validation_complete = False
-                    self._handled_final_result = False
 
                 @property
                 def result(self) -> AgentRunResult[Any] | None:
-                    """Override result property to return modified result if available."""
-                    if self._modified_result is not None:
-                        return self._modified_result
+                    """Pass through the wrapped result unchanged."""
                     return self._wrapped.result
 
                 async def __anext__(self) -> Any:
-                    """Comprehensive buffering: collect ALL nodes until validation completes, then yield sequentially."""
+                    """Pass through all nodes immediately while running validation in background for logging."""
                     nonlocal handled_final_result, original_result
 
-                    # If validation is complete, yield buffered nodes sequentially
-                    if self._validation_complete:
-                        if self._buffer_index < len(self._node_buffer):
-                            node = self._node_buffer[self._buffer_index]
-                            self._buffer_index += 1
-                            logger.info(f"[cleanlab] Yielding buffered node {self._buffer_index}/{len(self._node_buffer)}")
-                            return node
-                        else:
-                            # All buffered nodes yielded, delegation back to wrapped
-                            return await self._wrapped.__anext__()
+                    # Get the next node from the wrapped agent
+                    node = await self._wrapped.__anext__()
+                    logger.info(f"[cleanlab] Yielding node: {type(node).__name__}")
 
-                    # Validation not complete - keep buffering nodes until we hit End
-                    while not self._validation_complete:
-                        node = await self._wrapped.__anext__()
-                        self._node_buffer.append(node)
-                        logger.info(f"[cleanlab] Buffered node {len(self._node_buffer)}: {type(node).__name__}")
+                    # If this is an End node, run validation for logging purposes only
+                    if isinstance(node, End) and not handled_final_result:
+                        handled_final_result = True
+                        original_result = self._wrapped.result
 
-                        # If this is an End node, run validation
-                        if isinstance(node, End) and not self._handled_final_result:
-                            logger.info("[cleanlab] End node detected - starting validation (all nodes buffered)")
-                            self._handled_final_result = True
-                            original_result = self._wrapped.result
+                        if original_result:
+                            current_history = list(message_history) if message_history else []
 
-                            if original_result:
-                                current_history = list(message_history) if message_history else []
-
-                                logger.info("[cleanlab] Running validation...")
+                            # Run validation for logging/monitoring, but don't modify the response
+                            logger.info("[cleanlab] Running validation for logging purposes...")
+                            try:
                                 updated_history, final_response_str = (
                                     self._cleanlab_agent._run_cleanlab_validation_logging_tools(  # noqa: SLF001
                                         project=self._cleanlab_agent.cleanlab_project,
@@ -744,57 +725,18 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
                                         thread_id=self._cleanlab_agent.thread_id,
                                     )
                                 )
-                                logger.info("[cleanlab] Validation completed")
-
-                                graph_run = getattr(self._wrapped, "_graph_run", None)
-                                if graph_run and hasattr(graph_run, "state"):
-                                    graph_run.state.message_history = updated_history
-                                    logger.info(
-                                        "[cleanlab] Updated agent run's internal message history: %d messages",
-                                        len(updated_history),
-                                    )
-
+                                logger.info("[cleanlab] Validation completed for logging")
+                                
                                 if final_response_str != original_result.output:
-                                    self._modified_result = AgentRunResult(
-                                        output=final_response_str,
-                                        _output_tool_name=original_result._output_tool_name,  # noqa: SLF001
-                                        _state=original_result._state,  # noqa: SLF001
-                                        _new_message_index=original_result._new_message_index,  # noqa: SLF001
-                                        _traceparent_value=original_result._traceparent_value,  # noqa: SLF001
-                                    )
-                                    logger.info("[cleanlab] Response modified by validation")
-                                    
-                                    # CRITICAL: Update the wrapped agent's result so End node contains validated response
-                                    if hasattr(self._wrapped, '_graph_run'):
-                                        # Try to update the graph run's final result
-                                        if hasattr(self._wrapped._graph_run, '_final_result'):
-                                            self._wrapped._graph_run._final_result = self._modified_result  # noqa: SLF001
-                                            logger.info("[cleanlab] Updated _graph_run._final_result")
-                                        # Skip setting 'result' property - it's read-only
-                                        
-                                    # Also try to update the wrapped run's result directly
-                                    if hasattr(self._wrapped, '_result'):
-                                        self._wrapped._result = self._modified_result  # noqa: SLF001
-                                        logger.info("[cleanlab] Updated _wrapped._result")
-                                    
-                                    logger.info(f"[cleanlab] Validated response: '{final_response_str[:100]}...'")
+                                    logger.info(f"[cleanlab] Response would have been replaced with: '{final_response_str[:100]}...'")
                                 else:
-                                    logger.info("[cleanlab] No response modification needed")
+                                    logger.info("[cleanlab] No response modification would be needed")
+                                    
+                            except Exception as e:
+                                logger.error(f"[cleanlab] Validation failed: {e}")
 
-                            # Mark validation complete and break out of buffering loop
-                            self._validation_complete = True
-                            logger.info(f"[cleanlab] Validation complete - will now yield {len(self._node_buffer)} buffered nodes")
-                            break
-
-                    # Return the first buffered node
-                    if self._node_buffer:
-                        first_node = self._node_buffer[0]
-                        self._buffer_index = 1
-                        logger.info("[cleanlab] Yielding first buffered node")
-                        return first_node
-                    
-                    # Fallback (shouldn't reach here)
-                    return await self._wrapped.__anext__()
+                    # Always return the original node unchanged
+                    return node
 
                 def __aiter__(self) -> CleanlabAgentRun:
                     return self
