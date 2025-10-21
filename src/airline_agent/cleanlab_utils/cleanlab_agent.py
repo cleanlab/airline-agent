@@ -97,13 +97,30 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         self.cleanlab_project = cleanlab_project
         self.context_retrieval_tools = context_retrieval_tools or []
         self.fallback_response = fallback_response
-        self.thread_id = thread_id
+        self._thread_id = thread_id
         self.openai_tools = self._extract_tools_to_openai_format()
         self.codex_api_key = os.getenv("CODEX_API_KEY", None) or codex_api_key
         if not self.codex_api_key:
             logger.error("CODEX_API_KEY environment variable is not set.")
 
         self.perfect_eval_scores = self._get_perfect_eval_scores()
+        self._instructions_added = False
+        self._system_prompts_added: set[str] = set()
+
+    @property
+    def thread_id(self) -> str | None:
+        """Get the thread ID (read-only)."""
+        return self._thread_id
+
+    def reset_conversation(self, thread_id: str) -> None:
+        """Reset conversation state and internal tracking.
+
+        Args:
+            thread_id: New thread ID for the conversation.
+        """
+        self._instructions_added = False
+        self._system_prompts_added.clear()
+        self._thread_id = thread_id
 
     def _extract_tools_to_openai_format(self) -> list[ChatCompletionFunctionToolParam]:
         """Extract tools from the wrapped agent and convert to OpenAI format."""
@@ -167,19 +184,21 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
     def _convert_to_openai_messages(self, message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
         """Convert pydantic-ai message history to OpenAI Chat Completions format."""
         openai_messages: list[dict[str, Any]] = []
-        instructions_added = False
 
         for message in message_history:
             if isinstance(message, ModelRequest):
                 # Handle request messages (sent TO the model)
-                # Extract instructions and add as system message only once at the start
-                if hasattr(message, "instructions") and message.instructions and not instructions_added:
+                # Extract instructions and add as system message only once per conversation
+                if hasattr(message, "instructions") and message.instructions and not self._instructions_added:
                     openai_messages.append({"role": "system", "content": message.instructions})
-                    instructions_added = True
+                    self._instructions_added = True
 
                 for part in message.parts:
                     if isinstance(part, SystemPromptPart):
-                        openai_messages.append({"role": "system", "content": part.content})
+                        # Only add system prompt if we haven't seen this exact content before in this conversation
+                        if part.content not in self._system_prompts_added:
+                            openai_messages.append({"role": "system", "content": part.content})
+                            self._system_prompts_added.add(part.content)
                     elif isinstance(part, UserPromptPart):
                         openai_messages.append(self._convert_user_prompt(part))
                     elif isinstance(part, ToolReturnPart):

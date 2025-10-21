@@ -28,10 +28,10 @@ Before running the agent, you need to configure the following API keys either in
 3. Run the agent:
 
     ```bash
-    hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db --validation-mode agent
+    hatch run python src/airline_agent/agent.py --kb-path data/kb.json --vector-db-path data/vector-db --use-cleanlab
     ```
 
-    **Note:** Use `--validation-mode` to control validation: `none` (default, no validation), `cleanlab` (standard validation), `cleanlab_log_tools` (validation with post-chat-turn tool logging), `agent` (same as cleanlab log tools but using an Agent wrapper)
+    **Note:** Use `--use-cleanlab` to enable Cleanlab validation and use the CleanlabAgent wrapper. Without this flag, the agent runs without validation.
 
 ## Example queries
 

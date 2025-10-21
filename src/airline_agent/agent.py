@@ -44,7 +44,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
 
     if validation_mode != "none":
         project = get_cleanlab_project()
-    if validation_mode == "agent":
+    if validation_mode == "agent_wrapper":
         agent = cast(
             Agent,
             CleanlabAgent(
@@ -62,7 +62,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
         if not user_input:
             continue
 
-        if validation_mode == "cleanlab":
+        if validation_mode == "cleanlab_without_tool_logging":
             result = agent.run_sync(user_input, message_history=message_history)
             message_history, final_response = run_cleanlab_validation(
                 project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
@@ -72,7 +72,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
                 tools=openai_tools,
                 thread_id=thread_id,
             )
-        elif validation_mode == "cleanlab_log_tools":
+        elif validation_mode == "cleanlab_with_tool_logging":
             result = agent.run_sync(user_input, message_history=message_history)
             message_history, final_response = run_cleanlab_validation_logging_tools(
                 project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
@@ -82,7 +82,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
                 tools=openai_tools,
                 thread_id=thread_id,
             )
-        else:  # validation_mode == "none" or "agent" where agent is wrapped with CleanlabAgent above
+        else:  # validation_mode == "none" or "agent_wrapper" where agent is wrapped with CleanlabAgent above
             result = agent.run_sync(user_input, message_history=message_history)
             message_history.extend(result.new_messages())
             final_response = result.output
@@ -104,18 +104,33 @@ def main() -> None:
     parser.add_argument("--kb-path", type=str, required=True, help="Path to the knowledge base JSON file.")
     parser.add_argument("--vector-db-path", type=str, required=True, help="Path to the vector database directory.")
     parser.add_argument(
-        "--validation-mode",
-        choices=["none", "cleanlab", "cleanlab_log_tools", "agent"],
-        default="none",
-        help="Validation mode: 'none' (no validation), 'cleanlab' (run_cleanlab_validation), 'cleanlab_log_tools' (run_cleanlab_validation_logging_tools), 'agent' (use CleanlabAgent wrapper)",
+        "--use-cleanlab",
+        action="store_true",
+        help="Enable Cleanlab validation and use the CleanlabAgent wrapper",
+    )
+    parser.add_argument(
+        "--use-cleanlab-advanced-integrations",
+        choices=["cleanlab_without_tool_logging", "cleanlab_with_tool_logging"],
+        help=argparse.SUPPRESS,  # Hidden from help output
     )
 
     args = parser.parse_args()
 
+    # Determine validation mode based on new arguments
+    if args.use_cleanlab_advanced_integrations:
+        if args.use_cleanlab_advanced_integrations == "cleanlab_without_tool_logging":
+            validation_mode = "cleanlab_without_tool_logging"
+        else:  # cleanlab_with_tool_logging
+            validation_mode = "cleanlab_with_tool_logging"
+    elif args.use_cleanlab:
+        validation_mode = "agent_wrapper"
+    else:
+        validation_mode = "none"
+
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
     agent = create_agent(kb)
     with contextlib.suppress(KeyboardInterrupt, EOFError):
-        run_agent(agent, validation_mode=args.validation_mode)
+        run_agent(agent, validation_mode=validation_mode)
 
 
 if __name__ == "__main__":
