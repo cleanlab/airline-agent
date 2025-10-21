@@ -91,8 +91,8 @@ const ChatMessage = ({
                   ? detectionMetadata
                   : (message.metadata ?? null)
               }
-              showAccordion={cleanlabMode === 'cleanlab-detection'}
-              disableScores={true}
+              showAccordion={true}
+              disableScores={false}
               icon={
                 <LogoImg
                   className="size-7"
