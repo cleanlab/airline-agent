@@ -104,8 +104,6 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
             logger.error("CODEX_API_KEY environment variable is not set.")
 
         self.perfect_eval_scores = self._get_perfect_eval_scores()
-        self._instructions_added = False
-        self._system_prompts_added: set[str] = set()
 
     @property
     def thread_id(self) -> str | None:
@@ -118,9 +116,32 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         Args:
             thread_id: New thread ID for the conversation.
         """
-        self._instructions_added = False
-        self._system_prompts_added.clear()
         self._thread_id = thread_id
+
+    def _get_system_messages(self, message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
+        """Get system messages to prepend to validation messages."""
+        system_messages: list[ChatCompletionMessageParam] = []
+        instructions_added = False
+        system_prompts_seen = set()
+
+        for message in message_history:
+            if isinstance(message, ModelRequest):
+                # Extract instructions and add as system message only once
+                if hasattr(message, "instructions") and message.instructions and not instructions_added:
+                    system_messages.append(
+                        cast(ChatCompletionMessageParam, {"role": "system", "content": message.instructions})
+                    )
+                    instructions_added = True
+
+                # Add SystemPromptPart content from message history
+                for part in message.parts:
+                    if isinstance(part, SystemPromptPart) and part.content not in system_prompts_seen:
+                        system_messages.append(
+                            cast(ChatCompletionMessageParam, {"role": "system", "content": part.content})
+                        )
+                        system_prompts_seen.add(part.content)
+
+        return system_messages
 
     def _extract_tools_to_openai_format(self) -> list[ChatCompletionFunctionToolParam]:
         """Extract tools from the wrapped agent and convert to OpenAI format."""
@@ -188,18 +209,11 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         for message in message_history:
             if isinstance(message, ModelRequest):
                 # Handle request messages (sent TO the model)
-                # Extract instructions and add as system message only once per conversation
-                if hasattr(message, "instructions") and message.instructions and not self._instructions_added:
-                    openai_messages.append({"role": "system", "content": message.instructions})
-                    self._instructions_added = True
-
                 for part in message.parts:
                     if isinstance(part, SystemPromptPart):
-                        # Only add system prompt if we haven't seen this exact content before in this conversation
-                        if part.content not in self._system_prompts_added:
-                            openai_messages.append({"role": "system", "content": part.content})
-                            self._system_prompts_added.add(part.content)
-                    elif isinstance(part, UserPromptPart):
+                        # Skip SystemPromptPart - handled separately in _get_system_messages()
+                        continue
+                    if isinstance(part, UserPromptPart):
                         openai_messages.append(self._convert_user_prompt(part))
                     elif isinstance(part, ToolReturnPart):
                         openai_messages.append(
@@ -534,7 +548,9 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         thread_id: str | None = None,
     ) -> tuple[list[ModelMessage], str]:
         """Run cleanlab validation with tool call logging."""
-        messages = self._convert_to_openai_messages(message_history)
+        messages = self._get_system_messages(
+            message_history + result.new_messages()
+        ) + self._convert_to_openai_messages(message_history)
         openai_new_messages = self._convert_to_openai_messages(result.new_messages())
 
         for index, openai_newest_message in enumerate(openai_new_messages):
@@ -574,7 +590,9 @@ class CleanlabAgent(WrapperAgent[AgentDepsT, OutputDataT]):
         thread_id: str | None = None,
     ) -> tuple[list[ModelMessage], str]:
         """Run cleanlab validation on the latest agent response and update message history."""
-        messages = self._convert_to_openai_messages(message_history)
+        messages = self._get_system_messages(
+            message_history + result.new_messages()
+        ) + self._convert_to_openai_messages(message_history)
         openai_new_messages = self._convert_to_openai_messages(result.new_messages())
         _, latest_agent_response_idx_openai = self._get_latest_agent_response_openai(openai_new_messages)
 
