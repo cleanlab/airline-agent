@@ -63,7 +63,9 @@ def main() -> None:
     args = parser.parse_args()
 
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
-    agent = prepare_agent(create_agent(kb))
+    agent = create_agent(kb)
+    if args.validation_mode == "agent":
+        agent = prepare_agent(agent)
     import uvicorn
 
     uvicorn.run(agent.to_ag_ui(), host="localhost", port=8000)
