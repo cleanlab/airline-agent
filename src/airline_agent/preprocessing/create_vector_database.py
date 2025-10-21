@@ -1,6 +1,7 @@
 import argparse
 import json
 
+from dotenv import load_dotenv
 from llama_index.core import Document, VectorStoreIndex
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
@@ -10,6 +11,8 @@ from airline_agent.types.knowledge_base import KBArticle
 
 
 def main() -> None:
+    load_dotenv()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-path", type=str, help="Path to the JSON file with FAQs", required=True)
     parser.add_argument("--vector-db-path", type=str, help="Path to save the vector database", required=True)

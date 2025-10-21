@@ -5,6 +5,7 @@ import urllib.parse
 
 import requests
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -20,6 +21,8 @@ HOME_URL = "https://www.flyfrontier.com"
 
 
 def main() -> None:
+    load_dotenv()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", type=str, help="Path to save the fetched pages", required=True)
     args = parser.parse_args()
