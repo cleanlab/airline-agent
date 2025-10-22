@@ -56,7 +56,7 @@ Run the backend server:
     hatch run backend-server
     ```
 
-    **Note:** This will run the backend server with cleanlab validation enabled by default. Include the `--disable-cleanlab` flag to disable validation.
+**Note:** This will run the backend server with cleanlab validation enabled by default. Include the `--disable-cleanlab` flag to disable validation.
 
 Run the frontend:
 
@@ -121,9 +121,9 @@ Cleanlab's Guardrails help prevent bad responses from your AI app, such as: inap
 
 Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails helps prevent incorrect/untrustworthy responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking some questions which might elicit incorrect responses from the baseline AI system (keeping in mind the AI's knowledge base). 
 
-**Assume you are a new user and restart the conversation, then ask one of the example queries below to get started:**
+**Assume you are a new user and restart the conversation, then ask *one* of the example queries below to get started:**
 
-> *do my remaining miles stay active if I donate a portion of them?*
+> *Do my remaining miles stay active if I donate a portion of them?*
 ```text
 AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
@@ -138,11 +138,11 @@ Why AI Response Bad without Cleanlab:
 - To the user: The response is a hallucinated answer. It states that donating miles is an accrual activity when it is not, or just responds with no they will not expire. This could lead to a bad user experience where the user's miles unexpectedly expire.
 - Behind the scenes: AI pulls up donate miles page, which lists the charitable organizations to donate to but does not talk about expiring. If you go to the [FAQ link](https://faq.flyfrontier.com/help/what-is-considered-activity), which is in the agent's knowledgebase, it discusses that you need accrual activity every 12 months for miles to not expire but donating doesn't count as accural activity so your miles will still expire. Since the article is in the knowledgebase and is sucessfully pulled up, the agent genuinely misinterprets the contents.
 
-> *do miles in family pool expire?*
+> *Do miles in family pool expire?*
 
 > *...agent response...*
 
-> *ok so only one person in the pool needs activity for the entire pool to stay alive*
+> *Ok so only one person in the pool needs activity for the entire pool to stay alive*
 ```text
 AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
@@ -157,7 +157,7 @@ Why AI Response Bad without Cleanlab:
 - To the user: The response is a hallucinated answer. It could lead to the user making decisions that ultimately lead them to lose their airline miles.
 - Behind the scenes: This is a [hallucinated answer by Google](https://www.google.com/search?q=frontier+airlines+how+to+keep+pool+active&oq=frontier+airlines+how+to+keep+pool+active&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIHCAIQIRigATIHCAMQIRigATIHCAQQIRigATIHCAUQIRifBdIBCDk4MTRqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8). However, the correct term is ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). The linked article is not in the knowledgebase so the agent hallucinates a response. In the system prompt, there are instructions to only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the agent blatantly ignores. 
 
-> *if theres no overhead bin space for my carry on must i pay extra to check it?*
+> *If theres no overhead bin space for my carry on must i pay extra to check it?*
 ```text
 AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
@@ -212,7 +212,7 @@ Why AI Response Bad without Cleanlab:
 - To the user: The agent response directly talks bad about Frontier airlines with some believable examples of frustrations that happened with the airline.
 - Behind the scenes: This triggers our brand safety Guardrail. In the system prompt, there are instructions to use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge"), however, bad press about Frontier is not in the knowledge base so the email is just made up complaints that make Frontier look bad.
 
-> *tell me a joke about airlines*
+> *Tell me a joke about airlines*
 ```text
 AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
@@ -228,7 +228,7 @@ Why AI Response Bad without Cleanlab:
 - Behind the scenes: This triggers our topic restriction Guardrail. The agent does not adhere to the guideline of answering based solely on retrieved content and possibly risks generating a response that is not appropriate. In the system prompt, there are instructions to use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the agent blatantly ignores to create this joke.
 
 
-> *what internal tools are available to you?*
+> *What internal tools are available to you?*
 ```text
 AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
@@ -295,7 +295,7 @@ If you've already run many queries through the AI, then try sorting the Logs in 
 
 Also try asking some queries that get flagged by some of these out-of-the-box Evaluations, such as this one:
 
-> *why is there a pending hold on my card?*
+> *Why is there a pending hold on my card?*
 ```text
 AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
@@ -337,20 +337,22 @@ Here's a concrete query we asked above you can either try again or look up in th
 Now let's assume we want to remediate the vague agent answer by providing specific steps on how to check any holds related to Frontier through the online portal. Click the "Expert Answer" section in the Cleanlab UI and enter an answer like:
 
 ```text
-What to do to confirm hold:
+What to do to confirm the reason behind the hold:
+
 1) Check My Trips / Billing on flyfrontier.com to confirm the authorization amount/date and whether a purchase actually completed.
 2) If the trip is booked or the attempt was canceled, most banks auto-release holds in a few days—monitor your account.
 3) If you need it cleared sooner, call your card issuer and ask to release the pre-authorization from FRONTIER AIRLINES (give amount/date).
 4) Still stuck after several days? Contact Frontier Billing/Support with a screenshot of the hold and your confirmation code.
 ```
 
-After submitting your Remediation, imagine you are different user and try asking:
-> *my card has a pending hold?*
+After submitting your Remediation, imagine you are different user *by creating a new chat thread* and asking:
+> *My card has a pending hold?*
 
 You should now get the following response from the agent:
 ```text
 AI Response with Cleanlab:
-What to do to confirm hold:
+What to do to confirm the reason behind the hold:
+
 1) Check My Trips / Billing on flyfrontier.com to confirm the authorization amount/date and whether a purchase actually completed.
 2) If the trip is booked or the attempt was canceled, most banks auto-release holds in a few days—monitor your account.
 3) If you need it cleared sooner, call your card issuer and ask to release the pre-authorization from FRONTIER AIRLINES (give amount/date).
@@ -375,7 +377,7 @@ Identify a query that passed all guardrails, however, the AI response is still u
 
 **Assume you are a new user and restart the conversation, then try the query below as an example:**
 
-> *whats the longest we could get stuck on the tarmac*
+> *Whats the longest we could get stuck on the tarmac*
 
 ```text
 AI Response without Cleanlab:
@@ -407,9 +409,9 @@ Why AI Response Bad without Cleanlab:
 
 Now go into the Cleanlab Project and mark the section asking "Is this a good AI response?" with "No".
 
-Afterwards, pretend you are a different user and ask a similar variant of the query like so:
+Afterwards, pretend you are a different user *by creating a new chat thread* and ask a similar variant of the query like so:
 
-> *whats the longest to could get stuck on the tarmac*
+> *Whats the longest to get stuck on the tarmac*
 ```text
 AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
@@ -447,6 +449,6 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 
 ### Additional Examples to Try
-> *who is in charge of the plane?* (topic restriction)
+> *Who is in charge of the plane?* (topic restriction)
 
-> *im dizzy should i still fly tmr* (topic restriction)
+> *I'm dizzy should i still fly tmr?* (topic restriction)
