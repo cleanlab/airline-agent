@@ -21,6 +21,8 @@ import {
   MessageAssistantStatus
 } from './design-system-components/MessageAssistant'
 import { MessageError } from './design-system-components/MessageError'
+import { Collapsible } from 'radix-ui'
+import { IconChevronDown } from './icons'
 
 export interface ChatListProps {
   threadId?: string
@@ -127,48 +129,49 @@ const ChatMessage = ({
         }
 
         return (
-          <div
-            className={cn(
-              'rounded-4 border border-border-2 bg-surface-1 px-6 py-7'
-            )}
-          >
+          <div className={cn('rounded-4 border border-border-2 bg-surface-1')}>
             <div className="flex items-start gap-4">
-              <div className="bg-primary-1 text-primary-11 flex h-7 w-7 items-center justify-center rounded-full">
-                <span className="text-xs font-medium">🔧</span>
-              </div>
-              <div className="flex-1 space-y-3">
-                <div className="text-sm font-medium text-foreground">
-                  Tool Call: {toolCallData?.tool_name || 'Unknown'}
-                </div>
-
-                {toolCallData?.arguments && (
-                  <div>
-                    <div className="type-body-100 mb-1 font-medium">
-                      Arguments:
-                    </div>
-                    <div className="type-caption-medium max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
-                      {parseAndPrettyPrint(toolCallData.arguments)}
-                    </div>
+              <Collapsible.Root className="group/collapsible group flex-1">
+                <Collapsible.Trigger className="type-body-200-semibold flex w-full items-center justify-between gap-5 rounded-4 px-6 py-7 hover:bg-surface-1-hover">
+                  <div className="flex items-center gap-4">
+                    <span className="text-xs font-medium">🔧</span> Tool Call:{' '}
+                    {toolCallData?.tool_name || 'Unknown'}
                   </div>
-                )}
-
-                {toolCallData?.result && (
-                  <div>
-                    <div className="text-foreground-2 type-body-100 mb-1 font-medium">
-                      Result:
+                  <IconChevronDown
+                    size={16}
+                    className="text-text-disabled transition-transform group-data-[state=open]/collapsible:-scale-y-100"
+                  />
+                </Collapsible.Trigger>
+                <Collapsible.Content className="overflow-hidden data-[state=closed]:animate-collapsible-close data-[state=open]:animate-collapsible-open">
+                  {toolCallData?.arguments && (
+                    <div className="px-6 pt-4">
+                      <div className="type-body-100 mb-2 font-medium">
+                        Arguments:
+                      </div>
+                      <div className="type-caption-medium max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
+                        {parseAndPrettyPrint(toolCallData.arguments)}
+                      </div>
                     </div>
-                    <div className="rounded max-h-32 type-caption-medium max-w-full overflow-x-auto overflow-y-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
-                      {parseAndPrettyPrint(toolCallData.result)}
-                    </div>
-                  </div>
-                )}
+                  )}
 
-                {!toolCallData && (
-                  <div className="text-xs text-foreground-2 rounded max-w-full overflow-x-auto break-all bg-surface-2 p-2 font-mono">
-                    {message.content}
-                  </div>
-                )}
-              </div>
+                  {toolCallData?.result && (
+                    <div className="px-6 py-6">
+                      <div className="text-foreground-2 type-body-100 mb-1 font-medium">
+                        Result:
+                      </div>
+                      <div className="rounded max-h-32 type-caption-medium max-w-full overflow-x-auto overflow-y-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
+                        {parseAndPrettyPrint(toolCallData.result)}
+                      </div>
+                    </div>
+                  )}
+
+                  {!toolCallData && (
+                    <div className="text-xs text-foreground-2 rounded max-w-full overflow-x-auto break-all bg-surface-2 p-2 font-mono">
+                      {message.content}
+                    </div>
+                  )}
+                </Collapsible.Content>
+              </Collapsible.Root>
             </div>
           </div>
         )
