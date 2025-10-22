@@ -1,5 +1,6 @@
 """Create a new demo project from an existing official demo project."""
 
+import argparse
 import logging
 import os
 
@@ -10,11 +11,17 @@ from dotenv import load_dotenv
 
 # Official demo project ID to copy configuration from
 OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"
-COPY_PROJECT_ROUTE = "https://api-codex.cleanlab.ai/api/admin/projects/copy_project_settings"
+DEFAULT_DEMO_PROJECT_NAME = "(Demo) Frontier Airlines Support Chatbot"
+DEFAULT_DEMO_PROJECT_DESCRIPTION = "Do not delete please!"
+COPY_PROJECT_ROUTE = (
+    "https://api-codex.cleanlab.ai/api/admin/projects/copy_project_settings"
+)
 logger = logging.getLogger(__name__)
 
 
-def copy_project_configuration(new_project_id: str, api_key: str) -> ProjectReturnSchema:
+def copy_project_configuration(
+    new_project_id: str, api_key: str
+) -> ProjectReturnSchema:
     with httpx.Client(headers={"X-API-Key": api_key}) as client:
         response = client.patch(
             COPY_PROJECT_ROUTE,
@@ -29,6 +36,23 @@ def copy_project_configuration(new_project_id: str, api_key: str) -> ProjectRetu
 
 def main() -> None:
     """Create a new demo project by copying configuration from the official demo project."""
+    parser = argparse.ArgumentParser(
+        description="Create a new demo project by copying configuration from the official demo project."
+    )
+    parser.add_argument(
+        "--name",
+        type=str,
+        default=DEFAULT_DEMO_PROJECT_NAME,
+        help="Name of the new demo project",
+    )
+    parser.add_argument(
+        "--description",
+        type=str,
+        default=DEFAULT_DEMO_PROJECT_DESCRIPTION,
+        help="Description of the new demo project",
+    )
+    args = parser.parse_args()
+
     logging.basicConfig(level=logging.INFO)
     load_dotenv()
 
@@ -42,11 +66,13 @@ def main() -> None:
     codex_client = Client(api_key=codex_api_key)
 
     new_project = codex_client.create_project(
-        name="(Demo) Frontier Airlines Support Chatbot",
-        description="Do not delete please!",
+        name=args.name,
+        description=args.description,
     )
 
-    new_project_with_updated_config = copy_project_configuration(new_project.id, codex_api_key)
+    new_project_with_updated_config = copy_project_configuration(
+        new_project.id, codex_api_key
+    )
 
     logger.info(
         "Created new demo project: %s (%s)",
