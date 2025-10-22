@@ -15,7 +15,7 @@ Before running the agent, you need to configure the following API keys either in
 
 We've provided a `.env.sample` file that you can copy to `.env` and then fill in.
 
-To get your `CODEX_API_KEY`, navigate to the `Account` page in the lefthand sidebar. 
+You can find your `CODEX_API_KEY` in your [Codex Account](https://codex.cleanlab.ai/account) page.
 
 To get your `CLEANLAB_PROJECT_ID`, you can programmatically create a new Cleanlab Project for this demo by running:
 
