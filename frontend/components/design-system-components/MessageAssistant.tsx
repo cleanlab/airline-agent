@@ -4,7 +4,6 @@ import type { HTMLAttributes, ReactNode } from 'react'
 import type { ValueOf } from 'type-fest'
 
 import { Badge } from './Badge'
-import { CleanlabLogo } from './CleanlabLogo'
 import { cn } from '@/lib/utils/tailwindUtils'
 import { IssuesAccordion } from './IssuesAccordion'
 import { MessageMarkdown } from './MessageMarkdown'
@@ -89,7 +88,9 @@ const AssistantIcon = ({
         )}
       />
       {/* Relative position assures logo appears above loading background */}
-      <div className="relative">{icon ?? <CleanlabLogo size={21} />}</div>
+      <div className="relative flex h-full w-full items-center justify-center pl-1">
+        {icon}
+      </div>
     </div>
   )
 }

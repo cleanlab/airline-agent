@@ -5,15 +5,11 @@ import { useRateLimitedValue } from '@/lib/hooks/useRateLimitedValue'
 import { useMessagesStore } from '@/providers/messages-store-provider'
 import type { StoreMessage } from '@/stores/messages-store'
 
-import logoLightMode from './assets/logo-black.png'
-import logoDarkMode from './assets/logo-white.png'
 import type { RefObject } from 'react'
 import { useEffect, useRef } from 'react'
 import { useAutoScrollMessage } from '../lib/hooks/use-auto-scroll-message'
 import type { DemoMode } from './chat'
 import { RetryButton } from './message'
-import { LogoImg } from './design-system-components/LogoImg'
-import { logoMetadata } from './design-system-components/logoMetadata'
 import { MessageUser } from './design-system-components/MessageUser'
 import {
   MessageAssistant,
@@ -21,7 +17,7 @@ import {
 } from './design-system-components/MessageAssistant'
 import { MessageError } from './design-system-components/MessageError'
 import { Collapsible } from 'radix-ui'
-import { IconChevronDown } from './icons'
+import { IconAirplane, IconChevronDown } from './icons'
 
 // Simple JSON syntax highlighter component
 const JsonHighlighter = ({ children }: { children: string }) => {
@@ -102,13 +98,7 @@ const ChatMessage = ({
               messageMetadata={message.metadata ?? null}
               showAccordion={false}
               disableScores={true}
-              icon={
-                <LogoImg
-                  className="size-7"
-                  src={{ light: logoLightMode.src, dark: logoDarkMode.src }}
-                  {...logoMetadata[128].logo}
-                />
-              }
+              icon={<IconAirplane size={16} />}
             />
           </div>
         )
