@@ -5,7 +5,7 @@ import os
 from typing import TYPE_CHECKING
 
 from codex import Client
-from dotenv import load_dotenv, find_dotenv, set_key
+from dotenv import find_dotenv, load_dotenv, set_key
 
 if TYPE_CHECKING:
     from codex.types import ProjectRetrieveResponse
