@@ -1,4 +1,3 @@
-import argparse
 import json
 import pathlib
 import subprocess
@@ -24,12 +23,9 @@ HOME_URL = "https://www.flyfrontier.com"
 def main() -> None:
     load_dotenv()
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--path", type=str, help="Path to save the fetched pages", required=True)
-    args = parser.parse_args()
-
-    if not pathlib.Path(args.path).parent.exists():
-        pathlib.Path(args.path).parent.mkdir(parents=True)
+    project_root = pathlib.Path(__file__).resolve().parents[3]
+    output_path = project_root / "data" / "kb.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     faq_urls = get_all_faq_urls()
     home_urls = get_home_urls()
@@ -37,7 +33,7 @@ def main() -> None:
 
     entries: list[KBArticle] = [fetch_page(url) for url in tqdm(all_urls, desc="fetching pages")]
 
-    with open(args.path, "w") as f:
+    with output_path.open("w") as f:
         json.dump([entry.model_dump() for entry in entries], f, indent=2)
 
 

@@ -1,4 +1,3 @@
-import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -15,12 +14,9 @@ from airline_agent.types.knowledge_base import KBArticle
 def main() -> None:
     load_dotenv()
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data-path", type=str, help="Path to the JSON file with FAQs", required=True)
-    parser.add_argument("--vector-db-path", type=str, help="Path to save the vector database", required=True)
-    args = parser.parse_args()
-
-    data_path = Path(args.data_path)
+    project_root = Path(__file__).resolve().parents[3]
+    data_path = project_root / "data" / "kb.json"
+    vector_db_path = project_root / "data" / "vector-db"
     verify_checksum(data_path)
 
     with data_path.open() as f:
@@ -30,7 +26,7 @@ def main() -> None:
 
     index = create_index(documents)
 
-    save_index(index, args.vector_db_path)
+    save_index(index, vector_db_path)
 
 
 def to_documents(data: list[KBArticle]) -> list[Document]:
@@ -59,8 +55,9 @@ def create_index(documents: list[Document]) -> VectorStoreIndex:
     )
 
 
-def save_index(index: VectorStoreIndex, path: str) -> None:
-    index.storage_context.persist(persist_dir=path)
+def save_index(index: VectorStoreIndex, path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+    index.storage_context.persist(persist_dir=str(path))
 
 
 def verify_checksum(file_path: Path) -> None:
