@@ -2,17 +2,29 @@
 
 import logging
 import os
-from typing import TYPE_CHECKING
 
-from codex import Client
+import httpx
+from cleanlab_codex import Client
+from codex.types.project_return_schema import ProjectReturnSchema
 from dotenv import load_dotenv
-
-if TYPE_CHECKING:
-    from codex.types import ProjectRetrieveResponse
 
 # Official demo project ID to copy configuration from
 OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"
+COPY_PROJECT_ROUTE = "https://api-codex.cleanlab.ai/api/admin/projects/copy_project_settings"
 logger = logging.getLogger(__name__)
+
+
+def copy_project_configuration(new_project_id: str, api_key: str) -> ProjectReturnSchema:
+    with httpx.Client(headers={"X-API-Key": api_key}) as client:
+        response = client.patch(
+            COPY_PROJECT_ROUTE,
+            params={
+                "project_id": OFFICIAL_DEMO_PROJECT_ID,
+                "new_project_id": new_project_id,
+            },
+        )
+        response.raise_for_status()
+        return ProjectReturnSchema.model_validate(response.json())
 
 
 def main() -> None:
@@ -27,27 +39,28 @@ def main() -> None:
 
     logger.info("Using official demo project ID: %s", OFFICIAL_DEMO_PROJECT_ID)
 
-    client = Client(api_key=codex_api_key)
+    codex_client = Client(api_key=codex_api_key)
 
-    # Retrieve the existing project configuration
-    try:
-        existing_project: ProjectRetrieveResponse = client.projects.retrieve(project_id=OFFICIAL_DEMO_PROJECT_ID)
-    except Exception as err:
-        retrieve_error_msg = f"Failed to retrieve project {OFFICIAL_DEMO_PROJECT_ID}: {err}"
-        raise ValueError(retrieve_error_msg) from err
-
-    # Create a new project with the same configuration
-    new_project = client.projects.create(
-        config=existing_project.config,  # type: ignore[arg-type]
+    new_project = codex_client.create_project(
         name="(Demo) Frontier Airlines Support Chatbot",
-        description=existing_project.description,
-        organization_id=existing_project.organization_id,
-        auto_clustering_enabled=existing_project.auto_clustering_enabled or False,
+        description="Do not delete please!",
     )
 
-    logger.info("Created new demo project: %s (%s)", new_project.name, new_project.id)
-    logger.info("Project can be found in organization: %s", new_project.organization_id)
-    logger.info("Set CLEANLAB_PROJECT_ID=%s in your .env file", new_project.id)
+    new_project_with_updated_config = copy_project_configuration(new_project.id, codex_api_key)
+
+    logger.info(
+        "Created new demo project: %s (%s)",
+        new_project_with_updated_config.name,
+        new_project_with_updated_config.id,
+    )
+    logger.info(
+        "Project can be found in organization: %s",
+        new_project_with_updated_config.organization_id,
+    )
+    logger.info(
+        "Set CLEANLAB_PROJECT_ID=%s in your .env file",
+        new_project_with_updated_config.id,
+    )
 
 
 if __name__ == "__main__":
