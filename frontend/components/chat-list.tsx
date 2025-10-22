@@ -171,24 +171,26 @@ const ChatMessage = ({
                       <div className="type-body-100 mb-2 font-medium">
                         Arguments:
                       </div>
-                      <ChatCodeBlock
-                        language="json"
-                        code={(() => {
-                          // Handle arguments - they might be a string that needs parsing
-                          let argumentsData = toolCallData.arguments
-                          if (typeof argumentsData === 'string') {
-                            try {
-                              argumentsData = JSON.parse(argumentsData)
-                            } catch {
-                              // If parsing fails, use the string as-is
+                      <div className="w-full max-w-full overflow-hidden">
+                        <ChatCodeBlock
+                          language="json"
+                          code={(() => {
+                            // Handle arguments - they might be a string that needs parsing
+                            let argumentsData = toolCallData.arguments
+                            if (typeof argumentsData === 'string') {
+                              try {
+                                argumentsData = JSON.parse(argumentsData)
+                              } catch {
+                                // If parsing fails, use the string as-is
+                              }
                             }
-                          }
-                          return parseAndPrettyPrint(argumentsData)
-                        })()}
-                        showLineNumbers={false}
-                        textSize="50"
-                        className="max-w-full"
-                      />
+                            return parseAndPrettyPrint(argumentsData)
+                          })()}
+                          showLineNumbers={false}
+                          textSize="50"
+                          className="w-full max-w-full"
+                        />
+                      </div>
                     </div>
                   )}
 
@@ -197,16 +199,50 @@ const ChatMessage = ({
                       <div className="type-body-100 mb-1 font-medium">
                         Result:
                       </div>
-                      <div className="max-h-32 max-w-full overflow-x-auto overflow-y-auto rounded-2 bg-surface-2 px-5 py-4">
-                        <pre className="type-caption whitespace-pre-wrap break-words font-mono">
-                          {parseAndPrettyPrint(toolCallData.result)}
-                        </pre>
-                      </div>
+                      {(() => {
+                        const resultContent = parseAndPrettyPrint(
+                          toolCallData.result
+                        )
+
+                        // Check if the result is valid JSON
+                        const isJson = (() => {
+                          try {
+                            const parsed = JSON.parse(resultContent)
+                            return typeof parsed === 'object' && parsed !== null
+                          } catch {
+                            return false
+                          }
+                        })()
+
+                        if (isJson) {
+                          // Use ChatCodeBlock for JSON results
+                          return (
+                            <div className="w-full max-w-full overflow-hidden">
+                              <ChatCodeBlock
+                                language="json"
+                                code={resultContent}
+                                showLineNumbers={false}
+                                textSize="50"
+                                className="w-full max-w-full"
+                              />
+                            </div>
+                          )
+                        } else {
+                          // Use plain text for non-JSON results
+                          return (
+                            <div className="max-h-32 max-w-full overflow-x-auto overflow-y-auto rounded-2 bg-surface-2 px-5 py-4">
+                              <pre className="type-caption whitespace-pre-wrap break-words font-mono">
+                                {resultContent}
+                              </pre>
+                            </div>
+                          )
+                        }
+                      })()}
                     </div>
                   )}
 
                   {!toolCallData && (
-                    <div className="type-caption-medium max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
+                    <div className="type-caption max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
                       {message.content}
                     </div>
                   )}
