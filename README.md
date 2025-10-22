@@ -17,7 +17,7 @@ We've provided a `.env.sample` file that you can copy to `.env` and then fill in
 
 To get your `CODEX_API_KEY`, navigate to the `Account` page in the lefthand sidebar. 
 
-Your `CLEANLAB_PROJECT_ID` will be programmatically set when you create a new Cleanlab Project for this demo:
+Your `CLEANLAB_PROJECT_ID` will be programmatically set when you create a new Cleanlab Project for this demo using:
 
 ```bash
 hatch run create-demo-project
