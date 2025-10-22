@@ -100,7 +100,7 @@ const CodeBlock: FC<Props> = memo(props => {
   return (
     <div
       className={cn(
-        'type-code-100 relative w-full overflow-hidden rounded-2 border border-border-1 bg-surface-0-hover',
+        'type-code-100 relative w-full max-w-full overflow-hidden rounded-2 border border-border-1 bg-surface-0-hover',
         textSize === '50' && 'type-code-50',
         className
       )}
@@ -152,7 +152,7 @@ const CodeBlock: FC<Props> = memo(props => {
           <div
             style={style}
             className={cn(
-              'type-code-100 m-0 flex flex-nowrap overflow-auto p-0 py-8 pr-6 [scrollbar-width:thin]',
+              'type-code-100 m-0 flex max-w-full flex-wrap overflow-auto p-0 py-8 pr-6 [scrollbar-width:thin]',
               textSize === '50' && 'type-code-50 p-5',
               classNameFromPrism,
               codeSectionClassName
@@ -166,11 +166,19 @@ const CodeBlock: FC<Props> = memo(props => {
                 {tokens.map((_, i) => [<div key={i}>{i}</div>])}
               </div>
             )}
-            <div>
+            <div className="max-w-full overflow-hidden whitespace-pre-wrap break-words break-all">
               {tokens.map((line, i) => (
-                <pre key={i} {...getLineProps({ line })}>
+                <pre
+                  key={i}
+                  {...getLineProps({ line })}
+                  className="max-w-full whitespace-pre-wrap break-words break-all"
+                >
                   {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token })} />
+                    <span
+                      key={key}
+                      {...getTokenProps({ token })}
+                      className="break-words break-all"
+                    />
                   ))}
                 </pre>
               ))}
