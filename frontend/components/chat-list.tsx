@@ -7,7 +7,6 @@ import type { StoreMessage } from '@/stores/messages-store'
 
 import logoLightMode from './assets/logo-black.png'
 import logoDarkMode from './assets/logo-white.png'
-import { cn } from '@/lib/utils/tailwindUtils'
 import type { RefObject } from 'react'
 import { useEffect, useRef } from 'react'
 import { useAutoScrollMessage } from '../lib/hooks/use-auto-scroll-message'
@@ -129,12 +128,12 @@ const ChatMessage = ({
         }
 
         return (
-          <div className={cn('rounded-4 border border-border-2 bg-surface-1')}>
+          <div className="rounded-4 border border-border-2 bg-surface-1">
             <div className="flex items-start gap-4">
               <Collapsible.Root className="group/collapsible group flex-1">
                 <Collapsible.Trigger className="type-body-200-semibold flex w-full items-center justify-between gap-5 rounded-4 px-6 py-7 hover:bg-surface-1-hover">
-                  <div className="flex items-center gap-4">
-                    <span className="text-xs font-medium">🔧</span> Tool Call:{' '}
+                  <div className="type-body-200-semibold flex items-center gap-4">
+                    <span>🔧</span> Tool Call:{' '}
                     {toolCallData?.tool_name || 'Unknown'}
                   </div>
                   <IconChevronDown
