@@ -9,7 +9,7 @@ import { useRagAppStore } from '@/providers/rag-app-store-provider'
 import type { StoreMessage, ThreadError } from '@/stores/messages-store'
 import type { UserMessage } from '@/client/types.gen'
 import ENV_VARS from '@/lib/envVars'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useAppSettings } from './use-app-settings'
 import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '../consts'
 import type { SetOptional } from 'type-fest'
@@ -95,17 +95,11 @@ const createInitialMessages = ({
   ] as const satisfies StoreMessage[]
 }
 
-function useStreamMessage() {
+function useStreamMessage(cleanlabEnabled: boolean = true) {
   const currentThread = useMessagesStore(state => state.currentThread)
   const setCurrentThread = useMessagesStore(state => state.setCurrentThread)
   const appendMessage = useMessagesStore(state => state.appendMessage)
-  const updateMessageContent = useMessagesStore(
-    state => state.updateMessageContent
-  )
-  const updateMessage = useMessagesStore(state => state.updateMessage)
-  const updateMessageMetadata = useMessagesStore(
-    state => state.updateMessageMetadata
-  )
+
   const messageIsPending = useMessagesStore(
     state => state.currentThread?.isPending
   )
@@ -113,6 +107,10 @@ function useStreamMessage() {
 
   const addHistoryThread = useRagAppStore(state => state.addHistoryThread)
   const [appSettings] = useAppSettings()
+
+  // Always use latest cleanlabEnabled in callbacks
+  const cleanlabRef = useRef(cleanlabEnabled)
+  cleanlabRef.current = cleanlabEnabled
 
   const setDone = useCallback(
     (opts: SetOptional<Parameters<typeof setThreadStatus>[0], 'status'>) => {
@@ -159,11 +157,13 @@ function useStreamMessage() {
     async ({
       threadId,
       localThreadId,
-      messageContent
+      messageContent,
+      cleanlabEnabled = true
     }: {
       threadId: string
       localThreadId?: string
       messageContent?: string
+      cleanlabEnabled?: boolean
     }) => {
       if (!threadId) return
       setThreadStatus({
@@ -186,7 +186,7 @@ function useStreamMessage() {
         }
 
         response = await fetch(
-          `${baseURL}/api/airline-agent/stream?thread_id=${threadId}`,
+          `${baseURL}/api/airline-agent/stream?thread_id=${threadId}&cleanlab_enabled=${cleanlabEnabled}`,
           {
             method: 'POST',
             headers: {
@@ -242,7 +242,7 @@ function useStreamMessage() {
               const currentThread = bareStore.getState().currentThread
               if (currentThread?.status !== 'complete') {
                 const error =
-                  currentThread?.error ??
+                  currentThread?.error ||
                   getErrorFromCurrentStatus(currentThread?.status)
                 setDone({
                   threadId,
@@ -421,12 +421,20 @@ function useStreamMessage() {
         isPending: true,
         status: CurrentThreadStatus.threadPending
       })
+      // Persist selection exactly when first message is sent for this new thread
+      try {
+        localStorage.setItem(
+          `cleanlabEnabled:thread:${localThreadId}`,
+          JSON.stringify(cleanlabRef.current)
+        )
+      } catch {}
       // Immediately post to backend and treat this as a standalone Q+A thread
       window?.history.pushState({}, '', getChatPath(localThreadId))
       postMessage({
         threadId: localThreadId,
         localThreadId,
-        messageContent: messageContent
+        messageContent: messageContent,
+        cleanlabEnabled: cleanlabRef.current
       })
     },
     [addHistoryThread, setCurrentThread, postMessage]
@@ -469,7 +477,8 @@ function useStreamMessage() {
         postMessage({
           threadId: threadIdToUse,
           localThreadId: currentThread?.localThreadId,
-          messageContent: messageContent
+          messageContent: messageContent,
+          cleanlabEnabled: cleanlabRef.current
         })
       } else {
         // Start new conversation
@@ -506,7 +515,8 @@ function useStreamMessage() {
     postMessage({
       threadId: existingThreadId,
       localThreadId: currentThread?.localThreadId,
-      messageContent: lastUserMessage.content
+      messageContent: lastUserMessage.content,
+      cleanlabEnabled: cleanlabRef.current
     })
   }, [appendMessage, currentThread, postMessage])
 

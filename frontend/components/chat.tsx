@@ -19,8 +19,9 @@ import { ChatInputPanel } from './design-system-components/ChatInputPanel'
 import { useAssistantHistory } from '@/providers/rag-app-store-provider'
 import { useAppSettings } from '@/lib/hooks/use-app-settings'
 import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '@/lib/consts'
+import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group'
 
-export type DemoMode = 'no-cleanlab' | 'cleanlab-detection' | 'cleanlab-enforce'
+export type DemoMode = 'cleanlab-enabled' | 'cleanlab-disabled'
 export interface ChatProps {
   threadId?: string
   className?: string
@@ -45,11 +46,26 @@ export function Chat({
   const [input, setInput] = useState('')
   const setCurrentThread = useMessagesStore(state => state.setCurrentThread)
   const currentThread = useMessagesStore(state => state.currentThread)
-  const [cleanlabMode, setCleanlabMode] =
-    useState<DemoMode>('cleanlab-detection')
   const [appSettings] = useAppSettings()
   const assistantId = appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG
   const history = useAssistantHistory(assistantId || undefined)
+  const [cleanlabEnabled, setCleanlabEnabled] = useState<boolean>(() => {
+    try {
+      if (threadId) {
+        const key = `cleanlabEnabled:thread:${threadId}`
+        const v = localStorage.getItem(key)
+        if (v !== null) {
+          const parsed = JSON.parse(v)
+          console.log('[Chat] init from storage', key, parsed)
+          return parsed
+        }
+      }
+      console.log('[Chat] init default true (no storage) for thread', threadId)
+      return true
+    } catch {
+      return true
+    }
+  })
 
   const historySnapshot = useMemo(() => {
     if (!threadId) return undefined
@@ -58,6 +74,20 @@ export function Chat({
     )
     return item?.snapshot
   }, [history, threadId])
+
+  // Hydrate per-thread cleanlabEnabled on thread change (if previously saved)
+  useEffect(() => {
+    if (!threadId) return
+    try {
+      const key = `cleanlabEnabled:thread:${threadId}`
+      const v = localStorage.getItem(key)
+      console.log('[Chat] hydrate on thread change', key, v)
+      if (v !== null) {
+        const parsed = JSON.parse(v)
+        setCleanlabEnabled(parsed)
+      }
+    } catch {}
+  }, [threadId])
 
   useEffect(() => {
     if (!threadId) {
@@ -148,6 +178,9 @@ export function Chat({
     })
   }, [missingKeys])
 
+  const disableToggleGroup =
+    (messages?.length ?? 0) > 0 || currentThread?.isPending
+
   const content = (
     <div
       className={cn(
@@ -167,11 +200,43 @@ export function Chat({
               'sm:rounded-t-xl mx-auto flex w-full max-w-[680px] grow flex-col px-8 md:px-9'
             )}
           >
+            <ToggleGroup
+              disabled={disableToggleGroup}
+              type="single"
+              value={cleanlabEnabled ? 'cleanlab-enabled' : 'cleanlab-disabled'}
+              onValueChange={value => {
+                const next = value === 'cleanlab-enabled'
+                console.log('[Chat] toggle change', next)
+                setCleanlabEnabled(next)
+              }}
+              className="absolute top-5 z-50 mx-4 inline-flex w-fit justify-center self-center overflow-hidden rounded-2 border border-border-1 bg-surface-1 shadow-elev-2"
+            >
+              <ToggleGroupItem
+                value="cleanlab-disabled"
+                className={cn(
+                  toggleGroupItemClasses,
+                  disableToggleGroup &&
+                    'cursor-not-allowed bg-surface-disabled text-text-disabled'
+                )}
+              >
+                Cleanlab Disabled
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="cleanlab-enabled"
+                className={cn(
+                  toggleGroupItemClasses,
+                  disableToggleGroup &&
+                    'cursor-not-allowed bg-surface-disabled text-text-disabled'
+                )}
+              >
+                Cleanlab Enabled
+              </ToggleGroupItem>
+            </ToggleGroup>
             {messages?.length ? (
               <ChatList
                 threadId={currentThread?.threadId}
                 scrollRef={scrollRef}
-                cleanlabMode={cleanlabMode}
+                cleanlabEnabled={cleanlabEnabled}
               />
             ) : (
               <EmptyScreen />
@@ -186,6 +251,7 @@ export function Chat({
                   setInput={setInput}
                   promptPlaceholder={promptPlaceholder}
                   threadId={threadId}
+                  cleanlabEnabled={cleanlabEnabled}
                 />
               </ChatInputPanel>
             </div>

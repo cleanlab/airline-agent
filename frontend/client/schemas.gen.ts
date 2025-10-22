@@ -161,14 +161,7 @@ export const MessageMetadataSchema = {
 export const UserMessageSchema = {
   properties: {
     thread_id: {
-      anyOf: [
-        {
-          type: 'string'
-        },
-        {
-          type: 'null'
-        }
-      ],
+      type: 'string',
       title: 'Thread Id'
     },
     metadata: {
@@ -186,7 +179,7 @@ export const UserMessageSchema = {
     }
   },
   type: 'object',
-  required: ['content'],
+  required: ['thread_id', 'content'],
   title: 'UserMessage'
 } as const
 

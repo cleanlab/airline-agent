@@ -27,7 +27,7 @@ export type MessageMetadata = {
 }
 
 export type UserMessage = {
-  thread_id?: string | null
+  thread_id: string
   metadata?: MessageMetadata
   role?: 'user'
   content: string
@@ -41,6 +41,12 @@ export type ValidationError = {
 
 export type AirlineAgentChatRouteApiAirlineAgentStreamPostData = {
   body: UserMessage
+  query?: {
+    /**
+     * Whether to enable cleanlab validation
+     */
+    cleanlab_enabled?: boolean
+  }
 }
 
 export type AirlineAgentChatRouteApiAirlineAgentStreamPostResponse = unknown
