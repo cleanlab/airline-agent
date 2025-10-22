@@ -9,8 +9,8 @@ from cleanlab_codex import Client
 from codex.types.project_return_schema import ProjectReturnSchema
 from dotenv import load_dotenv
 
-# Official demo project ID to copy configuration from
-OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"
+from airline_agent.constants import OFFICIAL_DEMO_PROJECT_ID
+
 DEFAULT_DEMO_PROJECT_NAME = "(Demo) Frontier Airlines Support Chatbot"
 DEFAULT_DEMO_PROJECT_DESCRIPTION = "Do not delete please!"
 COPY_PROJECT_ROUTE = "https://api-codex.cleanlab.ai/api/admin/projects/copy_project_settings"
