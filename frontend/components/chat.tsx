@@ -209,14 +209,14 @@ export function Chat({
                 console.log('[Chat] toggle change', next)
                 setCleanlabEnabled(next)
               }}
-              className="absolute top-5 z-50 mx-4 inline-flex w-fit justify-center self-center overflow-hidden rounded-2 border border-border-1 bg-surface-1 shadow-elev-2"
+              className="absolute top-0 z-50 mx-4 inline-flex w-fit justify-center self-center overflow-hidden rounded-2 border border-border-1 bg-surface-1 shadow-elev-2"
             >
               <ToggleGroupItem
                 value="cleanlab-disabled"
                 className={cn(
                   toggleGroupItemClasses,
                   disableToggleGroup &&
-                    'cursor-not-allowed bg-surface-disabled text-text-disabled'
+                    'cursor-not-allowed bg-surface-disabled text-text-disabled hover:bg-surface-disabled'
                 )}
               >
                 Cleanlab Disabled
@@ -226,7 +226,7 @@ export function Chat({
                 className={cn(
                   toggleGroupItemClasses,
                   disableToggleGroup &&
-                    'cursor-not-allowed bg-surface-disabled text-text-disabled'
+                    'cursor-not-allowed bg-surface-disabled text-text-disabled hover:bg-surface-disabled'
                 )}
               >
                 Cleanlab Enabled
