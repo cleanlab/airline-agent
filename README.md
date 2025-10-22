@@ -39,13 +39,33 @@ This will create a Project with already configured guardrails and evaluations fo
     hatch run create-vector-database
     ```
 
-3. Run the agent:
+3a. Run the agent (CLI version):
 
     ```bash
     hatch run agent --validation-mode cleanlab_log_tools
     ```
 
     **Note:** Use `--validation-mode` to control validation: `none` (default, no validation), `cleanlab` (standard validation), or `cleanlab_log_tools` (validation with post-chat-turn tool logging)
+
+
+3b. Run the agent (UI version):
+
+Run the backend server:
+
+    ```bash
+    hatch run backend-server
+    ```
+
+Run the frontend:
+
+    ```bash
+    cd frontend
+    npm install
+    npm run dev
+    ```
+
+    Then, open the UI in your browser at `http://localhost:3000`.
+
 
 ## Walkthrough
 

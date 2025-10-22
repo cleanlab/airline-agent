@@ -1,5 +1,6 @@
 import argparse
 import json
+import pathlib
 import subprocess
 import urllib.parse
 
@@ -26,6 +27,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", type=str, help="Path to save the fetched pages", required=True)
     args = parser.parse_args()
+
+    if not pathlib.Path(args.path).parent.exists():
+        pathlib.Path(args.path).parent.mkdir(parents=True)
 
     faq_urls = get_all_faq_urls()
     home_urls = get_home_urls()

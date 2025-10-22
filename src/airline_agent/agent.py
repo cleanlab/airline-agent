@@ -24,7 +24,11 @@ if TYPE_CHECKING:
 
 def create_agent(kb: KnowledgeBase) -> Agent:
     model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
-    return Agent(model=model, instructions=AGENT_INSTRUCTIONS, tools=[kb.get_article, kb.search, kb.list_directory])
+    return Agent(
+        model=model,
+        instructions=AGENT_INSTRUCTIONS,
+        tools=[kb.get_article, kb.search, kb.list_directory],
+    )
 
 
 def get_cleanlab_project() -> Project:
@@ -35,7 +39,7 @@ def get_cleanlab_project() -> Project:
     return Client().get_project(cleanlab_project_id)
 
 
-def run_agent(agent: Agent, *, validation_mode: str) -> None:
+def run_agent_sync(agent: Agent, *, validation_mode: str) -> None:
     message_history: list[ModelMessage] = []
     project = None
     if validation_mode != "none":
@@ -51,7 +55,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
         result = agent.run_sync(user_input, message_history=message_history)
 
         if validation_mode == "cleanlab":
-            message_history, final_response = run_cleanlab_validation(
+            message_history, final_response, _ = run_cleanlab_validation(
                 project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
                 query=user_input,
                 result=result,
@@ -60,7 +64,7 @@ def run_agent(agent: Agent, *, validation_mode: str) -> None:
                 thread_id=thread_id,
             )
         elif validation_mode == "cleanlab_log_tools":
-            message_history, final_response = run_cleanlab_validation_logging_tools(
+            message_history, final_response, _ = run_cleanlab_validation_logging_tools(
                 project=cast(Project, project),  # project cannot be None since get_cleanlab_project raises if not found
                 query=user_input,
                 result=result,
@@ -86,8 +90,18 @@ def main() -> None:
     logging.getLogger("llama_index.core.indices.loading").setLevel(logging.WARNING)
 
     parser = argparse.ArgumentParser(description="Run the airline support agent.")
-    parser.add_argument("--kb-path", type=str, required=True, help="Path to the knowledge base JSON file.")
-    parser.add_argument("--vector-db-path", type=str, required=True, help="Path to the vector database directory.")
+    parser.add_argument(
+        "--kb-path",
+        type=str,
+        required=True,
+        help="Path to the knowledge base JSON file.",
+    )
+    parser.add_argument(
+        "--vector-db-path",
+        type=str,
+        required=True,
+        help="Path to the vector database directory.",
+    )
     parser.add_argument(
         "--validation-mode",
         choices=["none", "cleanlab", "cleanlab_log_tools"],
@@ -100,7 +114,7 @@ def main() -> None:
     kb = KnowledgeBase(args.kb_path, args.vector_db_path)
     agent = create_agent(kb)
     with contextlib.suppress(KeyboardInterrupt, EOFError):
-        run_agent(agent, validation_mode=args.validation_mode)
+        run_agent_sync(agent, validation_mode=args.validation_mode)
 
 
 if __name__ == "__main__":
