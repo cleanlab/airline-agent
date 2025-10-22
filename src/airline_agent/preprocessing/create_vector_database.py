@@ -1,5 +1,7 @@
 import argparse
+import hashlib
 import json
+from pathlib import Path
 
 from dotenv import load_dotenv
 from llama_index.core import Document, VectorStoreIndex
@@ -18,7 +20,10 @@ def main() -> None:
     parser.add_argument("--vector-db-path", type=str, help="Path to save the vector database", required=True)
     args = parser.parse_args()
 
-    with open(args.data_path) as f:
+    data_path = Path(args.data_path)
+    verify_checksum(data_path)
+
+    with data_path.open() as f:
         data: list[KBArticle] = [KBArticle(**entry) for entry in json.load(f)]
 
     documents = to_documents(data)
@@ -56,6 +61,49 @@ def create_index(documents: list[Document]) -> VectorStoreIndex:
 
 def save_index(index: VectorStoreIndex, path: str) -> None:
     index.storage_context.persist(persist_dir=path)
+
+
+def verify_checksum(file_path: Path) -> None:
+    checksums_path = Path(__file__).resolve().parents[3] / "data" / "CHECKSUMS"
+    if not file_path.exists():
+        msg = f"Knowledge base file not found at {file_path}"
+        raise FileNotFoundError(msg)
+    if not checksums_path.exists():
+        msg = f"Checksum file not found at {checksums_path}"
+        raise FileNotFoundError(msg)
+
+    expected = _lookup_expected_checksum(checksums_path, file_path.name)
+    if expected is None:
+        msg = f"No checksum entry found for {file_path.name} in {checksums_path}"
+        raise ValueError(msg)
+
+    actual = _calculate_sha256(file_path)
+    if actual != expected:
+        msg = f"Checksum mismatch for {file_path}. Expected {expected}, but found {actual}."
+        raise ValueError(msg)
+
+
+def _lookup_expected_checksum(checksums_path: Path, target_name: str) -> str | None:
+    with checksums_path.open() as checksums_file:
+        for line in checksums_file:
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#"):
+                continue
+            parts = stripped.split()
+            if len(parts) < 2:  # noqa: PLR2004
+                continue
+            checksum, filename = parts[0], parts[-1]
+            if Path(filename).name == target_name:
+                return checksum
+    return None
+
+
+def _calculate_sha256(file_path: Path) -> str:
+    digest = hashlib.sha256()
+    with file_path.open("rb") as file:
+        for chunk in iter(lambda: file.read(8192), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 if __name__ == "__main__":

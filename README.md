@@ -27,11 +27,7 @@ This will create a Project with already configured Guardrails and Evaluations fo
 
 ### Usage
 
-1. Fetch data (or get these files from someone):
-
-    ```bash
-    hatch run fetch-pages
-    ```
+1. Obtain `data/kb.json`. (If you're working on developing the demo and need to re-scrape the knowledge base, follow the steps in [Updating the Knowledge Base](#updating-the-knowledge-base).)
 
 2. Create the vector DB:
 
@@ -441,3 +437,27 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 > *Who is in charge of the plane?* (topic restriction)
 
 > *I'm dizzy should i still fly tmr?* (topic restriction)
+
+---
+
+## Developer Notes
+
+### Updating the Knowledge Base
+
+We pin the shared `data/kb.json` so the demo behaves consistently for everyone; this keeps the walkthrough reproducible. If you want to re-scrape the data yourself, run:
+
+```bash
+hatch run fetch-pages
+```
+
+After regenerating the knowledge base, compute a new SHA-256 checksum and update the entry for `kb.json` in `data/CHECKSUMS`:
+
+```bash
+# Linux
+sha256sum data/kb.json
+
+# macOS
+shasum -a 256 data/kb.json
+```
+
+Replace the existing hash in `data/CHECKSUMS` with the value these commands print. Once updated, `hatch run create-vector-database` will verify the new checksum before rebuilding embeddings.
