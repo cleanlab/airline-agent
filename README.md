@@ -3,7 +3,7 @@
 ## Setup
 
 ### Prerequisites
-This repo uses the [Hatch](https://hatch.pypa.io/) Project manager ([installation instructions](https://hatch.pypa.io/latest/install/)).
+This repo uses the [Hatch](https://hatch.pypa.io/) project manager ([installation instructions](https://hatch.pypa.io/latest/install/)).
 
 ### API Keys
 
@@ -45,7 +45,7 @@ This will create a Project with already configured Guardrails and Evaluations fo
     hatch run backend-server
     ```
 
-**Note:** This will run the backend server with cleanlab validation enabled by default. Include the `--disable-cleanlab` flag to disable validation.
+    **Note:** This will run the backend server with cleanlab validation enabled by default. Include the `--disable-cleanlab` flag to disable validation.
 
 4. Run the frontend:
 
