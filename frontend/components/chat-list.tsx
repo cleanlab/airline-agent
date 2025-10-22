@@ -71,7 +71,7 @@ const ChatMessage = ({
             ? message.content
             : rateLimitedMessage
         return (
-          <div className={cn('rounded-4 border border-border-2 px-6 py-7')}>
+          <div className="rounded-4 border border-border-2 px-6 py-7">
             <MessageAssistant
               data-id={message.id}
               content={content}
