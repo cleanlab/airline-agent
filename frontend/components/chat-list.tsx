@@ -83,7 +83,7 @@ const ChatMessage = ({
                   : status
               }
               messageMetadata={message.metadata ?? null}
-              showAccordion={true}
+              showAccordion={false}
               disableScores={true}
               icon={
                 <LogoImg
