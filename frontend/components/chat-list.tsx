@@ -156,7 +156,7 @@ const ChatMessage = ({
 
                   {toolCallData?.result && (
                     <div className="px-6 py-6">
-                      <div className="text-foreground-2 type-body-100 mb-1 font-medium">
+                      <div className="type-body-100 mb-1 font-medium">
                         Result:
                       </div>
                       <div className="rounded max-h-32 type-caption-medium max-w-full overflow-x-auto overflow-y-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
@@ -166,7 +166,7 @@ const ChatMessage = ({
                   )}
 
                   {!toolCallData && (
-                    <div className="text-xs text-foreground-2 rounded max-w-full overflow-x-auto break-all bg-surface-2 p-2 font-mono">
+                    <div className="type-caption-medium max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
                       {message.content}
                     </div>
                   )}
