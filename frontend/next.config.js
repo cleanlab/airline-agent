@@ -5,6 +5,10 @@ const nextConfig = {
     // Allow production builds to successfully complete even if there are type errors.
     ignoreBuildErrors: true
   },
+  devIndicators: {
+    appIsrStatus: false,
+    buildActivity: false
+  },
   images: {
     remotePatterns: [
       {

@@ -1,6 +1,5 @@
 import '@/app/globals.css'
 import { Providers } from '@/components/providers'
-import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { Toaster } from '@/components/ui/sonner'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
@@ -61,7 +60,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
               {children}
             </main>
           </div>
-          <TailwindIndicator />
         </Providers>
       </body>
     </html>
