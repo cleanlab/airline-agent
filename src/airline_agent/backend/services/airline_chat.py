@@ -8,6 +8,7 @@ from collections.abc import AsyncGenerator
 from cleanlab_codex import Client, Project
 from codex.types import ProjectValidateResponse
 from dotenv import load_dotenv
+from fastapi import HTTPException
 from pydantic_ai import (
     Agent,
     CallToolsNode,
@@ -76,13 +77,24 @@ project = get_cleanlab_project()
 agent = create_agent(kb)
 
 thread_to_messages: dict[str, list[ModelMessage]] = {}
+cleanlab_enabled_by_thread: dict[str, bool] = {}
 
 
 async def airline_chat_streaming(
     message: UserMessage,
+    cleanlab_enabled: bool,  # noqa: FBT001
 ) -> AsyncGenerator[RunEvent, None]:
     run_id = uuid.uuid4()
     thread_id = message.thread_id
+
+    if thread_id not in cleanlab_enabled_by_thread:
+        cleanlab_enabled_by_thread[thread_id] = cleanlab_enabled
+    elif cleanlab_enabled_by_thread[thread_id] != cleanlab_enabled:
+        raise HTTPException(
+            status_code=400,
+            detail="Cleanlab enabled state cannot be changed after the thread has started",
+        )
+
     yield RunEventThreadRunInProgress(
         id=run_id,
         object=RunEventObject.THREAD_RUN_IN_PROGRESS,
@@ -149,7 +161,6 @@ async def airline_chat_streaming(
                             )
                             del current_tool_calls[request_part.tool_call_id]
 
-            cleanlab_enabled = os.getenv("DISABLE_CLEANLAB", "false").lower() == "false"
             if run.result is not None and cleanlab_enabled:
                 updated_message_history, final_response, validation_result = run_cleanlab_validation_logging_tools(
                     project=project,
