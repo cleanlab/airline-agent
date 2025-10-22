@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import pathlib
 import uuid
 from collections.abc import AsyncGenerator
@@ -110,7 +111,8 @@ async def airline_chat_streaming(
                             )
                             del current_tool_calls[request_part.tool_call_id]
 
-            if run.result is not None:
+            cleanlab_enabled = os.getenv("DISABLE_CLEANLAB", "false").lower() == "false"
+            if run.result is not None and cleanlab_enabled:
                 updated_message_history, final_response, validation_result = run_cleanlab_validation_logging_tools(
                     project=project,
                     query=user_prompt,
@@ -136,7 +138,7 @@ async def airline_chat_streaming(
                 )
                 thread_to_messages[thread_id] = updated_message_history
             else:
-                logger.warning("Unable to validate response with cleanlab. Missing `run.result`.")
+                final_response = run.result.output if run.result is not None else ""
                 yield RunEventThreadMessage(
                     id=run_id,
                     object=RunEventObject.THREAD_MESSAGE,

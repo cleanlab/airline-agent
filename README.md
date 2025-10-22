@@ -56,6 +56,8 @@ Run the backend server:
     hatch run backend-server
     ```
 
+    **Note:** This will run the backend server with cleanlab validation enabled by default. Include the `--disable-cleanlab` flag to disable validation.
+
 Run the frontend:
 
     ```bash
