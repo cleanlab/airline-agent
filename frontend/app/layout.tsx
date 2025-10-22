@@ -9,9 +9,8 @@ import { ScrollRestoration } from '../components/next-scroll-restoration'
 import { cn } from '@/lib/utils/tailwindUtils'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = 'RAG app'
-  const description =
-    'A trustworthy AI agent enhanced with your own data, built by Cleanlab.'
+  const title = 'Support Agent'
+  const description = 'A trustworthy AI agent for your airline.'
 
   return {
     metadataBase: process.env.VERCEL_URL

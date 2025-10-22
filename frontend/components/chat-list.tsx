@@ -5,23 +5,20 @@ import { useRateLimitedValue } from '@/lib/hooks/useRateLimitedValue'
 import { useMessagesStore } from '@/providers/messages-store-provider'
 import type { StoreMessage } from '@/stores/messages-store'
 
-import logoLightMode from './assets/logo-black.png'
-import logoDarkMode from './assets/logo-white.png'
 import type { RefObject } from 'react'
 import { useEffect, useRef } from 'react'
 import { useAutoScrollMessage } from '../lib/hooks/use-auto-scroll-message'
 import type { DemoMode } from './chat'
 import { RetryButton } from './message'
-import { LogoImg } from './design-system-components/LogoImg'
-import { logoMetadata } from './design-system-components/logoMetadata'
 import { MessageUser } from './design-system-components/MessageUser'
 import {
   MessageAssistant,
   MessageAssistantStatus
 } from './design-system-components/MessageAssistant'
 import { MessageError } from './design-system-components/MessageError'
+import { ChatCodeBlock } from './design-system-components/ChatCodeBlock'
 import { Collapsible } from 'radix-ui'
-import { IconChevronDown } from './icons'
+import { IconAirplane, IconChevronDown } from './icons'
 
 export interface ChatListProps {
   threadId?: string
@@ -84,31 +81,58 @@ const ChatMessage = ({
               messageMetadata={message.metadata ?? null}
               showAccordion={false}
               disableScores={true}
-              icon={
-                <LogoImg
-                  className="size-7"
-                  src={{ light: logoLightMode.src, dark: logoDarkMode.src }}
-                  {...logoMetadata[128].logo}
-                />
-              }
+              icon={<IconAirplane size={16} />}
             />
           </div>
         )
       case 'tool':
         // Display tool call messages
         const toolCallData = (() => {
-          try {
-            return JSON.parse(message.content)
-          } catch {
-            return null
+          // If content is already an object, use it directly
+          if (typeof message.content === 'object' && message.content !== null) {
+            return message.content
           }
+
+          // If content is a string, try to parse it as JSON
+          if (typeof message.content === 'string') {
+            try {
+              return JSON.parse(message.content)
+            } catch {
+              return null
+            }
+          }
+
+          return null
         })()
 
-        // Helper function to parse and pretty-print JSON strings
-        const parseAndPrettyPrint = (jsonString: string) => {
+        // Helper function to parse and pretty-print JSON strings or objects
+        const parseAndPrettyPrint = (data: any) => {
+          // If it's already an object, just stringify it
+          if (typeof data === 'object' && data !== null) {
+            return JSON.stringify(data, null, 2)
+          }
+
+          // If it's not a string, return as-is
+          if (typeof data !== 'string') {
+            return String(data)
+          }
+
+          // Check if the string looks like JSON or double-encoded JSON
+          const trimmed = data.trim()
+          const looksLikeJson =
+            (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+            (trimmed.startsWith('[') && trimmed.endsWith(']')) ||
+            (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+            // Check for double-encoded JSON (starts with " and contains escaped quotes)
+            (trimmed.startsWith('"') && trimmed.includes('\\"'))
+
+          if (!looksLikeJson) {
+            return data
+          }
+
           try {
             // First try to parse as JSON
-            let parsed = JSON.parse(jsonString)
+            let parsed = JSON.parse(data)
 
             // If the result is still a string, it might be double-encoded JSON
             if (typeof parsed === 'string') {
@@ -119,11 +143,11 @@ const ChatMessage = ({
               }
             }
 
-            // Pretty print the final result
+            // Pretty print the final result with better formatting
             return JSON.stringify(parsed, null, 2)
-          } catch {
+          } catch (error) {
             // If all parsing fails, return the original string
-            return jsonString
+            return data
           }
         }
 
@@ -147,8 +171,25 @@ const ChatMessage = ({
                       <div className="type-body-100 mb-2 font-medium">
                         Arguments:
                       </div>
-                      <div className="type-caption-medium max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
-                        {parseAndPrettyPrint(toolCallData.arguments)}
+                      <div className="w-full max-w-full overflow-hidden">
+                        <ChatCodeBlock
+                          language="json"
+                          code={(() => {
+                            // Handle arguments - they might be a string that needs parsing
+                            let argumentsData = toolCallData.arguments
+                            if (typeof argumentsData === 'string') {
+                              try {
+                                argumentsData = JSON.parse(argumentsData)
+                              } catch {
+                                // If parsing fails, use the string as-is
+                              }
+                            }
+                            return parseAndPrettyPrint(argumentsData)
+                          })()}
+                          showLineNumbers={false}
+                          textSize="50"
+                          className="w-full max-w-full"
+                        />
                       </div>
                     </div>
                   )}
@@ -158,14 +199,50 @@ const ChatMessage = ({
                       <div className="type-body-100 mb-1 font-medium">
                         Result:
                       </div>
-                      <div className="rounded max-h-32 type-caption-medium max-w-full overflow-x-auto overflow-y-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
-                        {parseAndPrettyPrint(toolCallData.result)}
-                      </div>
+                      {(() => {
+                        const resultContent = parseAndPrettyPrint(
+                          toolCallData.result
+                        )
+
+                        // Check if the result is valid JSON
+                        const isJson = (() => {
+                          try {
+                            const parsed = JSON.parse(resultContent)
+                            return typeof parsed === 'object' && parsed !== null
+                          } catch {
+                            return false
+                          }
+                        })()
+
+                        if (isJson) {
+                          // Use ChatCodeBlock for JSON results
+                          return (
+                            <div className="w-full max-w-full overflow-hidden">
+                              <ChatCodeBlock
+                                language="json"
+                                code={resultContent}
+                                showLineNumbers={false}
+                                textSize="50"
+                                className="w-full max-w-full"
+                              />
+                            </div>
+                          )
+                        } else {
+                          // Use plain text for non-JSON results
+                          return (
+                            <div className="max-h-32 max-w-full overflow-x-auto overflow-y-auto rounded-2 bg-surface-2 px-5 py-4">
+                              <pre className="type-caption whitespace-pre-wrap break-words font-mono">
+                                {resultContent}
+                              </pre>
+                            </div>
+                          )
+                        }
+                      })()}
                     </div>
                   )}
 
                   {!toolCallData && (
-                    <div className="type-caption-medium max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
+                    <div className="type-caption max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
                       {message.content}
                     </div>
                   )}
@@ -220,13 +297,7 @@ export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
       return false
     }) || []
 
-  // Find any pending assistant message for the loading state
-  const pendingAssistantMessage = allMessages?.find(
-    message =>
-      message.role === 'assistant' && message.isPending && !message.content
-  )
-
-  if (!actualMessages.length && !pendingAssistantMessage) {
+  if (!actualMessages.length && !isPending) {
     return null
   }
 
@@ -254,13 +325,20 @@ export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
         )
       })}
 
-      {/* Show loading message at the bottom if there's a pending assistant message */}
-      {pendingAssistantMessage && (
+      {/* Show loading message at the bottom if thread is pending */}
+      {isPending && (
         <div key="loading-message">
           <ChatMessage
             isAutoScrollEnabled={true}
             scrollRef={scrollRef}
-            message={pendingAssistantMessage}
+            message={{
+              localId: 'loading-placeholder',
+              role: 'assistant',
+              content: '',
+              metadata: {},
+              isPending: true,
+              isContentPending: true
+            }}
             cleanlabMode={cleanlabMode}
           />
         </div>

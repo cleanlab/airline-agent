@@ -1,20 +1,25 @@
 import json
 import logging
+import os
 import pathlib
 import uuid
 from collections.abc import AsyncGenerator
 
+from cleanlab_codex import Client, Project
 from codex.types import ProjectValidateResponse
 from dotenv import load_dotenv
 from pydantic_ai import (
+    Agent,
     CallToolsNode,
     ModelMessage,
     ModelRequestNode,
+    ModelSettings,
+    TextPart,
     ToolCallPart,
     ToolReturnPart,
 )
+from pydantic_ai.models.openai import OpenAIChatModel
 
-from airline_agent.agent import create_agent, get_cleanlab_project
 from airline_agent.backend.schemas.message import (
     AssistantMessage,
     EvalResult,
@@ -36,11 +41,32 @@ from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
     run_cleanlab_validation_logging_tools,
 )
+from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
 load_dotenv(override=True)
 
 logger = logging.getLogger(__name__)
+
+
+def create_agent(kb: KnowledgeBase) -> Agent:
+    """Create the airline support agent."""
+    model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
+    return Agent(
+        model=model,
+        instructions=AGENT_INSTRUCTIONS,
+        tools=[kb.get_article, kb.search, kb.list_directory],
+    )
+
+
+def get_cleanlab_project() -> Project:
+    """Retrieve the configured Cleanlab project."""
+    cleanlab_project_id = os.getenv("CLEANLAB_PROJECT_ID")
+    if not cleanlab_project_id:
+        msg = "CLEANLAB_PROJECT_ID environment variable is not set"
+        raise ValueError(msg)
+    return Client().get_project(cleanlab_project_id)
+
 
 kb = KnowledgeBase(
     kb_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/kb.json"),
@@ -83,13 +109,26 @@ async def airline_chat_streaming(
                 if isinstance(node, CallToolsNode):
                     response = node.model_response
                     if response.finish_reason == "tool_call":
+                        text_content = ""
                         for response_part in response.parts:
-                            if isinstance(response_part, ToolCallPart):
+                            if isinstance(response_part, TextPart):
+                                text_content += response_part.content
+                            elif isinstance(response_part, ToolCallPart):
                                 current_tool_calls[response_part.tool_call_id] = ToolCall(
                                     tool_call_id=response_part.tool_call_id,
                                     tool_name=response_part.tool_name,
                                     arguments=json.dumps(response_part.args),
                                 )
+
+                        if text_content:
+                            yield RunEventThreadMessage(
+                                id=run_id,
+                                object=RunEventObject.THREAD_MESSAGE,
+                                data=AssistantMessage(
+                                    thread_id=thread_id,
+                                    content=text_content,
+                                ),
+                            )
 
                 elif isinstance(node, ModelRequestNode) and current_tool_calls:
                     request = node.request
@@ -110,7 +149,8 @@ async def airline_chat_streaming(
                             )
                             del current_tool_calls[request_part.tool_call_id]
 
-            if run.result is not None:
+            cleanlab_enabled = os.getenv("DISABLE_CLEANLAB", "false").lower() == "false"
+            if run.result is not None and cleanlab_enabled:
                 updated_message_history, final_response, validation_result = run_cleanlab_validation_logging_tools(
                     project=project,
                     query=user_prompt,
@@ -136,7 +176,7 @@ async def airline_chat_streaming(
                 )
                 thread_to_messages[thread_id] = updated_message_history
             else:
-                logger.warning("Unable to validate response with cleanlab. Missing `run.result`.")
+                final_response = run.result.output if run.result is not None else ""
                 yield RunEventThreadMessage(
                     id=run_id,
                     object=RunEventObject.THREAD_MESSAGE,

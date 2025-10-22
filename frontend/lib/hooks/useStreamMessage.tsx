@@ -136,7 +136,7 @@ function useStreamMessage() {
         const toolMessage: StoreMessage = {
           localId: nanoid(),
           role: 'tool',
-          content: JSON.stringify(value.content),
+          content: value.content,
           metadata: value.metadata || {}
         }
         appendMessage({ threadId, message: toolMessage })
