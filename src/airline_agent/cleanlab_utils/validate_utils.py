@@ -12,7 +12,9 @@ if TYPE_CHECKING:
     from pydantic_ai.tools import ToolDefinition
 
 from cleanlab_tlm.utils.chat import _ASSISTANT_PREFIX as ASSISTANT_PREFIX
-from cleanlab_tlm.utils.chat import _form_prompt_chat_completions_api as form_prompt_chat_completions_api
+from cleanlab_tlm.utils.chat import (
+    _form_prompt_chat_completions_api as form_prompt_chat_completions_api,
+)
 from openai.types.chat import (
     ChatCompletionAssistantMessageParam,
     ChatCompletionFunctionToolParam,
@@ -87,7 +89,9 @@ def _get_context_as_string(messages: list[ChatCompletionMessageParam]) -> str:
     return _get_tool_result_as_text(messages, CONTEXT_RETRIEVAL_TOOLS)
 
 
-def _get_latest_agent_response_pydantic(messages: list[ModelMessage]) -> tuple[ModelResponse, int]:
+def _get_latest_agent_response_pydantic(
+    messages: list[ModelMessage],
+) -> tuple[ModelResponse, int]:
     """Get the latest AI assistant response with stop finish_reason."""
     for i in range(len(messages) - 1, -1, -1):
         message = messages[i]
@@ -217,7 +221,7 @@ def run_cleanlab_validation(
     message_history: list[ModelMessage],
     tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
-) -> tuple[list[ModelMessage], str]:
+) -> tuple[list[ModelMessage], str, ProjectValidateResponse]:
     """
     Run cleanlab validation on the latest agent response and update message history.
 
@@ -261,7 +265,7 @@ def run_cleanlab_validation(
         message_history.extend(result.new_messages())
         final_response_str = result.output  # No change, use original output
 
-    return message_history, final_response_str
+    return message_history, final_response_str, validation_result
 
 
 def run_cleanlab_validation_logging_tools(
@@ -271,7 +275,7 @@ def run_cleanlab_validation_logging_tools(
     message_history: list[ModelMessage],
     tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
-) -> tuple[list[ModelMessage], str]:
+) -> tuple[list[ModelMessage], str, ProjectValidateResponse]:
     """
     Run cleanlab validation on the latest agent response and update message history.
 
