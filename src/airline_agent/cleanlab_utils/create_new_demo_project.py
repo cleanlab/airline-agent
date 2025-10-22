@@ -13,15 +13,11 @@ from dotenv import load_dotenv
 OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"
 DEFAULT_DEMO_PROJECT_NAME = "(Demo) Frontier Airlines Support Chatbot"
 DEFAULT_DEMO_PROJECT_DESCRIPTION = "Do not delete please!"
-COPY_PROJECT_ROUTE = (
-    "https://api-codex.cleanlab.ai/api/admin/projects/copy_project_settings"
-)
+COPY_PROJECT_ROUTE = "https://api-codex.cleanlab.ai/api/admin/projects/copy_project_settings"
 logger = logging.getLogger(__name__)
 
 
-def copy_project_configuration(
-    new_project_id: str, api_key: str
-) -> ProjectReturnSchema:
+def copy_project_configuration(new_project_id: str, api_key: str) -> ProjectReturnSchema:
     with httpx.Client(headers={"X-API-Key": api_key}) as client:
         response = client.patch(
             COPY_PROJECT_ROUTE,
@@ -70,9 +66,7 @@ def main() -> None:
         description=args.description,
     )
 
-    new_project_with_updated_config = copy_project_configuration(
-        new_project.id, codex_api_key
-    )
+    new_project_with_updated_config = copy_project_configuration(new_project.id, codex_api_key)
 
     logger.info(
         "Created new demo project: %s (%s)",
