@@ -20,7 +20,13 @@ from openai.types.chat import (
     ChatCompletionFunctionToolParam,
     ChatCompletionMessageParam,
 )
-from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, SystemPromptPart, UserPromptPart
+from pydantic_ai.messages import (
+    ModelMessage,
+    ModelRequest,
+    ModelResponse,
+    SystemPromptPart,
+    UserPromptPart,
+)
 
 from airline_agent.cleanlab_utils.conversion_utils import (
     convert_message_to_chat_completion,
@@ -28,11 +34,7 @@ from airline_agent.cleanlab_utils.conversion_utils import (
     convert_to_openai_messages,
     convert_tools_to_openai_format,
 )
-from airline_agent.constants import (
-    CONTEXT_RETRIEVAL_TOOLS,
-    FALLBACK_RESPONSE,
-    get_perfect_eval_scores,
-)
+from airline_agent.constants import CONTEXT_RETRIEVAL_TOOLS, FALLBACK_RESPONSE
 
 logger = logging.getLogger(__name__)
 
@@ -151,7 +153,9 @@ def _get_final_response_message(
     return response, None
 
 
-def _get_system_messages(message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
+def _get_system_messages(
+    message_history: list[ModelMessage],
+) -> list[ChatCompletionMessageParam]:
     """Get system messages to prepend to validation messages."""
     system_messages: list[ChatCompletionMessageParam] = []
     instructions_added = False
@@ -162,7 +166,10 @@ def _get_system_messages(message_history: list[ModelMessage]) -> list[ChatComple
             # Extract instructions and add as system message only once
             if hasattr(message, "instructions") and message.instructions and not instructions_added:
                 system_messages.append(
-                    cast(ChatCompletionMessageParam, {"role": "system", "content": message.instructions})
+                    cast(
+                        ChatCompletionMessageParam,
+                        {"role": "system", "content": message.instructions},
+                    )
                 )
                 instructions_added = True
 
@@ -170,7 +177,10 @@ def _get_system_messages(message_history: list[ModelMessage]) -> list[ChatComple
             for part in message.parts:
                 if isinstance(part, SystemPromptPart) and part.content not in system_prompts_seen:
                     system_messages.append(
-                        cast(ChatCompletionMessageParam, {"role": "system", "content": part.content})
+                        cast(
+                            ChatCompletionMessageParam,
+                            {"role": "system", "content": part.content},
+                        )
                     )
                     system_prompts_seen.add(part.content)
 
@@ -314,7 +324,7 @@ def run_cleanlab_validation_logging_tools(
                 context=_get_context_as_string(openai_new_messages),
                 tools=tools,
                 metadata={"thread_id": thread_id} if thread_id else None,
-                eval_scores=get_perfect_eval_scores(),
+                eval_scores={},
             )
             logger.info("[cleanlab] Logging function call, automatic validation pass.")
 
