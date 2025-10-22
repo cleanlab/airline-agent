@@ -5,17 +5,20 @@ import pathlib
 import uuid
 from collections.abc import AsyncGenerator
 
+from cleanlab_codex import Client, Project
 from codex.types import ProjectValidateResponse
 from dotenv import load_dotenv
 from pydantic_ai import (
+    Agent,
     CallToolsNode,
     ModelMessage,
     ModelRequestNode,
+    ModelSettings,
     ToolCallPart,
     ToolReturnPart,
 )
+from pydantic_ai.models.openai import OpenAIChatModel
 
-from airline_agent.agent import create_agent, get_cleanlab_project
 from airline_agent.backend.schemas.message import (
     AssistantMessage,
     EvalResult,
@@ -37,11 +40,32 @@ from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
     run_cleanlab_validation_logging_tools,
 )
+from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+
+
+def create_agent(kb: KnowledgeBase) -> Agent:
+    """Create the airline support agent."""
+    model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
+    return Agent(
+        model=model,
+        instructions=AGENT_INSTRUCTIONS,
+        tools=[kb.get_article, kb.search, kb.list_directory],
+    )
+
+
+def get_cleanlab_project() -> Project:
+    """Retrieve the configured Cleanlab project."""
+    cleanlab_project_id = os.getenv("CLEANLAB_PROJECT_ID")
+    if not cleanlab_project_id:
+        msg = "CLEANLAB_PROJECT_ID environment variable is not set"
+        raise ValueError(msg)
+    return Client().get_project(cleanlab_project_id)
+
 
 kb = KnowledgeBase(
     kb_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/kb.json"),
