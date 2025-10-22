@@ -45,7 +45,7 @@ def get_perfect_eval_scores() -> dict[str, float]:
     from codex import Codex
     from dotenv import load_dotenv
 
-    load_dotenv()  # Ensure .env is loaded before accessing environment variables
+    load_dotenv(override=True)  # Ensure .env is loaded before accessing environment variables
     api_key = os.getenv("CODEX_API_KEY")
     project_id = os.getenv("CLEANLAB_PROJECT_ID")
 

@@ -80,7 +80,7 @@ def run_agent_sync(agent: Agent, *, validation_mode: str) -> None:
 
 
 def main() -> None:
-    load_dotenv()
+    load_dotenv(override=True)
 
     logging.basicConfig(
         level=logging.INFO,

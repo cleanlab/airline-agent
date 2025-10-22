@@ -11,7 +11,7 @@ from airline_agent.types.knowledge_base import KBArticle
 
 
 def main() -> None:
-    load_dotenv()
+    load_dotenv(override=True)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-path", type=str, help="Path to the JSON file with FAQs", required=True)

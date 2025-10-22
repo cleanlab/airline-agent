@@ -5,7 +5,7 @@ import os
 from typing import TYPE_CHECKING
 
 from codex import Client
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv, set_key
 
 if TYPE_CHECKING:
     from codex.types import ProjectRetrieveResponse
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 def main() -> None:
     """Create a new demo project by copying configuration from the official demo project."""
     logging.basicConfig(level=logging.INFO)
-    load_dotenv()
+    load_dotenv(override=True)
 
     codex_api_key = os.getenv("CODEX_API_KEY")
     if not codex_api_key:
@@ -44,6 +44,8 @@ def main() -> None:
         organization_id=existing_project.organization_id,
         auto_clustering_enabled=existing_project.auto_clustering_enabled or False,
     )
+
+    set_key(find_dotenv(), "CLEANLAB_PROJECT_ID", new_project.id)
 
     logger.info("Created new demo project: %s (%s)", new_project.name, new_project.id)
     logger.info("Project can be found in organization: %s", new_project.organization_id)

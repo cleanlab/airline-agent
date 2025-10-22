@@ -17,13 +17,13 @@ We've provided a `.env.sample` file that you can copy to `.env` and then fill in
 
 To get your `CODEX_API_KEY`, navigate to the `Account` page in the lefthand sidebar. 
 
-To get your `CLEANLAB_PROJECT_ID`, you can programmatically create a new Cleanlab Project for this demo by running:
+Your `CLEANLAB_PROJECT_ID` will be programmatically set when you create a new Cleanlab Project for this demo:
 
 ```bash
 hatch run create-demo-project
 ```
 
-This will create a Project with already configured guardrails and evaluations for the walkthrough below. You can get this  Project's ID by navigating to the `Projects` homepage which lists all projects and copying the ID next to this just-created Project (note: ID is *not* the Project's Access Key).
+This command creates a new Project preconfigured with Guardrails and Evaluations for the walkthrough below.
 
 ### Usage
 
