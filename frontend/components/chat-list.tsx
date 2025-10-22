@@ -16,26 +16,9 @@ import {
   MessageAssistantStatus
 } from './design-system-components/MessageAssistant'
 import { MessageError } from './design-system-components/MessageError'
+import { ChatCodeBlock } from './design-system-components/ChatCodeBlock'
 import { Collapsible } from 'radix-ui'
 import { IconAirplane, IconChevronDown } from './icons'
-
-// Simple JSON syntax highlighter component
-const JsonHighlighter = ({ children }: { children: string }) => {
-  const highlightedJson = children
-    .replace(/"([^"]+)":/g, '<span class="text-blue-600">"$1":</span>') // Keys
-    .replace(/:\s*"([^"]*)"/g, ': <span class="text-blue-600">"$1"</span>') // String values
-    .replace(/:\s*(\d+)/g, ': <span class="text-red-600">$1</span>') // Numbers
-    .replace(/:\s*(true|false)/g, ': <span class="text-red-600">$1</span>') // Booleans
-    .replace(/:\s*(null)/g, ': <span class="text-neutral-600">$1</span>') // Null
-    .replace(/([{}[\]])/g, '<span class="text-neutral-800">$1</span>') // Brackets
-
-  return (
-    <div
-      className="m-0 whitespace-pre-wrap break-words bg-transparent px-5 py-4 font-mono text-[14px] text-neutral-800"
-      dangerouslySetInnerHTML={{ __html: highlightedJson }}
-    />
-  )
-}
 
 export interface ChatListProps {
   threadId?: string
@@ -188,22 +171,24 @@ const ChatMessage = ({
                       <div className="type-body-100 mb-2 font-medium">
                         Arguments:
                       </div>
-                      <div className="max-w-full overflow-x-auto rounded-2 bg-surface-2">
-                        <JsonHighlighter>
-                          {(() => {
-                            // Handle arguments - they might be a string that needs parsing
-                            let argumentsData = toolCallData.arguments
-                            if (typeof argumentsData === 'string') {
-                              try {
-                                argumentsData = JSON.parse(argumentsData)
-                              } catch {
-                                // If parsing fails, use the string as-is
-                              }
+                      <ChatCodeBlock
+                        language="json"
+                        code={(() => {
+                          // Handle arguments - they might be a string that needs parsing
+                          let argumentsData = toolCallData.arguments
+                          if (typeof argumentsData === 'string') {
+                            try {
+                              argumentsData = JSON.parse(argumentsData)
+                            } catch {
+                              // If parsing fails, use the string as-is
                             }
-                            return parseAndPrettyPrint(argumentsData)
-                          })()}
-                        </JsonHighlighter>
-                      </div>
+                          }
+                          return parseAndPrettyPrint(argumentsData)
+                        })()}
+                        showLineNumbers={false}
+                        textSize="50"
+                        className="max-w-full"
+                      />
                     </div>
                   )}
 
@@ -212,10 +197,10 @@ const ChatMessage = ({
                       <div className="type-body-100 mb-1 font-medium">
                         Result:
                       </div>
-                      <div className="max-h-32 max-w-full overflow-x-auto overflow-y-auto rounded-2 bg-surface-2">
-                        <JsonHighlighter>
+                      <div className="max-h-32 max-w-full overflow-x-auto overflow-y-auto rounded-2 bg-surface-2 px-5 py-4">
+                        <pre className="type-caption whitespace-pre-wrap break-words font-mono">
                           {parseAndPrettyPrint(toolCallData.result)}
-                        </JsonHighlighter>
+                        </pre>
                       </div>
                     </div>
                   )}
