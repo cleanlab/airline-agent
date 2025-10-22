@@ -22,7 +22,7 @@ HOME_URL = "https://www.flyfrontier.com"
 
 
 def main() -> None:
-    load_dotenv()
+    load_dotenv(override=True)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", type=str, help="Path to save the fetched pages", required=True)

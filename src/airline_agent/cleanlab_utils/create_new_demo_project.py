@@ -7,7 +7,7 @@ import os
 import httpx
 from cleanlab_codex import Client
 from codex.types.project_return_schema import ProjectReturnSchema
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv, set_key
 
 # Official demo project ID to copy configuration from
 OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"
@@ -50,7 +50,7 @@ def main() -> None:
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
-    load_dotenv()
+    load_dotenv(override=True)
 
     codex_api_key = os.getenv("CODEX_API_KEY")
     if not codex_api_key:
@@ -67,6 +67,8 @@ def main() -> None:
     )
 
     new_project_with_updated_config = copy_project_configuration(new_project.id, codex_api_key)
+
+    set_key(find_dotenv(), "CLEANLAB_PROJECT_ID", new_project.id)
 
     logger.info(
         "Created new demo project: %s (%s)",

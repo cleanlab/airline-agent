@@ -44,7 +44,7 @@ from airline_agent.cleanlab_utils.validate_utils import (
 from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
-load_dotenv()
+load_dotenv(override=True)
 
 logger = logging.getLogger(__name__)
 
