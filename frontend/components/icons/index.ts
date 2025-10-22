@@ -13,6 +13,7 @@ import {
   FiSun,
   FiTrash
 } from 'react-icons/fi'
+import { GiCommercialAirplane } from 'react-icons/gi'
 
 export const IconMoon = wrapFeatherIcon(FiMoon, 'IconMoon')
 export const IconSun = wrapFeatherIcon(FiSun, 'IconSun')
@@ -24,6 +25,10 @@ export const IconRefresh = wrapFeatherIcon(FiRefreshCw, 'IconRefresh')
 export const IconArrowDownCircle = wrapFeatherIcon(
   FiArrowDownCircle,
   'IconArrowDownCircle'
+)
+export const IconAirplane = wrapFeatherIcon(
+  GiCommercialAirplane,
+  'IconAirplane'
 )
 export const IconCheck = wrapFeatherIcon(FiCheck, 'IconCheck')
 export const IconCopy = wrapFeatherIcon(FiCopy, 'IconCopy')
