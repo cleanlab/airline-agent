@@ -14,6 +14,7 @@ from pydantic_ai import (
     ModelMessage,
     ModelRequestNode,
     ModelSettings,
+    TextPart,
     ToolCallPart,
     ToolReturnPart,
 )
@@ -108,13 +109,26 @@ async def airline_chat_streaming(
                 if isinstance(node, CallToolsNode):
                     response = node.model_response
                     if response.finish_reason == "tool_call":
+                        text_content = ""
                         for response_part in response.parts:
-                            if isinstance(response_part, ToolCallPart):
+                            if isinstance(response_part, TextPart):
+                                text_content += response_part.content
+                            elif isinstance(response_part, ToolCallPart):
                                 current_tool_calls[response_part.tool_call_id] = ToolCall(
                                     tool_call_id=response_part.tool_call_id,
                                     tool_name=response_part.tool_name,
                                     arguments=json.dumps(response_part.args),
                                 )
+
+                        if text_content:
+                            yield RunEventThreadMessage(
+                                id=run_id,
+                                object=RunEventObject.THREAD_MESSAGE,
+                                data=AssistantMessage(
+                                    thread_id=thread_id,
+                                    content=text_content,
+                                ),
+                            )
 
                 elif isinstance(node, ModelRequestNode) and current_tool_calls:
                     request = node.request

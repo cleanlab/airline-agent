@@ -302,6 +302,8 @@ def run_cleanlab_validation_logging_tools(
     for index, openai_newest_message in enumerate(
         openai_new_messages
     ):  # Go through new messages and log all assistant calls
+        # IMPORTANT: the backend currently relies on this integration LOGGING but BYPASSING VALIDATION for any intermediate AI responses
+        # do not change this behavior without updating the backend code
         if openai_newest_message.get("role") == "assistant" and openai_newest_message.get("finish_reason") != "stop":
             openai_response = convert_message_to_chat_completion(openai_newest_message)
 

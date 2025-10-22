@@ -297,13 +297,7 @@ export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
       return false
     }) || []
 
-  // Find any pending assistant message for the loading state
-  const pendingAssistantMessage = allMessages?.find(
-    message =>
-      message.role === 'assistant' && message.isPending && !message.content
-  )
-
-  if (!actualMessages.length && !pendingAssistantMessage) {
+  if (!actualMessages.length && !isPending) {
     return null
   }
 
@@ -331,13 +325,20 @@ export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
         )
       })}
 
-      {/* Show loading message at the bottom if there's a pending assistant message */}
-      {pendingAssistantMessage && (
+      {/* Show loading message at the bottom if thread is pending */}
+      {isPending && (
         <div key="loading-message">
           <ChatMessage
             isAutoScrollEnabled={true}
             scrollRef={scrollRef}
-            message={pendingAssistantMessage}
+            message={{
+              localId: 'loading-placeholder',
+              role: 'assistant',
+              content: '',
+              metadata: {},
+              isPending: true,
+              isContentPending: true
+            }}
             cleanlabMode={cleanlabMode}
           />
         </div>
