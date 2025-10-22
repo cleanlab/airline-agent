@@ -23,6 +23,24 @@ import { MessageError } from './design-system-components/MessageError'
 import { Collapsible } from 'radix-ui'
 import { IconChevronDown } from './icons'
 
+// Simple JSON syntax highlighter component
+const JsonHighlighter = ({ children }: { children: string }) => {
+  const highlightedJson = children
+    .replace(/"([^"]+)":/g, '<span class="text-blue-600">"$1":</span>') // Keys
+    .replace(/:\s*"([^"]*)"/g, ': <span class="text-blue-600">"$1"</span>') // String values
+    .replace(/:\s*(\d+)/g, ': <span class="text-red-600">$1</span>') // Numbers
+    .replace(/:\s*(true|false)/g, ': <span class="text-red-600">$1</span>') // Booleans
+    .replace(/:\s*(null)/g, ': <span class="text-neutral-600">$1</span>') // Null
+    .replace(/([{}[\]])/g, '<span class="text-neutral-800">$1</span>') // Brackets
+
+  return (
+    <div
+      className="m-0 whitespace-pre-wrap break-words bg-transparent px-5 py-4 font-mono text-[14px] text-neutral-800"
+      dangerouslySetInnerHTML={{ __html: highlightedJson }}
+    />
+  )
+}
+
 export interface ChatListProps {
   threadId?: string
   scrollRef: RefObject<HTMLElement | null>
@@ -97,18 +115,51 @@ const ChatMessage = ({
       case 'tool':
         // Display tool call messages
         const toolCallData = (() => {
-          try {
-            return JSON.parse(message.content)
-          } catch {
-            return null
+          // If content is already an object, use it directly
+          if (typeof message.content === 'object' && message.content !== null) {
+            return message.content
           }
+
+          // If content is a string, try to parse it as JSON
+          if (typeof message.content === 'string') {
+            try {
+              return JSON.parse(message.content)
+            } catch {
+              return null
+            }
+          }
+
+          return null
         })()
 
-        // Helper function to parse and pretty-print JSON strings
-        const parseAndPrettyPrint = (jsonString: string) => {
+        // Helper function to parse and pretty-print JSON strings or objects
+        const parseAndPrettyPrint = (data: any) => {
+          // If it's already an object, just stringify it
+          if (typeof data === 'object' && data !== null) {
+            return JSON.stringify(data, null, 2)
+          }
+
+          // If it's not a string, return as-is
+          if (typeof data !== 'string') {
+            return String(data)
+          }
+
+          // Check if the string looks like JSON or double-encoded JSON
+          const trimmed = data.trim()
+          const looksLikeJson =
+            (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+            (trimmed.startsWith('[') && trimmed.endsWith(']')) ||
+            (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+            // Check for double-encoded JSON (starts with " and contains escaped quotes)
+            (trimmed.startsWith('"') && trimmed.includes('\\"'))
+
+          if (!looksLikeJson) {
+            return data
+          }
+
           try {
             // First try to parse as JSON
-            let parsed = JSON.parse(jsonString)
+            let parsed = JSON.parse(data)
 
             // If the result is still a string, it might be double-encoded JSON
             if (typeof parsed === 'string') {
@@ -119,11 +170,11 @@ const ChatMessage = ({
               }
             }
 
-            // Pretty print the final result
+            // Pretty print the final result with better formatting
             return JSON.stringify(parsed, null, 2)
-          } catch {
+          } catch (error) {
             // If all parsing fails, return the original string
-            return jsonString
+            return data
           }
         }
 
@@ -147,8 +198,21 @@ const ChatMessage = ({
                       <div className="type-body-100 mb-2 font-medium">
                         Arguments:
                       </div>
-                      <div className="type-caption-medium max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
-                        {parseAndPrettyPrint(toolCallData.arguments)}
+                      <div className="max-w-full overflow-x-auto rounded-2 bg-surface-2">
+                        <JsonHighlighter>
+                          {(() => {
+                            // Handle arguments - they might be a string that needs parsing
+                            let argumentsData = toolCallData.arguments
+                            if (typeof argumentsData === 'string') {
+                              try {
+                                argumentsData = JSON.parse(argumentsData)
+                              } catch {
+                                // If parsing fails, use the string as-is
+                              }
+                            }
+                            return parseAndPrettyPrint(argumentsData)
+                          })()}
+                        </JsonHighlighter>
                       </div>
                     </div>
                   )}
@@ -158,8 +222,10 @@ const ChatMessage = ({
                       <div className="type-body-100 mb-1 font-medium">
                         Result:
                       </div>
-                      <div className="rounded max-h-32 type-caption-medium max-w-full overflow-x-auto overflow-y-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
-                        {parseAndPrettyPrint(toolCallData.result)}
+                      <div className="max-h-32 max-w-full overflow-x-auto overflow-y-auto rounded-2 bg-surface-2">
+                        <JsonHighlighter>
+                          {parseAndPrettyPrint(toolCallData.result)}
+                        </JsonHighlighter>
                       </div>
                     </div>
                   )}
