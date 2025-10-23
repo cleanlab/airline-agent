@@ -7,7 +7,7 @@ This repo uses the [Hatch](https://hatch.pypa.io/) project manager ([installatio
 
 ### API Keys
 
-Before running the agent, you need to configure the following API keys either in a `.env` file or as environment variables.
+Before running the Agent, you need to configure the following API keys either in a `.env` file or as environment variables.
 
 - **OPENAI_API_KEY**: Your OpenAI API key (the AI Agent in this demo uses OpenAI model)
 - **CODEX_API_KEY**: Your Cleanlab Codex API key
@@ -404,7 +404,7 @@ AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 ```
 
-The Agent is guessing here (as it admits to) which could mislead the customer's expectations. This is due to gaps in the knowledge base, which contains no information on this topic. Here the Agent has also ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge").
+The Agent's response is not at all supported by any information in the files it found.  Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
 <br><br>
 </details>
 
