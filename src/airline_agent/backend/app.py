@@ -1,5 +1,4 @@
 import argparse
-import os
 
 import uvicorn
 from fastapi import APIRouter, FastAPI
@@ -31,12 +30,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--reload", action="store_true")
-    parser.add_argument("--disable-cleanlab", action="store_true")
 
     args = parser.parse_args()
-
-    # Set environment variable so the backend can access this setting
-    os.environ["DISABLE_CLEANLAB"] = str(args.disable_cleanlab)
 
     uvicorn.run(
         "src.airline_agent.backend.app:app",

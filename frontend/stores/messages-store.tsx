@@ -1,8 +1,3 @@
-import type {
-  AssistantMessage,
-  ToolCallMessage,
-  UserMessage
-} from '@/client/types.gen'
 import { CurrentThreadStatus as ResponseStreamingStatus } from '@/lib/hooks/useStreamMessage'
 import { isCurrentThread } from '@/lib/isCurrentThread'
 import type { Prettify } from '@/lib/ts/Prettify'
@@ -12,7 +7,6 @@ import { type StateCreator, createStore } from 'zustand'
 import { assertExhaustive } from '../lib/ts/assertExhaustive'
 import { sameByIdOrLocalId } from './history-thread-store'
 
-type Message = AssistantMessage | ToolCallMessage | UserMessage
 export type MessageMetadata = Record<string, any>
 
 export type StoreMessage = {
@@ -38,6 +32,7 @@ export type CurrentThread = {
   isPending?: boolean
   status?: ResponseStreamingStatus
   error?: ThreadError | undefined
+  cleanlabEnabled?: boolean
 } & (
   | {
       localThreadId: string

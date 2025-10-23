@@ -1,6 +1,6 @@
 from collections.abc import AsyncGenerator
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from fastapi.responses import StreamingResponse
 
 from airline_agent.backend.schemas.message import UserMessage
@@ -12,8 +12,9 @@ router = APIRouter(prefix="/airline-agent")
 @router.post("/stream")
 async def airline_agent_chat_route(
     message: UserMessage,
+    cleanlab_enabled: bool = Query(default=True, description="Whether to enable cleanlab validation"),  # noqa: FBT001
 ) -> StreamingResponse:
-    event_generator = airline_chat_streaming(message)
+    event_generator = airline_chat_streaming(message, cleanlab_enabled)
 
     async def sse_generator() -> AsyncGenerator[str, None]:
         async for event in event_generator:
