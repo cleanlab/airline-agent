@@ -71,7 +71,7 @@ Here is an idea for questions you can ask:
 The agent responds correctly here, but with Cleanlab validation, you have more *trust* these answers are correct as well as  observability/monitoring. You can verify yourself that the AI Response was correct from [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
 
 ```text
-AI Response with Cleanlab:
+AI Response without Cleanlab:
 Yes, you can bring your domesticated cat on a domestic flight with Frontier Airlines. Here are some important guidelines:
 
 Pets, including cats, must stay in their travel container at all times.
@@ -84,8 +84,8 @@ There is a one-way fee for bringing a pet, and you can add your pet to the reser
 ```
 
 ```text
-AI Response without Cleanlab:
-<Same as AI Response with Cleanlab>
+AI Response with Cleanlab:
+<Same as AI Response without Cleanlab>
 ```
 
 <br><br>
