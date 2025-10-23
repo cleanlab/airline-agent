@@ -43,6 +43,7 @@ from airline_agent.cleanlab_utils.validate_utils import (
     run_cleanlab_validation_logging_tools,
 )
 from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
+from airline_agent.tools.flights import Flights
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
 load_dotenv()
@@ -50,13 +51,13 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 
-def create_agent(kb: KnowledgeBase) -> Agent:
+def create_agent(kb: KnowledgeBase, flights: Flights) -> Agent:
     """Create the airline support agent."""
     model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
     return Agent(
         model=model,
         instructions=AGENT_INSTRUCTIONS,
-        tools=[kb.get_article, kb.search, kb.list_directory],
+        tools=[kb.get_article, kb.search, kb.list_directory, flights.search_flights],
     )
 
 
@@ -73,8 +74,9 @@ kb = KnowledgeBase(
     kb_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/kb.json"),
     vector_index_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/vector-db"),
 )
+flights = Flights(db_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/flights.db"))
 project = get_cleanlab_project()
-agent = create_agent(kb)
+agent = create_agent(kb, flights)
 
 thread_to_messages: dict[str, list[ModelMessage]] = {}
 cleanlab_enabled_by_thread: dict[str, bool] = {}
