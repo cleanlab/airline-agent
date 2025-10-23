@@ -140,21 +140,6 @@ Why AI Response Bad without Cleanlab:
 - User Experience: The response is a hallucinated answer. It could lead to the user making decisions that ultimately lead them to lose their airline miles.
 - Explanation: The AI incorrectly suggests that only **one individual’s accrual activity** is needed to keep the **entire pool’s miles (including contributions from other members)** from expiring.  However, the correct policy states: ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). Interestingly, Google’s **AI Overview** makes the same [hallucinated error](https://www.google.com/search?q=frontier+airlines+how+to+keep+pool+active&oq=frontier+airlines+how+to+keep+pool+active&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIHCAIQIRigATIHCAMQIRigATIHCAQQIRigATIHCAUQIRifBdIBCDk4MTRqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8). In the system prompt, there are instructions to only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the agent blatantly ignores.
 
-> *If theres no overhead bin space for my carry on must i pay extra to check it?*
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
-
-```text
-AI Response without Cleanlab:
-I couldn't find specific information about whether you would need to pay extra to check your carry-on if there's no overhead bin space. However, typically, if overhead bin space is unavailable, airlines may check your carry-on at the gate without an additional fee. It's best to confirm this with Frontier Airlines directly at the airport or through their customer service to ensure you have the most accurate information for your specific situation.
-```
-
-Why AI Response Bad without Cleanlab:
-- User Experience: The response is a guess, admitted to by the agent. It could lead to the user having different expectiations and a negative view of Frontier if those expectations are incorrect.
-- Explanation: This response is hallucinated due to gaps in the knowledge base. In the system prompt, there are instructions to only focus to only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the agent blatantly ignores.
-
 **Note**: The AI (OpenAI's GPT-4o model) is nondeterministic, so these examples can occasionally not elicit hallucinated responses. Cleanlab is [benchmarked](https://cleanlab.ai/blog/rag-tlm-hallucination-benchmarking/) as the top method for detecting LLM hallucinations.
 
 As you ask these questions in the UI, open your [Cleanlab Project](https://codex.cleanlab.ai/) and expand the log line corresponding to your question to see how the Agent would have responded without Cleanlab’s intervention.
@@ -432,9 +417,30 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 
 ### Additional Examples to Try
-> *Who is in charge of the plane?* (topic restriction)
 
-> *I'm dizzy should i still fly tmr?* (topic restriction)
+#### To showcase Topic Restriction guardrail
+
+> *Who is in charge of the plane?*
+
+> *I'm dizzy should i still fly tmr?*
+
+#### To showcase trust scoring
+
+> *If theres no overhead bin space for my carry on must i pay extra to check it?*
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+```text
+AI Response without Cleanlab:
+I couldn't find specific information about whether you would need to pay extra to check your carry-on if there's no overhead bin space. However, typically, if overhead bin space is unavailable, airlines may check your carry-on at the gate without an additional fee. It's best to confirm this with Frontier Airlines directly at the airport or through their customer service to ensure you have the most accurate information for your specific situation.
+```
+
+Why AI Response Bad without Cleanlab:
+- User Experience: The response is a guess, admitted to by the agent. It could lead to the user having different expectiations and a negative view of Frontier if those expectations are incorrect.
+- Explanation: This response is hallucinated due to gaps in the knowledge base. In the system prompt, there are instructions to only focus to only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the agent blatantly ignores.
+
 
 ---
 
