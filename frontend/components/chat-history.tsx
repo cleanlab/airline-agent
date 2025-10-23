@@ -2,11 +2,14 @@
 
 import { Tooltip } from './design-system-components/Tooltip'
 import Link from 'next/link'
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import * as React from 'react'
 import { NewChatButton } from './new-chat-button'
 import { cn } from '@/lib/utils/tailwindUtils'
 import { SidebarList } from './sidebar-list'
+import { Button } from './design-system-components/Button'
+import { ModalAlertBasic } from './design-system-components/ModalAlertBasic'
+import { useClearHistory } from '@/lib/hooks/useClearHistory'
 
 interface ChatHistoryProps {
   mobile?: boolean
@@ -45,6 +48,8 @@ export function UrlsList({ urls }: { urls?: string[] }) {
 }
 
 export function ChatHistory({ mobile, logoLockup }: ChatHistoryProps) {
+  const [showClearHistoryModal, setShowClearHistoryModal] = useState(false)
+  const clearHistory = useClearHistory()
   return (
     <div
       data-scroll-restoration-id="chat-history"
@@ -87,6 +92,43 @@ export function ChatHistory({ mobile, logoLockup }: ChatHistoryProps) {
           </React.Suspense>
         </div>
       </div>
+      <ModalAlertBasic
+        title="Clear history"
+        description="Are you sure you want to clear your chat history? This action cannot be undone."
+        open={showClearHistoryModal}
+        onOpenChange={setShowClearHistoryModal}
+        trigger={
+          <Button
+            variant="secondaryFaint"
+            size="xSmall"
+            className="my-4 w-fit self-center"
+            onClick={() => setShowClearHistoryModal(true)}
+          >
+            Clear history
+          </Button>
+        }
+        footerContent={
+          <>
+            <Button
+              variant="critical"
+              size="small"
+              onClick={() => {
+                clearHistory()
+                setShowClearHistoryModal(false)
+              }}
+            >
+              Clear history
+            </Button>
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={() => setShowClearHistoryModal(false)}
+            >
+              Cancel
+            </Button>
+          </>
+        }
+      />
     </div>
   )
 }
