@@ -355,7 +355,7 @@ Coordination and Resources: The plan is coordinated with airport authorities and
 In summary, the longest you could be stuck on the tarmac without the option to deplane is three hours for domestic flights and four hours for international flights, barring any safety or security exceptions.
 ```
 
-Here maybe a Product Leader / SME has quickly decided the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
+Suppose a Product Leader / SME has quickly decided the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
 
 Go to this Log entry in the Project and mark "No" under "Is this a good AI response?".
 
@@ -363,30 +363,7 @@ Then pretend you are a different user **by creating a new chat thread** and ask 
 
 > *What is the maximum time we might be stuck on the tarmac without being let off*
 
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
-
-```text
-AI Response without Cleanlab:
-Frontier Airlines has a tarmac delay plan to manage situations where passengers are stuck on the tarmac. Here are the key points:
-
-Notification and Updates: Passengers will be notified of the delay status if it exceeds 30 minutes, with updates provided as necessary.
-
-Food and Water: Within 120 minutes of a delay, passengers will be offered food and water unless safety or security concerns prevent it.
-
-Deplaning Opportunity:
-
-For domestic flights, passengers must be given the option to deplane before the delay exceeds three hours.
-For international flights, this option is available before four hours.
-Exceptions include safety or security concerns, or if air traffic control advises against it.
-Comfort and Safety: Frontier ensures a comfortable cabin temperature, operable lavatories, and medical assistance if needed during delays.
-
-Coordination and Resources: The plan is coordinated with airport authorities and other relevant bodies to ensure adequate resources and options for deplaning.
-
-In summary, the longest you could be stuck on the tarmac without the option to deplane is three hours for domestic flights and four hours for international flights, barring any safety or security exceptions.
-```
+You'll see that Cleanlab now guardrails the AI, preventing the response that was deemed undesirable.
 
 
 ## Conclusion
