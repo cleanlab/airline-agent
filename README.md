@@ -275,19 +275,20 @@ Cleanlab also provides out-of-the-box Evaluations to help developers root cause 
 
 If you've already run many queries through the AI, then try sorting the Logs in the [Cleanlab Project](https://codex.cleanlab.ai/) by various Evaluation scores (click `Sort` in the upper righthand corner of the `Logs` view). Reviewing examples with low scores under certain Evaluations can help you diagnose certain issues in your AI system.
 
-Also try asking some queries that get flagged by some of these out-of-the-box Evaluations, such as this one:
+Try asking queries that get flagged by some of these out-of-the-box Evaluations, such as this one:
 
-> *Why is there a pending hold on my card?*
+> *Who founded Frontier Airlines?*
 
 <details>
   <summary>Learn More</summary>
 
 ```text
 AI Response:
-I'm sorry, but I couldn't find specific information on why there might be a pending hold on your card from Frontier Airlines. Such holds can frequently occur due to pre-authorizations for bookings or services. It's best to contact Frontier's customer support directly or check with your bank for detailed information regarding specific charges.
+
+I couldn't find specific information about the founder of Frontier Airlines in the available knowledge base. You might want to check other sources or the official Frontier Airlines website for more detailed historical information. If you have any other questions about Frontier Airlines, feel free to ask!
 ```
 
-The Agent is giving vague financial suggestions to the user that are not helpful in answering their direct question. Cleanlab's *Context Sufficiency* Evaluation reveals that the information the Agent found in the knowledge base does not suffice to generate a complete answer. If no Guardrails are triggered, this means that the user still sees the original agent answer, however it is now logged (for future Remediation) that the Agent is guessing at information that is not in the knowledge base due to the responses' low context sufficiency score.
+Here the Agent unhelpfully says it does not know the answer. Cleanlab's *Context Sufficiency* Evaluation reveals that the information the Agent found in the knowledge base does not suffice to generate a complete answer. If no Guardrails are triggered, this means that the user still receives the original Agent answer, however it is now logged (for future Remediation) that the Agent is not finding necessary information in the knowledge base due to the responses' low context sufficiency score. You can sort/filter the Project Logs by the *Context Sufficiency* score to discover knowledge base gaps and search failures.
 <br><br>
 </details>
 
@@ -307,46 +308,23 @@ If you haven't already asked a number of questions where the RAG app replied wit
 #### 4a. Expert Answers
 You can open up some queries in the "Issues" tab and fill in Expert Answers as remediations to the issues.
 
-These answers are integrated into the RAG app as a semantic cache, so when anyone asks a similar question in the future, it'll be answered correctly thanks to the expert answer.
+These answers are integrated into the RAG app as a semantic cache, so when anyone asks a similar question in the future, it'll be answered correctly thanks to the expert answer. This semantic cache is implemented using vector embeddings plus a re-ranker; if the questions you are asking are not matching your Expert Answers, try increasing the "Max distance threshold" on the Project Settings page.
 
-**Note:** The demo UI app always shows the results of the RAG application with Guardrailing and Expert Answers enabled.
+Here's a concrete query we asked above that you can either try again or look up in the Project's Issues page:
 
-This semantic cache is implemented using vector embeddings plus a re-ranker; if the questions you are asking are not matching your Expert Answers, try increasing the "Max distance threshold" on the Project Settings page.
+> *Who founded Frontier Airlines?*
 
-Here's a concrete query we asked above you can either try again or look up in the Issues page (if it was guardrailed) or Logs page (if it was not):
-> *why is there a pending hold on my card?*
-
-Now let's assume we want to remediate the vague agent answer by providing specific steps on how to check any holds related to Frontier through the online portal. Click the "Expert Answer" section in the Cleanlab UI and enter an answer like:
+The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries like this. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
 
 ```text
-What to do to confirm the reason behind the hold:
-
-1) Check My Trips / Billing on flyfrontier.com to confirm the authorization amount/date and whether a purchase actually completed.
-2) If the trip is booked or the attempt was canceled, most banks auto-release holds in a few days—monitor your account.
-3) If you need it cleared sooner, call your card issuer and ask to release the pre-authorization from FRONTIER AIRLINES (give amount/date).
-4) Still stuck after several days? Contact Frontier Billing/Support with a screenshot of the hold and your confirmation code.
+Frontier Airlines was founded by Frederick W. "Rick" Brown, Janice Brown, and Bob Schulman in 1994.
 ```
 
-After submitting your Remediation, imagine you are different user **by creating a new chat thread** and asking:
+After submitting your Remediation, imagine you are different user **by creating a new chat thread** and asking a similar question:
 
-> *My card has a pending hold?*
+> *list the founders of Frontier Airlines*
 
-```text
-AI Response with Cleanlab:
-What to do to confirm the reason behind the hold:
-
-1) Check My Trips / Billing on flyfrontier.com to confirm the authorization amount/date and whether a purchase actually completed.
-2) If the trip is booked or the attempt was canceled, most banks auto-release holds in a few days—monitor your account.
-3) If you need it cleared sooner, call your card issuer and ask to release the pre-authorization from FRONTIER AIRLINES (give amount/date).
-4) Still stuck after several days? Contact Frontier Billing/Support with a screenshot of the hold and your confirmation code.
-```
-
-```text
-AI Response without Cleanlab:
-I'm sorry, but I couldn't find specific information on why there might be a pending hold on your card from Frontier Airlines. Such holds can frequently occur due to pre-authorizations for bookings or services. It's best to contact Frontier's customer support directly or check with your bank for detailed information regarding specific charges.
-```
-
-You should see the AI app now responds with the desired Expert Answer. The problem has instantly been fixed!
+You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
 
 
 #### 4b. Expert Review
@@ -377,14 +355,9 @@ Coordination and Resources: The plan is coordinated with airport authorities and
 In summary, the longest you could be stuck on the tarmac without the option to deplane is three hours for domestic flights and four hours for international flights, barring any safety or security exceptions.
 ```
 
-<details>
-  <summary>Learn More</summary>
+Here maybe a Product Leader / SME has quickly decided the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
 
-Here maybe a Product Leader or SME has quickly decided the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
-</details>
-
-
-Now go into the Cleanlab Project and mark the section asking "Is this a good AI response?" with "No".
+Go to this Log entry in the Project and mark "No" under "Is this a good AI response?".
 
 Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
 
@@ -418,7 +391,7 @@ In summary, the longest you could be stuck on the tarmac without the option to d
 
 ## Conclusion
 
-This example demonstrates a client application integrated with the Cleanlab AI Platform and demonstrates some of the core functionality of the platform, including observability/logging, Guardrails, Evaluations, and Expert Answers.
+This demo shows one example AI Agent integrated with the Cleanlab AI Platform. It demonstrates some of the core functionality of the platform, including observability/logging, Guardrails, Evaluations, and Remediations. To efficiently utilize your SMEs, Cleanlab automatically prioiritizes which cases will be highest impact to remediate on the Project's Issues page.
 
 Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easily integrate the Cleanlab AI Platform as a trust/control layer for your own AI applications.
 
