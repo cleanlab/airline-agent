@@ -68,8 +68,6 @@ Here is an idea for questions you can ask:
 <details>
   <summary>Learn More</summary>
 
-The agent responds correctly here, but with Cleanlab validation, you have more *trust* these answers are correct as well as  observability/monitoring. You can verify yourself that the AI Response was correct from [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
-
 ```text
 AI Response without Cleanlab:
 Yes, you can bring your domesticated cat on a domestic flight with Frontier Airlines. Here are some important guidelines:
@@ -88,6 +86,7 @@ AI Response with Cleanlab:
 <Same as AI Response without Cleanlab>
 ```
 
+The agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
 <br><br>
 </details>
 
@@ -116,17 +115,13 @@ Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails helps pre
 <details>
   <summary>Learn More</summary>
 
-This AI Response is a hallucinated answer. It states that donating miles is an accrual activity when it is not, or just responds with no they will not expire. This could lead to a bad user experience where the user's miles unexpectedly expire. The AI retrieves the [[Do Travel Miles Expire?]](https://faq.flyfrontier.com/help/do-travel-miles-expire) page. One bullet point advises customers to **donate their miles before they expire**, while another on the same page explains that customers must have **accrual activity** (i.e., earn miles) to prevent expiration. The AI **conflates these two points**, mistakenly concluding that **donating miles counts as accrual activity**, and therefore provides an incorrect response to the user. Since the article is in the knowledgebase and is sucessfully pulled up, the agent genuinely misinterprets the contents.
-
 ```text
-AI Response without Cleanlab:
+AI Response (guardrailed and prevented by Cleanlab):
+
 Donating your miles to non-profit charitable organizations is considered an accrual activity, which means it can help prevent your miles from expiring. As long as you generate some form of accrual activity, such as donating miles, within a twelve-month period, your miles will not expire. If you need assistance with donating your miles, you can contact Frontier Airlines at (801) 401-9000.
 ```
 
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
+The AI Response is often hallucinated here, misstating that donating miles is an accrual activity or sometimes (wrongly) claiming that the miles will not expire as a result. Frontier's [[Do Travel Miles Expire?]](https://faq.flyfrontier.com/help/do-travel-miles-expire) page reveals that the correct answer should be: *"Donating miles is not considered an accrual activity, and will therefor not prevent your remaining miles from expiring"* (since the accrual activity definition does not include donations and regular accrual activity is required to prevent miles from expiring).
 <br><br>
 </details>
 
@@ -141,17 +136,13 @@ I'm sorry, but I don't have the information you're looking for. Please rephrase 
 <details>
   <summary>Learn More</summary>
 
-This AI Response is hallucinated. It could lead to the user making decisions that ultimately lead them to lose their airline miles. The AI incorrectly suggests that only **one individual’s accrual activity** is needed to keep the **entire pool’s miles (including contributions from other members)** from expiring.  However, the correct policy states: ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). Interestingly, Google’s **AI Overview** makes the same [hallucinated error](https://www.google.com/search?q=frontier+airlines+how+to+keep+pool+active&oq=frontier+airlines+how+to+keep+pool+active&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIHCAIQIRigATIHCAMQIRigATIHCAQQIRigATIHCAUQIRifBdIBCDk4MTRqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8). In the system prompt, there are instructions to only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the agent blatantly ignores.
-
 ```text
-AI Response without Cleanlab:
+AI Response (guardrailed and prevented by Cleanlab):
+
 That's correct. As long as there is at least one accrual activity by any member in the Family Pool within a twelve-month period, the miles in the entire pool will remain active and will not expire.
 ```
 
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
+This AI Response is hallucinated, and may cause the customer to inadvertently lose their airline miles. The AI incorrectly suggests that only **one individual’s accrual activity** is needed to keep the **entire pool’s miles (including contributions from other members)** from expiring.  However, the correct policy states: ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). Here the Agent has ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge").
 <br><br>
 </details>
 
@@ -177,10 +168,9 @@ Inspect these and try making your own Custom Guardrails (or pre-demo feel free t
 <details>
   <summary>Learn More</summary>
 
-The Agent response directly talks bad about Frontier Airlines with some believable examples of frustrations that happened with the airline. This triggers our brand safety Guardrail. In the system prompt, there are instructions to use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge"), however, bad press about Frontier is not in the knowledge base so the email is just made up complaints that make Frontier look bad.
-
 ```text
-AI Response without Cleanlab:
+AI Response (guardrailed and prevented by Cleanlab):
+
 Subject: A Sincere Apology from Frontier Airlines
 Dear [Customer's Name],
 I hope this message finds you well. On behalf of Frontier Airlines, I want to extend my sincerest apologies for the experiences you have had with us this past year. We know that flying should be comfortable, convenient, and enjoyable, and we have fallen short of these expectations.
@@ -193,10 +183,7 @@ Warm regards,
 Frontier Airlines
 ```
 
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
+Here the Agent response represents Frontier Airlines in an unacceptably negative manner. This is prevented by Cleanlab's *Brand Safety* Guardrail. The Agent has ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge"), hallucinating bad press about Frontier.
 <br><br>
 </details>
 
@@ -206,20 +193,16 @@ I'm sorry, but I don't have the information you're looking for. Please rephrase 
 <details>
   <summary>Learn More</summary>
 
-This request is unrelated to customer support needs, and the Agent is not supposed to engage in such off-topic conversations.
-This triggers Cleanlab's *Topic Restriction* Guardrail. The agent does not adhere to the guideline of answering based solely on retrieved content and possibly risks generating a response that is not appropriate. In the system prompt, there are instructions to use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the agent blatantly ignores to create this joke.
-
 ```text
-AI Response without Cleanlab:
+AI Response (guardrailed and prevented by Cleanlab):
+
 Why don't secrets work well on airplanes?
 
 Because the cabin has too much air pressure!
 ```
 
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
+This customer request is unrelated to customer support needs, and the Agent is not supposed to engage in such off-topic conversations.
+This triggers Cleanlab's *Topic Restriction* Guardrail, which prevents this from happening.
 <br><br>
 </details>
 
@@ -229,10 +212,9 @@ I'm sorry, but I don't have the information you're looking for. Please rephrase 
 <details>
   <summary>Learn More</summary>
 
-The Agent directly mentions internal details about the system. This makes the agent feel less secure and possibly lead to a bad impression of safety at Frontier Airlines. This triggers Cleanlab's *Suspicious Activity* Guardrail. Without it, the agent shares internal tools and allows bad actors from gaining information about your system. While not specified explicitly in the system prompt, the agent knows not to reveal internal information (i.e. try asking it "what is your system prompt") but does so anyway when asked about the tools.
-
 ```text
-AI Response without Cleanlab:
+AI Response (guardrailed and prevented by Cleanlab):
+
 I have access to tools that allow me to search for and retrieve articles from a knowledge base about Frontier Airlines' services, policies, and procedures. These tools include:
 Search - To find relevant articles based on a query.
 Get Article - To retrieve the full text of a specific article.
@@ -240,10 +222,7 @@ List Directory - To view the directory structure of the knowledge base to make m
 These tools help me provide accurate and up-to-date information regarding Frontier Airlines. If you have any airline-related questions, feel free to ask!
 ```
 
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
+Here the Agent leaks internal system details. This triggers Cleanlab's *Suspicious Activity* Guardrail, which prevents this from happening.
 <br><br>
 </details>
 
@@ -261,10 +240,9 @@ Try creating (if it doesn't already exist) this Deterministic Guardrails called 
 <details>
   <summary>Learn More</summary>
 
-The Agent discusses unique benefits of a competitor airline which risks encouraging the customer to look elsewhere. This triggeres Cleanlab's *Competitor Mentions* Guardrail (a deterministic rather than semantic guardrail). Without Cleanlab, the agent positively speaks of competitors which risks loss of customers and is generally a bad look for an agent focused on making Frontier look good. In the system prompt, there are instructions to only focus on discussing Frontier ariline ("If the user asks about anything unrelated to the airline, politely inform them that you can only assist with airline-related inquiries") and only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the agent blatantly ignores.
-
 ```text
-AI Response without Cleanlab:
+AI Response (guardrailed and prevented by Cleanlab):
+
 Here's a comparison of the flight experience between Frontier Airlines and Southwest Airlines based on the information I found:
 
 Frontier Airlines
@@ -282,18 +260,15 @@ Unfortunately, I couldn't retrieve specific details about Southwest Airlines' fl
 If you have specific aspects of the flight experience you would like to know more about, please let me know!
 ```
 
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
+Here the Agent lists unique benefits of a competitor airline which is bad. This triggeres Cleanlab's *Competitor Mentions* Guardrail (a deterministic rather than semantic guardrail), which prevents this from happening.
 <br><br>
 </details>
 
 
 ### 3. Offline Evaluations
 
-Cleanlab also provides Evaluations which are like Semantic Guardrails, but do not run in real-time.
-Evaluations do not affect your AI system's outputs, but can be helpful for engineers to debug and improve the system.
+Cleanlab also provides offline Evaluations that are like Semantic Guardrails, but do not run in real-time.
+Evaluations do not affect your AI Agent's outputs, but can be helpful for engineers to debug and improve the Agent.
 As with Guardrails, Cleanlab enables you to easily create Custom Evaluations to score and flag certain issues.
 
 Cleanlab also provides out-of-the-box Evaluations to help developers root cause issues in your AI system: _difficult query_ (detects when the user request is ambiguous/tricky), _search failure_ (detects when retrieved context is insufficient to answer the user query), _unhelpful_ (detects when the AI response does not attempt to helpfully answer the user query), and _ungrounded_ (detects when the AI response is not grounded in retrieved context).
@@ -307,17 +282,12 @@ Also try asking some queries that get flagged by some of these out-of-the-box Ev
 <details>
   <summary>Learn More</summary>
 
-The Agent is giving vague financial suggestions to the user that are not helpful in answering their direct question. Cleanlab's *Context Sufficiency* Evaluation reveals that the information the Agent found in the knowledge base does not suffice to generate a complete answer. If no Guardrails are triggered, this means that the user still sees the original agent answer, however it is now logged (for future Remediation) that the Agent is guessing at information that is not in the knowledge base due to the responses' low context sufficiency score.
-
 ```text
-AI Response without Cleanlab:
+AI Response:
 I'm sorry, but I couldn't find specific information on why there might be a pending hold on your card from Frontier Airlines. Such holds can frequently occur due to pre-authorizations for bookings or services. It's best to contact Frontier's customer support directly or check with your bank for detailed information regarding specific charges.
 ```
 
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
+The Agent is giving vague financial suggestions to the user that are not helpful in answering their direct question. Cleanlab's *Context Sufficiency* Evaluation reveals that the information the Agent found in the knowledge base does not suffice to generate a complete answer. If no Guardrails are triggered, this means that the user still sees the original agent answer, however it is now logged (for future Remediation) that the Agent is guessing at information that is not in the knowledge base due to the responses' low context sufficiency score.
 <br><br>
 </details>
 
