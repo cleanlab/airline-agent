@@ -14,7 +14,7 @@ YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TIMEZONE = 2025, 10, 1, 17, 0, 0, "UTC" 
 LOCAL_DT = datetime(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, tzinfo=ZoneInfo(TIMEZONE)).astimezone()  # user's local time
 AGENT_MODEL = "gpt-4o"
 AGENT_INSTRUCTIONS = (
-    """You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
+    f"""You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
 documents about the airline's services, policies, and procedures.
 
 ## You have access to the following tools:
