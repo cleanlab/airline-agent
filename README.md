@@ -331,12 +331,16 @@ You should see the Agent now responds with the desired Expert Answer instead of 
 
 Beyond Expert Answers, Cleanlab supports other types of remediations, such as Expert Reviews.
 
-**Try starting a new chat and asking the example question below to explore how Cleanlab validates responses for another new customer:**
+**Try starting a new chat** and asking the example question below:
 
 > *Whats the maximum time we might be stuck on the tarmac without being let off*
 
+<details>
+  <summary>Learn More</summary>
+
 ```text
 AI Response:
+
 Frontier Airlines has a tarmac delay plan to manage situations where passengers are stuck on the tarmac. Here are the key points:
 
 Notification and Updates: Passengers will be notified of the delay status if it exceeds 30 minutes, with updates provided as necessary.
@@ -354,10 +358,12 @@ Coordination and Resources: The plan is coordinated with airport authorities and
 
 In summary, the longest you could be stuck on the tarmac without the option to deplane is three hours for domestic flights and four hours for international flights, barring any safety or security exceptions.
 ```
+<br><br>
+</details>
 
-Suppose a Product Leader / SME has quickly decided the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
+Suppose a Product Leader / SME has quickly decided that the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
 
-Go to this Log entry in the Project and mark "No" under "Is this a good AI response?".
+Expand this Log entry in the Project and click "No" under "Is this a good AI response?".
 
 Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
 
