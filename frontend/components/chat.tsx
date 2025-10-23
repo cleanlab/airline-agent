@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils/tailwindUtils'
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { CurrentThreadStatus } from '../lib/hooks/useStreamMessage'
+import { getThreadBufferSnapshot } from '../lib/hooks/useStreamMessage'
 import type { CurrentThread } from '../stores/messages-store'
 import { PromptForm } from './prompt-form'
 import { ChatInputPanel } from './design-system-components/ChatInputPanel'
@@ -95,12 +96,25 @@ export function Chat({
       setCurrentThread(undefined)
       return
     }
-    // Prefer initialMessages if provided, otherwise try to hydrate from snapshot
+    // Prefer initialMessages if provided
     if (initialMessages && initialMessages.length) {
       setCurrentThread({
         threadId: threadId,
         messages: initialMessages,
         status: CurrentThreadStatus.complete
+      })
+      return
+    }
+    // If a stream is in progress for this thread, prefer hydrating from
+    // the live buffer BEFORE falling back to snapshot. Snapshot at creation
+    // time contains an empty assistant and would hide loading state.
+    const buffered1 = getThreadBufferSnapshot(threadId)
+    if (buffered1 && buffered1.length > 0) {
+      setCurrentThread({
+        threadId: threadId,
+        messages: buffered1,
+        isPending: true,
+        status: CurrentThreadStatus.responsePending
       })
       return
     }
@@ -150,6 +164,18 @@ export function Chat({
         })
         return
       }
+    }
+    // If we have an in-progress stream for this thread, hydrate from buffer so
+    // partial content and loading state are visible while switching between threads
+    const liveBufferSnapshot = getThreadBufferSnapshot(threadId)
+    if (liveBufferSnapshot && liveBufferSnapshot.length > 0) {
+      setCurrentThread({
+        threadId: threadId,
+        messages: liveBufferSnapshot,
+        isPending: true,
+        status: CurrentThreadStatus.responsePending
+      })
+      return
     }
     setCurrentThread(undefined)
   }, [historySnapshot, initialMessages, setCurrentThread, threadId])
