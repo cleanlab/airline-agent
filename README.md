@@ -378,6 +378,7 @@ This demo shows one example AI Agent integrated with the Cleanlab AI Platform. I
 
 Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easily integrate the Cleanlab AI Platform as a trust/control layer for your own AI applications.
 
+---
 
 ### Additional Examples to Try
 
@@ -414,7 +415,7 @@ The Agent's response is not at all supported by any information in the files it 
 
 ### Updating the Knowledge Base
 
-We pin the shared `data/kb.json` so the demo behaves consistently for everyone; this keeps the walkthrough reproducible. If you want to re-scrape the data yourself, run:
+We pin the shared `data/kb.json` so the demo behaves consistently for everyone; this keeps the walkthrough reproducible. If you want to re-scrape the data yourself, make sure you have [Pandoc](https://pandoc.org/) installed, and then run:
 
 ```bash
 hatch run fetch-pages

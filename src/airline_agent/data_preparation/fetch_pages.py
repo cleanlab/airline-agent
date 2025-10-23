@@ -1,5 +1,6 @@
 import json
 import pathlib
+import shutil
 import subprocess
 import urllib.parse
 
@@ -26,6 +27,11 @@ def main() -> None:
     project_root = pathlib.Path(__file__).resolve().parents[3]
     output_path = project_root / "data" / "kb.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # bail out early with a good error message if the user doesn't have Pandoc
+    if not shutil.which("pandoc"):
+        msg = "Pandoc must be installed to run this script"
+        raise FileNotFoundError(msg)
 
     faq_urls = get_all_faq_urls()
     home_urls = get_home_urls()
