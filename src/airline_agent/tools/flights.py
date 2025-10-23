@@ -50,14 +50,17 @@ class Flights:
                 Examples: "SFO", "San Francisco", "San Fran", "CA (SFO)", "San Francisco, CA (SFO)". Optional.
             arrival_location: The arrival location. Supports partial matching with LIKE patterns.
                 Examples: "DEN", "Denver", "Denver, CO (DEN)", "CO (DEN)". Optional.
-            start_time: The earliest departure time in ISO format (e.g., "2025-10-06T00:00:00+00:00"). Optional.
-            end_time: The latest departure time in ISO format (e.g., "2025-10-12T23:59:59+00:00"). Optional.
+            start_time: The earliest departure UTC time, in ISO 8601 format (e.g., "2025-10-06T00:00:00+00:00"). Optional.
+            end_time: The latest departure UTC time, in ISO 8601 format (e.g., "2025-10-12T23:59:59+00:00"). Optional.
             budget: The maximum budget for the flight search. Optional.
 
         Returns:
             A list of Frontier Airlines flights matching the search criteria. Each flight includes both
             standard pricing (available to all customers) and Discount Den pricing (available only to
             Frontier's \"Discount Den\" members). All prices are in USD.
+
+            The scheduled_departure and scheduled_arrival times are provided in the local time zones of their
+            respective departure and arrival locations.
         """
 
         logger.info(
@@ -75,8 +78,8 @@ class Flights:
             "SELECT * FROM flights WHERE "  # noqa: S608  # PRICE_COLUMNS is static
             "departure_location LIKE ? AND "
             "arrival_location LIKE ? AND "
-            "scheduled_departure >= ? AND "
-            "scheduled_departure <= ? AND "
+            "scheduled_departure_utc >= ? AND "
+            "scheduled_departure_utc <= ? AND "
             "(" + " OR ".join(f"{col} <= ?" for col in PRICE_COLUMNS) + ")"
         )
 
@@ -102,16 +105,16 @@ class Flights:
                 flight_num=row[0],
                 departure_location=row[1],
                 arrival_location=row[2],
-                scheduled_departure=datetime.fromisoformat(row[3]),
-                scheduled_arrival=datetime.fromisoformat(row[4]),
-                basic_price_standard=row[5],
-                economy_price_standard=row[6],
-                premium_price_standard=row[7],
-                business_price_standard=row[8],
-                basic_price_discount_den=row[9],
-                economy_price_discount_den=row[10],
-                premium_price_discount_den=row[11],
-                business_price_discount_den=row[12],
+                scheduled_departure=datetime.fromisoformat(row[5]),  # local time
+                scheduled_arrival=datetime.fromisoformat(row[6]),  # local time
+                basic_price_standard=row[7],
+                economy_price_standard=row[8],
+                premium_price_standard=row[9],
+                business_price_standard=row[10],
+                basic_price_discount_den=row[11],
+                economy_price_discount_den=row[12],
+                premium_price_discount_den=row[13],
+                business_price_discount_den=row[14],
             )
             flights.append(flight)
 

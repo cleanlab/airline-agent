@@ -13,8 +13,12 @@ class FlightInfo(BaseModel, frozen=True):
     flight_num: str = Field(..., description="Frontier Airlines flight number")
     departure_location: str = Field(..., description="Departure location e.g. San Francisco, CA (SFO)")
     arrival_location: str = Field(..., description="Arrival location e.g. San Francisco, CA (SFO)")
-    scheduled_departure: datetime = Field(..., description="Scheduled departure time (in UTC, in ISO 8601 format)")
-    scheduled_arrival: datetime = Field(..., description="Scheduled arrival time (in UTC, in ISO 8601 format)")
+    scheduled_departure: datetime = Field(
+        ..., description="Scheduled departure time (in local timezone, in ISO 8601 format)"
+    )
+    scheduled_arrival: datetime = Field(
+        ..., description="Scheduled arrival time (in local timezone, in ISO 8601 format)"
+    )
     basic_price_standard: int = Field(..., description="Basic fare standard price (in USD)")
     economy_price_standard: int = Field(..., description="Economy bundle standard price (in USD)")
     premium_price_standard: int = Field(..., description="Premium bundle standard price (in USD)")
