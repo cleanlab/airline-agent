@@ -119,7 +119,7 @@ Donating your miles to non-profit charitable organizations is considered an accr
 
 > *Do miles in family pool expire?*
 
-> *...agent response...*
+...agent response...
 
 > *Ok so only one person in the pool needs activity for the entire pool to stay alive*
 ```text
