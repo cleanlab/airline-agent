@@ -41,8 +41,6 @@ This will create a Project with already configured Guardrails and Evaluations fo
     hatch run backend-server
     ```
 
-    **Note:** This will run the backend server with cleanlab validation enabled by default. Include the `--disable-cleanlab` flag to disable validation.
-
 4. Run the frontend:
 
     ```bash
