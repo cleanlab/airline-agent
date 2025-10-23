@@ -12,9 +12,15 @@ router = APIRouter(prefix="/airline-agent")
 @router.post("/stream")
 async def airline_agent_chat_route(
     message: UserMessage,
-    cleanlab_enabled: bool = Query(default=True, description="Whether to enable cleanlab validation"),  # noqa: FBT001
+    cleanlab_enabled: bool = Query(  # noqa: FBT001
+        default=True, description="Whether to enable cleanlab validation"
+    ),
+    stream_intermediate_messages: bool = Query(  # noqa: FBT001
+        default=False,
+        description="Whether to stream intermediate assistant messages before the final response",
+    ),
 ) -> StreamingResponse:
-    event_generator = airline_chat_streaming(message, cleanlab_enabled)
+    event_generator = airline_chat_streaming(message, cleanlab_enabled, stream_intermediate_messages)
 
     async def sse_generator() -> AsyncGenerator[str, None]:
         async for event in event_generator:
