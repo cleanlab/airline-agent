@@ -11,6 +11,8 @@ import { Button } from './design-system-components/Button'
 import { ModalAlertBasic } from './design-system-components/ModalAlertBasic'
 import { useClearHistory } from '@/lib/hooks/useClearHistory'
 import { useAssistantHistory } from '@/providers/rag-app-store-provider'
+import { useAppSettings } from '@/lib/hooks/use-app-settings'
+import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '@/lib/consts'
 
 interface ChatHistoryProps {
   mobile?: boolean
@@ -50,8 +52,12 @@ export function UrlsList({ urls }: { urls?: string[] }) {
 
 export function ChatHistory({ mobile, logoLockup }: ChatHistoryProps) {
   const [showClearHistoryModal, setShowClearHistoryModal] = useState(false)
-  const history = useAssistantHistory()
-  console.log('history', history)
+  const [appSettings] = useAppSettings()
+  console.log('appSettings', appSettings.assistantId)
+  console.log('AGILITY_DEFAULT_ASSISTANT_SLUG', AGILITY_DEFAULT_ASSISTANT_SLUG)
+  const appId = appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG
+  const history = useAssistantHistory(appId || undefined)
+
   const clearHistory = useClearHistory()
   return (
     <div
