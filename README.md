@@ -81,7 +81,7 @@ AI Response without Cleanlab:
 ```
 
 <details>
-  <summary>More Info</summary>
+  <summary>Learn More</summary>
 
 The agent responds correctly here, but with Cleanlab validation, you have more *trust* these answers are correct as well as  observability/monitoring. You can verify yourself that the AI Response was correct from [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
 </details>
