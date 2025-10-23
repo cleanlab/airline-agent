@@ -29,15 +29,11 @@ export async function Header() {
   return (
     <header className="flex w-full shrink-0 items-center justify-between overflow-hidden bg-surface-0 px-8 py-5 backdrop-blur-xl">
       <div className="flex" />
-      <Link
-        className="flex md:hidden"
-        href="https://cleanlab.ai/"
-        target="_blank"
-      >
+      <div className="flex md:hidden">
         <h1 className="type-body-300 flex items-center justify-center gap-4 text-text-strong">
           <LogoLockup className="h-[26px] w-auto" />
         </h1>
-      </Link>
+      </div>
       <div className="flex items-center gap-4">
         <ThemeToggle />
         <NewChatButton className="flex md:hidden" asChild>

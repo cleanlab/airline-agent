@@ -11,7 +11,8 @@ import {
   FiMoon,
   FiRefreshCw,
   FiSun,
-  FiTrash
+  FiTrash,
+  FiX
 } from 'react-icons/fi'
 import { FaPlane } from 'react-icons/fa'
 
@@ -34,4 +35,5 @@ export const IconInfo = wrapFeatherIcon(FiInfo, 'IconInfo')
 export const IconWarning = wrapFeatherIcon(FiAlertOctagon, 'IconWarning')
 export const IconCaution = wrapFeatherIcon(FiAlertTriangle, 'IconCaution')
 export const IconTrash = wrapFeatherIcon(FiTrash, 'IconTrash')
+export const IconX = wrapFeatherIcon(FiX, 'IconX')
 export { IconCheckCircleFilled } from './IconCheckCircleFilled'

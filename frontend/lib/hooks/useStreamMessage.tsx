@@ -422,6 +422,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                               appSettings.assistantId ??
                               AGILITY_DEFAULT_ASSISTANT_SLUG,
                             thread: { id: threadId } as any,
+                            cleanlabEnabled: cleanlabRef.current,
                             snapshot: lastAssistantMessage
                               ? {
                                   user: {
@@ -519,6 +520,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         title: messageContent || 'New thread',
         assistantId: appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG,
         thread: { id: localThreadId } as any,
+        cleanlabEnabled: cleanlabRef.current,
         snapshot: {
           user: { content: messageContent || '', metadata: {} },
           assistant: { content: '', metadata: {} }
@@ -535,15 +537,6 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         isPending: true,
         status: CurrentThreadStatus.threadPending
       })
-      // Track the initiating user message for this thread in the buffer
-      bufferAppendUser({ threadId: localThreadId, content: messageContent })
-      // Persist selection exactly when first message is sent for this new thread
-      try {
-        localStorage.setItem(
-          `cleanlabEnabled:thread:${localThreadId}`,
-          JSON.stringify(cleanlabRef.current)
-        )
-      } catch {}
       // Immediately post to backend and treat this as a standalone Q+A thread
       window?.history.pushState({}, '', getChatPath(localThreadId))
       postMessage({
