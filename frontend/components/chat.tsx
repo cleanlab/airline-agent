@@ -53,15 +53,21 @@ export function Chat({
   const [cleanlabEnabled, setCleanlabEnabled] = useState<boolean>(() => {
     try {
       if (threadId) {
+        // Prefer reading from saved history thread
+        const historyItem = history?.find(
+          h => h.thread?.id === threadId || h.localThreadId === threadId
+        )
+        if (typeof historyItem?.cleanlabEnabled === 'boolean') {
+          return historyItem.cleanlabEnabled
+        }
+        // Fallback to legacy localStorage key for backward compatibility
         const key = `cleanlabEnabled:thread:${threadId}`
         const v = localStorage.getItem(key)
         if (v !== null) {
           const parsed = JSON.parse(v)
-          console.log('[Chat] init from storage', key, parsed)
           return parsed
         }
       }
-      console.log('[Chat] init default true (no storage) for thread', threadId)
       return true
     } catch {
       return true
@@ -76,19 +82,23 @@ export function Chat({
     return item?.snapshot
   }, [history, threadId])
 
-  // Hydrate per-thread cleanlabEnabled on thread change (if previously saved)
+  // Hydrate per-thread cleanlabEnabled on thread change
   useEffect(() => {
     if (!threadId) return
     try {
+      const historyItem = history?.find(
+        h => h.thread?.id === threadId || h.localThreadId === threadId
+      )
+      if (typeof historyItem?.cleanlabEnabled === 'boolean') {
+        setCleanlabEnabled(historyItem.cleanlabEnabled)
+        return
+      }
+      // Fallback: legacy localStorage
       const key = `cleanlabEnabled:thread:${threadId}`
       const v = localStorage.getItem(key)
-      console.log('[Chat] hydrate on thread change', key, v)
-      if (v !== null) {
-        const parsed = JSON.parse(v)
-        setCleanlabEnabled(parsed)
-      }
+      if (v !== null) setCleanlabEnabled(JSON.parse(v))
     } catch {}
-  }, [threadId])
+  }, [threadId, history])
 
   useEffect(() => {
     if (!threadId) {
@@ -189,7 +199,6 @@ export function Chat({
       value={cleanlabEnabled ? 'cleanlab-enabled' : 'cleanlab-disabled'}
       onValueChange={value => {
         const next = value === 'cleanlab-enabled'
-        console.log('[Chat] toggle change', next)
         setCleanlabEnabled(next)
       }}
       className="absolute top-0 z-50 mx-4 inline-flex w-fit justify-center self-center overflow-hidden rounded-2 border border-border-1 bg-surface-1 shadow-elev-2"
