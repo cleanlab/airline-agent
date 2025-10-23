@@ -1,10 +1,10 @@
-import functools
 import logging
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
 
+OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"  # to copy configuration from
 RAG_EMBED_MODEL = "text-embedding-3-small"
 RAG_EMBED_BATCH_SIZE = 100
 RAG_CHUNK_SIZE = 1024
@@ -12,10 +12,10 @@ RAG_CHUNK_OVERLAP = 200
 CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory", "search_flights"]
 YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, TIMEZONE = 2025, 10, 1, 17, 0, 0, "UTC"  # universal time
 LOCAL_DT = datetime(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, tzinfo=ZoneInfo(TIMEZONE)).astimezone()  # user's local time
-AGENT_MODEL = "openai:gpt-4o"
-AGENT_SYSTEM_PROMPT = (
-    f"""You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
-documents about the airline's services, policies, and procedures, and to search for flights.
+AGENT_MODEL = "gpt-4o"
+AGENT_INSTRUCTIONS = (
+    """You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
+documents about the airline's services, policies, and procedures.
 
 ## You have access to the following tools:
 - search — find candidate articles by query (keep top-k small, ≤5), returns title/snippet/path.
@@ -42,43 +42,3 @@ The current date and time is {LOCAL_DT.strftime("%Y-%m-%d %H:%M:%S %Z")}.
 )
 
 FALLBACK_RESPONSE = "I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance."
-
-
-@functools.cache
-def get_perfect_eval_scores() -> dict[str, float]:
-    """Get perfect eval scores, cached after first call."""
-    import os
-
-    from codex import Codex
-    from dotenv import load_dotenv
-
-    load_dotenv()  # Ensure .env is loaded before accessing environment variables
-    api_key = os.getenv("CODEX_API_KEY")
-    project_id = os.getenv("CLEANLAB_PROJECT_ID")
-
-    if not api_key or not project_id:
-        logger.warning("CODEX_API_KEY or CLEANLAB_PROJECT_ID environment variable is not set")
-        return {}
-
-    client = Codex(api_key=api_key)
-    project = client.projects.retrieve(project_id)
-    eval_config = project.config.eval_config
-
-    if not eval_config:
-        logger.warning("No eval_config found in project")
-        return {}
-
-    eval_keys = []
-
-    # Add default evals if they exist
-    if eval_config.default_evals:
-        default_evals_dump = eval_config.default_evals.model_dump()
-        if default_evals_dump:
-            eval_keys.extend([evaluation["eval_key"] for evaluation in default_evals_dump.values()])
-
-    # Add custom evals if they exist
-    if eval_config.custom_evals and eval_config.custom_evals.evals:
-        eval_keys.extend([evaluation.eval_key for evaluation in eval_config.custom_evals.evals.values()])
-
-    logger.info("Retrieved evals: %s", eval_keys)
-    return {eval_key: 1.0 for eval_key in eval_keys}
