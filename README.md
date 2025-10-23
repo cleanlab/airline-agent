@@ -464,18 +464,23 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 #### To showcase trust scoring
 
 > *If theres no overhead bin space for my carry on must i pay extra to check it?*
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
+
+<details>
+  <summary>Learn More</summary>
 
 ```text
 AI Response without Cleanlab:
 I couldn't find specific information about whether you would need to pay extra to check your carry-on if there's no overhead bin space. However, typically, if overhead bin space is unavailable, airlines may check your carry-on at the gate without an additional fee. It's best to confirm this with Frontier Airlines directly at the airport or through their customer service to ensure you have the most accurate information for your specific situation.
 ```
 
-**More Info:**  The AI Response is a guess, as admitted to by the agent, and it could mislead the customer. This response is hallucinated due to gaps in the knowledge base. In the system prompt, there are instructions to only focus to only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") that the Agent has ignored here.
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
 
+The Agent is guessing here (as it admits to) which could mislead the customer's expectations. This is due to gaps in the knowledge base, which contains no information on this topic. Here the Agent has also ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge").
+<br><br>
+</details>
 
 ---
 
