@@ -53,8 +53,6 @@ export function UrlsList({ urls }: { urls?: string[] }) {
 export function ChatHistory({ mobile, logoLockup }: ChatHistoryProps) {
   const [showClearHistoryModal, setShowClearHistoryModal] = useState(false)
   const [appSettings] = useAppSettings()
-  console.log('appSettings', appSettings.assistantId)
-  console.log('AGILITY_DEFAULT_ASSISTANT_SLUG', AGILITY_DEFAULT_ASSISTANT_SLUG)
   const appId = appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG
   const history = useAssistantHistory(appId || undefined)
 

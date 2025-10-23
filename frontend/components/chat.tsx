@@ -65,7 +65,6 @@ export function Chat({
         const v = localStorage.getItem(key)
         if (v !== null) {
           const parsed = JSON.parse(v)
-          console.log('[Chat] init from legacy storage', key, parsed)
           return parsed
         }
       }
@@ -200,7 +199,6 @@ export function Chat({
       value={cleanlabEnabled ? 'cleanlab-enabled' : 'cleanlab-disabled'}
       onValueChange={value => {
         const next = value === 'cleanlab-enabled'
-        console.log('[Chat] toggle change', next)
         setCleanlabEnabled(next)
       }}
       className="absolute top-0 z-50 mx-4 inline-flex w-fit justify-center self-center overflow-hidden rounded-2 border border-border-1 bg-surface-1 shadow-elev-2"
