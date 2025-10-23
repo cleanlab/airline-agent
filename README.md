@@ -80,7 +80,11 @@ AI Response without Cleanlab:
 <Same as AI Response with Cleanlab>
 ```
 
-**More Info:** The agent responds correctly here, but with Cleanlab validation, you have more *trust* these answers are correct as well as  observability/monitoring. You can verify yourself that the AI Response was correct from [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+<details>
+  <summary>More Info</summary>
+
+The agent responds correctly here, but with Cleanlab validation, you have more *trust* these answers are correct as well as  observability/monitoring. You can verify yourself that the AI Response was correct from [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+</details>
 
 As you ask questions, you'll see log lines being populated in the connected [Cleanlab Project](https://codex.cleanlab.ai/) (which you can find by navigating to the "Logs" page using the sidebar).
 
