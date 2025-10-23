@@ -10,6 +10,7 @@ import { SidebarList } from './sidebar-list'
 import { Button } from './design-system-components/Button'
 import { ModalAlertBasic } from './design-system-components/ModalAlertBasic'
 import { useClearHistory } from '@/lib/hooks/useClearHistory'
+import { useAssistantHistory } from '@/providers/rag-app-store-provider'
 
 interface ChatHistoryProps {
   mobile?: boolean
@@ -49,6 +50,8 @@ export function UrlsList({ urls }: { urls?: string[] }) {
 
 export function ChatHistory({ mobile, logoLockup }: ChatHistoryProps) {
   const [showClearHistoryModal, setShowClearHistoryModal] = useState(false)
+  const history = useAssistantHistory()
+  console.log('history', history)
   const clearHistory = useClearHistory()
   return (
     <div
@@ -99,6 +102,7 @@ export function ChatHistory({ mobile, logoLockup }: ChatHistoryProps) {
         onOpenChange={setShowClearHistoryModal}
         trigger={
           <Button
+            disabled={!history?.length}
             variant="secondaryFaint"
             size="xSmall"
             className="my-4 w-fit self-center"

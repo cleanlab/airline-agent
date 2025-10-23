@@ -1,4 +1,4 @@
-import type { Thread } from '@/client'
+type Thread = { id: string }
 import { produce } from 'immer'
 import type { StateCreator } from 'zustand'
 import type { Prettify } from '@/lib/ts/Prettify'
@@ -7,6 +7,7 @@ import type { AssistantId } from './common'
 export type HistoryThread = {
   title: string
   assistantId: AssistantId
+  cleanlabEnabled?: boolean
   snapshot?: {
     user: {
       content: string

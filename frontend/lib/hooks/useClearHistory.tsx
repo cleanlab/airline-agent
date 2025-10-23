@@ -14,18 +14,6 @@ export function useClearHistory() {
     } catch {}
 
     try {
-      const keysToRemove: string[] = []
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i)
-        if (!key) continue
-        if (key.startsWith('cleanlabEnabled:thread:')) {
-          keysToRemove.push(key)
-        }
-      }
-      keysToRemove.forEach(key => localStorage.removeItem(key))
-    } catch {}
-
-    try {
       ragAppStore.setState({ history: {}, responseRatings: {} })
     } catch {}
     try {
