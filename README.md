@@ -58,8 +58,6 @@ This demo AI is a conversational Agent for Frontier Airlines customer support. T
 
 This demo AI Agent is connected to a [Cleanlab Project](https://codex.cleanlab.ai/). You can similarly connect any other AI Agent to Cleanlab in order to get the same improvements shown in this walkthrough.
 
-**Temporary (only for now):** Go through this walkthrough with one window running the airline agent UI backed by Cleanlab validation and another window showing the connected [Cleanlab Project](https://codex.cleanlab.ai/) dashboard. To compare responses with and without Cleanlab, restart the backend using the `--disable-cleanlab` flag.
-
 ### 1. Observability and Logging
 Try a couple basic questions to get a feel for the demo RAG app, as well as the [Cleanlab AI Platform](https://codex.cleanlab.ai/projects). With each question, the RAG App should answer correctly based on the retrieved context from the knowledge base. Feel free to look at either to tool returns for that context or the "Context" section directly in Codex to confirm the correct answer.
 
