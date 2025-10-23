@@ -537,6 +537,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         isPending: true,
         status: CurrentThreadStatus.threadPending
       })
+      // Track the initiating user message for this thread in the buffer
+      bufferAppendUser({ threadId: localThreadId, content: messageContent })
       // Immediately post to backend and treat this as a standalone Q+A thread
       window?.history.pushState({}, '', getChatPath(localThreadId))
       postMessage({
