@@ -2,55 +2,54 @@
 
 ## Setup
 
-### Prerequisites
-This repo uses the [Hatch](https://hatch.pypa.io/) project manager ([installation instructions](https://hatch.pypa.io/latest/install/)).
-
-### API Keys
-
-Before running the Agent, you need to configure the following API keys either in a `.env` file or as environment variables.
-
-- **OPENAI_API_KEY**: Your OpenAI API key (the AI Agent in this demo uses OpenAI model)
-- **CODEX_API_KEY**: Your Cleanlab Codex API key
-- **CLEANLAB_PROJECT_ID**: Your Cleanlab Project ID
-
-We've provided a `.env.sample` file that you can copy to `.env` and then fill in.
-
-You can find your `CODEX_API_KEY` in your [Codex Account](https://codex.cleanlab.ai/account) page.
-
-To get your `CLEANLAB_PROJECT_ID`, you can programmatically create a new Cleanlab Project for this demo by running:
-
-```bash
-hatch run create-demo-project
-```
-
-This will create a Project with already configured Guardrails and Evaluations for the walkthrough below. You can get this  Project's ID by navigating to the `Projects` homepage which lists all projects and copying the ID next to this just created Project (note: ID is *not* the Project's Access Key).
-
-### Usage
-
-1. Obtain `data/kb.json`. (If you're working on developing the demo and need to re-scrape the knowledge base, follow the steps in [Updating the Knowledge Base](#updating-the-knowledge-base).)
-
-2. Create the vector DB:
-
-    ```bash
-    hatch run create-vector-database
+1. Install [Hatch](https://hatch.pypa.io/), a Python project manager ([installation instructions](https://hatch.pypa.io/latest/install/)).
+    - On macOS, you can run `brew install hatch`.
+2. Install [Node.js](https://nodejs.org).
+    - On macOS, you can run `brew install node`.
+3. Configure API keys, either in `.env` or as environment variables (or a mix).
+    1. If you are using the `.env` file, you can `cp .env.sample .env` to start with a template.
+    2. Populate `OPENAI_API_KEY` with your OpenAI API key (the AI Agent in this demo uses an OpenAI model).
+    3. Populate `CODEX_API_KEY` with your Cleanlab Codex API key.
+    4. Leave the `CLEANLAB_PROJECT_ID` as-is for now.
+4. Create the demo project in Codex.
+    1. Create the demo programmatically with:
+        ```console
+        $ hatch run create-demo-project
+        Demo project created!
+        Set CLEANLAB_PROJECT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx in your .env file.
+        ```
+        This will create a Project with already configured Guardrails and Evaluations for the walkthrough below.
+    2. Populate `CLEANLAB_PROJECT_ID` in your `.env` file using the output from the previous command.
+    3. Open the demo project in your web browser with `hatch run open-project`.
+5. Ensure the `data/kb.json` file is in place (this should have been provided to you out-of-band, e.g., with a Google Drive link). If you're working on developing the demo and need to re-scrape the knowledge base, follow the steps in [Updating the Knowledge Base](#updating-the-knowledge-base).
+6. Create the vector database:
+    ```console
+    $ hatch run create-vector-database
+    ```
+7. Install frontend dependencies:
+    ```console
+    $ cd frontend
+    $ npm install
     ```
 
-3. Run the backend server:
+## Usage
 
-    ```bash
-    hatch run backend-server
+Once you've completed all the setup steps, to run the demo, do the following:
+
+1. Run the backend server:
+
+    ```console
+    $ hatch run backend-server
     ```
 
-4. Run the frontend:
+2. Run the frontend:
 
-    ```bash
-    cd frontend
-    npm install
-    npm run dev
+    ```console
+    $ cd frontend
+    $ npm run dev
     ```
 
-    Then, open the UI in your browser at `http://localhost:3000`.
-
+Then, open the frontend at <http://localhost:3000>.
 
 ## Walkthrough
 
