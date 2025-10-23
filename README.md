@@ -416,9 +416,10 @@ Here maybe a Product Leader or SME has quickly decided the AI agent should not a
 
 Now go into the Cleanlab Project and mark the section asking "Is this a good AI response?" with "No".
 
-Afterwards, pretend you are a different user *by creating a new chat thread* and ask a similar variant of the query like so:
+Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
 
 > *What is the maximum time we might be stuck on the tarmac without being let off*
+
 ```text
 AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
