@@ -20,6 +20,7 @@ import { useAssistantHistory } from '@/providers/rag-app-store-provider'
 import { useAppSettings } from '@/lib/hooks/use-app-settings'
 import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '@/lib/consts'
 import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group'
+import { Tooltip } from './design-system-components/Tooltip'
 
 export type DemoMode = 'cleanlab-enabled' | 'cleanlab-disabled'
 export interface ChatProps {
@@ -181,6 +182,41 @@ export function Chat({
   const disableToggleGroup =
     (messages?.length ?? 0) > 0 || currentThread?.isPending
 
+  const toggleGroupControl = (
+    <ToggleGroup
+      disabled={disableToggleGroup}
+      type="single"
+      value={cleanlabEnabled ? 'cleanlab-enabled' : 'cleanlab-disabled'}
+      onValueChange={value => {
+        const next = value === 'cleanlab-enabled'
+        console.log('[Chat] toggle change', next)
+        setCleanlabEnabled(next)
+      }}
+      className="absolute top-0 z-50 mx-4 inline-flex w-fit justify-center self-center overflow-hidden rounded-2 border border-border-1 bg-surface-1 shadow-elev-2"
+    >
+      <ToggleGroupItem
+        value="cleanlab-disabled"
+        className={cn(
+          toggleGroupItemClasses,
+          disableToggleGroup &&
+            'cursor-not-allowed bg-surface-disabled text-text-disabled hover:bg-surface-disabled'
+        )}
+      >
+        Cleanlab Disabled
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value="cleanlab-enabled"
+        className={cn(
+          toggleGroupItemClasses,
+          disableToggleGroup &&
+            'cursor-not-allowed bg-surface-disabled text-text-disabled hover:bg-surface-disabled'
+        )}
+      >
+        Cleanlab Enabled
+      </ToggleGroupItem>
+    </ToggleGroup>
+  )
+
   const content = (
     <div
       className={cn(
@@ -200,38 +236,13 @@ export function Chat({
               'sm:rounded-t-xl mx-auto flex w-full max-w-[680px] grow flex-col px-8 md:px-9'
             )}
           >
-            <ToggleGroup
-              disabled={disableToggleGroup}
-              type="single"
-              value={cleanlabEnabled ? 'cleanlab-enabled' : 'cleanlab-disabled'}
-              onValueChange={value => {
-                const next = value === 'cleanlab-enabled'
-                console.log('[Chat] toggle change', next)
-                setCleanlabEnabled(next)
-              }}
-              className="absolute top-0 z-50 mx-4 inline-flex w-fit justify-center self-center overflow-hidden rounded-2 border border-border-1 bg-surface-1 shadow-elev-2"
-            >
-              <ToggleGroupItem
-                value="cleanlab-disabled"
-                className={cn(
-                  toggleGroupItemClasses,
-                  disableToggleGroup &&
-                    'cursor-not-allowed bg-surface-disabled text-text-disabled hover:bg-surface-disabled'
-                )}
-              >
-                Cleanlab Disabled
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="cleanlab-enabled"
-                className={cn(
-                  toggleGroupItemClasses,
-                  disableToggleGroup &&
-                    'cursor-not-allowed bg-surface-disabled text-text-disabled hover:bg-surface-disabled'
-                )}
-              >
-                Cleanlab Enabled
-              </ToggleGroupItem>
-            </ToggleGroup>
+            {disableToggleGroup ? (
+              <Tooltip content="This setting can only be changed in an empty conversation thread">
+                {toggleGroupControl}
+              </Tooltip>
+            ) : (
+              toggleGroupControl
+            )}
             {messages?.length ? (
               <ChatList
                 threadId={currentThread?.threadId}
