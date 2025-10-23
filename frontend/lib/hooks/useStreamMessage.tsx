@@ -95,6 +95,21 @@ const createInitialMessages = ({
   ] as const satisfies StoreMessage[]
 }
 
+// Global in-memory buffers for in-progress streams keyed by threadId
+const threadBuffers = new Map<string, StoreMessage[]>()
+
+export const getThreadBufferSnapshot = (
+  threadId: string
+): StoreMessage[] | undefined => {
+  const buf = threadBuffers.get(threadId)
+  if (!buf) return undefined
+  // return a shallow copy to avoid accidental mutations
+  return buf.map(m => ({
+    ...m,
+    metadata: m.metadata ? { ...m.metadata } : m.metadata
+  }))
+}
+
 function useStreamMessage(cleanlabEnabled: boolean = true) {
   const currentThread = useMessagesStore(state => state.currentThread)
   const setCurrentThread = useMessagesStore(state => state.setCurrentThread)
@@ -111,6 +126,80 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
   // Always use latest cleanlabEnabled in callbacks
   const cleanlabRef = useRef(cleanlabEnabled)
   cleanlabRef.current = cleanlabEnabled
+
+  const getOrInitBuffer = useCallback((threadId: string) => {
+    let buffer = threadBuffers.get(threadId)
+    if (!buffer) {
+      buffer = []
+      threadBuffers.set(threadId, buffer)
+    }
+    return buffer
+  }, [])
+
+  const bufferAppendUser = useCallback(
+    ({ threadId, content }: { threadId: string; content: string }) => {
+      const buffer = getOrInitBuffer(threadId)
+      buffer.push({
+        localId: nanoid(),
+        role: 'user',
+        content,
+        metadata: {}
+      })
+    },
+    [getOrInitBuffer]
+  )
+
+  const bufferAppendTool = useCallback(
+    ({
+      threadId,
+      content,
+      metadata
+    }: {
+      threadId: string
+      content: any
+      metadata?: any
+    }) => {
+      const buffer = getOrInitBuffer(threadId)
+      buffer.push({
+        localId: nanoid(),
+        role: 'tool',
+        content,
+        metadata: metadata || {}
+      })
+    },
+    [getOrInitBuffer]
+  )
+
+  const bufferAppendAssistantChunk = useCallback(
+    ({
+      threadId,
+      content,
+      metadata
+    }: {
+      threadId: string
+      content: string
+      metadata?: any
+    }) => {
+      const buffer = getOrInitBuffer(threadId)
+      const last = buffer[buffer.length - 1]
+      if (last && last.role === 'assistant') {
+        last.content = `${last.content || ''}${content || ''}`
+        last.metadata = { ...(last.metadata || {}), ...(metadata || {}) }
+      } else {
+        buffer.push({
+          localId: nanoid(),
+          role: 'assistant',
+          content: content || '',
+          metadata: metadata || {}
+        })
+      }
+    },
+    [getOrInitBuffer]
+  )
+
+  const clearBuffer = useCallback((threadId: string) => {
+    threadBuffers.delete(threadId)
+  }, [])
 
   const setDone = useCallback(
     (opts: SetOptional<Parameters<typeof setThreadStatus>[0], 'status'>) => {
@@ -138,6 +227,11 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
           metadata: value.metadata || {}
         }
         appendMessage({ threadId, message: toolMessage })
+        bufferAppendTool({
+          threadId,
+          content: value.content,
+          metadata: value.metadata
+        })
       } else if (value.role === 'assistant') {
         // Handle assistant messages - appendMessage will automatically replace pending message
         const assistantMessage: StoreMessage = {
@@ -147,10 +241,20 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
           metadata: value.metadata || {}
         }
         appendMessage({ threadId, message: assistantMessage })
+        bufferAppendAssistantChunk({
+          threadId,
+          content: value.content,
+          metadata: value.metadata
+        })
         // Don't set status to complete here - wait for thread.run.completed
       }
     },
-    [appendMessage, setThreadStatus]
+    [
+      appendMessage,
+      setThreadStatus,
+      bufferAppendAssistantChunk,
+      bufferAppendTool
+    ]
   )
 
   const postMessage = useCallback(
@@ -251,6 +355,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                   error: error
                 })
               }
+              clearBuffer(threadId)
               return
             }
 
@@ -291,15 +396,22 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                       }
                     } else if (currentEvent === 'thread.run.completed') {
                       // Save history when stream completes
-                      // Get all messages from the current thread to save complete conversation
-                      const currentThread = bareStore.getState().currentThread
-                      if (currentThread && currentThread.messages) {
-                        // Find the first user message for the title
-                        const firstUserMessage = currentThread.messages.find(
+                      // Use per-thread buffer (avoids cross-thread clobbering)
+                      const bufferedMessages = threadBuffers.get(threadId) || []
+
+                      // Fall back to currentThread only if it matches, otherwise keep buffer
+                      const possibleThread = bareStore.getState().currentThread
+                      const sourceMessages =
+                        possibleThread?.threadId === threadId &&
+                        possibleThread?.messages?.length
+                          ? possibleThread.messages
+                          : bufferedMessages
+
+                      if (sourceMessages && sourceMessages.length) {
+                        const firstUserMessage = sourceMessages.find(
                           m => m.role === 'user'
                         )
-                        // Find the last assistant message for the snapshot
-                        const lastAssistantMessage = currentThread.messages
+                        const lastAssistantMessage = sourceMessages
                           .filter(m => m.role === 'assistant')
                           .pop()
 
@@ -332,19 +444,20 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                                     metadata: {}
                                   }
                                 },
-                            messages: currentThread.messages.map(msg => ({
+                            messages: sourceMessages.map(msg => ({
                               localId: msg.localId,
                               id: msg.id,
                               role: msg.role,
                               content: msg.content,
                               metadata: msg.metadata,
-                              isPending: false, // Ensure saved messages are not pending
-                              isContentPending: false, // Ensure saved messages are not content pending
+                              isPending: false,
+                              isContentPending: false,
                               error: msg.error
                             }))
                           })
                         }
                       }
+                      clearBuffer(threadId)
                       setDone({ threadId, localThreadId })
                       return
                     } else if (currentEvent === 'thread.run.failed') {
@@ -353,6 +466,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                         error: { message: 'Run failed', canRetry: true },
                         status: CurrentThreadStatus.failed
                       })
+                      clearBuffer(threadId)
                       return
                     }
                   } catch (e) {
@@ -421,6 +535,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         isPending: true,
         status: CurrentThreadStatus.threadPending
       })
+      // Track the initiating user message for this thread in the buffer
+      bufferAppendUser({ threadId: localThreadId, content: messageContent })
       // Persist selection exactly when first message is sent for this new thread
       try {
         localStorage.setItem(
@@ -437,7 +553,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         cleanlabEnabled: cleanlabRef.current
       })
     },
-    [addHistoryThread, setCurrentThread, postMessage]
+    [addHistoryThread, setCurrentThread, postMessage, bufferAppendUser]
   )
 
   const sendMessage = useCallback(
@@ -461,6 +577,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
           metadata: {}
         }
         appendMessage({ threadId: threadIdToUse, message: userMessage })
+        // Also record in the per-thread buffer for history when stream completes
+        bufferAppendUser({ threadId: threadIdToUse, content: messageContent })
 
         // Add optimistic assistant placeholder
         const assistantMessage: StoreMessage = {
@@ -490,7 +608,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
       appendMessage,
       postMessage,
       createThreadAndPostMessage,
-      isPending
+      isPending,
+      bufferAppendUser
     ]
   )
 
