@@ -70,8 +70,8 @@ def get_cleanlab_project() -> Project:
 
 
 kb = KnowledgeBase(
-    kb_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/kb.json"),
-    vector_index_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/vector-db"),
+    kb_path=str(pathlib.Path(__file__).parents[4] / "data/kb.json"),
+    vector_index_path=str(pathlib.Path(__file__).parents[4] / "data/vector-db"),
 )
 project = get_cleanlab_project()
 agent = create_agent(kb)
