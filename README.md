@@ -387,8 +387,7 @@ Coordination and Resources: The plan is coordinated with airport authorities and
 In summary, the longest you could be stuck on the tarmac without the option to deplane is three hours for domestic flights and four hours for international flights, barring any safety or security exceptions.
 ```
 
-Why AI Response Bad without Cleanlab:
-- Here maybe a Product Leader or SME has simply decided the AI agent should not answer queries like this.  With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
+**More Info:** Here maybe a Product Leader or SME has simply decided the AI agent should not answer queries like this.  With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
 
 
 ## Conclusion
@@ -419,9 +418,7 @@ AI Response without Cleanlab:
 I couldn't find specific information about whether you would need to pay extra to check your carry-on if there's no overhead bin space. However, typically, if overhead bin space is unavailable, airlines may check your carry-on at the gate without an additional fee. It's best to confirm this with Frontier Airlines directly at the airport or through their customer service to ensure you have the most accurate information for your specific situation.
 ```
 
-Why AI Response Bad without Cleanlab:
-- User Experience: The response is a guess, admitted to by the agent. It could lead to the user having different expectiations and a negative view of Frontier if those expectations are incorrect.
-- Explanation: This response is hallucinated due to gaps in the knowledge base. In the system prompt, there are instructions to only focus to only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the agent blatantly ignores.
+**More Info:**  The AI Response is a guess, as admitted to by the agent, and it could mislead the customer. This response is hallucinated due to gaps in the knowledge base. In the system prompt, there are instructions to only focus to only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") that the Agent has ignored here.
 
 
 ---
