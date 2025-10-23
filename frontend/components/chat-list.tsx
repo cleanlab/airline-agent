@@ -8,7 +8,6 @@ import type { StoreMessage } from '@/stores/messages-store'
 import type { RefObject } from 'react'
 import { useEffect, useRef } from 'react'
 import { useAutoScrollMessage } from '../lib/hooks/use-auto-scroll-message'
-import type { DemoMode } from './chat'
 import { RetryButton } from './message'
 import { MessageUser } from './design-system-components/MessageUser'
 import {
@@ -23,20 +22,18 @@ import { IconAirplane, IconChevronDown } from './icons'
 export interface ChatListProps {
   threadId?: string
   scrollRef: RefObject<HTMLElement | null>
-  cleanlabMode: DemoMode
+  cleanlabEnabled: boolean
 }
 
 const ChatMessage = ({
   message,
   scrollRef,
-  isAutoScrollEnabled,
-  cleanlabMode
+  isAutoScrollEnabled
 }: {
   message: StoreMessage
   scrollRef: RefObject<HTMLElement | null>
   isAutoScrollEnabled: boolean
   showRetryButton?: boolean
-  cleanlabMode: DemoMode
 }) => {
   const messageRef = useRef<HTMLDivElement>(null)
   useAutoScrollMessage(scrollRef, messageRef, isAutoScrollEnabled)
@@ -263,7 +260,11 @@ const ChatMessage = ({
   )
 }
 
-export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
+export function ChatList({
+  threadId,
+  scrollRef,
+  cleanlabEnabled
+}: ChatListProps) {
   const allMessages = useMessagesStore(state => state.currentThread?.messages)
   const error = useMessagesStore(state => state.currentThread?.error)
   const isPending = useMessagesStore(state => state.currentThread?.isPending)
@@ -318,9 +319,10 @@ export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
               isAutoScrollEnabled={index === actualMessages.length - 1}
               scrollRef={scrollRef}
               message={message}
-              cleanlabMode={cleanlabMode}
             />
-            {showRetryButton && <RetryButton />}
+            {showRetryButton && (
+              <RetryButton cleanlabEnabled={cleanlabEnabled} />
+            )}
           </div>
         )
       })}
@@ -339,7 +341,6 @@ export function ChatList({ threadId, scrollRef, cleanlabMode }: ChatListProps) {
               isPending: true,
               isContentPending: true
             }}
-            cleanlabMode={cleanlabMode}
           />
         </div>
       )}

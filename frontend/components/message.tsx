@@ -5,10 +5,15 @@ import { useMessagesStore } from '@/providers/messages-store-provider'
 import { useStreamMessage } from '../lib/hooks/useStreamMessage'
 import { ButtonRetryMessage } from './design-system-components/ButtonRetryMessage'
 
-export function RetryButton({}: Readonly<{ error?: ReactNode }>) {
+export function RetryButton({
+  cleanlabEnabled = true
+}: Readonly<{
+  error?: ReactNode
+  cleanlabEnabled?: boolean
+}>) {
   const isPending = useMessagesStore(state => state.currentThread?.isPending)
 
-  const { retrySendMessage } = useStreamMessage()
+  const { retrySendMessage } = useStreamMessage(cleanlabEnabled)
   const retry = () => {
     retrySendMessage()
   }

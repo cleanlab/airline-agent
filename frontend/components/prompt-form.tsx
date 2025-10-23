@@ -10,15 +10,17 @@ export function PromptForm({
   input,
   setInput,
   promptPlaceholder,
-  threadId
+  threadId,
+  cleanlabEnabled = true
 }: {
   input: string
   setInput: (value: string) => void
   promptPlaceholder: string
   threadId?: string
+  cleanlabEnabled?: boolean
 }) {
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
-  const { sendMessage: sendMessage } = useStreamMessage()
+  const { sendMessage: sendMessage } = useStreamMessage(cleanlabEnabled)
   const isPending = useMessageIsPending()
   const submitDisabled = isPending || !input
 

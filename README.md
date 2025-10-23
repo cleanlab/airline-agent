@@ -41,8 +41,6 @@ This will create a Project with already configured Guardrails and Evaluations fo
     hatch run backend-server
     ```
 
-    **Note:** This will run the backend server with cleanlab validation enabled by default. Include the `--disable-cleanlab` flag to disable validation.
-
 4. Run the frontend:
 
     ```bash
@@ -106,7 +104,7 @@ Cleanlab's Guardrails help prevent bad responses from your AI app, such as: inap
 
 #### 2a. Out-of-the-box Guardrails
 
-Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails helps prevent incorrect/untrustworthy responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking some questions which might elicit incorrect responses from the baseline AI system (keeping in mind the AI's knowledge base). 
+Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails helps prevent incorrect/untrustworthy responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking some questions which might elicit incorrect responses from the baseline AI system (keeping in mind the AI's knowledge base).
 
 **Try starting a new chat and asking *one* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
@@ -268,7 +266,7 @@ If you have specific aspects of the flight experience you would like to know mor
 
 Why AI Response Bad without Cleanlab:
 - User Experience: The Agent discusses unique benefits of a competitor airline which risks encouraging the customer to look elswhere.
-- Explanation: This triggeres the competitor mentions Deterministic Guardrail we have set up. Without Cleanlab, the Agent positively speaks of competitors which risks loss of customers and is generally a bad look for an Agent focused on making Frontier look good. In the system prompt, there are instructions to only focus on discussing Frontier ariline ("If the user asks about anything unrelated to the airline, politely inform them that you can only assist with airline-related inquiries") and only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the Agent blatantly ignores. 
+- Explanation: This triggers the competitor mentions Deterministic Guardrail we have set up. Without Cleanlab, the Agent positively speaks of competitors which risks loss of customers and is generally a bad look for an Agent focused on making Frontier look good. In the system prompt, there are instructions to only focus on discussing Frontier ariline ("If the user asks about anything unrelated to the airline, politely inform them that you can only assist with airline-related inquiries") and only use information from the knowledge base ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge") the Agent blatantly ignores. 
 
 ### 3. Offline Evaluations
 
@@ -312,7 +310,7 @@ If you haven't already asked a number of questions where the RAG app replied wit
 #### 4a. Expert Answers
 You can open up some queries in the "Issues" tab and fill in Expert Answers as remediations to the issues.
 
-These answers are integrated into the RAG app as a semantic cache, so when anyone asks a similar question in the future, it'll be answered correctly thanks to the expert answer. 
+These answers are integrated into the RAG app as a semantic cache, so when anyone asks a similar question in the future, it'll be answered correctly thanks to the expert answer.
 
 **Note:** The demo UI app always shows the results of the RAG application with Guardrailing and Expert Answers enabled.
 
@@ -360,7 +358,7 @@ You should see the AI app now responds with the desired Expert Answer. The probl
 #### 4b. Expert Review
 Beyond Expert Answers, Cleanlab supports other types of remediations, such as Expert Reviews, which empower nontechnical SMEs to improve your AI directly.
 
-Identify a query that passed all guardrails, however, the AI response is still unsatisfactory. 
+Identify a query that passed all guardrails, however, the AI response is still unsatisfactory.
 
 **Try starting a new chat and asking the example question below to explore how Cleanlab validates responses for another new customer:**
 
