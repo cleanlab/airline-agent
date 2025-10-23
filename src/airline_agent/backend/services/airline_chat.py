@@ -83,6 +83,7 @@ cleanlab_enabled_by_thread: dict[str, bool] = {}
 async def airline_chat_streaming(
     message: UserMessage,
     cleanlab_enabled: bool,  # noqa: FBT001
+    stream_intermediate_messages: bool,  # noqa: FBT001
 ) -> AsyncGenerator[RunEvent, None]:
     run_id = uuid.uuid4()
     thread_id = message.thread_id
@@ -132,7 +133,7 @@ async def airline_chat_streaming(
                                     arguments=json.dumps(response_part.args),
                                 )
 
-                        if text_content:
+                        if text_content and stream_intermediate_messages:
                             yield RunEventThreadMessage(
                                 id=run_id,
                                 object=RunEventObject.THREAD_MESSAGE,

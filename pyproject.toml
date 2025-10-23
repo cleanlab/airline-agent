@@ -7,7 +7,7 @@ name = "airline-agent"
 version = "0.1.0"
 description = "A demo agent for an airline"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
   "beautifulsoup4>=4.14.2",
   "html5lib>=1.1",
