@@ -49,15 +49,12 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO)
     load_dotenv()
 
     codex_api_key = os.getenv("CODEX_API_KEY")
     if not codex_api_key:
         missing_key_msg = "CODEX_API_KEY environment variable is not set"
         raise ValueError(missing_key_msg)
-
-    logger.info("Using official demo project ID: %s", OFFICIAL_DEMO_PROJECT_ID)
 
     codex_client = Client(api_key=codex_api_key)
 
@@ -68,19 +65,8 @@ def main() -> None:
 
     new_project_with_updated_config = copy_project_configuration(new_project.id, codex_api_key)
 
-    logger.info(
-        "Created new demo project: %s (%s)",
-        new_project_with_updated_config.name,
-        new_project_with_updated_config.id,
-    )
-    logger.info(
-        "Project can be found in organization: %s",
-        new_project_with_updated_config.organization_id,
-    )
-    logger.info(
-        "Set CLEANLAB_PROJECT_ID=%s in your .env file",
-        new_project_with_updated_config.id,
-    )
+    print("Demo project created!")  # noqa: T201
+    print(f"Set CLEANLAB_PROJECT_ID={new_project_with_updated_config.id} in your .env file.")  # noqa: T201
 
 
 if __name__ == "__main__":
