@@ -1,5 +1,5 @@
-import argparse
 import os
+import pathlib
 import random
 import re
 import sqlite3
@@ -27,6 +27,139 @@ random.seed(SEED)
 np.random.seed(SEED)
 
 tf = TimezoneFinder(in_memory=True)
+
+
+def main() -> None:
+
+    project_root = pathlib.Path(__file__).resolve().parents[3]
+    output_path = project_root / "data" / "flights.db"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    airports_path = project_root / "static" / "airports.csv"
+    routes_path = project_root / "static" / "routes.csv"
+
+    airports = pd.read_csv(airports_path)
+    airports_coords = airports.astype({"latitude": float, "longitude": float})
+    airports_coords_dict: dict[str, dict[str, float]] = (
+        airports_coords.set_index("airport")[["latitude", "longitude"]]
+        .apply(lambda row: {"lat": row["latitude"], "lng": row["longitude"]}, axis=1)
+        .to_dict()
+    )
+
+    routes = pd.read_csv(routes_path)
+    routes = routes[["departure", "arrival"]].dropna()
+    routes_list: list[tuple[str, str]] = list(routes.itertuples(index=False, name=None))
+
+    start_datetime = datetime(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, tzinfo=ZoneInfo(TIMEZONE))
+    end_datetime = start_datetime + timedelta(days=SIX_MONTHS_IN_DAYS)
+    rows = []
+
+    for dep_airport, arr_airport in tqdm(routes_list, desc="Generating flights"):
+        dep_code = parse_airport_code(dep_airport)
+        arr_code = parse_airport_code(arr_airport)
+
+        dep_coords = airports_coords_dict[dep_code]
+        arr_coords = airports_coords_dict[arr_code]
+
+        distance_km = calculate_distance(dep_coords["lat"], dep_coords["lng"], arr_coords["lat"], arr_coords["lng"])
+        flight_time_minutes = generate_flight_time(distance_km)
+
+        for _ in range(FLIGHTS_PER_ROUTE):
+            # Generate flight number, departure and arrival times
+            flight_num = generate_flight_num()
+            dep_dt = generate_random_datetime(start_datetime, end_datetime)
+            arr_dt = dep_dt + timedelta(minutes=flight_time_minutes)
+
+            # Convert timezones based on airport coordinates
+            dep_dt_local = convert_to_local_timezone(dep_dt, dep_coords["lat"], dep_coords["lng"])
+            arr_dt_local = convert_to_local_timezone(arr_dt, arr_coords["lat"], arr_coords["lng"])
+
+            # Generate prices
+            basic = generate_basic_price(distance_km)
+            basic, econ, prem, biz = generate_bundled_prices(basic)
+            basic_dd, econ_dd, prem_dd, biz_dd = apply_den_discount(basic, econ, prem, biz)
+
+            rows.append(
+                {
+                    "flight_num": flight_num,
+                    "departure_location": dep_airport,
+                    "arrival_location": arr_airport,
+                    "scheduled_departure_utc": dep_dt.isoformat(),
+                    "scheduled_arrival_utc": arr_dt.isoformat(),
+                    "scheduled_departure_local": dep_dt_local.isoformat(),
+                    "scheduled_arrival_local": arr_dt_local.isoformat(),
+                    "basic_price_standard": basic,
+                    "economy_price_standard": econ,
+                    "premium_price_standard": prem,
+                    "business_price_standard": biz,
+                    "basic_price_discount_den": basic_dd,
+                    "economy_price_discount_den": econ_dd,
+                    "premium_price_discount_den": prem_dd,
+                    "business_price_discount_den": biz_dd,
+                }
+            )
+
+    schema_sql = """
+    CREATE TABLE flights (
+        flight_num TEXT,
+        departure_location TEXT,
+        arrival_location TEXT,
+        scheduled_departure_utc DATETIME,
+        scheduled_arrival_utc DATETIME,
+        scheduled_departure_local DATETIME,
+        scheduled_arrival_local DATETIME,
+        basic_price_standard INTEGER,
+        economy_price_standard INTEGER,
+        premium_price_standard INTEGER,
+        business_price_standard INTEGER,
+        basic_price_discount_den INTEGER,
+        economy_price_discount_den INTEGER,
+        premium_price_discount_den INTEGER,
+        business_price_discount_den INTEGER
+    );
+    """
+
+    if os.path.exists(output_path):
+        os.remove(output_path)
+
+    conn = sqlite3.connect(output_path)
+    cur = conn.cursor()
+    cur.execute(schema_sql)
+
+    insert_sql = """
+    INSERT INTO flights (
+        flight_num, departure_location, arrival_location, 
+        scheduled_departure_utc, scheduled_arrival_utc, scheduled_departure_local, scheduled_arrival_local,
+        basic_price_standard, economy_price_standard, premium_price_standard, business_price_standard,
+        basic_price_discount_den, economy_price_discount_den, premium_price_discount_den, business_price_discount_den
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+
+    cur.executemany(
+        insert_sql,
+        [
+            (
+                r["flight_num"],
+                r["departure_location"],
+                r["arrival_location"],
+                r["scheduled_departure_utc"],
+                r["scheduled_arrival_utc"],
+                r["scheduled_departure_local"],
+                r["scheduled_arrival_local"],
+                r["basic_price_standard"],
+                r["economy_price_standard"],
+                r["premium_price_standard"],
+                r["business_price_standard"],
+                r["basic_price_discount_den"],
+                r["economy_price_discount_den"],
+                r["premium_price_discount_den"],
+                r["business_price_discount_den"],
+            )
+            for r in rows
+        ],
+    )
+
+    conn.commit()
+    conn.close()
 
 
 def calculate_distance(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
@@ -107,138 +240,6 @@ def parse_airport_code(text: str) -> str:
         msg = f"No airport code found in text: {text}"
         raise ValueError(msg)
     return match.group(1).upper()
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--routes-path", type=str, required=True)
-    parser.add_argument("--airports-path", type=str, required=True)
-    parser.add_argument("--db-path", type=str, required=True)
-    args = parser.parse_args()
-
-    routes_file = args.routes_path
-    airports_file = args.airports_path
-    db_file = args.db_path
-
-    airports = pd.read_csv(airports_file)
-    airports_coords = airports.astype({"latitude": float, "longitude": float})
-    airports_coords_dict: dict[str, dict[str, float]] = (
-        airports_coords.set_index("airport")[["latitude", "longitude"]]
-        .apply(lambda row: {"lat": row["latitude"], "lng": row["longitude"]}, axis=1)
-        .to_dict()
-    )
-
-    routes = pd.read_csv(routes_file)
-    routes = routes[["departure", "arrival"]].dropna()
-    routes_list: list[tuple[str, str]] = list(routes.itertuples(index=False, name=None))
-
-    start_datetime = datetime(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, tzinfo=ZoneInfo(TIMEZONE))
-    end_datetime = start_datetime + timedelta(days=SIX_MONTHS_IN_DAYS)
-    rows = []
-
-    for dep_airport, arr_airport in tqdm(routes_list, desc="Generating flights"):
-        dep_code = parse_airport_code(dep_airport)
-        arr_code = parse_airport_code(arr_airport)
-
-        dep_coords = airports_coords_dict[dep_code]
-        arr_coords = airports_coords_dict[arr_code]
-
-        distance_km = calculate_distance(dep_coords["lat"], dep_coords["lng"], arr_coords["lat"], arr_coords["lng"])
-        flight_time_minutes = generate_flight_time(distance_km)
-
-        for _ in range(FLIGHTS_PER_ROUTE):
-            # Generate flight number, departure and arrival times
-            flight_num = generate_flight_num()
-            dep_dt = generate_random_datetime(start_datetime, end_datetime)
-            arr_dt = dep_dt + timedelta(minutes=flight_time_minutes)
-
-            # Convert timezones based on airport coordinates
-            dep_dt_local = convert_to_local_timezone(dep_dt, dep_coords["lat"], dep_coords["lng"])
-            arr_dt_local = convert_to_local_timezone(arr_dt, arr_coords["lat"], arr_coords["lng"])
-
-            # Generate prices
-            basic = generate_basic_price(distance_km)
-            basic, econ, prem, biz = generate_bundled_prices(basic)
-            basic_dd, econ_dd, prem_dd, biz_dd = apply_den_discount(basic, econ, prem, biz)
-
-            rows.append(
-                {
-                    "flight_num": flight_num,
-                    "departure_location": dep_airport,
-                    "arrival_location": arr_airport,
-                    "scheduled_departure_utc": dep_dt.isoformat(),
-                    "scheduled_arrival_utc": arr_dt.isoformat(),
-                    "scheduled_departure_local": dep_dt_local.isoformat(),
-                    "scheduled_arrival_local": arr_dt_local.isoformat(),
-                    "basic_price_standard": basic,
-                    "economy_price_standard": econ,
-                    "premium_price_standard": prem,
-                    "business_price_standard": biz,
-                    "basic_price_discount_den": basic_dd,
-                    "economy_price_discount_den": econ_dd,
-                    "premium_price_discount_den": prem_dd,
-                    "business_price_discount_den": biz_dd,
-                }
-            )
-
-    schema_sql = """
-    CREATE TABLE flights (
-        flight_num TEXT,
-        departure_location TEXT,
-        arrival_location TEXT,
-        scheduled_departure DATETIME,
-        scheduled_arrival DATETIME,
-        basic_price_standard INTEGER,
-        economy_price_standard INTEGER,
-        premium_price_standard INTEGER,
-        business_price_standard INTEGER,
-        basic_price_discount_den INTEGER,
-        economy_price_discount_den INTEGER,
-        premium_price_discount_den INTEGER,
-        business_price_discount_den INTEGER
-    );
-    """
-
-    if os.path.exists(db_file):
-        os.remove(db_file)
-
-    conn = sqlite3.connect(db_file)
-    cur = conn.cursor()
-    cur.execute(schema_sql)
-
-    insert_sql = """
-    INSERT INTO flights (
-        flight_num, scheduled_departure, scheduled_arrival,
-        departure_location, arrival_location,
-        basic_price_standard, economy_price_standard, premium_price_standard, business_price_standard,
-        basic_price_discount_den, economy_price_discount_den, premium_price_discount_den, business_price_discount_den
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """
-
-    cur.executemany(
-        insert_sql,
-        [
-            (
-                r["flight_num"],
-                r["scheduled_departure"],
-                r["scheduled_arrival"],
-                r["departure_location"],
-                r["arrival_location"],
-                r["basic_price_standard"],
-                r["economy_price_standard"],
-                r["premium_price_standard"],
-                r["business_price_standard"],
-                r["basic_price_discount_den"],
-                r["economy_price_discount_den"],
-                r["premium_price_discount_den"],
-                r["business_price_discount_den"],
-            )
-            for r in rows
-        ],
-    )
-
-    conn.commit()
-    conn.close()
 
 
 if __name__ == "__main__":
