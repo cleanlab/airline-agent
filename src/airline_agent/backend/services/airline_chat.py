@@ -38,6 +38,9 @@ from airline_agent.backend.schemas.run_event import (
     RunEventThreadRunFailed,
     RunEventThreadRunInProgress,
 )
+from airline_agent.cleanlab_utils.consult_utils import (
+    consult_cleanlab_and_update_prompt,
+)
 from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
     run_cleanlab_validation_logging_tools,
@@ -48,11 +51,14 @@ from airline_agent.tools.knowledge_base import KnowledgeBase
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def create_agent(kb: KnowledgeBase) -> Agent:
     """Create the airline support agent."""
-    model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
+    model = OpenAIChatModel(
+        model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0)
+    )
     return Agent(
         model=model,
         instructions=AGENT_INSTRUCTIONS,
@@ -111,12 +117,17 @@ async def airline_chat_streaming(
 
     current_tool_calls: dict[str, ToolCall] = {}
 
-    user_prompt = message.content
+    original_user_query = message.content
+    user_prompt = consult_cleanlab_and_update_prompt(
+        original_user_query, thread_to_messages[thread_id]
+    )
 
     nodes = []
     original_message_history = thread_to_messages[thread_id].copy()
     try:
-        async with agent.iter(user_prompt=user_prompt, message_history=original_message_history) as run:
+        async with agent.iter(
+            user_prompt=user_prompt, message_history=original_message_history
+        ) as run:
             async for node in run:
                 nodes.append(node)
                 if isinstance(node, CallToolsNode):
@@ -127,10 +138,12 @@ async def airline_chat_streaming(
                             if isinstance(response_part, TextPart):
                                 text_content += response_part.content
                             elif isinstance(response_part, ToolCallPart):
-                                current_tool_calls[response_part.tool_call_id] = ToolCall(
-                                    tool_call_id=response_part.tool_call_id,
-                                    tool_name=response_part.tool_name,
-                                    arguments=json.dumps(response_part.args),
+                                current_tool_calls[response_part.tool_call_id] = (
+                                    ToolCall(
+                                        tool_call_id=response_part.tool_call_id,
+                                        tool_name=response_part.tool_name,
+                                        arguments=json.dumps(response_part.args),
+                                    )
                                 )
 
                         if text_content and stream_intermediate_messages:
@@ -146,7 +159,10 @@ async def airline_chat_streaming(
                 elif isinstance(node, ModelRequestNode) and current_tool_calls:
                     request = node.request
                     for request_part in request.parts:
-                        if isinstance(request_part, ToolReturnPart) and request_part.tool_call_id in current_tool_calls:
+                        if (
+                            isinstance(request_part, ToolReturnPart)
+                            and request_part.tool_call_id in current_tool_calls
+                        ):
                             yield RunEventThreadMessage(
                                 id=run_id,
                                 object=RunEventObject.THREAD_MESSAGE,
@@ -155,7 +171,11 @@ async def airline_chat_streaming(
                                     content=ToolCall(
                                         tool_call_id=request_part.tool_call_id,
                                         tool_name=request_part.tool_name,
-                                        arguments=json.dumps(current_tool_calls[request_part.tool_call_id].arguments),
+                                        arguments=json.dumps(
+                                            current_tool_calls[
+                                                request_part.tool_call_id
+                                            ].arguments
+                                        ),
                                         result=request_part.model_response_str(),
                                     ),
                                 ),
@@ -163,13 +183,15 @@ async def airline_chat_streaming(
                             del current_tool_calls[request_part.tool_call_id]
 
             if run.result is not None and cleanlab_enabled:
-                updated_message_history, final_response, validation_result = run_cleanlab_validation_logging_tools(
-                    project=project,
-                    query=user_prompt,
-                    result=run.result,
-                    message_history=original_message_history,
-                    tools=get_tools_in_openai_format(agent),
-                    thread_id=thread_id,
+                updated_message_history, final_response, validation_result = (
+                    run_cleanlab_validation_logging_tools(
+                        project=project,
+                        query=original_user_query,
+                        result=run.result,
+                        message_history=original_message_history,
+                        tools=get_tools_in_openai_format(agent),
+                        thread_id=thread_id,
+                    )
                 )
                 yield RunEventThreadMessage(
                     id=run_id,
@@ -179,7 +201,8 @@ async def airline_chat_streaming(
                         content=final_response,
                         metadata=MessageMetadata(
                             original_llm_response=run.result.output,
-                            is_expert_answer=validation_result.expert_answer is not None,
+                            is_expert_answer=validation_result.expert_answer
+                            is not None,
                             guardrailed=validation_result.should_guardrail,
                             escalated_to_sme=validation_result.escalated_to_sme,
                             scores=_format_eval_results(validation_result),
