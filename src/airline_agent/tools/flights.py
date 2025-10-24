@@ -38,8 +38,8 @@ class Flights:
         self,
         departure_location: str | None = None,
         arrival_location: str | None = None,
-        start_time: str | date | datetime | None = None,
-        end_time: str | date | datetime | None = None,
+        start_time_utc: str | date | datetime | None = None,
+        end_time_utc: str | date | datetime | None = None,
         budget: int | None = None,
     ) -> list[FlightInfo]:
         """
@@ -50,8 +50,8 @@ class Flights:
                 Examples: "SFO", "San Francisco", "San Fran", "CA (SFO)", "San Francisco, CA (SFO)". Optional.
             arrival_location: The arrival location. Supports partial matching with LIKE patterns.
                 Examples: "DEN", "Denver", "Denver, CO (DEN)", "CO (DEN)". Optional.
-            start_time: The earliest departure UTC time, in ISO 8601 format (e.g., "2025-10-06T00:00:00+00:00"). Optional.
-            end_time: The latest departure UTC time, in ISO 8601 format (e.g., "2025-10-12T23:59:59+00:00"). Optional.
+            start_time_utc: The earliest departure UTC time, in ISO 8601 format (e.g., "2025-10-06T00:00:00+00:00"). Optional.
+            end_time_utc: The latest departure UTC time, in ISO 8601 format (e.g., "2025-10-12T23:59:59+00:00"). Optional.
             budget: The maximum budget for the flight search. Optional.
 
         Returns:
@@ -66,11 +66,11 @@ class Flights:
         logger.info(
             "searching for flights with parameters: "
             "Departure location=%s, Arrival location=%s, "
-            "Start time=%s, End time=%s, Budget=%s",
+            "Start time UTC=%s, End time UTC=%s, Budget=%s",
             departure_location,
             arrival_location,
-            start_time,
-            end_time,
+            start_time_utc,
+            end_time_utc,
             budget,
         )
 
@@ -86,8 +86,8 @@ class Flights:
         params = [
             self._wrap_sql_like(departure_location),
             self._wrap_sql_like(arrival_location),
-            start_time if start_time else "1900-01-01T00:00:00+00:00",
-            end_time if end_time else "2100-12-31T23:59:59+00:00",
+            start_time_utc if start_time_utc else "1900-01-01T00:00:00+00:00",
+            end_time_utc if end_time_utc else "2100-12-31T23:59:59+00:00",
             *([budget if budget is not None else 999999] * len(PRICE_COLUMNS)),
         ]
 
@@ -105,8 +105,8 @@ class Flights:
                 flight_num=row[0],
                 departure_location=row[1],
                 arrival_location=row[2],
-                scheduled_departure=datetime.fromisoformat(row[5]),  # local time
-                scheduled_arrival=datetime.fromisoformat(row[6]),  # local time
+                scheduled_departure_local=datetime.fromisoformat(row[5]),  # local time
+                scheduled_arrival_local=datetime.fromisoformat(row[6]),  # local time
                 basic_price_standard=row[7],
                 economy_price_standard=row[8],
                 premium_price_standard=row[9],
