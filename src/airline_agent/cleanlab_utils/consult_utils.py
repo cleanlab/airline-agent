@@ -18,7 +18,7 @@ def _consult(query: str, message_history: list[ChatCompletionMessageParam]) -> s
     if not project_id:
         raise ValueError("CLEANLAB_PROJECT_ID environment variable is not set")  # noqa
     response = httpx.post(
-        f"{base_url}/api/projects/{project_id}/consult",
+        base_url.join(f"api/projects/{project_id}/consult"),
         json={"query": query, "message_history": message_history},
         headers={"X-API-Key": api_key},
     )
