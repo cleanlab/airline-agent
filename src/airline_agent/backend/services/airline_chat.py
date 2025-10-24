@@ -15,9 +15,11 @@ from pydantic_ai import (
     ModelMessage,
     ModelRequestNode,
     ModelSettings,
+    SystemPromptPart,
     TextPart,
     ToolCallPart,
     ToolReturnPart,
+    UserPromptPart,
 )
 from pydantic_ai.models.openai import OpenAIChatModel
 
@@ -116,13 +118,37 @@ async def airline_chat_streaming(
     current_tool_calls: dict[str, ToolCall] = {}
 
     original_user_query = message.content
-    user_prompt = consult_cleanlab_and_update_prompt(original_user_query, thread_to_messages[thread_id])
+    user_prompt, consult_system_message = consult_cleanlab_and_update_prompt(
+        original_user_query, thread_to_messages[thread_id]
+    )
+    consult_system_part = (
+        SystemPromptPart(content=consult_system_message) if consult_system_message is not None else None
+    )
 
     nodes = []
     original_message_history = thread_to_messages[thread_id].copy()
     try:
         async with agent.iter(user_prompt=user_prompt, message_history=original_message_history) as run:
+            consult_message_injected = False
             async for node in run:
+                if (
+                    consult_system_part is not None
+                    and not consult_message_injected
+                    and isinstance(node, ModelRequestNode)
+                ):
+                    request = node.request
+                    new_parts = []
+                    inserted = False
+                    for part in request.parts:
+                        new_parts.append(part)
+                        if isinstance(part, UserPromptPart) and not inserted:
+                            new_parts.append(consult_system_part)
+                            inserted = True
+                    if not inserted:
+                        new_parts.append(consult_system_part)
+                    request.parts = new_parts
+                    consult_message_injected = True
+
                 nodes.append(node)
                 if isinstance(node, CallToolsNode):
                     response = node.model_response

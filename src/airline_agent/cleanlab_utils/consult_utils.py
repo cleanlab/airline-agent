@@ -31,14 +31,15 @@ def consult_cleanlab(query: str, message_history: list[ModelMessage]) -> str | N
     return _consult(query, openai_messages)
 
 
-def update_prompt_with_guidance(prompt: str, guidance: str | None) -> str:
-    """Update the prompt with the guidance."""
+def update_prompt_with_guidance(prompt: str, guidance: str | None) -> tuple[str, str | None]:
+    """Return the original prompt and formatted guidance message if available."""
     if guidance:
-        return f"{prompt}\n\n<advice_to_consider>\n{guidance}\n</advice_to_consider>\n\n"
-    return prompt
+        system_message = f"<advice_to_consider>\n{guidance}\n</advice_to_consider>"
+        return prompt, system_message
+    return prompt, None
 
 
-def consult_cleanlab_and_update_prompt(prompt: str, message_history: list[ModelMessage]) -> str:
-    """Consult Cleanlab for a response to the query and update the prompt with the guidance."""
+def consult_cleanlab_and_update_prompt(prompt: str, message_history: list[ModelMessage]) -> tuple[str, str | None]:
+    """Consult Cleanlab and return the prompt alongside any guidance to surface as a system message."""
     guidance = consult_cleanlab(prompt, message_history)
     return update_prompt_with_guidance(prompt, guidance)
