@@ -22,7 +22,7 @@ def _consult(query: str, message_history: list[ChatCompletionMessageParam]) -> s
         json={"query": query, "message_history": message_history},
         headers={"X-API-Key": api_key},
     )
-    return response.json()["guidance"]
+    return str(response.json()["guidance"])
 
 
 def consult_cleanlab(query: str, message_history: list[ModelMessage]) -> str | None:
