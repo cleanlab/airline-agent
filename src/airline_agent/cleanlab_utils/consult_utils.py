@@ -11,7 +11,7 @@ from airline_agent.cleanlab_utils.conversion_utils import convert_to_openai_mess
 GuidanceResults = TypeAdapter(list[str])
 
 
-def _consult(query: str, message_history: list[ChatCompletionMessageParam]) -> GuidanceResults:
+def _consult(query: str, message_history: list[ChatCompletionMessageParam]) -> list[str]:
     api_key = os.getenv("CODEX_API_KEY")
     if not api_key:
         raise ValueError("CODEX_API_KEY environment variable is not set")  # noqa
@@ -29,7 +29,7 @@ def _consult(query: str, message_history: list[ChatCompletionMessageParam]) -> G
     return GuidanceResults.validate_python(res)
 
 
-def consult_cleanlab(query: str, message_history: list[ModelMessage]) -> GuidanceResults:
+def consult_cleanlab(query: str, message_history: list[ModelMessage]) -> list[str]:
     """Consult Cleanlab for a response to the query."""
     openai_messages = convert_to_openai_messages(message_history)
     return _consult(query, openai_messages)
