@@ -177,7 +177,7 @@ async def airline_chat_streaming(
                     message_history=original_message_history,
                     tools=get_tools_in_openai_format(agent),
                     thread_id=thread_id,
-                    additional_metadata={"applied_guidance": guidance} if guidance else None,
+                    additional_metadata={f"applied_guidance_{i}": guidance for i, guidance in enumerate(guidance)} if guidance else None,
                 )
                 yield RunEventThreadMessage(
                     id=run_id,
