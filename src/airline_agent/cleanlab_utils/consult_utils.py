@@ -8,7 +8,9 @@ from pydantic_ai import ModelMessage
 from airline_agent.cleanlab_utils.conversion_utils import convert_to_openai_messages
 
 
-def _consult(query: str, message_history: list[ChatCompletionMessageParam]) -> str:
+def _consult(
+    query: str, message_history: list[ChatCompletionMessageParam]
+) -> str | None:
     api_key = os.getenv("CODEX_API_KEY")
     if not api_key:
         raise ValueError("CODEX_API_KEY environment variable is not set")  # noqa
@@ -22,7 +24,8 @@ def _consult(query: str, message_history: list[ChatCompletionMessageParam]) -> s
         json={"query": query, "message_history": message_history},
         headers={"X-API-Key": api_key},
     )
-    return str(response.json()["guidance"])
+    res = response.json()["guidance"]
+    return str(res) if res is not None else None
 
 
 def consult_cleanlab(query: str, message_history: list[ModelMessage]) -> str | None:
@@ -34,11 +37,7 @@ def consult_cleanlab(query: str, message_history: list[ModelMessage]) -> str | N
 def update_prompt_with_guidance(prompt: str, guidance: str | None) -> str:
     """Update the prompt with the guidance."""
     if guidance:
-        return f"{prompt}\n\n<advice_to_consider>\n{guidance}\n</advice_to_consider>\n\n"
+        return (
+            f"{prompt}\n\n<advice_to_consider>\n{guidance}\n</advice_to_consider>\n\n"
+        )
     return prompt
-
-
-def consult_cleanlab_and_update_prompt(prompt: str, message_history: list[ModelMessage]) -> str:
-    """Consult Cleanlab for a response to the query and update the prompt with the guidance."""
-    guidance = consult_cleanlab(prompt, message_history)
-    return update_prompt_with_guidance(prompt, guidance)

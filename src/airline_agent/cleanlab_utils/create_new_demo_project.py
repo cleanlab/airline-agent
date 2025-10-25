@@ -10,7 +10,7 @@ from cleanlab_codex import Client
 from codex.types.project_return_schema import ProjectReturnSchema
 from dotenv import load_dotenv
 
-from airline_agent.constants import OFFICIAL_DEMO_PROJECT_ID, STAGING_DEMO_PROJECT_ID
+from airline_agent.constants import OFFICIAL_DEMO_PROJECT_ID
 
 DEFAULT_DEMO_PROJECT_NAME = "(Demo) Frontier Airlines Support Chatbot"
 DEFAULT_DEMO_PROJECT_DESCRIPTION = "Do not delete please!"
@@ -25,7 +25,7 @@ def copy_project_configuration(
         response = client.patch(
             base_url.join(COPY_PROJECT_ROUTE),
             params={
-                "project_id": STAGING_DEMO_PROJECT_ID,
+                "project_id": OFFICIAL_DEMO_PROJECT_ID,
                 "new_project_id": new_project_id,
             },
         )

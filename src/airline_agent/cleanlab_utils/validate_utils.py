@@ -39,7 +39,9 @@ from airline_agent.constants import CONTEXT_RETRIEVAL_TOOLS, FALLBACK_RESPONSE
 logger = logging.getLogger(__name__)
 
 
-def _get_tool_result_as_text(messages: list[ChatCompletionMessageParam], tool_names: list[str]) -> str:
+def _get_tool_result_as_text(
+    messages: list[ChatCompletionMessageParam], tool_names: list[str]
+) -> str:
     """
     Extract tool results as text for specified tool names from all messages.
 
@@ -62,20 +64,27 @@ def _get_tool_result_as_text(messages: list[ChatCompletionMessageParam], tool_na
                 # Only handle function tool calls, skip custom tool calls
                 if tool_call.get("type") == "function":
                     # Type narrow to function tool call
-                    func_tool_call = cast(Any, tool_call)  # Use Any to avoid union issues
+                    func_tool_call = cast(
+                        Any, tool_call
+                    )  # Use Any to avoid union issues
                     if (
                         func_tool_call.get("function")
                         and func_tool_call["function"].get("name") in tool_names
                         and func_tool_call.get("id")
                     ):
-                        tool_call_to_name[func_tool_call["id"]] = func_tool_call["function"]["name"]
+                        tool_call_to_name[func_tool_call["id"]] = func_tool_call[
+                            "function"
+                        ]["name"]
 
     # 2. Collect tool results in message order
     results = []
     for msg in messages:
         if msg.get("role") == "tool":
             tool_msg = cast(Any, msg)  # Cast to avoid TypedDict union issues
-            if "tool_call_id" in tool_msg and tool_msg["tool_call_id"] in tool_call_to_name:
+            if (
+                "tool_call_id" in tool_msg
+                and tool_msg["tool_call_id"] in tool_call_to_name
+            ):
                 content = tool_msg.get("content", "")
                 if content:
                     tool_name_for_result = tool_call_to_name[tool_msg["tool_call_id"]]
@@ -109,7 +118,10 @@ def _get_latest_agent_response_openai(
     """Get index of latest AI assistant response with stop finish_reason in OpenAI format."""
     for i in range(len(openai_messages) - 1, -1, -1):
         message = openai_messages[i]
-        if message.get("role") == "assistant" and message.get("finish_reason") == "stop":
+        if (
+            message.get("role") == "assistant"
+            and message.get("finish_reason") == "stop"
+        ):
             return message, i
     msg = "No AI assistant response with 'stop' finish_reason found."
     raise ValueError(msg)
@@ -164,7 +176,11 @@ def _get_system_messages(
     for message in message_history:
         if isinstance(message, ModelRequest):
             # Extract instructions and add as system message only once
-            if hasattr(message, "instructions") and message.instructions and not instructions_added:
+            if (
+                hasattr(message, "instructions")
+                and message.instructions
+                and not instructions_added
+            ):
                 system_messages.append(
                     cast(
                         ChatCompletionMessageParam,
@@ -175,7 +191,10 @@ def _get_system_messages(
 
             # Add SystemPromptPart content from message history
             for part in message.parts:
-                if isinstance(part, SystemPromptPart) and part.content not in system_prompts_seen:
+                if (
+                    isinstance(part, SystemPromptPart)
+                    and part.content not in system_prompts_seen
+                ):
                     system_messages.append(
                         cast(
                             ChatCompletionMessageParam,
@@ -214,7 +233,13 @@ def _get_tools_from_agent(agent: Agent) -> list[ToolDefinition]:
     tool_definitions = []
     for toolset in agent.toolsets:
         if hasattr(toolset, "tools") and isinstance(toolset.tools, dict):
-            tool_definitions.extend([tool.tool_def for tool in toolset.tools.values() if hasattr(tool, "tool_def")])
+            tool_definitions.extend(
+                [
+                    tool.tool_def
+                    for tool in toolset.tools.values()
+                    if hasattr(tool, "tool_def")
+                ]
+            )
     return tool_definitions
 
 
@@ -231,6 +256,7 @@ def run_cleanlab_validation(
     message_history: list[ModelMessage],
     tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
+    additional_metadata: dict[str, Any] | None = None,
 ) -> tuple[list[ModelMessage], str, ProjectValidateResponse]:
     """
     Run cleanlab validation on the latest agent response and update message history.
@@ -245,26 +271,33 @@ def run_cleanlab_validation(
         message_history: Current conversation message history
         tools: Optional list of tools in OpenAI function format for context
         thread_id: Optional thread ID for metadata
+        additional_metadata: Optional additional metadata to add to the validation metadata
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = _get_system_messages(message_history + result.new_messages()) + convert_to_openai_messages(
-        message_history
-    )
+    messages = _get_system_messages(
+        message_history + result.new_messages()
+    ) + convert_to_openai_messages(message_history)
     openai_new_messages = convert_to_openai_messages(result.new_messages())
-    latest_agent_response, _ = _get_latest_agent_response_pydantic(result.new_messages())
-    _, latest_agent_response_idx_openai = _get_latest_agent_response_openai(openai_new_messages)
+    latest_agent_response, _ = _get_latest_agent_response_pydantic(
+        result.new_messages()
+    )
+    _, latest_agent_response_idx_openai = _get_latest_agent_response_openai(
+        openai_new_messages
+    )
     validation_result = project.validate(
         query=query,
         response=result.output,
         messages=messages + openai_new_messages[:latest_agent_response_idx_openai],
         context=_get_context_as_string(openai_new_messages),
         tools=tools,
-        metadata={"thread_id": thread_id} if thread_id else None,
+        metadata=_get_final_metadata(thread_id, additional_metadata),
     )
     logger.info("[cleanlab] Validation result: %s", validation_result)
 
-    final_response_message, final_response_str = _get_final_response_message(latest_agent_response, validation_result)
+    final_response_message, final_response_str = _get_final_response_message(
+        latest_agent_response, validation_result
+    )
 
     if final_response_str is not None:
         logger.info("[cleanlab] Response was replaced by cleanlab...")
@@ -285,6 +318,7 @@ def run_cleanlab_validation_logging_tools(
     message_history: list[ModelMessage],
     tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
+    additional_metadata: dict[str, Any] | None = None,
 ) -> tuple[list[ModelMessage], str, ProjectValidateResponse]:
     """
     Run cleanlab validation on the latest agent response and update message history.
@@ -301,12 +335,13 @@ def run_cleanlab_validation_logging_tools(
         message_history: Current conversation message history
         tools: Optional list of tools in OpenAI function format for context
         thread_id: Optional thread ID for metadata
+        additional_metadata: Optional additional metadata to add to the validation metadata
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
-    messages = _get_system_messages(message_history + result.new_messages()) + convert_to_openai_messages(
-        message_history
-    )
+    messages = _get_system_messages(
+        message_history + result.new_messages()
+    ) + convert_to_openai_messages(message_history)
     openai_new_messages = convert_to_openai_messages(result.new_messages())
 
     for index, openai_newest_message in enumerate(
@@ -314,7 +349,10 @@ def run_cleanlab_validation_logging_tools(
     ):  # Go through new messages and log all assistant calls
         # IMPORTANT: the backend currently relies on this integration LOGGING but BYPASSING VALIDATION for any intermediate AI responses
         # do not change this behavior without updating the backend code
-        if openai_newest_message.get("role") == "assistant" and openai_newest_message.get("finish_reason") != "stop":
+        if (
+            openai_newest_message.get("role") == "assistant"
+            and openai_newest_message.get("finish_reason") != "stop"
+        ):
             openai_response = convert_message_to_chat_completion(openai_newest_message)
 
             _ = project.validate(
@@ -323,7 +361,7 @@ def run_cleanlab_validation_logging_tools(
                 messages=messages + openai_new_messages[:index],
                 context=_get_context_as_string(openai_new_messages),
                 tools=tools,
-                metadata={"thread_id": thread_id} if thread_id else None,
+                metadata=_get_final_metadata(thread_id, additional_metadata),
                 eval_scores={},
             )
             logger.info("[cleanlab] Logging function call, automatic validation pass.")
@@ -335,4 +373,17 @@ def run_cleanlab_validation_logging_tools(
         message_history=message_history,
         tools=tools,
         thread_id=thread_id,
+        additional_metadata=additional_metadata,
     )  # Run real validation on the final output
+
+
+def _get_final_metadata(
+    thread_id: str | None, additional_metadata: dict[str, Any] | None
+) -> dict[str, Any] | None:
+    """Get the final metadata for the validation."""
+    if additional_metadata and thread_id:
+        return {"thread_id": thread_id, **additional_metadata}
+    elif thread_id:
+        return {"thread_id": thread_id}
+    else:
+        return None
