@@ -231,6 +231,7 @@ def run_cleanlab_validation(
     message_history: list[ModelMessage],
     tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
+    additional_metadata: dict[str, Any] | None = None,
 ) -> tuple[list[ModelMessage], str, ProjectValidateResponse]:
     """
     Run cleanlab validation on the latest agent response and update message history.
@@ -245,6 +246,7 @@ def run_cleanlab_validation(
         message_history: Current conversation message history
         tools: Optional list of tools in OpenAI function format for context
         thread_id: Optional thread ID for metadata
+        additional_metadata: Optional additional metadata to add to the validation metadata
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
@@ -260,7 +262,7 @@ def run_cleanlab_validation(
         messages=messages + openai_new_messages[:latest_agent_response_idx_openai],
         context=_get_context_as_string(openai_new_messages),
         tools=tools,
-        metadata={"thread_id": thread_id} if thread_id else None,
+        metadata=_get_final_metadata(thread_id, additional_metadata),
     )
     logger.info("[cleanlab] Validation result: %s", validation_result)
 
@@ -285,6 +287,7 @@ def run_cleanlab_validation_logging_tools(
     message_history: list[ModelMessage],
     tools: list[ChatCompletionFunctionToolParam] | None = None,
     thread_id: str | None = None,
+    additional_metadata: dict[str, Any] | None = None,
 ) -> tuple[list[ModelMessage], str, ProjectValidateResponse]:
     """
     Run cleanlab validation on the latest agent response and update message history.
@@ -301,6 +304,7 @@ def run_cleanlab_validation_logging_tools(
         message_history: Current conversation message history
         tools: Optional list of tools in OpenAI function format for context
         thread_id: Optional thread ID for metadata
+        additional_metadata: Optional additional metadata to add to the validation metadata
     Returns:
         Final response as a ModelResponse object and updated message history.
     """
@@ -323,7 +327,7 @@ def run_cleanlab_validation_logging_tools(
                 messages=messages + openai_new_messages[:index],
                 context=_get_context_as_string(openai_new_messages),
                 tools=tools,
-                metadata={"thread_id": thread_id} if thread_id else None,
+                metadata=_get_final_metadata(thread_id, additional_metadata),
                 eval_scores={},
             )
             logger.info("[cleanlab] Logging function call, automatic validation pass.")
@@ -335,4 +339,16 @@ def run_cleanlab_validation_logging_tools(
         message_history=message_history,
         tools=tools,
         thread_id=thread_id,
+        additional_metadata=additional_metadata,
     )  # Run real validation on the final output
+
+
+def _get_final_metadata(thread_id: str | None, additional_metadata: dict[str, Any] | None) -> dict[str, Any] | None:
+    """Get the final metadata for the validation."""
+    if additional_metadata and thread_id:
+        return {"thread_id": thread_id, **additional_metadata}
+
+    if thread_id:
+        return {"thread_id": thread_id}
+
+    return None

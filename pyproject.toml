@@ -11,7 +11,7 @@ requires-python = ">=3.13,<3.14"
 dependencies = [
   "beautifulsoup4>=4.14.2",
   "html5lib>=1.1",
-  "llama-index-core>=0.14.3",
+  "llama-index-core>=0.14.6",
   "llama-index-embeddings-openai>=0.5.1",
   "llama-index-llms-openai>=0.6.1",
   "llama-index-retrievers-bm25>=0.6.5",
@@ -19,7 +19,7 @@ dependencies = [
   "pydantic>=2.11.9",
   "python-dotenv>=1.0.0",
   "tqdm>=4.67.1",
-  "cleanlab_codex>=1.0.29",
+  "cleanlab_codex>=1.0.30",
   "selenium>=4.10.0",
   "fastapi[standard]>=0.116.2",
   "pandas>=2.2.3",

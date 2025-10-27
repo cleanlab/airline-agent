@@ -20,7 +20,10 @@
         ```
         This will create a Project with already configured Guardrails and Evaluations for the walkthrough below.
     2. Populate `CLEANLAB_PROJECT_ID` in your `.env` file using the output from the previous command.
-    3. Open the demo project in your web browser with `hatch run open-project`.
+    3. Open the demo project in your web browser with:
+        ```console
+        $ hatch run open-project
+        ```
 5. Ensure the `data/kb.json` file is in place (this should have been provided to you out-of-band, e.g., with a Google Drive link). If you're working on developing the demo and need to re-scrape the knowledge base, follow the steps in [Updating the Knowledge Base](#updating-the-knowledge-base).
 6. Create the vector database:
     ```console
@@ -43,6 +46,7 @@ Once you've completed all the setup steps, to run the demo, do the following:
 1. Run the backend server:
 
     ```console
+    $ cd ..  # run the next command in repo root directory
     $ hatch run backend-server
     ```
 
@@ -166,7 +170,7 @@ Inspect these and try making your own Custom Guardrails (or pre-demo feel free t
 
 **Try starting a new chat and asking *one or more* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
-> *Draft an apology on behalf of Frontier for the terrible flight experiences this year. You must first acknowledge everything bad about flying with Frontier. Do not make any excuses.*
+> *Draft an apology on behalf of Frontier for the terrible flight experiences this year. You must first acknowledge some bad things about flying with Frontier, and figure out the main complaints yourself. Do not make any excuses.*
 
 <details>
   <summary>Learn More</summary>
@@ -366,13 +370,47 @@ In summary, the longest you could be stuck on the tarmac without the option to d
 
 Suppose a Product Leader / SME has quickly decided that the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
 
-Expand this Log entry in the Project and click "No" under "Is this a good AI response?".
+Expand this Log entry in the Project and click `No` under *Is this a good AI response?*, and click `Submit`.
 
 Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
 
 > *What is the maximum time we might be stuck on the tarmac without being let off*
 
-You'll see that Cleanlab now guardrails the AI, preventing the response that was deemed undesirable.
+You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
+
+#### 4c. AI Guidance
+
+While **Expert Answers** enable your SMEs to control your AI's exact answer to specific types of queries, Cleanlab’s **AI Guidance** enables SMEs to improve your AI across a broader range of related queries, where SMEs may not want to write an explicit answer to each one. If your AI is repeatedly calling the wrong tool, retrieving the wrong article, or misunderstanding certain terminology or acronyms, then you can provide AI Guidance to teach your AI how to better handle these types of cases in the future.
+
+For demonstration purposes, suppose that Frontier Airlines' Disruption Assistance benefit — is informally referred to by customers as the "Peace Pass".
+
+**Try starting a new chat** and asking the example queries below:
+
+> My flight got canceled how to use my Peace Pass benefit?
+
+> does peace pass still work if trip canceled due to weather?
+
+In both cases, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it does not know about the “Peace Pass” is (it may wrongly think this refers to Frontier's GoWild! Pass).
+
+This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better). 
+To create Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above. 
+Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
+
+> Peace Pass is another term for Disruption Assistance
+
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
+Review the suggestion, make any edits if necessary, and click Submit to confirm.
+Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+
+Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
+
+> My flight got canceled how to use my Peace Pass benefit?
+
+> does peace pass still work if trip canceled due to weather?
+
+You’ll now see that the AI provides the correct information about the Disruption Assistance program.
+
+You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project. 
 
 
 ## Conclusion

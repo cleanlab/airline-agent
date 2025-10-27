@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 logger = logging.getLogger(__name__)
 
 OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"  # to copy configuration from
+STAGING_DEMO_PROJECT_ID = "6de236e4-c6e7-456c-b248-872236010992"
 RAG_EMBED_MODEL = "text-embedding-3-small"
 RAG_EMBED_BATCH_SIZE = 100
 RAG_CHUNK_SIZE = 1024

@@ -3,13 +3,9 @@ import json
 from pathlib import Path
 
 from dotenv import load_dotenv
-
-from airline_agent.utils.llama_warnings import suppress_llama_index_warnings
-
-with suppress_llama_index_warnings():
-    from llama_index.core import Document, VectorStoreIndex
-    from llama_index.core.node_parser import SentenceSplitter
-    from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
+from llama_index.core import Document, VectorStoreIndex
+from llama_index.core.node_parser import SentenceSplitter
+from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
 
 from airline_agent.constants import RAG_CHUNK_OVERLAP, RAG_CHUNK_SIZE, RAG_EMBED_BATCH_SIZE, RAG_EMBED_MODEL
 from airline_agent.types.knowledge_base import KBArticle

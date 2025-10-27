@@ -1,11 +1,8 @@
 import json
 import logging
 
-from airline_agent.utils.llama_warnings import suppress_llama_index_warnings
-
-with suppress_llama_index_warnings():
-    from llama_index.core import StorageContext, VectorStoreIndex, load_index_from_storage
-    from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
+from llama_index.core import StorageContext, VectorStoreIndex, load_index_from_storage
+from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
 from pydantic_ai import ModelRetry
 
 from airline_agent.constants import RAG_EMBED_MODEL
