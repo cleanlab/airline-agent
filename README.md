@@ -370,34 +370,31 @@ Then pretend you are a different user **by creating a new chat thread** and ask 
 
 You'll see that Cleanlab now guardrails the AI, preventing the response that was deemed undesirable.
 
-### 5. Guidance
+#### 4c. AI Guidance
 
-While **Expert Answers** are valuable for resolving queries with responses provided by SMEs, Cleanlab’s AI Guidance feature helps address situations where the AI systematically struggles so it can independently deliver improved answers across a broader range of related queries.
-For example, you might observe your AI making recurring mistakes, such as calling the wrong tool, retrieving the wrong article, or repeatedly misunderstanding certain terminology or acronyms. 
-In such cases, you can add AI Guidance to help the AI improve its reasoning and/or context understanding for future similar queries.
+While **Expert Answers** enable your SMEs to control your AI's exact answer to specific types of queries, Cleanlab’s **AI Guidance** enables SMEs to improve your AI across a broader range of related queries, where SMEs may not want to write an explicit answer to each one. If your AI is repeatedly calling the wrong tool, retrieving the wrong article, or misunderstanding certain terminology or acronyms, then you can provide AI Guidance to teach your AI how to better handle these types of cases in the future.
 
-For demonstration purposes, suppose that Disruption Assistance — an actual Frontier Airlines benefit — is informally referred to by customers as the Peace Pass.
+For demonstration purposes, suppose that Frontier Airlines' Disruption Assistance benefit — is informally referred to by customers as the "Peace Pass".
 
-**Try starting a new chat** and asking the example questions below:
+**Try starting a new chat** and asking the example queries below:
 
 > My flight got canceled how to use my Peace Pass benefit?
 
 > does peace pass still work if trip canceled due to weather?
 
-In both cases, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it incorrectly assumes that “Peace Pass” refers to the GoWild! Pass, which is unrelated.
+In both cases, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it does not know about the “Peace Pass” is (it may wrongly think this refers to Frontier's GoWild! Pass).
 
-Since this misunderstanding reflects a systematic error rather than a one-off issue, this is an ideal opportunity to use AI Guidance. 
-To create Guidance for this case, expand either Log entry in your Cleanlab Project. 
-Select No under “Is this a good AI response?” and provide a short explanation in the reason field:
+This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better). 
+To create Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above. 
+Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
 
-> Doesn’t know that Peace Pass is Disruption Assistance.
+> Peace Pass is another term for Disruption Assistance
 
-After you submit the reason, Cleanlab automatically generates a suggested AI Guidance based on your feedback. 
+After you submit the SME feedack for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
+Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
-Once saved, this AI Guidance is automatically applied the next time a similar query appears, helping the AI correctly interpret “Peace Pass” as Disruption Assistance.
-
-Then pretend you are a different user **by creating a new chat thread** and ask the same queries as above:
+Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
 
 > My flight got canceled how to use my Peace Pass benefit?
 
@@ -405,8 +402,8 @@ Then pretend you are a different user **by creating a new chat thread** and ask 
 
 You’ll now see that the AI provides the correct information about the Disruption Assistance program.
 
-You can review all existing Guidance entries at any time by opening the AI Guidance section in the left sidebar of your Cleanlab Project. 
-From there, you can edit or delete Guidance entries as needed. 
+You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project. 
+
 
 ## Conclusion
 
