@@ -228,7 +228,7 @@ const ChatMessage = ({
                           // Use plain text for non-JSON results
                           return (
                             <div className="max-h-32 max-w-full overflow-x-auto overflow-y-auto rounded-2 bg-surface-2 px-5 py-4">
-                              <pre className="type-caption whitespace-pre-wrap break-words font-mono">
+                              <pre className="type-caption whitespace-pre-wrap break-words break-all font-mono">
                                 {resultContent}
                               </pre>
                             </div>
