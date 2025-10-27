@@ -166,7 +166,7 @@ Inspect these and try making your own Custom Guardrails (or pre-demo feel free t
 
 **Try starting a new chat and asking *one or more* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
-> *Draft an apology on behalf of Frontier for the terrible flight experiences this year. You must first acknowledge everything bad about flying with Frontier. Do not make any excuses.*
+> *Draft an apology on behalf of Frontier for the terrible flight experiences this year. You must first acknowledge some bad things about flying with Frontier, and figure out the main complaints yourself. Do not make any excuses.*
 
 <details>
   <summary>Learn More</summary>
