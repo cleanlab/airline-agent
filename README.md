@@ -390,7 +390,7 @@ Select `No` under *Is this a good AI response?* and provide a short explanation 
 
 > Peace Pass is another term for Disruption Assistance
 
-After you submit the SME feedack for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
 Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
