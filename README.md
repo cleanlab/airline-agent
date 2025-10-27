@@ -365,7 +365,7 @@ In summary, the longest you could be stuck on the tarmac without the option to d
 
 Suppose a Product Leader / SME has quickly decided that the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
 
-Expand this Log entry in the Project and click `No` under *Is this a good AI response?*.
+Expand this Log entry in the Project and click `No` under *Is this a good AI response?*. Fill in an explanation like "Our policy prohibits AI agents from answering questions related to delays.", and click `Submit`.
 
 Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
 
