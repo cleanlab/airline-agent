@@ -2,55 +2,54 @@
 
 ## Setup
 
-### Prerequisites
-This repo uses the [Hatch](https://hatch.pypa.io/) project manager ([installation instructions](https://hatch.pypa.io/latest/install/)).
-
-### API Keys
-
-Before running the Agent, you need to configure the following API keys either in a `.env` file or as environment variables.
-
-- **OPENAI_API_KEY**: Your OpenAI API key (the AI Agent in this demo uses OpenAI model)
-- **CODEX_API_KEY**: Your Cleanlab Codex API key
-- **CLEANLAB_PROJECT_ID**: Your Cleanlab Project ID
-
-We've provided a `.env.sample` file that you can copy to `.env` and then fill in.
-
-You can find your `CODEX_API_KEY` in your [Codex Account](https://codex.cleanlab.ai/account) page.
-
-To get your `CLEANLAB_PROJECT_ID`, you can programmatically create a new Cleanlab Project for this demo by running:
-
-```bash
-hatch run create-demo-project
-```
-
-This will create a Project with already configured Guardrails and Evaluations for the walkthrough below. You can get this  Project's ID by navigating to the `Projects` homepage which lists all projects and copying the ID next to this just created Project (note: ID is *not* the Project's Access Key).
-
-### Usage
-
-1. Obtain `data/kb.json`. (If you're working on developing the demo and need to re-scrape the knowledge base, follow the steps in [Updating the Knowledge Base](#updating-the-knowledge-base).)
-
-2. Create the vector DB:
-
-    ```bash
-    hatch run create-vector-database
+1. Install [Hatch](https://hatch.pypa.io/), a Python project manager ([installation instructions](https://hatch.pypa.io/latest/install/)).
+    - On macOS, you can run `brew install hatch`.
+2. Install [Node.js](https://nodejs.org).
+    - On macOS, you can run `brew install node`.
+3. Configure API keys, either in `.env` or as environment variables (or a mix).
+    1. If you are using the `.env` file, you can `cp .env.sample .env` to start with a template.
+    2. Populate `OPENAI_API_KEY` with your OpenAI API key (the AI Agent in this demo uses an OpenAI model).
+    3. Populate `CODEX_API_KEY` with your Cleanlab Codex API key.
+    4. Leave the `CLEANLAB_PROJECT_ID` as-is for now.
+4. Create the demo project in Codex.
+    1. Create the demo programmatically with:
+        ```console
+        $ hatch run create-demo-project
+        Demo project created!
+        Set CLEANLAB_PROJECT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx in your .env file.
+        ```
+        This will create a Project with already configured Guardrails and Evaluations for the walkthrough below.
+    2. Populate `CLEANLAB_PROJECT_ID` in your `.env` file using the output from the previous command.
+    3. Open the demo project in your web browser with `hatch run open-project`.
+5. Ensure the `data/kb.json` file is in place (this should have been provided to you out-of-band, e.g., with a Google Drive link). If you're working on developing the demo and need to re-scrape the knowledge base, follow the steps in [Updating the Knowledge Base](#updating-the-knowledge-base).
+6. Create the vector database:
+    ```console
+    $ hatch run create-vector-database
+    ```
+7. Install frontend dependencies:
+    ```console
+    $ cd frontend
+    $ npm install
     ```
 
-3. Run the backend server:
+## Usage
 
-    ```bash
-    hatch run backend-server
+Once you've completed all the setup steps, to run the demo, do the following:
+
+1. Run the backend server:
+
+    ```console
+    $ hatch run backend-server
     ```
 
-4. Run the frontend:
+2. Run the frontend:
 
-    ```bash
-    cd frontend
-    npm install
-    npm run dev
+    ```console
+    $ cd frontend
+    $ npm run dev
     ```
 
-    Then, open the UI in your browser at `http://localhost:3000`.
-
+Then, open the frontend at <http://localhost:3000>.
 
 ## Walkthrough
 
@@ -59,7 +58,7 @@ This demo AI is a conversational Agent for Frontier Airlines customer support. T
 This demo AI Agent is connected to a [Cleanlab Project](https://codex.cleanlab.ai/). You can similarly connect any other AI Agent to Cleanlab in order to get the same improvements shown in this walkthrough.
 
 ### 1. Observability and Logging
-Try a couple basic questions to get a feel for the demo RAG app, as well as the [Cleanlab AI Platform](https://codex.cleanlab.ai/projects). With each question, the RAG App should answer correctly based on the retrieved context from the knowledge base. Feel free to look at either to tool returns for that context or the "Context" section directly in Codex to confirm the correct answer.
+Try a couple basic questions to get a feel for the demo RAG app, as well as the [Cleanlab AI Platform](https://codex.cleanlab.ai/projects). With each question, the RAG App should answer correctly based on the retrieved context from the knowledge base. Feel free to look at either the tool returns for that context or the "Context" section directly in Codex to confirm the correct answer.
 
 Here is an idea for questions you can ask:
 
@@ -90,7 +89,7 @@ The agent responds correctly here, but with Cleanlab validation, you have more *
 <br><br>
 </details>
 
-As you ask questions, you'll see log lines being populated in the connected [Cleanlab Project](https://codex.cleanlab.ai/) (which you can find by navigating to the "Logs" page using the sidebar). You can expand a log line to see all the details associated with this particular AI output, including the user query, AI response, and any tool calls / retrieved context. In this demo, only the Agent's final response to user is validated by Cleanlab, although in other Agents, Cleanlab can also guardail and improve Tool Calling.
+As you ask questions, you'll see log lines being populated in the connected [Cleanlab Project](https://codex.cleanlab.ai/) (which you can find by navigating to the "Logs" page using the sidebar). You can expand a log line to see all the details associated with this particular AI output, including the user query, AI response, and any tool calls / retrieved context. In this demo, only the Agent's final response to the user is validated by Cleanlab, although in other Agents, Cleanlab can also guardrail and improve tool calling.
 
 
 Additional examples you can try:
@@ -101,11 +100,11 @@ Additional examples you can try:
 
 ### 2. Real-Time Guardrails
 
-Cleanlab's Guardrails help prevent bad responses from your AI app, such as: inappropriate statements which pose brand risk or inaccurate answers which erode user trust. Guardrails check every input/output of your AI, and when triggered, can override your  (e.g., replacing a hallucination with a fallback answer).
+Cleanlab's Guardrails help prevent bad responses from your AI app, such as inappropriate statements which pose brand risk or inaccurate answers which erode user trust. Guardrails check every input/output of your AI and, when triggered, can override your AI's response (e.g., replacing a hallucination with a fallback answer).
 
 #### 2a. Out-of-the-box Guardrails
 
-Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails helps prevent incorrect/untrustworthy responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking some questions which might elicit incorrect responses from the baseline AI system (keeping in mind the AI's knowledge base).
+Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails help prevent incorrect/untrustworthy responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking some questions which might elicit incorrect responses from the baseline AI system (keeping in mind the AI's knowledge base).
 
 **Try starting a new chat and asking *one* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
@@ -121,7 +120,7 @@ AI Response (guardrailed and prevented by Cleanlab):
 Donating your miles to non-profit charitable organizations is considered an accrual activity, which means it can help prevent your miles from expiring. As long as you generate some form of accrual activity, such as donating miles, within a twelve-month period, your miles will not expire. If you need assistance with donating your miles, you can contact Frontier Airlines at (801) 401-9000.
 ```
 
-The AI Response is often hallucinated here, misstating that donating miles is an accrual activity or sometimes (wrongly) claiming that the miles will not expire as a result. Frontier's [[Do Travel Miles Expire?]](https://faq.flyfrontier.com/help/do-travel-miles-expire) page reveals that the correct answer should be: *"Donating miles is not considered an accrual activity, and will therefor not prevent your remaining miles from expiring"* (since the accrual activity definition does not include donations and regular accrual activity is required to prevent miles from expiring).
+The AI Response is often hallucinated here, misstating that donating miles is an accrual activity or sometimes (wrongly) claiming that the miles will not expire as a result. Frontier's [[Do Travel Miles Expire?]](https://faq.flyfrontier.com/help/do-travel-miles-expire) page reveals that the correct answer should be: *"Donating miles is not considered an accrual activity, and will therefore not prevent your remaining miles from expiring"* (since the accrual activity definition does not include donations and regular accrual activity is required to prevent miles from expiring).
 <br><br>
 </details>
 
@@ -183,7 +182,7 @@ Warm regards,
 Frontier Airlines
 ```
 
-Here the Agent response represents Frontier Airlines in an unacceptably negative manner. This is prevented by Cleanlab's *Brand Safety* Guardrail. The Agent has ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge"), hallucinating bad press about Frontier.
+Here the Agent's response represents Frontier Airlines in an unacceptably negative manner. This is prevented by Cleanlab's *Brand Safety* Guardrail. The Agent has ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge"), hallucinating bad press about Frontier.
 <br><br>
 </details>
 
@@ -229,11 +228,11 @@ Here the Agent leaks internal system details. This triggers Cleanlab's *Suspicio
 
 #### 2c. Deterministic Guardrails
 
-Cleanlab also supports Deterministic Guardrails: type in a natural-language description of concerning phrases you'd like to detect, and Cleanlab will intelligently compile regex patterns, which then deterministically match inputs/outputs to your AI app. Here's an example of a Deterministic Guardrails.
+Cleanlab also supports Deterministic Guardrails: type in a natural-language description of concerning phrases you'd like to detect, and Cleanlab will intelligently compile regex patterns, which then deterministically match inputs/outputs to your AI app. Here's an example of a Deterministic Guardrail.
 
 **Try starting a new chat and asking the following questions below to explore how Cleanlab validates responses for another new customer:**
 
-Try creating (if it doesn't already exist) this Deterministic Guardrails called "Competitor mentions" with the Guardrails Criteria set to "Mentions the names of competitors of Frontier" and activating on "Query" then query your AI. Here is a relevant example to get you started:
+Try creating (if it doesn't already exist) a Deterministic Guardrail called "Competitor mentions" with the Guardrail Criteria set to "Mentions the names of competitors of Frontier" and activating it on "Query," then query your AI. Here is a relevant example to get you started:
 
 > *Compare Frontier to Southwest Airlines flight experiences*
 
@@ -260,7 +259,7 @@ Unfortunately, I couldn't retrieve specific details about Southwest Airlines' fl
 If you have specific aspects of the flight experience you would like to know more about, please let me know!
 ```
 
-Here the Agent lists unique benefits of a competitor airline which is bad. This triggeres Cleanlab's *Competitor Mentions* Guardrail (a deterministic rather than semantic guardrail), which prevents this from happening.
+Here the Agent lists unique benefits of a competitor airline, which is undesirable. This triggers Cleanlab's *Competitor Mentions* Guardrail (a deterministic rather than semantic guardrail), which prevents this from happening.
 <br><br>
 </details>
 
@@ -273,7 +272,7 @@ As with Guardrails, Cleanlab enables you to easily create Custom Evaluations to 
 
 Cleanlab also provides out-of-the-box Evaluations to help developers root cause issues in your AI system: _difficult query_ (detects when the user request is ambiguous/tricky), _search failure_ (detects when retrieved context is insufficient to answer the user query), _unhelpful_ (detects when the AI response does not attempt to helpfully answer the user query), and _ungrounded_ (detects when the AI response is not grounded in retrieved context).
 
-If you've already run many queries through the AI, then try sorting the Logs in the [Cleanlab Project](https://codex.cleanlab.ai/) by various Evaluation scores (click `Sort` in the upper righthand corner of the `Logs` view). Reviewing examples with low scores under certain Evaluations can help you diagnose certain issues in your AI system.
+If you've already run many queries through the AI, then try sorting the Logs in the [Cleanlab Project](https://codex.cleanlab.ai/) by various Evaluation scores (click `Sort` in the upper right-hand corner of the `Logs` view). Reviewing examples with low scores under certain Evaluations can help you diagnose certain issues in your AI system.
 
 Try asking queries that get flagged by some of these out-of-the-box Evaluations, such as this one:
 
@@ -320,7 +319,7 @@ The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlin
 Frontier Airlines was founded by Frederick W. "Rick" Brown, Janice Brown, and Bob Schulman in 1994.
 ```
 
-After submitting your Remediation, imagine you are different user **by creating a new chat thread** and asking a similar question:
+After submitting your Remediation, imagine you are a different user **by creating a new chat thread** and asking a similar question:
 
 > *list the founders of Frontier Airlines*
 
@@ -363,21 +362,56 @@ In summary, the longest you could be stuck on the tarmac without the option to d
 
 Suppose a Product Leader / SME has quickly decided that the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
 
-Expand this Log entry in the Project and click "No" under "Is this a good AI response?".
+Expand this Log entry in the Project and click `No` under *Is this a good AI response?*.
 
 Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
 
 > *What is the maximum time we might be stuck on the tarmac without being let off*
 
-You'll see that Cleanlab now guardrails the AI, preventing the response that was deemed undesirable.
+You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
+
+#### 4c. AI Guidance
+
+While **Expert Answers** enable your SMEs to control your AI's exact answer to specific types of queries, Cleanlab’s **AI Guidance** enables SMEs to improve your AI across a broader range of related queries, where SMEs may not want to write an explicit answer to each one. If your AI is repeatedly calling the wrong tool, retrieving the wrong article, or misunderstanding certain terminology or acronyms, then you can provide AI Guidance to teach your AI how to better handle these types of cases in the future.
+
+For demonstration purposes, suppose that Frontier Airlines' Disruption Assistance benefit — is informally referred to by customers as the "Peace Pass".
+
+**Try starting a new chat** and asking the example queries below:
+
+> My flight got canceled how to use my Peace Pass benefit?
+
+> does peace pass still work if trip canceled due to weather?
+
+In both cases, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it does not know about the “Peace Pass” is (it may wrongly think this refers to Frontier's GoWild! Pass).
+
+This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better). 
+To create Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above. 
+Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
+
+> Peace Pass is another term for Disruption Assistance
+
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
+Review the suggestion, make any edits if necessary, and click Submit to confirm.
+Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+
+Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
+
+> My flight got canceled how to use my Peace Pass benefit?
+
+> does peace pass still work if trip canceled due to weather?
+
+You’ll now see that the AI provides the correct information about the Disruption Assistance program.
+
+You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project. 
 
 
 ## Conclusion
 
-This demo shows one example AI Agent integrated with the Cleanlab AI Platform. It demonstrates some of the core functionality of the platform, including observability/logging, Guardrails, Evaluations, and Remediations. To efficiently utilize your SMEs, Cleanlab automatically prioiritizes which cases will be highest impact to remediate on the Project's Issues page.
+This demo shows one example of an AI Agent integrated with the Cleanlab AI Platform. It demonstrates some of the core functionality of the platform, including observability/logging, Guardrails, Evaluations, and Remediations. To efficiently utilize your SMEs, Cleanlab automatically prioritizes the cases that will have the highest impact to remediate on the Project's Issues page.
 
 Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easily integrate the Cleanlab AI Platform as a trust/control layer for your own AI applications.
 
+---
 
 ### Additional Examples to Try
 
@@ -414,7 +448,7 @@ The Agent's response is not at all supported by any information in the files it 
 
 ### Updating the Knowledge Base
 
-We pin the shared `data/kb.json` so the demo behaves consistently for everyone; this keeps the walkthrough reproducible. If you want to re-scrape the data yourself, run:
+We pin the shared `data/kb.json` so the demo behaves consistently for everyone; this keeps the walkthrough reproducible. If you want to re-scrape the data yourself, make sure you have [Pandoc](https://pandoc.org/) installed, and then run:
 
 ```bash
 hatch run fetch-pages

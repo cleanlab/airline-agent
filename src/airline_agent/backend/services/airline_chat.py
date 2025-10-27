@@ -38,6 +38,10 @@ from airline_agent.backend.schemas.run_event import (
     RunEventThreadRunFailed,
     RunEventThreadRunInProgress,
 )
+from airline_agent.cleanlab_utils.consult_utils import (
+    consult_cleanlab,
+    update_prompt_with_guidance,
+)
 from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
     run_cleanlab_validation_logging_tools,
@@ -48,6 +52,7 @@ from airline_agent.tools.knowledge_base import KnowledgeBase
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 def create_agent(kb: KnowledgeBase) -> Agent:
@@ -70,8 +75,8 @@ def get_cleanlab_project() -> Project:
 
 
 kb = KnowledgeBase(
-    kb_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/kb.json"),
-    vector_index_path=str(pathlib.Path(__file__).parent.parent.parent.parent.parent / "data/vector-db"),
+    kb_path=str(pathlib.Path(__file__).parents[4] / "data/kb.json"),
+    vector_index_path=str(pathlib.Path(__file__).parents[4] / "data/vector-db"),
 )
 project = get_cleanlab_project()
 agent = create_agent(kb)
@@ -111,7 +116,9 @@ async def airline_chat_streaming(
 
     current_tool_calls: dict[str, ToolCall] = {}
 
-    user_prompt = message.content
+    original_user_query = message.content
+    guidance = consult_cleanlab(original_user_query, thread_to_messages[thread_id])
+    user_prompt = update_prompt_with_guidance(original_user_query, guidance)
 
     nodes = []
     original_message_history = thread_to_messages[thread_id].copy()
@@ -165,11 +172,14 @@ async def airline_chat_streaming(
             if run.result is not None and cleanlab_enabled:
                 updated_message_history, final_response, validation_result = run_cleanlab_validation_logging_tools(
                     project=project,
-                    query=user_prompt,
+                    query=original_user_query,
                     result=run.result,
                     message_history=original_message_history,
                     tools=get_tools_in_openai_format(agent),
                     thread_id=thread_id,
+                    additional_metadata={f"applied_guidance_{i}": guidance for i, guidance in enumerate(guidance)}
+                    if guidance
+                    else None,
                 )
                 yield RunEventThreadMessage(
                     id=run_id,
