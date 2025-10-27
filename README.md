@@ -42,6 +42,7 @@ Once you've completed all the setup steps, to run the demo, do the following:
 1. Run the backend server:
 
     ```console
+    $ cd ..  # run the next command in repo root directory
     $ hatch run backend-server
     ```
 
