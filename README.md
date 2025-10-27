@@ -20,7 +20,10 @@
         ```
         This will create a Project with already configured Guardrails and Evaluations for the walkthrough below.
     2. Populate `CLEANLAB_PROJECT_ID` in your `.env` file using the output from the previous command.
-    3. Open the demo project in your web browser with `hatch run open-project`.
+    3. Open the demo project in your web browser with:
+        ```console
+        $ hatch run open-project
+        ```
 5. Ensure the `data/kb.json` file is in place (this should have been provided to you out-of-band, e.g., with a Google Drive link). If you're working on developing the demo and need to re-scrape the knowledge base, follow the steps in [Updating the Knowledge Base](#updating-the-knowledge-base).
 6. Create the vector database:
     ```console
