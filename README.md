@@ -362,13 +362,13 @@ In summary, the longest you could be stuck on the tarmac without the option to d
 
 Suppose a Product Leader / SME has quickly decided that the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
 
-Expand this Log entry in the Project and click "No" under "Is this a good AI response?".
+Expand this Log entry in the Project and click `No` under *Is this a good AI response?*.
 
 Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
 
 > *What is the maximum time we might be stuck on the tarmac without being let off*
 
-You'll see that Cleanlab now guardrails the AI, preventing the response that was deemed undesirable.
+You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
 #### 4c. AI Guidance
 
