@@ -121,6 +121,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
   const setThreadStatus = useMessagesStore(state => state.setThreadStatus)
 
   const addHistoryThread = useRagAppStore(state => state.addHistoryThread)
+  const updateHistoryThread = useRagAppStore(state => state.updateHistoryThread)
   const [appSettings] = useAppSettings()
 
   // Always use latest cleanlabEnabled in callbacks
@@ -224,6 +225,37 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
     [getOrInitBuffer]
   )
 
+  // Persist the latest buffered messages for a thread into history so that
+  // switching to an inactive, in-progress thread shows up-to-date content.
+  const syncHistoryFromBuffer = useCallback(
+    (threadId: string) => {
+      try {
+        const buffered = threadBuffers.get(threadId) || []
+        if (!buffered.length) return
+        updateHistoryThread({
+          assistantId:
+            appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG,
+          threadId,
+          thread: {
+            messages: buffered.map(msg => ({
+              localId: msg.localId,
+              id: msg.id,
+              role: msg.role,
+              content: msg.content,
+              metadata: msg.metadata || {},
+              isPending: false,
+              isContentPending: false,
+              error: msg.error
+            }))
+          }
+        })
+      } catch (e) {
+        // best-effort; ignore persistence errors during streaming
+      }
+    },
+    [updateHistoryThread, appSettings.assistantId]
+  )
+
   const clearBuffer = useCallback((threadId: string) => {
     threadBuffers.delete(threadId)
   }, [])
@@ -259,6 +291,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
           content: value.content,
           metadata: value.metadata
         })
+        syncHistoryFromBuffer(threadId)
       } else if (value.role === 'assistant') {
         // Handle assistant messages - appendMessage will automatically replace pending message
         const assistantMessage: StoreMessage = {
@@ -273,6 +306,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
           content: value.content,
           metadata: value.metadata
         })
+        syncHistoryFromBuffer(threadId)
         // Don't set status to complete here - wait for thread.run.completed
       }
     },
@@ -280,7 +314,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
       appendMessage,
       setThreadStatus,
       bufferAppendAssistantChunk,
-      bufferAppendTool
+      bufferAppendTool,
+      syncHistoryFromBuffer
     ]
   )
 
@@ -596,6 +631,11 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
           threadId: threadIdToUse,
           seedMessages: currentThread.messages
         })
+        // Seed the per-thread buffer with existing conversation history
+        bufferSeedFromMessages({
+          threadId: threadIdToUse,
+          seedMessages: currentThread.messages
+        })
         // Continue existing conversation - add user message to current thread
         const userMessage: StoreMessage = {
           localId: nanoid(),
@@ -606,6 +646,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         appendMessage({ threadId: threadIdToUse, message: userMessage })
         // Also record in the per-thread buffer for history when stream completes
         bufferAppendUser({ threadId: threadIdToUse, content: messageContent })
+        // Persist new buffered state to history for inactive thread visibility
+        syncHistoryFromBuffer(threadIdToUse)
 
         // Add optimistic assistant placeholder
         const assistantMessage: StoreMessage = {
@@ -637,7 +679,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
       createThreadAndPostMessage,
       isPending,
       bufferAppendUser,
-      bufferSeedFromMessages
+      bufferSeedFromMessages,
+      syncHistoryFromBuffer
     ]
   )
 
@@ -664,13 +707,21 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         isContentPending: true
       }
     })
+    // Keep history in sync for inactive thread visibility
+    syncHistoryFromBuffer(existingThreadId)
     postMessage({
       threadId: existingThreadId,
       localThreadId: currentThread?.localThreadId,
       messageContent: lastUserMessage.content,
       cleanlabEnabled: cleanlabRef.current
     })
-  }, [appendMessage, currentThread, postMessage, bufferSeedFromMessages])
+  }, [
+    appendMessage,
+    currentThread,
+    postMessage,
+    bufferSeedFromMessages,
+    syncHistoryFromBuffer
+  ])
 
   return useMemo(
     () => ({
