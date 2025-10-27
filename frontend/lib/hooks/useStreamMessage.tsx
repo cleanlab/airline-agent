@@ -136,6 +136,33 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
     return buffer
   }, [])
 
+  // Ensure a thread's buffer starts with the existing persisted messages so
+  // toggling threads mid-stream never drops earlier history.
+  const bufferSeedFromMessages = useCallback(
+    ({
+      threadId,
+      seedMessages
+    }: {
+      threadId: string
+      seedMessages?: StoreMessage[]
+    }) => {
+      if (!seedMessages || seedMessages.length === 0) return
+      const buffer = getOrInitBuffer(threadId)
+      if (buffer.length > 0) return
+      // Copy messages without pending flags; buffer should reflect committed history
+      for (const msg of seedMessages) {
+        buffer.push({
+          localId: msg.localId || nanoid(),
+          id: msg.id,
+          role: msg.role,
+          content: msg.content,
+          metadata: msg.metadata ? { ...msg.metadata } : {}
+        })
+      }
+    },
+    [getOrInitBuffer]
+  )
+
   const bufferAppendUser = useCallback(
     ({ threadId, content }: { threadId: string; content: string }) => {
       const buffer = getOrInitBuffer(threadId)
@@ -564,6 +591,11 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         currentThread?.messages &&
         currentThread.messages.length > 0
       ) {
+        // Seed the per-thread buffer with existing conversation history
+        bufferSeedFromMessages({
+          threadId: threadIdToUse,
+          seedMessages: currentThread.messages
+        })
         // Continue existing conversation - add user message to current thread
         const userMessage: StoreMessage = {
           localId: nanoid(),
@@ -604,7 +636,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
       postMessage,
       createThreadAndPostMessage,
       isPending,
-      bufferAppendUser
+      bufferAppendUser,
+      bufferSeedFromMessages
     ]
   )
 
@@ -614,6 +647,11 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
     )
     const existingThreadId = currentThread?.threadId
     if (!lastUserMessage?.content || !existingThreadId) return
+    // Seed buffer with existing history if needed
+    bufferSeedFromMessages({
+      threadId: existingThreadId,
+      seedMessages: currentThread?.messages
+    })
     // Add optimistic assistant placeholder to show loading state
     appendMessage({
       threadId: existingThreadId,
@@ -632,7 +670,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
       messageContent: lastUserMessage.content,
       cleanlabEnabled: cleanlabRef.current
     })
-  }, [appendMessage, currentThread, postMessage])
+  }, [appendMessage, currentThread, postMessage, bufferSeedFromMessages])
 
   return useMemo(
     () => ({
