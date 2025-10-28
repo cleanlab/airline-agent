@@ -483,6 +483,49 @@ The Agent's response is not at all supported by any information in the files it 
 <br><br>
 </details>
 
+> *I got this upgrade offer which has a bid for upgrading my seats. I did make an offer considered low by their bar graph. When is this decided and concluded? Does it occur before or after the 24-hour check-in for the flight. Are you notified of your bid result e.g. It was not sufficient to win or you won.*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+I couldn't find specific details about the timing and notification process for seat upgrade bids on Frontier Airlines. However, typically, airlines will notify you about the outcome of your bid before your flight, often around the time of check-in or shortly before. If your bid is successful, you will be informed and your seat will be upgraded. If not, you will likely receive a notification that your bid was not accepted.
+
+For precise information, I recommend checking your email for any updates from Frontier Airlines or contacting their customer service directly for assistance.
+```
+
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+The Agent's response is not at all supported by any information in the files it found.  Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
+<br><br>
+</details>
+
+> *i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+The Discount Den membership is a separate entity from your flight booking. If you received a Discount Den membership as part of a promotion when booking a flight, canceling the flight within 24 hours should not automatically cancel your Discount Den membership. However, it's important to check the specific terms and conditions of the promotion you received, as there might be unique stipulations.
+
+For general terms, the Discount Den membership provides access to lower fares and other benefits for a year, and it is not typically tied to the status of a specific flight booking. If you have any concerns or specific conditions related to your promotional offer, I recommend reviewing the terms provided at the time of the offer or contacting Frontier Airlines customer service for clarification.
+```
+
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+The user asked about a specific promotional offer, but the AI gave a general response that assumed standard terms for Discount Den memberships. 
+Since the AI has no evidence in its knowledge base about this particular promotion, the response was unsupported. 
+<br><br>
+</details>
+
 > *can i do a seat change on same day of flight*
 
 <details>
