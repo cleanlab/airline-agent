@@ -24,7 +24,7 @@
         ```console
         $ hatch run open-project
         ```
-5. Ensure the `data/kb.json` file is in place (this should have been provided to you out-of-band, e.g., with a Google Drive link). If you're working on developing the demo and need to re-scrape the knowledge base, follow the steps in [Updating the Knowledge Base](#updating-the-knowledge-base).
+5. Download [kb.json](https://cleanlab-public.s3.us-east-1.amazonaws.com/airline-agent/kb.json) and place it in the `data` directory. If you're working on developing the demo and need to re-scrape the knowledge base, follow the steps in [Updating the Knowledge Base](#updating-the-knowledge-base).
 6. Create the vector database:
     ```console
     $ hatch run create-vector-database
