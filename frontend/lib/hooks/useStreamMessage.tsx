@@ -95,6 +95,116 @@ const createInitialMessages = ({
   ] as const satisfies StoreMessage[]
 }
 
+// Global in-memory buffers for in-progress streams keyed by threadId
+const threadBuffers = new Map<string, StoreMessage[]>()
+
+export const getThreadBufferSnapshot = (
+  threadId: string
+): StoreMessage[] | undefined => {
+  const buf = threadBuffers.get(threadId)
+  if (!buf) return undefined
+  // return a shallow copy to avoid accidental mutations
+  return buf.map(m => ({
+    ...m,
+    metadata: m.metadata ? { ...m.metadata } : m.metadata
+  }))
+}
+
+// Module-scoped helpers to avoid recreating callbacks inside the hook
+const getOrInitBuffer = (threadId: string) => {
+  let buffer = threadBuffers.get(threadId)
+  if (!buffer) {
+    buffer = []
+    threadBuffers.set(threadId, buffer)
+  }
+  return buffer
+}
+
+const bufferAppendUser = ({
+  threadId,
+  content
+}: {
+  threadId: string
+  content: string
+}) => {
+  const buffer = getOrInitBuffer(threadId)
+  buffer.push({
+    localId: nanoid(),
+    role: 'user',
+    content,
+    metadata: {}
+  })
+}
+
+const bufferAppendTool = ({
+  threadId,
+  content,
+  metadata
+}: {
+  threadId: string
+  content: any
+  metadata?: any
+}) => {
+  const buffer = getOrInitBuffer(threadId)
+  buffer.push({
+    localId: nanoid(),
+    role: 'tool',
+    content,
+    metadata: metadata || {}
+  })
+}
+
+const bufferAppendAssistantChunk = ({
+  threadId,
+  content,
+  metadata
+}: {
+  threadId: string
+  content: string
+  metadata?: any
+}) => {
+  const buffer = getOrInitBuffer(threadId)
+  const last = buffer[buffer.length - 1]
+  if (last && last.role === 'assistant') {
+    last.content = `${last.content || ''}${content || ''}`
+    last.metadata = { ...(last.metadata || {}), ...(metadata || {}) }
+  } else {
+    buffer.push({
+      localId: nanoid(),
+      role: 'assistant',
+      content: content || '',
+      metadata: metadata || {}
+    })
+  }
+}
+
+const clearThreadBuffer = (threadId: string) => {
+  threadBuffers.delete(threadId)
+}
+
+// Ensure a thread's buffer starts with the existing persisted messages so
+// toggling threads mid-stream never drops earlier history.
+const bufferSeedFromMessages = ({
+  threadId,
+  seedMessages
+}: {
+  threadId: string
+  seedMessages?: StoreMessage[]
+}) => {
+  if (!seedMessages || seedMessages.length === 0) return
+  const buffer = getOrInitBuffer(threadId)
+  if (buffer.length > 0) return
+  for (const msg of seedMessages) {
+    buffer.push({
+      localId: msg.localId || nanoid(),
+      id: msg.id,
+      role: msg.role,
+      content: msg.content,
+      metadata: msg.metadata ? { ...msg.metadata } : {}
+    })
+  }
+}
+
 function useStreamMessage(cleanlabEnabled: boolean = true) {
   const currentThread = useMessagesStore(state => state.currentThread)
   const setCurrentThread = useMessagesStore(state => state.setCurrentThread)
@@ -106,11 +216,43 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
   const setThreadStatus = useMessagesStore(state => state.setThreadStatus)
 
   const addHistoryThread = useRagAppStore(state => state.addHistoryThread)
+  const updateHistoryThread = useRagAppStore(state => state.updateHistoryThread)
   const [appSettings] = useAppSettings()
 
   // Always use latest cleanlabEnabled in callbacks
   const cleanlabRef = useRef(cleanlabEnabled)
   cleanlabRef.current = cleanlabEnabled
+
+  // Persist the latest buffered messages for a thread into history so that
+  // switching to an inactive, in-progress thread shows up-to-date content.
+  const syncHistoryFromBuffer = useCallback(
+    (threadId: string) => {
+      try {
+        const buffered = threadBuffers.get(threadId) || []
+        if (!buffered.length) return
+        updateHistoryThread({
+          assistantId:
+            appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG,
+          threadId,
+          thread: {
+            messages: buffered.map(msg => ({
+              localId: msg.localId,
+              id: msg.id,
+              role: msg.role,
+              content: msg.content,
+              metadata: msg.metadata || {},
+              isPending: false,
+              isContentPending: false,
+              error: msg.error
+            }))
+          }
+        })
+      } catch (e) {
+        // best-effort; ignore persistence errors during streaming
+      }
+    },
+    [updateHistoryThread, appSettings.assistantId]
+  )
 
   const setDone = useCallback(
     (opts: SetOptional<Parameters<typeof setThreadStatus>[0], 'status'>) => {
@@ -138,6 +280,12 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
           metadata: value.metadata || {}
         }
         appendMessage({ threadId, message: toolMessage })
+        bufferAppendTool({
+          threadId,
+          content: value.content,
+          metadata: value.metadata
+        })
+        syncHistoryFromBuffer(threadId)
       } else if (value.role === 'assistant') {
         // Handle assistant messages - appendMessage will automatically replace pending message
         const assistantMessage: StoreMessage = {
@@ -147,10 +295,16 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
           metadata: value.metadata || {}
         }
         appendMessage({ threadId, message: assistantMessage })
+        bufferAppendAssistantChunk({
+          threadId,
+          content: value.content,
+          metadata: value.metadata
+        })
+        syncHistoryFromBuffer(threadId)
         // Don't set status to complete here - wait for thread.run.completed
       }
     },
-    [appendMessage, setThreadStatus]
+    [appendMessage, setThreadStatus, syncHistoryFromBuffer]
   )
 
   const postMessage = useCallback(
@@ -251,6 +405,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                   error: error
                 })
               }
+              clearThreadBuffer(threadId)
               return
             }
 
@@ -291,15 +446,22 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                       }
                     } else if (currentEvent === 'thread.run.completed') {
                       // Save history when stream completes
-                      // Get all messages from the current thread to save complete conversation
-                      const currentThread = bareStore.getState().currentThread
-                      if (currentThread && currentThread.messages) {
-                        // Find the first user message for the title
-                        const firstUserMessage = currentThread.messages.find(
+                      // Use per-thread buffer (avoids cross-thread clobbering)
+                      const bufferedMessages = threadBuffers.get(threadId) || []
+
+                      // Fall back to currentThread only if it matches, otherwise keep buffer
+                      const possibleThread = bareStore.getState().currentThread
+                      const sourceMessages =
+                        possibleThread?.threadId === threadId &&
+                        possibleThread?.messages?.length
+                          ? possibleThread.messages
+                          : bufferedMessages
+
+                      if (sourceMessages && sourceMessages.length) {
+                        const firstUserMessage = sourceMessages.find(
                           m => m.role === 'user'
                         )
-                        // Find the last assistant message for the snapshot
-                        const lastAssistantMessage = currentThread.messages
+                        const lastAssistantMessage = sourceMessages
                           .filter(m => m.role === 'assistant')
                           .pop()
 
@@ -333,19 +495,20 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                                     metadata: {}
                                   }
                                 },
-                            messages: currentThread.messages.map(msg => ({
+                            messages: sourceMessages.map(msg => ({
                               localId: msg.localId,
                               id: msg.id,
                               role: msg.role,
                               content: msg.content,
                               metadata: msg.metadata,
-                              isPending: false, // Ensure saved messages are not pending
-                              isContentPending: false, // Ensure saved messages are not content pending
+                              isPending: false,
+                              isContentPending: false,
                               error: msg.error
                             }))
                           })
                         }
                       }
+                      clearThreadBuffer(threadId)
                       setDone({ threadId, localThreadId })
                       return
                     } else if (currentEvent === 'thread.run.failed') {
@@ -354,6 +517,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                         error: { message: 'Run failed', canRetry: true },
                         status: CurrentThreadStatus.failed
                       })
+                      clearThreadBuffer(threadId)
                       return
                     }
                   } catch (e) {
@@ -423,6 +587,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         isPending: true,
         status: CurrentThreadStatus.threadPending
       })
+      // Track the initiating user message for this thread in the buffer
+      bufferAppendUser({ threadId: localThreadId, content: messageContent })
       // Immediately post to backend and treat this as a standalone Q+A thread
       window?.history.pushState({}, '', getChatPath(localThreadId))
       postMessage({
@@ -432,7 +598,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         cleanlabEnabled: cleanlabRef.current
       })
     },
-    [addHistoryThread, setCurrentThread, postMessage]
+    [addHistoryThread, setCurrentThread, postMessage, bufferAppendUser]
   )
 
   const sendMessage = useCallback(
@@ -448,6 +614,11 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         currentThread?.messages &&
         currentThread.messages.length > 0
       ) {
+        // Seed the per-thread buffer with existing conversation history
+        bufferSeedFromMessages({
+          threadId: threadIdToUse,
+          seedMessages: currentThread.messages
+        })
         // Continue existing conversation - add user message to current thread
         const userMessage: StoreMessage = {
           localId: nanoid(),
@@ -456,6 +627,10 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
           metadata: {}
         }
         appendMessage({ threadId: threadIdToUse, message: userMessage })
+        // Also record in the per-thread buffer for history when stream completes
+        bufferAppendUser({ threadId: threadIdToUse, content: messageContent })
+        // Persist new buffered state to history for inactive thread visibility
+        syncHistoryFromBuffer(threadIdToUse)
 
         // Add optimistic assistant placeholder
         const assistantMessage: StoreMessage = {
@@ -485,7 +660,8 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
       appendMessage,
       postMessage,
       createThreadAndPostMessage,
-      isPending
+      isPending,
+      syncHistoryFromBuffer
     ]
   )
 
@@ -495,6 +671,11 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
     )
     const existingThreadId = currentThread?.threadId
     if (!lastUserMessage?.content || !existingThreadId) return
+    // Seed buffer with existing history if needed
+    bufferSeedFromMessages({
+      threadId: existingThreadId,
+      seedMessages: currentThread?.messages
+    })
     // Add optimistic assistant placeholder to show loading state
     appendMessage({
       threadId: existingThreadId,
@@ -507,13 +688,15 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         isContentPending: true
       }
     })
+    // Keep history in sync for inactive thread visibility
+    syncHistoryFromBuffer(existingThreadId)
     postMessage({
       threadId: existingThreadId,
       localThreadId: currentThread?.localThreadId,
       messageContent: lastUserMessage.content,
       cleanlabEnabled: cleanlabRef.current
     })
-  }, [appendMessage, currentThread, postMessage])
+  }, [appendMessage, currentThread, postMessage, syncHistoryFromBuffer])
 
   return useMemo(
     () => ({

@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils/tailwindUtils'
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { CurrentThreadStatus } from '../lib/hooks/useStreamMessage'
+import { getThreadBufferSnapshot } from '../lib/hooks/useStreamMessage'
 import type { CurrentThread } from '../stores/messages-store'
 import { PromptForm } from './prompt-form'
 import { ChatInputPanel } from './design-system-components/ChatInputPanel'
@@ -105,12 +106,25 @@ export function Chat({
       setCurrentThread(undefined)
       return
     }
-    // Prefer initialMessages if provided, otherwise try to hydrate from snapshot
+    // Prefer initialMessages if provided
     if (initialMessages && initialMessages.length) {
       setCurrentThread({
         threadId: threadId,
         messages: initialMessages,
         status: CurrentThreadStatus.complete
+      })
+      return
+    }
+    // If a stream is in progress for this thread, prefer hydrating from
+    // the live buffer BEFORE falling back to snapshot. Snapshot at creation
+    // time contains an empty assistant and would hide loading state.
+    const inProgressBufferSnapshot = getThreadBufferSnapshot(threadId)
+    if (inProgressBufferSnapshot && inProgressBufferSnapshot.length > 0) {
+      setCurrentThread({
+        threadId: threadId,
+        messages: inProgressBufferSnapshot,
+        isPending: true,
+        status: CurrentThreadStatus.responsePending
       })
       return
     }
