@@ -526,6 +526,26 @@ Since the AI has no evidence in its knowledge base about this particular promoti
 <br><br>
 </details>
 
+> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
+```
+
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+The AI retrieves the relevant article about bag size, /help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags.
+However, /help/what-is-included-in-my-fare specifies that each traveler is allowed one personal item, therefore the size requirement applies to that single personal item and not multiple combined items. 
+<br><br>
+</details>
+
 > *can i do a seat change on same day of flight*
 
 <details>
