@@ -92,7 +92,7 @@ AI Response with Cleanlab:
 <Same as AI Response without Cleanlab>
 ```
 
-The agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from `/help/do-you-allow-pets-on-the-plane`. Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from `/help/do-you-allow-pets-on-the-plane`. Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
 <br><br>
 </details>
 
@@ -103,11 +103,41 @@ Additional examples you can try:
 
 > *My flight got canceled, can I get a refund?*
 
-Source: `/help/do-i-get-a-refund-if-my-flight-is-changed-or-cancelled-by-frontier`
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+If your Frontier flight was canceled and you did not take a rebooked flight, you are eligible for a refund. Refunds will be issued to the original form of payment either upon request or automatically after the scheduled departure date. The refund process typically takes up to seven business days. You can expedite the process by using Frontier's online portal to request your refund.
+```
+
+```text
+AI Response with Cleanlab:
+<Same as AI Response without Cleanlab>
+```
+
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from `/help/do-i-get-a-refund-if-my-flight-is-changed-or-cancelled-by-frontier`. Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+<br><br>
+</details>
 
 > *Max carry-on size for domestic flight?*
 
-Source: `/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+For domestic flights with Frontier Airlines, the maximum size for a carry-on bag is 24 inches in height, 16 inches in width, and 10 inches in depth. The carry-on bag should also weigh no more than 35 pounds. It must fit in the overhead bin or under the seat.
+```
+
+```text
+AI Response with Cleanlab:
+<Same as AI Response without Cleanlab>
+```
+
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from `/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`. Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+<br><br>
+</details>
 
 ### 2. Real-Time Guardrails
 
@@ -450,6 +480,27 @@ I'm sorry, but I don't have the information you're looking for. Please rephrase 
 ```
 
 The Agent's response is not at all supported by any information in the files it found.  Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
+<br><br>
+</details>
+
+> *can i do a seat change on same day of flight*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+Yes, you can change your seat on the same day of your flight with Frontier Airlines. If you wish to change to an earlier flight on your day of travel, you can do so by contacting an airport agent, subject to seat availability. A same-day change fee and any difference in fare and options prices will apply. This allows you to fly to your original destination or to an equivalent destination.
+```
+
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+The AI response was based on information about same-day flight changes.
+However, this policy differs from changing a seat on the same flight.
+The agent should have instead referenced `/help/do-i-have-to-purchase-a-seat-assignment` and clarified that the latest time to purchase and select a seat is during check-in.
 <br><br>
 </details>
 
