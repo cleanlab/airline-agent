@@ -567,6 +567,28 @@ The agent should have instead referenced `/help/do-i-have-to-purchase-a-seat-ass
 <br><br>
 </details>
 
+> *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
+```
+
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+Under U.S. federal law, marijuana, including all THC products (e.g., edibles, concentrates, or vape pens), remains illegal to possess or transport across state or federal jurisdictions, regardless of prescription status or local legalization. 
+The Transportation Security Administration (TSA) enforces federal law, and travelers found with THC products may face potential criminal charges.
+Cleanlab’s guardrail prevented the AI from giving unlawful travel guidance.
+
+<br><br>
+</details>
+
 ---
 
 ## Developer Notes
