@@ -118,11 +118,11 @@ export function Chat({
     // If a stream is in progress for this thread, prefer hydrating from
     // the live buffer BEFORE falling back to snapshot. Snapshot at creation
     // time contains an empty assistant and would hide loading state.
-    const buffered1 = getThreadBufferSnapshot(threadId)
-    if (buffered1 && buffered1.length > 0) {
+    const inProgressBufferSnapshot = getThreadBufferSnapshot(threadId)
+    if (inProgressBufferSnapshot && inProgressBufferSnapshot.length > 0) {
       setCurrentThread({
         threadId: threadId,
-        messages: buffered1,
+        messages: inProgressBufferSnapshot,
         isPending: true,
         status: CurrentThreadStatus.responsePending
       })
@@ -174,18 +174,6 @@ export function Chat({
         })
         return
       }
-    }
-    // If we have an in-progress stream for this thread, hydrate from buffer so
-    // partial content and loading state are visible while switching between threads
-    const liveBufferSnapshot = getThreadBufferSnapshot(threadId)
-    if (liveBufferSnapshot && liveBufferSnapshot.length > 0) {
-      setCurrentThread({
-        threadId: threadId,
-        messages: liveBufferSnapshot,
-        isPending: true,
-        status: CurrentThreadStatus.responsePending
-      })
-      return
     }
     setCurrentThread(undefined)
   }, [historySnapshot, initialMessages, setCurrentThread, threadId])
