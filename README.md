@@ -589,6 +589,40 @@ Cleanlab’s guardrail prevented the AI from giving unlawful travel guidance.
 <br><br>
 </details>
 
+#### To showcase AI Guidance
+
+> *can i bring my emotional support dog on a domestic flight*
+
+> *can i bring my dog on a domestic flight for emotional supprt?*
+
+<details>
+  <summary>Learn More</summary>
+
+The AI retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not accept emotional support animals as service animals.
+However, this answer can be improved if the AI also retrieved `/help/do-you-allow-pets-on-the-plane`.
+Then, the AI would be able to answer that the passenger may still bring their pet on the plane if they follow some guidelines and pay a one-way fee.
+
+To create Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above. 
+Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
+
+> If the user mentions animals, you should call get\_article with these 2 titles: /help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane and /help/do-you-allow-pets-on-the-plane.
+
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
+Review the suggestion, make any edits if necessary, and click Submit to confirm.
+Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+
+Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
+
+> *can i bring my emotional support dog on a domestic flight*
+
+> *can i bring my dog on a domestic flight for emotional support?*
+
+You’ll now see that the AI also mentions that domesticated pets are allowed on the flight. This improvement is especially helpful if the passenger actually meant they wanted to bring their pet, but mentioned “emotional support” as justification.
+
+You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project. 
+<br><br>
+</details>
+
 ---
 
 ## Developer Notes
