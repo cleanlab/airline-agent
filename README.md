@@ -60,7 +60,6 @@ Then, open the frontend at <http://localhost:3000>.
 This demo AI is a conversational Agent for Frontier Airlines customer support. The Agent is run using the Pydantic AI framework and OpenAI LLM.
 This Agent has access to tools that allow it to search airline policy documents, retrieve articles, browse directories, etc.
 The underlying data served from these tools is real data that we scraped from the Frontier Airlines' website.
-We’ll ask the Agent questions based on this data, citing the relevant article title from `kb.json` so you can verify each answer using Cmd/Ctrl + F.
 
 This demo AI Agent is connected to a [Cleanlab Project](https://codex.cleanlab.ai/). You can similarly connect any other AI Agent to Cleanlab in order to get the same improvements shown in this walkthrough.
 
@@ -92,7 +91,7 @@ AI Response with Cleanlab:
 <Same as AI Response without Cleanlab>
 ```
 
-The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from `/help/do-you-allow-pets-on-the-plane`. Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct by searching for `/help/do-you-allow-pets-on-the-plane` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane)). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
 <br><br>
 </details>
 
@@ -116,7 +115,7 @@ AI Response with Cleanlab:
 <Same as AI Response without Cleanlab>
 ```
 
-The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from `/help/do-i-get-a-refund-if-my-flight-is-changed-or-cancelled-by-frontier`. Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct by searching for `/help/do-i-get-a-refund-if-my-flight-is-changed-or-cancelled-by-frontier` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/do-i-get-a-refund-if-my-flight-is-changed-or-cancelled-by-frontier)). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
 <br><br>
 </details>
 
@@ -135,7 +134,7 @@ AI Response with Cleanlab:
 <Same as AI Response without Cleanlab>
 ```
 
-The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from `/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`. Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct by searching for `/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags)). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
 <br><br>
 </details>
 
@@ -161,7 +160,7 @@ AI Response (guardrailed and prevented by Cleanlab):
 Donating your miles to non-profit charitable organizations is considered an accrual activity, which means it can help prevent your miles from expiring. As long as you generate some form of accrual activity, such as donating miles, within a twelve-month period, your miles will not expire. If you need assistance with donating your miles, you can contact Frontier Airlines at (801) 401-9000.
 ```
 
-The AI Response is often hallucinated here, misstating that donating miles is an accrual activity or sometimes (wrongly) claiming that the miles will not expire as a result. Frontier's `/help/do-travel-miles-expire` page reveals that the correct answer should be: *"Donating miles is not considered an accrual activity, and will therefore not prevent your remaining miles from expiring"* (since the accrual activity definition does not include donations and regular accrual activity is required to prevent miles from expiring).
+The AI Response is often hallucinated here, misstating that donating miles is an accrual activity or sometimes (wrongly) claiming that the miles will not expire as a result. You can verify yourself that the AI Response was incorrect by searching for `/help/do-travel-miles-expire` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/do-travel-miles-expire)). The article reveals that the correct answer should be: *"Donating miles is not considered an accrual activity, and will therefore not prevent your remaining miles from expiring"* (since the accrual activity definition does not include donations and regular accrual activity is required to prevent miles from expiring).
 <br><br>
 </details>
 
