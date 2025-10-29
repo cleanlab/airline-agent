@@ -500,8 +500,7 @@ AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 ```
 
-The user asked about a specific promotional offer, but the AI gave a general response that assumed standard terms for Discount Den memberships. 
-Since the AI has no evidence in its knowledge base about this particular promotion, the response was unsupported. 
+The Agent has no information regarding this promotion in its knowledge base, yet it implicitly endorses a potential exploit of the promotional terms by reassuring the user that “undoing” the accrual activity would not affect the Discount Den membership earned via the promotion. Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
 <br><br>
 </details>
 
