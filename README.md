@@ -561,9 +561,7 @@ AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 ```
 
-The AI response was based on information about same-day flight changes.
-However, this policy differs from changing a seat on the same flight.
-The agent should have instead referenced `/help/do-i-have-to-purchase-a-seat-assignment` and clarified that the latest time to purchase and select a seat is during check-in.
+Here the AI response incorrectly focuses on same-day flight changes, when the customer was merely asking to change their seat on the same flight.  The Agent should have referenced the `/help/do-i-have-to-purchase-a-seat-assignment` document, and clarified that the latest time to select a seat is during check-in.
 <br><br>
 </details>
 
