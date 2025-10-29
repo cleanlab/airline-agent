@@ -568,21 +568,29 @@ Cleanlab’s guardrail prevented the AI from giving unlawful travel guidance.
 
 #### To showcase AI Guidance
 
-> *can i bring my emotional support dog on a domestic flight*
+> *can i bring a dog with me on a flight?*
 
-> *can i bring my dog on a domestic flight for emotional supprt?*
+> *can i bring my emotional support dog with me on a domestic flight?*
 
 <details>
   <summary>Learn More</summary>
 
-The AI retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not accept emotional support animals as service animals.
+  > *can i bring a dog with me on a flight?*
+
+The AI retrieves `/help/do-you-allow-pets-on-the-plane` instead and mentions that only service animals are allowed on international flights.
+However, this answer can be improved if the AI first clarified if the passenger is flying domestic or international.
+If the flight is international, the AI should also retrieve `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and explain the requirements for service animals.
+
+> *can i bring my emotional support dog with me on a domestic flight?*
+
+The AI retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not recognize emotional support animals as service animals.
 However, this answer can be improved if the AI also retrieved `/help/do-you-allow-pets-on-the-plane`.
-Then, the AI would be able to answer that the passenger may still bring their pet on the plane if they follow some guidelines and pay a one-way fee.
+By including that article, the AI could explain that the passenger may still bring their dog on board if they comply with Frontier’s Pet Policy.
 
-To create Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above. 
-Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
+To create Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above. 
+Select `No` under *Is this a good AI response?* and provide the following explanation in the `Reason` field:
 
-> If the user mentions animals, you should call get\_article with these 2 titles: /help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane and /help/do-you-allow-pets-on-the-plane.
+> If a user asks about bringing an animal on a flight, first confirm if the flight is international and if the animal is a service animal. Then call get_article with /help/do-you-allow-pets-on-the-plane. If either condition applies, also call get_article with /help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane. Use all retrieved articles in your response.
 
 After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
@@ -590,11 +598,23 @@ Once saved, this AI Guidance is automatically supplied to your AI system the nex
 
 Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
 
-> *can i bring my emotional support dog on a domestic flight*
+> *can i bring a dog with me on a flight?*
 
-> *can i bring my dog on a domestic flight for emotional support?*
+... after Agent responds, you can then ask a follow-up question ...
 
-You’ll now see that the AI also mentions that domesticated pets are allowed on the flight. This improvement is especially helpful if the passenger actually meant they wanted to bring their pet, but mentioned “emotional support” as justification.
+> *its an international flight. and its a service animal*
+
+You’ll now see that the AI also retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and includes more details about service animal requirements.
+In contrast, if you followed up with:
+
+> *its a domestic flight. and its a house pet*
+
+The AI will instead reference `/help/do-you-allow-pets-on-the-plane` and tailor its response accordingly.
+This new Guidance ensures the AI combines both articles when appropriate, resulting in a more complete and personalized user experience.
+
+> *can i bring my emotional support dog with me on a domestic flight?*
+
+In this case, because the user’s question already specifies both the type of flight and the kind of animal, the AI skips asking a clarifying question. You’ll also notice that the AI now adds information that domesticated pets are allowed on the flight. This helps clarify that while emotional support animals are not treated as service animals, pets may still travel under the standard Pet Policy.
 
 You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project. 
 <br><br>
