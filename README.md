@@ -1,5 +1,8 @@
 # Airline Support Agent
 
+This repository contains an example of a production-grade AI Agent that is integrated with the [Cleanlab AI Platform](https://codex.cleanlab.ai/). Cleanlab is a trust/control layer for *any* AI Agent, helping you automatically **detect** incorrect responses from your AI and **remediate** them via human-in-the-loop workflows. This self-contained demo illustrates the platform's basic capabilities; Cleanlab's technology is also used in other LLM applications like [RAG](https://github.com/cleanlab/cleanlab-platform-demo) and [Data Extraction](https://help.cleanlab.ai/tlm/use-cases/tlm_data_extraction/).
+
+
 ## Setup
 
 1. Install [Hatch](https://hatch.pypa.io/), a Python project manager ([installation instructions](https://hatch.pypa.io/latest/install/)).
@@ -37,7 +40,7 @@
 
 ## Usage
 
-Once you've completed all the setup steps, to run the demo, do the following:
+Once set up, you can launch the demo and interact with the AI Agent:
 
 1. Run the backend server:
 
@@ -46,25 +49,25 @@ Once you've completed all the setup steps, to run the demo, do the following:
     $ hatch run backend-server
     ```
 
-2. Run the frontend:
+2. Run the frontend (in a separate terminal window from the backend):
 
     ```console
     $ cd frontend
     $ npm run dev
     ```
 
-Then, open the frontend at <http://localhost:3000>.
+The demo AI app's UI (chat interface) will be available at <http://localhost:3000>.
 
 ## Walkthrough
 
-This demo AI is a conversational Agent for Frontier Airlines customer support. The Agent is run using the Pydantic AI framework and OpenAI LLM. This Agent has access to tools that allow it to search airline policy documents, retrieve articles, browse directories, etc. The underlying data served from these tools is real data that we scraped from the Frontier Airlines' website.
+This demo AI is a conversational Agent for Frontier Airlines customer support. The Agent is run using the [Pydantic AI framework](https://ai.pydantic.dev/) and OpenAI LLM. This Agent has access to tools that allow it to search airline policy documents, retrieve articles, browse directories, etc. The underlying data served from these tools is real data obtained from the Frontier Airlines website.
 
-This demo AI Agent is connected to a [Cleanlab Project](https://codex.cleanlab.ai/). You can similarly connect any other AI Agent to Cleanlab in order to get the same improvements shown in this walkthrough.
+This demo AI Agent is connected to a [Cleanlab Project](https://codex.cleanlab.ai/). You can similarly connect *any* other AI Agent to Cleanlab in order to get the same benefits shown in this walkthrough.
 
 ### 1. Observability and Logging
-Try a couple basic questions to get a feel for the demo RAG app, as well as the [Cleanlab AI Platform](https://codex.cleanlab.ai/projects). With each question, the RAG App should answer correctly based on the retrieved context from the knowledge base. Feel free to look at either the tool returns for that context or the "Context" section directly in Codex to confirm the correct answer.
+Try a couple basic questions to get a feel for this AI Agent, as well as the [Cleanlab AI Platform](https://codex.cleanlab.ai/projects). Imagine you are a Frontier Airlines customer, and the Agent should be able to answer your questions by calling the right tools and properly searching its knowledge base.
 
-Here is an idea for questions you can ask:
+Here are some ideas for questions you can ask:
 
 > *Can I bring my cat on a domestic flight?*
 
@@ -89,11 +92,11 @@ AI Response with Cleanlab:
 <Same as AI Response without Cleanlab>
 ```
 
-The agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Project's Log), you can see that the Agent relied on this clear information that it was able to find.
 <br><br>
 </details>
 
-As you ask questions, you'll see log lines being populated in the connected [Cleanlab Project](https://codex.cleanlab.ai/) (which you can find by navigating to the "Logs" page using the sidebar). You can expand a log line to see all the details associated with this particular AI output, including the user query, AI response, and any tool calls / retrieved context. In this demo, only the Agent's final response to the user is validated by Cleanlab, although in other Agents, Cleanlab can also guardrail and improve tool calling.
+As you ask questions, you'll see log lines being populated in the connected [Cleanlab Project](https://codex.cleanlab.ai/) (which you can find by navigating to the `Logs` page using the sidebar, and clicking `Refresh` after the Agent responded to your question). You can expand a log line to see all the details associated with this particular AI output, including the user query, AI response, chat history, and any tool calls / retrieved context. In this demo, only the Agent's final response to the user is validated by Cleanlab, although in other Agents, Cleanlab can also guardrail and improve tool calling. Run this walkthrough with two browser windows open: one with the AI Agent chat interface, and one showing the connected [Cleanlab Project](https://codex.cleanlab.ai/) where you can see how the original Agent would've behaved without Cleanlab integrated.
 
 
 Additional examples you can try:
@@ -104,11 +107,13 @@ Additional examples you can try:
 
 ### 2. Real-Time Guardrails
 
-Cleanlab's Guardrails help prevent bad responses from your AI app, such as inappropriate statements which pose brand risk or inaccurate answers which erode user trust. Guardrails check every input/output of your AI and, when triggered, can override your AI's response (e.g., replacing a hallucination with a fallback answer).
+Cleanlab's Guardrails help detect and prevent bad responses from your AI app, such as inappropriate statements which pose brand risk or inaccurate answers which erode user trust. Guardrails check every input/output of your AI and, when triggered, can override your AI's response (e.g., replacing a hallucination with a fallback answer).
 
 #### 2a. Out-of-the-box Guardrails
 
-Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails help prevent incorrect/untrustworthy responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking some questions which might elicit incorrect responses from the baseline AI system (keeping in mind the AI's knowledge base).
+Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails help prevent incorrect responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking questions which might elicit incorrect responses from this Agent (keeping in mind this Agent's knowledge base, tools, and capabilities). 
+
+After asking each query, refresh the Project Logs and expand the log entry to see how the Agent would have responded without Cleanlab’s intervention. In the expanded log entry, you can find Cleanlab's trustworthiness score for this response and `View trustworthiness explanation`.
 
 **Try starting a new chat and asking *one* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
@@ -150,19 +155,13 @@ This AI Response is hallucinated, and may cause the customer to inadvertently lo
 </details>
 
 
-**Note**: The AI (OpenAI's GPT-4o model) is nondeterministic, so these examples can occasionally not elicit hallucinated responses. Cleanlab is [benchmarked](https://cleanlab.ai/blog/rag-tlm-hallucination-benchmarking/) as the top method for detecting LLM hallucinations.
+**Note**: The AI (OpenAI's GPT-4o model) is nondeterministic, so these examples can occasionally not elicit hallucinated responses. Cleanlab is [benchmarked](https://cleanlab.ai/blog/rag-tlm-hallucination-benchmarking/) as the top method for detecting LLM hallucinations in real-time.
 
-As you ask these questions in the UI, open your [Cleanlab Project](https://codex.cleanlab.ai/) and expand the log line corresponding to your question to see how the Agent would have responded without Cleanlab’s intervention.
-
-Here, you’ll find detailed validation data including trust scores and any Guardrails and Evaluations Cleanlab has calculated. Reviewing these metrics helps you intelligently fine-tune your Guardrail thresholds for optimal performance.
-
-Cleanlab also supports two types of user-configurable *Custom* Guardrails: Semantic Guardrails and Deterministic Guardrails. If you are using a demo [Cleanlab Project](https://codex.cleanlab.ai/) we supplied, it will have some custom Guardrails pre-populated.
+Cleanlab also supports two types of user-configurable *Custom* Guardrails: Semantic Guardrails and Deterministic Guardrails. If you are using a demo [Cleanlab Project](https://codex.cleanlab.ai/) we supplied, it might have some custom Guardrails pre-configured.
 
 #### 2b. Semantic Guardrails
 
-Cleanlab supports creating Guardrails described in natural language. The [Cleanlab Project](https://codex.cleanlab.ai/) already has some Custom Guardrails that we created for this demo.
-
-Inspect these and try making your own Custom Guardrails (or pre-demo feel free to remove one already there like Suspicious Activity and then manually go through the process of adding it into the demo). Then query your AI to see how Cleanlab Guardrails have made it safer.
+Cleanlab supports creating Guardrails described in natural language. Inspect some Custom Guardrails that we pre-configured in your [Project]](https://codex.cleanlab.ai/) and try making your own Custom Guardrails. Then query the Agent to see how these Guardrails have made it safer.
 
 **Try starting a new chat and asking *one or more* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
@@ -232,11 +231,11 @@ Here the Agent leaks internal system details. This triggers Cleanlab's *Suspicio
 
 #### 2c. Deterministic Guardrails
 
-Cleanlab also supports Deterministic Guardrails: type in a natural-language description of concerning phrases you'd like to detect, and Cleanlab will intelligently compile regex patterns, which then deterministically match inputs/outputs to your AI app. Here's an example of a Deterministic Guardrail.
+Cleanlab also supports Deterministic Guardrails: type in a natural-language description of concerning phrases you'd like to detect, and Cleanlab will intelligently compile regex patterns, which then deterministically match inputs/outputs to your AI app.
 
 **Try starting a new chat and asking the following questions below to explore how Cleanlab validates responses for another new customer:**
 
-Try creating (if it doesn't already exist) a Deterministic Guardrail called "Competitor mentions" with the Guardrail Criteria set to "Mentions the names of competitors of Frontier" and activating it on "Query," then query your AI. Here is a relevant example to get you started:
+Try creating (if it doesn't already exist) a Deterministic Guardrail called "Competitor mentions" with the Guardrail Criteria set to "Mentions the names of competitors of Frontier" and focusing it on "Query". After that, here is a query you can try asking the Agent:
 
 > *Compare Frontier to Southwest Airlines flight experiences*
 
@@ -271,12 +270,12 @@ Here the Agent lists unique benefits of a competitor airline, which is undesirab
 ### 3. Offline Evaluations
 
 Cleanlab also provides offline Evaluations that are like Semantic Guardrails, but do not run in real-time.
-Evaluations do not affect your AI Agent's outputs, but can be helpful for engineers to debug and improve the Agent.
+Evaluations do not affect your Agent's outputs, but can be helpful for engineers to debug and improve the Agent.
 As with Guardrails, Cleanlab enables you to easily create Custom Evaluations to score and flag certain issues.
 
 Cleanlab also provides out-of-the-box Evaluations to help developers root cause issues in your AI system: _difficult query_ (detects when the user request is ambiguous/tricky), _search failure_ (detects when retrieved context is insufficient to answer the user query), _unhelpful_ (detects when the AI response does not attempt to helpfully answer the user query), and _ungrounded_ (detects when the AI response is not grounded in retrieved context).
 
-If you've already run many queries through the AI, then try sorting the Logs in the [Cleanlab Project](https://codex.cleanlab.ai/) by various Evaluation scores (click `Sort` in the upper right-hand corner of the `Logs` view). Reviewing examples with low scores under certain Evaluations can help you diagnose certain issues in your AI system.
+If you've already run many queries through the Agent, then try sorting the Logs in the [Cleanlab Project](https://codex.cleanlab.ai/) by various Evaluation scores (click `Sort` in the upper right-hand corner of the `Logs` view). Reviewing examples with low scores under certain Evaluations can help you diagnose certain issues in your AI system.
 
 Try asking queries that get flagged by some of these out-of-the-box Evaluations, such as this one:
 
@@ -306,12 +305,12 @@ This feature is especially useful for AI applications such as customer support (
 
 Put on your SME hat and open up the "Issues" page for your [Cleanlab Project](https://codex.cleanlab.ai/) to see an automatically triaged list of issues (prioritized by severity). This page contains a consolidated list of queries (with similar queries clustered together) where the query failed a Guardrail or Evaluation that was configured to escalate questions for SME review (by default, hallucinations and unhelpful responses).
 
-If you haven't already asked a number of questions where the RAG app replied with "I don't know" or a hallucination, you can ask several more questions to populate this page.
+If you haven't already asked a number of questions where the Agent replied with "I don't know" or a hallucination, you can ask several more questions to populate this page.
 
 #### 4a. Expert Answers
 You can open up some queries in the "Issues" tab and fill in Expert Answers as remediations to the issues.
 
-These answers are integrated into the RAG app as a semantic cache, so when anyone asks a similar question in the future, it'll be answered correctly thanks to the expert answer. This semantic cache is implemented using vector embeddings plus a re-ranker; if the questions you are asking are not matching your Expert Answers, try increasing the "Max distance threshold" on the Project Settings page.
+These answers are integrated into the Agent as a semantic cache, so when anyone asks a similar question in the future, it'll be answered correctly thanks to the expert answer. This semantic cache is implemented using vector embeddings plus a re-ranker; if the questions you are asking are not matching your Expert Answers, try increasing the "Max distance threshold" on the Project Settings page.
 
 Here's a concrete query we asked above that you can either try again or look up in the Project's Issues page:
 
@@ -417,15 +416,15 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 ---
 
-### Additional Examples to Try
+### Additional Examples You Can Try
 
-#### To showcase Topic Restriction guardrail
+#### To explore Topic Restriction guardrail
 
 > *Who is in charge of the plane?*
 
 > *I'm dizzy should i still fly tmr?*
 
-#### To showcase trust scoring
+#### To explore trust scoring
 
 > *If theres no overhead bin space for my carry on must i pay extra to check it?*
 
