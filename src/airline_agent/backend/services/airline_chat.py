@@ -117,15 +117,17 @@ async def airline_chat_streaming(
     current_tool_calls: dict[str, ToolCall] = {}
 
     original_user_query = message.content
-    guidance = consult_cleanlab(original_user_query, thread_to_messages[thread_id])
-    user_prompt = update_prompt_with_guidance(original_user_query, guidance)
+    if cleanlab_enabled:
+        guidance = consult_cleanlab(original_user_query, thread_to_messages[thread_id])
+        user_prompt = update_prompt_with_guidance(original_user_query, guidance)
+    else:
+        guidance = []
+        user_prompt = original_user_query
 
-    nodes = []
     original_message_history = thread_to_messages[thread_id].copy()
     try:
         async with agent.iter(user_prompt=user_prompt, message_history=original_message_history) as run:
             async for node in run:
-                nodes.append(node)
                 if isinstance(node, CallToolsNode):
                     response = node.model_response
                     if response.finish_reason == "tool_call":
