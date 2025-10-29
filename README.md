@@ -541,8 +541,7 @@ AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 ```
 
-The AI retrieves the relevant article about bag size, /help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags.
-However, /help/what-is-included-in-my-fare specifies that each traveler is allowed one personal item, therefore the size requirement applies to that single personal item and not multiple combined items. 
+Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
 <br><br>
 </details>
 
