@@ -121,7 +121,6 @@ async def airline_chat_streaming(
         guidance = consult_cleanlab(original_user_query, thread_to_messages[thread_id])
         user_prompt = update_prompt_with_guidance(original_user_query, guidance)
     else:
-        guidance = []
         user_prompt = original_user_query
 
     original_message_history = thread_to_messages[thread_id].copy()
