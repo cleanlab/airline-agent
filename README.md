@@ -60,7 +60,7 @@ The demo AI app's UI (chat interface) will be available at <http://localhost:300
 
 ## Walkthrough
 
-This demo AI is a conversational Agent for Frontier Airlines customer support. The Agent is run using the [Pydantic AI framework](https://ai.pydantic.dev/) and OpenAI LLM. This Agent has access to tools that allow it to search airline policy documents, retrieve articles, browse directories, etc. The underlying data served from these tools is real data obtained from the Frontier Airlines website.
+This demo AI is a conversational Agent for Frontier Airlines customer support. The Agent is run using the [Pydantic AI framework](https://ai.pydantic.dev/) and OpenAI LLM. This Agent has access to tools that allow it to search airline policy documents, retrieve articles, browse directories, etc. The underlying data served from these tools is real data obtained from the [Frontier Airlines website](https://faq.flyfrontier.com/help).
 
 This demo AI Agent is connected to a [Cleanlab Project](https://codex.cleanlab.ai/). You can similarly connect *any* other AI Agent to Cleanlab in order to get the same benefits shown in this walkthrough.
 
