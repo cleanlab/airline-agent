@@ -554,9 +554,7 @@ AI Response with Cleanlab:
 I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 ```
 
-Under U.S. federal law, marijuana, including all THC products (e.g., edibles, concentrates, or vape pens), remains illegal to possess or transport across state or federal jurisdictions, regardless of prescription status or local legalization. 
-The Transportation Security Administration (TSA) enforces federal law, and travelers found with THC products may face potential criminal charges.
-Cleanlab’s guardrail prevented the AI from giving unlawful travel guidance.
+Under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.  Here Cleanlab’s trustworthiness guardrail prevented the Agent from giving unlawful advice.
 
 <br><br>
 </details>
