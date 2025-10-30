@@ -561,7 +561,7 @@ Cleanlab’s guardrail prevented the AI from giving unlawful travel guidance.
 <br><br>
 </details>
 
-#### To showcase AI Guidance
+#### To explore AI Guidance
 
 > *can i bring a dog with me on a flight?*
 
