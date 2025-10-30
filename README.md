@@ -583,7 +583,7 @@ By including that article, the AI could explain that the passenger may still bri
 To create Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above. 
 Select `No` under *Is this a good AI response?* and provide the following explanation in the `Reason` field:
 
-> Answer depends if flight is international and if service animal. Should have clarified with user then use info from all relevant articles: always use "do you allow pets on plane" article then if international/service animal also the service animals one
+> Answer depends if flight is international and if it's a service animal. Should have clarified with user, and then used info from all relevant articles: always use the "do you allow pets on plane" article, then if international/service animal, also the "service animals" article
 
 After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
