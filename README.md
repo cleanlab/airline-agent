@@ -570,20 +570,20 @@ Under U.S. federal law, marijuana and all THC products is illegal to fly with, r
 
   > *can i bring a dog with me on a flight?*
 
-The AI retrieves `/help/do-you-allow-pets-on-the-plane` instead and mentions that only service animals are allowed on international flights.
+The AI references `/help/do-you-allow-pets-on-the-plane` and mentions that only service animals are allowed on international flights.
 However, this answer can be improved if the AI first clarified if the passenger is flying domestic or international.
-If the flight is international, the AI should also retrieve `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and explain the requirements for service animals.
+If the flight is international, the AI should also reference `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and explain the requirements for service animals.
 
 > *can i bring my emotional support dog with me on a domestic flight?*
 
-The AI retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not recognize emotional support animals as service animals.
-However, this answer can be improved if the AI also retrieved `/help/do-you-allow-pets-on-the-plane`.
+The AI references `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not recognize emotional support animals as service animals.
+However, this answer can be improved if the AI also referenced `/help/do-you-allow-pets-on-the-plane`.
 By including that article, the AI could explain that the passenger may still bring their dog on board if they comply with Frontier’s Pet Policy.
 
 To create Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above. 
 Select `No` under *Is this a good AI response?* and provide the following explanation in the `Reason` field:
 
-> If a user asks about bringing an animal on a flight, first confirm if the flight is international and if the animal is a service animal. Then call get_article with /help/do-you-allow-pets-on-the-plane. If either condition applies, also call get_article with /help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane. Use all retrieved articles in your response.
+> Answer depends if flight is international and if it's a service animal. Should have clarified with user, and then used info from all relevant articles: always use the "do you allow pets on plane" article, then if international/service animal, also the "service animals" article
 
 After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
@@ -597,7 +597,7 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 > *its an international flight. and its a service animal*
 
-You’ll now see that the AI also retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and includes more details about service animal requirements.
+You’ll now see that the AI also references `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and includes more details about service animal requirements.
 In contrast, if you followed up with:
 
 > *its a domestic flight. and its a house pet*
