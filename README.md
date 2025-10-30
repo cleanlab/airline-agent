@@ -92,7 +92,7 @@ AI Response with Cleanlab:
 <Same as AI Response without Cleanlab>
 ```
 
-The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct from [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Project's Log), you can see that the Agent relied on this clear information that it was able to find.
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct by searching for `/help/do-you-allow-pets-on-the-plane` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/do-you-allow-pets-on-the-plane)). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Project's Log), you can see that the Agent relied on this clear information that it was able to find.
 <br><br>
 </details>
 
@@ -103,7 +103,41 @@ Additional examples you can try:
 
 > *My flight got canceled, can I get a refund?*
 
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+If your Frontier flight was canceled and you did not take a rebooked flight, you are eligible for a refund. Refunds will be issued to the original form of payment either upon request or automatically after the scheduled departure date. The refund process typically takes up to seven business days. You can expedite the process by using Frontier's online portal to request your refund.
+```
+
+```text
+AI Response with Cleanlab:
+<Same as AI Response without Cleanlab>
+```
+
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct by searching for `/help/do-i-get-a-refund-if-my-flight-is-changed-or-cancelled-by-frontier` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/do-i-get-a-refund-if-my-flight-is-changed-or-cancelled-by-frontier)). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+<br><br>
+</details>
+
 > *Max carry-on size for domestic flight?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+For domestic flights with Frontier Airlines, the maximum size for a carry-on bag is 24 inches in height, 16 inches in width, and 10 inches in depth. The carry-on bag should also weigh no more than 35 pounds. It must fit in the overhead bin or under the seat.
+```
+
+```text
+AI Response with Cleanlab:
+<Same as AI Response without Cleanlab>
+```
+
+The Agent responds correctly here, but with Cleanlab validation, you have more *trust* that these answers are correct as well as observability/monitoring. You can verify yourself that the AI Response was correct by searching for `/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags)). Viewing the context that was retrieved by the Agent's `tool_call: get_article` (see `context` field in the Log), you can see that the Agent relied on this clear information that it was able to find.
+<br><br>
+</details>
 
 ### 2. Real-Time Guardrails
 
@@ -129,7 +163,7 @@ AI Response (guardrailed and prevented by Cleanlab):
 Donating your miles to non-profit charitable organizations is considered an accrual activity, which means it can help prevent your miles from expiring. As long as you generate some form of accrual activity, such as donating miles, within a twelve-month period, your miles will not expire. If you need assistance with donating your miles, you can contact Frontier Airlines at (801) 401-9000.
 ```
 
-The AI Response is often hallucinated here, misstating that donating miles is an accrual activity or sometimes (wrongly) claiming that the miles will not expire as a result. Frontier's [[Do Travel Miles Expire?]](https://faq.flyfrontier.com/help/do-travel-miles-expire) page reveals that the correct answer should be: *"Donating miles is not considered an accrual activity, and will therefore not prevent your remaining miles from expiring"* (since the accrual activity definition does not include donations and regular accrual activity is required to prevent miles from expiring).
+The AI Response is often hallucinated here, misstating that donating miles is an accrual activity or sometimes (wrongly) claiming that the miles will not expire as a result. You can verify yourself that the AI Response was incorrect by searching for `/help/do-travel-miles-expire` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/do-travel-miles-expire)). The article reveals that the correct answer should be: *"Donating miles is not considered an accrual activity, and will therefore not prevent your remaining miles from expiring"* (since the accrual activity definition does not include donations and regular accrual activity is required to prevent miles from expiring).
 <br><br>
 </details>
 
@@ -442,6 +476,140 @@ I'm sorry, but I don't have the information you're looking for. Please rephrase 
 ```
 
 The Agent's response is not at all supported by any information in the files it found.  Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
+<br><br>
+</details>
+
+
+> *i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+The Discount Den membership is a separate entity from your flight booking. If you received a Discount Den membership as part of a promotion when booking a flight, canceling the flight within 24 hours should not automatically cancel your Discount Den membership. However, it's important to check the specific terms and conditions of the promotion you received, as there might be unique stipulations.
+
+For general terms, the Discount Den membership provides access to lower fares and other benefits for a year, and it is not typically tied to the status of a specific flight booking. If you have any concerns or specific conditions related to your promotional offer, I recommend reviewing the terms provided at the time of the offer or contacting Frontier Airlines customer service for clarification.
+```
+
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+The Agent has no information regarding this promotion in its knowledge base, yet it implicitly endorses a potential exploit of the promotional terms by reassuring the user that “undoing” the accrual activity would not affect the Discount Den membership earned via the promotion. Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
+<br><br>
+</details>
+
+> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
+```
+
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
+<br><br>
+</details>
+
+> *can i do a seat change on same day of flight*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+Yes, you can change your seat on the same day of your flight with Frontier Airlines. If you wish to change to an earlier flight on your day of travel, you can do so by contacting an airport agent, subject to seat availability. A same-day change fee and any difference in fare and options prices will apply. This allows you to fly to your original destination or to an equivalent destination.
+```
+
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+Here the AI response incorrectly focuses on same-day flight changes, when the customer was merely asking to change their seat on the same flight.  The Agent should have referenced the `/help/do-i-have-to-purchase-a-seat-assignment` document, and clarified that the latest time to select a seat is during check-in.
+<br><br>
+</details>
+
+> *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
+```
+
+```text
+AI Response with Cleanlab:
+I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+
+Under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.  Here Cleanlab’s trustworthiness guardrail prevented the Agent from giving unlawful advice.
+
+<br><br>
+</details>
+
+#### To explore AI Guidance
+
+> *can i bring a dog with me on a flight?*
+
+> *can i bring my emotional support dog with me on a domestic flight?*
+
+<details>
+  <summary>Learn More</summary>
+
+  > *can i bring a dog with me on a flight?*
+
+The AI retrieves `/help/do-you-allow-pets-on-the-plane` instead and mentions that only service animals are allowed on international flights.
+However, this answer can be improved if the AI first clarified if the passenger is flying domestic or international.
+If the flight is international, the AI should also retrieve `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and explain the requirements for service animals.
+
+> *can i bring my emotional support dog with me on a domestic flight?*
+
+The AI retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not recognize emotional support animals as service animals.
+However, this answer can be improved if the AI also retrieved `/help/do-you-allow-pets-on-the-plane`.
+By including that article, the AI could explain that the passenger may still bring their dog on board if they comply with Frontier’s Pet Policy.
+
+To create Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above. 
+Select `No` under *Is this a good AI response?* and provide the following explanation in the `Reason` field:
+
+> If a user asks about bringing an animal on a flight, first confirm if the flight is international and if the animal is a service animal. Then call get_article with /help/do-you-allow-pets-on-the-plane. If either condition applies, also call get_article with /help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane. Use all retrieved articles in your response.
+
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
+Review the suggestion, make any edits if necessary, and click Submit to confirm.
+Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+
+Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
+
+> *can i bring a dog with me on a flight?*
+
+... after Agent responds, you can then ask a follow-up question ...
+
+> *its an international flight. and its a service animal*
+
+You’ll now see that the AI also retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and includes more details about service animal requirements.
+In contrast, if you followed up with:
+
+> *its a domestic flight. and its a house pet*
+
+The AI will instead reference `/help/do-you-allow-pets-on-the-plane` and tailor its response accordingly.
+This new Guidance ensures the AI combines both articles when appropriate, resulting in a more complete and personalized user experience.
+
+> *can i bring my emotional support dog with me on a domestic flight?*
+
+In this case, because the user’s question already specifies both the type of flight and the kind of animal, the AI skips asking a clarifying question. You’ll also notice that the AI now adds information that domesticated pets are allowed on the flight. This helps clarify that while emotional support animals are not treated as service animals, pets may still travel under the standard Pet Policy.
+
+You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project. 
 <br><br>
 </details>
 
