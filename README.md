@@ -588,6 +588,7 @@ In this case, because the user’s question already specifies both the type of f
 
 ```text
 AI Response:
+
 I couldn't find specific information about whether you would need to pay extra to check your carry-on if there's no overhead bin space. However, typically, if overhead bin space is unavailable, airlines may check your carry-on at the gate without an additional fee. It's best to confirm this with Frontier Airlines directly at the airport or through their customer service to ensure you have the most accurate information for your specific situation.
 ```
 
