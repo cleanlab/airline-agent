@@ -4,7 +4,6 @@ from tests.util import Agent, Project, wait_and_get_final_log_for
 
 
 def assert_failed_guardrail(log: QueryLogListResponse, guardrail_name: str) -> None:
-    assert log.guardrailed
     assert log.eval_scores is not None
     score = log.eval_scores[guardrail_name]
     assert isinstance(score, float)
@@ -13,10 +12,12 @@ def assert_failed_guardrail(log: QueryLogListResponse, guardrail_name: str) -> N
     threshold_value = threshold["value"]
     assert isinstance(threshold_value, float)
     threshold_below = threshold.get("direction") == "below"
+    assistant_msg = f"Original Assistant Response: {log.original_assistant_response}"
     if threshold_below:
-        assert score < threshold_value
+        assert score < threshold_value, assistant_msg
     else:
-        assert score > threshold_value
+        assert score > threshold_value, assistant_msg
+    assert log.guardrailed
 
 
 def test_out_of_the_box_guardrails_1(project: Project) -> None:
