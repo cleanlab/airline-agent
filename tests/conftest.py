@@ -4,13 +4,19 @@ from unittest.mock import patch
 
 import pytest
 from cleanlab_codex import Client
+from dotenv import load_dotenv
 
 from airline_agent.constants import OFFICIAL_DEMO_PROJECT_ID
 from tests.util import Project
 
 
+@pytest.fixture(scope="session", autouse=True)
+def load_env() -> None:
+    load_dotenv()
+
+
 @pytest.fixture(scope="session")
-def codex_client() -> Client:
+def codex_client(load_env: None) -> Client:  # noqa: ARG001
     codex_api_key = os.getenv("CODEX_API_KEY")
     return Client(api_key=codex_api_key)
 
