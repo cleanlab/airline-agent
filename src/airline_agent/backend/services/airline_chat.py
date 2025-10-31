@@ -48,6 +48,7 @@ from airline_agent.cleanlab_utils.validate_utils import (
 )
 from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
 from airline_agent.tools.knowledge_base import KnowledgeBase
+from airline_agent.tools.booking import BookingTools
 
 load_dotenv()
 
@@ -55,13 +56,23 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def create_agent(kb: KnowledgeBase) -> Agent:
+def create_agent(kb: KnowledgeBase, booking: BookingTools) -> Agent:
     """Create the airline support agent."""
     model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
     return Agent(
         model=model,
         instructions=AGENT_INSTRUCTIONS,
-        tools=[kb.get_article, kb.search, kb.list_directory],
+        tools=[
+            kb.get_article,
+            kb.search,
+            kb.list_directory,
+            booking.search_flights,
+            booking.get_fare_details,
+            booking.book_flights,
+            booking.get_booking,
+            booking.get_my_bookings,
+            booking.add_service_to_booking,
+        ],
     )
 
 
@@ -78,8 +89,12 @@ kb = KnowledgeBase(
     kb_path=str(pathlib.Path(__file__).parents[4] / "data/kb.json"),
     vector_index_path=str(pathlib.Path(__file__).parents[4] / "data/vector-db"),
 )
+booking = BookingTools(
+    flights_path=str(pathlib.Path(__file__).parents[4] / "data/flights.json"),
+    reservations_path=str(pathlib.Path(__file__).parents[4] / "data/reservations.json"),
+)
 project = get_cleanlab_project()
-agent = create_agent(kb)
+agent = create_agent(kb, booking)
 
 thread_to_messages: dict[str, list[ModelMessage]] = {}
 cleanlab_enabled_by_thread: dict[str, bool] = {}
