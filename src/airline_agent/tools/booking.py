@@ -4,15 +4,17 @@ import json
 import uuid
 from datetime import date, datetime
 from pathlib import Path
+from typing import Any, cast
 
 from airline_agent.types.booking import (
     Booking,
+    BookingStatus,
+    Cabin,
+    FareType,
     Flight,
     FlightBooking,
-    BookingStatus,
     ServiceAddOn,
-    ServiceAddOnOption,
-    FareType,
+    ServiceType,
 )
 
 
@@ -21,7 +23,7 @@ class BookingTools:
         with open(flights_path) as f:
             raw = json.load(f)
         self._flights: dict[str, Flight] = {x["id"]: Flight(**x) for x in raw["flights"]}
-        
+
         # Initialize reservations storage
         self._reservations_path = reservations_path
         self._reservations: dict[str, Booking] = {}
@@ -37,10 +39,7 @@ class BookingTools:
             if reservations_file.exists():
                 with open(reservations_file) as f:
                     data = json.load(f)
-                    self._reservations = {
-                        bid: Booking(**booking_data)
-                        for bid, booking_data in data.items()
-                    }
+                    self._reservations = {bid: Booking(**booking_data) for bid, booking_data in data.items()}
             else:
                 # Create empty file if it doesn't exist
                 reservations_file.parent.mkdir(parents=True, exist_ok=True)
@@ -52,10 +51,7 @@ class BookingTools:
         """Save reservations to JSON file."""
         if not self._reservations_path:
             return
-        data = {
-            bid: booking.model_dump(mode="json")
-            for bid, booking in self._reservations.items()
-        }
+        data = {bid: booking.model_dump(mode="json") for bid, booking in self._reservations.items()}
         with open(self._reservations_path, "w") as f:
             json.dump(data, f, indent=2, default=str)
 
@@ -73,7 +69,7 @@ class BookingTools:
         """
         try:
             dep = date.fromisoformat(departure_date)
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             raise ValueError(f"Invalid departure_date: {departure_date}") from e
 
         return [
@@ -84,7 +80,7 @@ class BookingTools:
             and fl.departure.date().isoformat() == dep.isoformat()
         ]
 
-    def get_fare_details(self, flight_id: str, cabin: str, fare_type: str = "basic") -> dict:
+    def get_fare_details(self, flight_id: str, cabin: str, fare_type: str = "basic") -> dict[str, Any]:
         """
         Get detailed fare information including what's included and available add-ons.
 
@@ -98,27 +94,24 @@ class BookingTools:
         """
         if flight_id not in self._flights:
             raise ValueError(f"Flight not found: {flight_id}")
-        
+
         flight = self._flights[flight_id]
-        
+
         # Find the fare for the requested cabin and fare type
-        fare = next(
-            (f for f in flight.fares if f.cabin == cabin and f.fare_type == fare_type),
-            None
-        )
+        fare = next((f for f in flight.fares if f.cabin == cabin and f.fare_type == fare_type), None)
         if not fare:
             available_fares = [(f.cabin, f.fare_type) for f in flight.fares]
             raise ValueError(
                 f"Fare '{fare_type}' in '{cabin}' cabin not available for flight {flight_id}. "
                 f"Available fares: {available_fares}"
             )
-        
+
         included_services = []
         if fare.included_carry_on:
             included_services.append("carry_on")
         if fare.included_checked_bag:
             included_services.append("checked_bag")
-        
+
         return {
             "flight_id": flight_id,
             "cabin": cabin,
@@ -160,45 +153,40 @@ class BookingTools:
 
         now = datetime.now()
         booking_id = f"BK-{uuid.uuid4().hex[:8].upper()}"
-        
+
         flight_bookings: list[FlightBooking] = []
         currency = "USD"
 
         for flight_id in flight_ids:
             if flight_id not in self._flights:
                 raise ValueError(f"Flight not found: {flight_id}")
-            
+
             flight = self._flights[flight_id]
-            
+
             # Find the fare for the requested cabin and fare type
-            fare = next(
-                (f for f in flight.fares if f.cabin == cabin and f.fare_type == fare_type),
-                None
-            )
+            fare = next((f for f in flight.fares if f.cabin == cabin and f.fare_type == fare_type), None)
             if not fare:
                 available_fares = [(f.cabin, f.fare_type) for f in flight.fares]
                 raise ValueError(
                     f"Fare '{fare_type}' in '{cabin}' cabin not available for flight {flight_id}. "
                     f"Available fares: {available_fares}"
                 )
-            
+
             if fare.seats_available <= 0:
-                raise ValueError(
-                    f"No seats available for fare '{fare_type}' in {cabin} cabin for flight {flight_id}"
-                )
-            
+                raise ValueError(f"No seats available for fare '{fare_type}' in {cabin} cabin for flight {flight_id}")
+
             # Determine included services
             included_services = []
             if fare.included_carry_on:
                 included_services.append("carry_on")
             if fare.included_checked_bag:
                 included_services.append("checked_bag")
-            
+
             flight_bookings.append(
                 FlightBooking(
                     flight_id=flight_id,
-                    cabin=cabin,
-                    fare_type=fare_type,
+                    cabin=cast(Cabin, cabin),
+                    fare_type=cast(FareType, fare_type),
                     base_price=fare.price_total,
                     currency=fare.currency,
                     included_services=included_services,
@@ -220,7 +208,7 @@ class BookingTools:
 
         self._reservations[booking_id] = booking
         self._save_reservations()
-        
+
         return booking
 
     def get_booking(self, booking_id: str) -> Booking:
@@ -244,99 +232,106 @@ class BookingTools:
         Returns:
             List of all confirmed bookings
         """
-        return [
-            booking
-            for booking in self._reservations.values()
-            if booking.status.status == "confirmed"
-        ]
+        return [booking for booking in self._reservations.values() if booking.status.status == "confirmed"]
 
     def add_service_to_booking(
         self,
         booking_id: str,
         flight_id: str,
         service_type: str,
+        seat_preference: str | None = None,
+        seat_assignment: str | None = None,
     ) -> Booking:
         """
-        Add a service (e.g., checked bag, carry-on) to an existing booking.
+        Add a service (e.g., checked bag, carry-on, seat selection) to an existing booking.
         Updates the booking's total price and updated_at timestamp.
 
         Args:
             booking_id: The booking ID (e.g., "BK-12345678")
             flight_id: The flight ID within the booking to add the service to
             service_type: Type of service to add (checked_bag, carry_on, seat_selection, etc.)
+            seat_preference: For seat_selection, preference like "window", "aisle", "middle" (optional)
+            seat_assignment: For seat_selection, actual assigned seat like "12A", "15F" (optional)
 
         Returns:
             The updated booking with the new service added
         """
         if booking_id not in self._reservations:
             raise ValueError(f"Booking not found: {booking_id}")
-        
+
         booking = self._reservations[booking_id]
-        
+
         # Find the flight in the booking
-        flight_booking = next(
-            (fb for fb in booking.flights if fb.flight_id == flight_id),
-            None
-        )
+        flight_booking = next((fb for fb in booking.flights if fb.flight_id == flight_id), None)
         if not flight_booking:
             available_flights = [fb.flight_id for fb in booking.flights]
             raise ValueError(
-                f"Flight {flight_id} not found in booking {booking_id}. "
-                f"Available flights: {available_flights}"
+                f"Flight {flight_id} not found in booking {booking_id}. " f"Available flights: {available_flights}"
             )
-        
+
         # Get the flight to check available add-ons
         if flight_id not in self._flights:
             raise ValueError(f"Flight not found: {flight_id}")
-        
+
         flight = self._flights[flight_id]
-        
+
         # Find the add-on option
-        addon_option = next(
-            (ao for ao in flight.add_ons if ao.service_type == service_type),
-            None
-        )
+        addon_option = next((ao for ao in flight.add_ons if ao.service_type == service_type), None)
         if not addon_option:
             available_addons = [ao.service_type for ao in flight.add_ons]
             raise ValueError(
                 f"Service '{service_type}' not available for flight {flight_id}. "
                 f"Available add-ons: {available_addons}"
             )
-        
+
         # Check if service is already included in the fare
         if service_type in flight_booking.included_services:
             raise ValueError(
                 f"Service '{service_type}' is already included in the {flight_booking.fare_type} fare "
                 f"for flight {flight_id}"
             )
-        
+
         # Check if add-on already exists
-        existing_addon = next(
-            (ao for ao in flight_booking.add_ons if ao.service_type == service_type),
-            None
-        )
+        existing_addon = next((ao for ao in flight_booking.add_ons if ao.service_type == service_type), None)
         if existing_addon:
-            raise ValueError(
-                f"Service '{service_type}' has already been added to flight {flight_id} in this booking"
-            )
-        
+            raise ValueError(f"Service '{service_type}' has already been added to flight {flight_id} in this booking")
+
         # Add the service add-on
         now = datetime.now()
+
+        # For seat selection, validate that preferences/assignments are only set for seat_selection
+        if service_type != "seat_selection" and (seat_preference or seat_assignment):
+            raise ValueError("seat_preference and seat_assignment can only be set for seat_selection service type")
+
         flight_booking.add_ons.append(
             ServiceAddOn(
-                service_type=service_type,
+                service_type=cast(ServiceType, service_type),
                 price=addon_option.price,
                 currency=addon_option.currency,
                 added_at=now,
+                seat_preference=seat_preference,
+                seat_assignment=seat_assignment,
             )
         )
-        
+
         # Update booking timestamp
         booking.status.updated_at = now
-        
+
         # Save the updated booking
         self._reservations[booking_id] = booking
         self._save_reservations()
-        
+
         return booking
 
+    def get_current_date(self) -> dict[str, str]:
+        """
+        Get the current date and time.
+
+        Returns:
+            Dictionary with current date in YYYY-MM-DD format and ISO timestamp
+        """
+        now = datetime.now()
+        return {
+            "date": now.date().isoformat(),  # YYYY-MM-DD format
+            "datetime": now.isoformat(),  # Full ISO timestamp with timezone
+        }

@@ -5,7 +5,6 @@ from typing import Literal
 
 from pydantic import BaseModel, computed_field
 
-
 Cabin = Literal["economy", "premium_economy", "business", "first"]
 FareType = Literal["basic", "standard", "flexible"]
 ServiceType = Literal["checked_bag", "carry_on", "seat_selection", "priority_boarding", "travel_insurance"]
@@ -13,10 +12,14 @@ ServiceType = Literal["checked_bag", "carry_on", "seat_selection", "priority_boa
 
 class ServiceAddOn(BaseModel):
     """A service add-on purchased for a flight."""
+
     service_type: ServiceType
     price: float
     currency: str = "USD"
     added_at: datetime  # When was this add-on added
+    # Seat selection specific fields
+    seat_preference: str | None = None  # e.g., "window", "aisle", "middle"
+    seat_assignment: str | None = None  # e.g., "12A", "15F" - actual assigned seat
 
 
 class Fare(BaseModel):
@@ -31,6 +34,7 @@ class Fare(BaseModel):
 
 class ServiceAddOnOption(BaseModel):
     """Available service add-on options for a flight."""
+
     service_type: ServiceType
     price: float
     currency: str = "USD"
@@ -57,21 +61,22 @@ class BookingStatus(BaseModel):
 
 class FlightBooking(BaseModel):
     """Represents a single flight within a booking."""
+
     flight_id: str
     cabin: Cabin
     fare_type: FareType = "basic"  # Which fare bundle was purchased
-    
+
     # Base fare pricing
     base_price: float  # Price of the fare itself
     currency: str = "USD"
-    
+
     # Services included in the fare (e.g., "carry_on" for standard, "checked_bag" for flexible)
     included_services: list[str] = []  # e.g., ["carry_on"] or ["checked_bag"]
-    
+
     # Add-on services purchased separately
     add_ons: list[ServiceAddOn] = []
-    
-    @computed_field
+
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def price_total(self) -> float:
         """Calculate total price including base fare + add-ons."""
@@ -80,14 +85,14 @@ class FlightBooking(BaseModel):
 
 class Booking(BaseModel):
     """Represents a complete booking containing one or more flights."""
+
     booking_id: str
     flights: list[FlightBooking]
     currency: str = "USD"
     status: BookingStatus
-    
-    @computed_field
+
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def total_price(self) -> float:
         """Calculate total price across all flights."""
         return sum(flight.price_total for flight in self.flights)
-

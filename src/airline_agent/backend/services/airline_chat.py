@@ -47,8 +47,8 @@ from airline_agent.cleanlab_utils.validate_utils import (
     run_cleanlab_validation_logging_tools,
 )
 from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
-from airline_agent.tools.knowledge_base import KnowledgeBase
 from airline_agent.tools.booking import BookingTools
+from airline_agent.tools.knowledge_base import KnowledgeBase
 
 load_dotenv()
 
@@ -66,6 +66,7 @@ def create_agent(kb: KnowledgeBase, booking: BookingTools) -> Agent:
             kb.get_article,
             kb.search,
             kb.list_directory,
+            booking.get_current_date,
             booking.search_flights,
             booking.get_fare_details,
             booking.book_flights,
