@@ -12,10 +12,11 @@ def assert_failed_eval(log: QueryLogListResponse, eval_name: str) -> None:
     threshold_value = threshold["value"]
     assert isinstance(threshold_value, float)
     threshold_below = threshold.get("direction") == "below"
+    assistant_msg = f"Original Assistant Response: {log.original_assistant_response}"
     if threshold_below:
-        assert score < threshold_value
+        assert score < threshold_value, assistant_msg
     else:
-        assert score > threshold_value
+        assert score > threshold_value, assistant_msg
 
 
 def test_evaluation_1(project: Project) -> None:
