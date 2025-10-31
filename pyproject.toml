@@ -44,4 +44,4 @@ extra-dependencies = [
 ]
 
 [tool.hatch.envs.types.scripts]
-check = "mypy --strict {args:src}"
+check = "mypy --strict {args:src tests}"

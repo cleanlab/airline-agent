@@ -20,7 +20,9 @@ async def airline_agent_chat_route(
         description="Whether to stream intermediate assistant messages before the final response",
     ),
 ) -> StreamingResponse:
-    event_generator = airline_chat_streaming(message, cleanlab_enabled, stream_intermediate_messages)
+    event_generator = airline_chat_streaming(
+        message, cleanlab_enabled=cleanlab_enabled, stream_intermediate_messages=stream_intermediate_messages
+    )
 
     async def sse_generator() -> AsyncGenerator[str, None]:
         async for event in event_generator:
