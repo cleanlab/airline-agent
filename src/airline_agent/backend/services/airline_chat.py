@@ -73,6 +73,9 @@ def create_agent(kb: KnowledgeBase, booking: BookingTools) -> Agent:
             booking.get_booking,
             booking.get_my_bookings,
             booking.add_service_to_booking,
+            booking.check_in,
+            booking.get_flight_timings,
+            booking.get_flight_status,
         ],
     )
 

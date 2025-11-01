@@ -8,6 +8,15 @@ from pydantic import BaseModel, computed_field
 Cabin = Literal["economy", "premium_economy", "business", "first"]
 FareType = Literal["basic", "standard", "flexible"]
 ServiceType = Literal["checked_bag", "carry_on", "seat_selection", "priority_boarding", "travel_insurance"]
+FlightStatus = Literal[
+    "scheduled",
+    "on_time",
+    "delayed",
+    "boarding",
+    "departed",
+    "arrived",
+    "cancelled",
+]
 
 
 class ServiceAddOn(BaseModel):
@@ -52,6 +61,17 @@ class Flight(BaseModel):
     fares: list[Fare]
     add_ons: list[ServiceAddOnOption] = []  # Available add-ons for this flight
 
+    # Day-of travel information (enriched closer to departure)
+    departure_terminal: str | None = None  # e.g., "Terminal 1", "Terminal A"
+    departure_gate: str | None = None  # e.g., "A15", "B22"
+    arrival_terminal: str | None = None  # e.g., "Terminal 3"
+    arrival_gate: str | None = None  # e.g., "C8"
+
+    # Flight status tracking
+    status: FlightStatus = "scheduled"
+    status_updated_at: datetime | None = None
+    delay_minutes: int | None = None  # If delayed, minutes of delay
+
 
 class BookingStatus(BaseModel):
     status: Literal["confirmed", "cancelled", "pending"]
@@ -75,6 +95,14 @@ class FlightBooking(BaseModel):
 
     # Add-on services purchased separately
     add_ons: list[ServiceAddOn] = []
+
+    # Check-in information
+    checked_in: bool = False
+    checked_in_at: datetime | None = None  # When check-in was completed
+
+    # Final seat assignment (may differ from seat_selection preference/addon)
+    # This is the actual assigned seat after check-in
+    seat_assignment: str | None = None  # e.g., "12A", "15F"
 
     @computed_field  # type: ignore[prop-decorator]
     @property
