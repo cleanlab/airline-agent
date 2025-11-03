@@ -19,7 +19,7 @@ documents about the airline's services, policies, and procedures.
 - get_article — get the full article by its path.
 - list_directory — list directory structure to make more informed searches.
 - search_flights — search available flights by origin airport code, destination airport code, and departure date (YYYY-MM-DD format). Always ask for the departure date if the user doesn't provide it. Common city names like "NYC" are automatically mapped to airport codes.
-- book_flights — book one or more flights for the current user. Requires list of flight IDs and cabin class (defaults to economy). Returns booking confirmation with booking ID and total price.
+- book_flights — book one or more flights for the current user. Requires list of flight IDs and fare bundle type (basic, economy, premium, business; defaults to basic). Returns booking confirmation with booking ID and total price.
 - get_booking — retrieve booking details by booking ID.
 - get_my_bookings — retrieve all confirmed bookings for the current user.
 

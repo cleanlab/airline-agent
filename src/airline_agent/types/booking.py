@@ -1,15 +1,22 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from datetime import datetime  # noqa: TCH003
+from typing import Literal
 
 from pydantic import BaseModel, computed_field
 
-if TYPE_CHECKING:
-    from datetime import datetime
-
-Cabin = Literal["economy", "premium_economy", "business", "first"]
-FareType = Literal["basic", "standard", "flexible"]
-ServiceType = Literal["checked_bag", "carry_on", "seat_selection", "priority_boarding", "travel_insurance"]
+FareType = Literal["basic", "economy", "premium", "business"]
+ServiceType = Literal[
+    "checked_bag",
+    "carry_on",
+    "standard_seat_selection",
+    "premium_seat_selection",
+    "upfront_plus_seating",
+    "priority_boarding",
+    "travel_insurance",
+    "refundability",
+    "change_cancel_fee_waived",
+]
 FlightStatus = Literal[
     "scheduled",
     "on_time",
@@ -31,16 +38,21 @@ class ServiceAddOn(BaseModel):
     # Seat selection specific fields
     seat_preference: str | None = None  # e.g., "window", "aisle", "middle"
     seat_assignment: str | None = None  # e.g., "12A", "15F" - actual assigned seat
+    seat_type: str | None = None  # e.g., "standard", "stretch", "upfront_plus" - type of seat selected
 
 
 class Fare(BaseModel):
-    cabin: Cabin
-    fare_type: FareType = "basic"  # Which fare bundle (basic, standard, flexible)
+    """Frontier Airlines fare bundle. No separate cabin classes - all passengers in same cabin."""
+
+    fare_type: FareType = "basic"  # Which fare bundle (basic, economy, premium, business)
     price_total: float  # per passenger
     currency: str = "USD"
     seats_available: int
-    included_carry_on: bool = False  # Does this fare include carry-on?
-    included_checked_bag: bool = False  # Does this fare include checked bag?
+    # Services included in this fare bundle (flat list, no nested references)
+    included_services: list[
+        str
+    ]  # e.g., ["carry_on", "standard_seat_selection", "refundability", "change_cancel_fee_waived"]
+    checked_bags_included: int = 0  # Number of checked bags included (0, 1, or 2 for business)
 
 
 class ServiceAddOnOption(BaseModel):
@@ -85,15 +97,15 @@ class FlightBooking(BaseModel):
     """Represents a single flight within a booking."""
 
     flight_id: str
-    cabin: Cabin
     fare_type: FareType = "basic"  # Which fare bundle was purchased
 
     # Base fare pricing
     base_price: float  # Price of the fare itself
     currency: str = "USD"
 
-    # Services included in the fare (e.g., "carry_on" for standard, "checked_bag" for flexible)
-    included_services: list[str] = []  # e.g., ["carry_on"] or ["checked_bag"]
+    # Services included in the fare (flat list, no nested references)
+    included_services: list[str] = []  # e.g., ["carry_on", "standard_seat_selection", "refundability"]
+    checked_bags_included: int = 0  # Number of checked bags included (0, 1, or 2 for business)
 
     # Add-on services purchased separately
     add_ons: list[ServiceAddOn] = []

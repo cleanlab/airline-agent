@@ -10,7 +10,6 @@ from typing import Any, cast
 from airline_agent.types.booking import (
     Booking,
     BookingStatus,
-    Cabin,
     FareType,
     Flight,
     FlightBooking,
@@ -94,14 +93,13 @@ class BookingTools:
             and fl.departure.date().isoformat() == dep.isoformat()
         ]
 
-    def get_fare_details(self, flight_id: str, cabin: str, fare_type: str = "basic") -> dict[str, Any]:
+    def get_fare_details(self, flight_id: str, fare_type: str = "basic") -> dict[str, Any]:
         """
         Get detailed fare information including what's included and available add-ons.
 
         Args:
             flight_id: The flight ID
-            cabin: Cabin class (economy, premium_economy, business, first)
-            fare_type: Fare type (basic, standard, flexible)
+            fare_type: Fare bundle type (basic, economy, premium, business)
 
         Returns:
             Dictionary with fare details including included services and available add-ons
@@ -112,30 +110,21 @@ class BookingTools:
 
         flight = self._flights[flight_id]
 
-        # Find the fare for the requested cabin and fare type
-        fare = next((f for f in flight.fares if f.cabin == cabin and f.fare_type == fare_type), None)
+        # Find the fare for the requested fare type (no cabin classes in Frontier model)
+        fare = next((f for f in flight.fares if f.fare_type == fare_type), None)
         if not fare:
-            available_fares = [(f.cabin, f.fare_type) for f in flight.fares]
-            msg = (
-                f"Fare '{fare_type}' in '{cabin}' cabin not available for flight {flight_id}. "
-                f"Available fares: {available_fares}"
-            )
+            available_fares = [f.fare_type for f in flight.fares]
+            msg = f"Fare '{fare_type}' not available for flight {flight_id}. " f"Available fares: {available_fares}"
             raise ValueError(msg)
-
-        included_services = []
-        if fare.included_carry_on:
-            included_services.append("carry_on")
-        if fare.included_checked_bag:
-            included_services.append("checked_bag")
 
         return {
             "flight_id": flight_id,
-            "cabin": cabin,
             "fare_type": fare_type,
             "price": fare.price_total,
             "currency": fare.currency,
             "seats_available": fare.seats_available,
-            "included_services": included_services,
+            "included_services": fare.included_services,
+            "checked_bags_included": fare.checked_bags_included,
             "available_add_ons": [
                 {
                     "service_type": addon.service_type,
@@ -150,7 +139,6 @@ class BookingTools:
     def book_flights(
         self,
         flight_ids: list[str],
-        cabin: str = "economy",
         fare_type: str = "basic",
     ) -> Booking:
         """
@@ -158,8 +146,7 @@ class BookingTools:
 
         Args:
             flight_ids: List of flight IDs to book
-            cabin: Cabin class (economy, premium_economy, business, first)
-            fare_type: Fare type (basic, standard, flexible). Defaults to "basic".
+            fare_type: Fare bundle type (basic, economy, premium, business). Defaults to "basic".
 
         Returns:
             The created booking with booking ID and total price
@@ -181,35 +168,25 @@ class BookingTools:
 
             flight = self._flights[flight_id]
 
-            # Find the fare for the requested cabin and fare type
-            fare = next((f for f in flight.fares if f.cabin == cabin and f.fare_type == fare_type), None)
+            # Find the fare for the requested fare type (no cabin classes in Frontier model)
+            fare = next((f for f in flight.fares if f.fare_type == fare_type), None)
             if not fare:
-                available_fares = [(f.cabin, f.fare_type) for f in flight.fares]
-                msg = (
-                    f"Fare '{fare_type}' in '{cabin}' cabin not available for flight {flight_id}. "
-                    f"Available fares: {available_fares}"
-                )
+                available_fares = [f.fare_type for f in flight.fares]
+                msg = f"Fare '{fare_type}' not available for flight {flight_id}. " f"Available fares: {available_fares}"
                 raise ValueError(msg)
 
             if fare.seats_available <= 0:
-                msg = f"No seats available for fare '{fare_type}' in {cabin} cabin for flight {flight_id}"
+                msg = f"No seats available for fare '{fare_type}' for flight {flight_id}"
                 raise ValueError(msg)
-
-            # Determine included services
-            included_services = []
-            if fare.included_carry_on:
-                included_services.append("carry_on")
-            if fare.included_checked_bag:
-                included_services.append("checked_bag")
 
             flight_bookings.append(
                 FlightBooking(
                     flight_id=flight_id,
-                    cabin=cast(Cabin, cabin),
                     fare_type=cast(FareType, fare_type),
                     base_price=fare.price_total,
                     currency=fare.currency,
-                    included_services=included_services,
+                    included_services=fare.included_services.copy(),
+                    checked_bags_included=fare.checked_bags_included,
                     add_ons=[],
                 )
             )
@@ -270,9 +247,9 @@ class BookingTools:
         Args:
             booking_id: The booking ID (e.g., "BK-12345678")
             flight_id: The flight ID within the booking to add the service to
-            service_type: Type of service to add (checked_bag, carry_on, seat_selection, etc.)
-            seat_preference: For seat_selection, preference like "window", "aisle", "middle" (optional)
-            seat_assignment: For seat_selection, actual assigned seat like "12A", "15F" (optional)
+            service_type: Type of service to add (checked_bag, carry_on, standard_seat_selection, etc.)
+            seat_preference: For seat selection services, preference like "window", "aisle", "middle" (optional)
+            seat_assignment: For seat selection services, actual assigned seat like "12A", "15F" (optional)
 
         Returns:
             The updated booking with the new service added
@@ -307,7 +284,15 @@ class BookingTools:
             raise ValueError(msg)
 
         # Check if service is already included in the fare
-        if service_type in flight_booking.included_services:
+        # Special handling for checked_bag (tracked via count, not in included_services)
+        if service_type == "checked_bag":
+            if flight_booking.checked_bags_included > 0:
+                msg = (
+                    f"Checked bag(s) are already included in the {flight_booking.fare_type} fare "
+                    f"for flight {flight_id} ({flight_booking.checked_bags_included} bag(s) included)"
+                )
+                raise ValueError(msg)
+        elif service_type in flight_booking.included_services:
             msg = (
                 f"Service '{service_type}' is already included in the {flight_booking.fare_type} fare "
                 f"for flight {flight_id}"
@@ -323,10 +308,20 @@ class BookingTools:
         # Add the service add-on
         now = datetime.now(UTC)
 
-        # For seat selection, validate that preferences/assignments are only set for seat_selection
-        if service_type != "seat_selection" and (seat_preference or seat_assignment):
-            msg = "seat_preference and seat_assignment can only be set for seat_selection service type"
+        # For seat selection services, validate that preferences/assignments are only set for seat selection
+        seat_selection_types = ["standard_seat_selection", "premium_seat_selection", "upfront_plus_seating"]
+        if service_type not in seat_selection_types and (seat_preference or seat_assignment):
+            msg = "seat_preference and seat_assignment can only be set for seat selection service types"
             raise ValueError(msg)
+
+        # Determine seat type based on service type
+        seat_type = None
+        if service_type == "standard_seat_selection":
+            seat_type = "standard"
+        elif service_type == "premium_seat_selection":
+            seat_type = "stretch"
+        elif service_type == "upfront_plus_seating":
+            seat_type = "upfront_plus"
 
         flight_booking.add_ons.append(
             ServiceAddOn(
@@ -336,6 +331,7 @@ class BookingTools:
                 added_at=now,
                 seat_preference=seat_preference,
                 seat_assignment=seat_assignment,
+                seat_type=seat_type,
             )
         )
 
@@ -361,11 +357,12 @@ class BookingTools:
             "datetime": now.isoformat(),  # Full ISO timestamp with timezone
         }
 
-    def _assign_seat(self, flight_booking: FlightBooking, cabin: Cabin, _flight_id: str) -> str:
-        """Assign a seat to a flight booking based on preferences or randomly."""
-        # Check if seat_selection add-on exists with an assignment
+    def _assign_seat(self, flight_booking: FlightBooking, _flight_id: str) -> str:
+        """Assign a seat to a flight booking based on preferences, fare type, or randomly."""
+        # Check if any seat selection add-on exists with an assignment
+        seat_selection_types = ["standard_seat_selection", "premium_seat_selection", "upfront_plus_seating"]
         seat_addon = next(
-            (addon for addon in flight_booking.add_ons if addon.service_type == "seat_selection"),
+            (addon for addon in flight_booking.add_ons if addon.service_type in seat_selection_types),
             None,
         )
         if seat_addon and seat_addon.seat_assignment:
@@ -373,16 +370,26 @@ class BookingTools:
 
         # If seat selection exists with preference, try to honor it
         preference = seat_addon.seat_preference if seat_addon else None
+        seat_type = seat_addon.seat_type if seat_addon else None
 
-        # Generate random seat assignment
-        # Rows vary by cabin: economy 1-40, premium 5-25, business 1-10, first 1-4
-        row_ranges = {
-            "economy": (1, 40),
-            "premium_economy": (5, 25),
-            "business": (1, 10),
-            "first": (1, 4),
-        }
-        row_min, row_max = row_ranges.get(cabin, (1, 40))
+        # Generate random seat assignment based on fare type and seat selection
+        # UpFront Plus: rows 1-2 (first two rows)
+        # Stretch: rows 3-15 (premium seating area)
+        # Standard: rows 16-40 (standard seating area)
+
+        if seat_type == "upfront_plus":
+            row_min, row_max = (1, 2)
+        elif seat_type == "stretch":
+            row_min, row_max = (3, 15)
+        elif flight_booking.fare_type == "business":
+            # Business fare includes UpFront Plus seating
+            row_min, row_max = (1, 2)
+        elif seat_type == "standard":
+            row_min, row_max = (16, 40)
+        else:
+            # Default to standard seating area
+            row_min, row_max = (16, 40)
+
         row = random.randint(row_min, row_max)  # noqa: S311
 
         # Seat letters (typical 3-3 configuration: A, B, C, D, E, F)
@@ -482,7 +489,7 @@ class BookingTools:
 
         # Assign seat if not already assigned
         if not flight_booking.seat_assignment:
-            flight_booking.seat_assignment = self._assign_seat(flight_booking, flight_booking.cabin, flight_id)
+            flight_booking.seat_assignment = self._assign_seat(flight_booking, flight_id)
 
         # Update check-in status
         flight_booking.checked_in = True

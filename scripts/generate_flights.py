@@ -13,8 +13,6 @@ from pathlib import Path
 # Constants
 SHORT_FLIGHT_THRESHOLD_HOURS = 2.0  # Threshold for short flights (hours)
 DURATION_ADJUSTMENT = 0.1  # Adjustment for SJC/OAK flights (hours)
-PROBABILITY_PREMIUM_ECONOMY = 0.3  # Probability of premium economy add-ons
-PROBABILITY_BUSINESS = 0.2  # Probability of business add-ons
 SF_BAY_AIRPORTS = {"SJC", "OAK"}  # SF Bay Area airports (excluding SFO)
 
 # San Francisco Bay Area airports
@@ -30,11 +28,12 @@ NYC_AIRPORTS = ["JFK", "EWR", "LGA"]
 CARRIER_CODE = "F9"
 CARRIER_NAME = "Frontier"
 
-# Cabin configurations and base prices (Frontier Airlines style)
-CABIN_CONFIGS = {
-    "economy": {"base_price": 120, "price_range": (80, 180)},
-    "premium_economy": {"base_price": 200, "price_range": (150, 280)},
-    "business": {"base_price": 350, "price_range": (280, 500)},
+# Fare bundle base prices (Frontier Airlines style - no separate cabin classes)
+FARE_BASE_PRICES = {
+    "basic": {"price_range": (80, 150)},
+    "economy": {"price_range": (120, 200)},
+    "premium": {"price_range": (200, 320)},
+    "business": {"price_range": (350, 550)},
 }
 
 # Flight duration estimates (in hours)
@@ -182,104 +181,75 @@ def get_timezone_offset(airport: str) -> int:
 
 
 def generate_fares() -> list[dict]:
-    """Generate random fares for a flight with different fare types."""
+    """Generate random fares for a flight with different fare bundles (Frontier Airlines model)."""
     fares = []
 
-    # Always include economy with multiple fare types
-    economy_config = CABIN_CONFIGS["economy"]
-    base_price = random.uniform(*economy_config["price_range"])  # noqa: S311
-
-    # Basic fare: no bags included
+    # Basic fare: no services included
+    basic_price = random.uniform(*FARE_BASE_PRICES["basic"]["price_range"])  # noqa: S311
     fares.append(
         {
-            "cabin": "economy",
             "fare_type": "basic",
-            "price_total": round(base_price, 2),
+            "price_total": round(basic_price, 2),
+            "currency": "USD",
+            "seats_available": random.randint(5, 15),  # noqa: S311
+            "included_services": [],
+            "checked_bags_included": 0,
+        }
+    )
+
+    # Economy bundle: Basic + Carry on, Standard seat selection, Refundability, Change/cancel fee waived
+    economy_price = random.uniform(*FARE_BASE_PRICES["economy"]["price_range"])  # noqa: S311
+    fares.append(
+        {
+            "fare_type": "economy",
+            "price_total": round(economy_price, 2),
             "currency": "USD",
             "seats_available": random.randint(3, 12),  # noqa: S311
-            "included_carry_on": False,
-            "included_checked_bag": False,
+            "included_services": ["carry_on", "standard_seat_selection", "refundability", "change_cancel_fee_waived"],
+            "checked_bags_included": 0,
         }
     )
 
-    # Standard fare: includes carry-on (+$15-25 more than basic)
-    standard_price = base_price + random.uniform(15, 25)  # noqa: S311
+    # Premium bundle: Economy + Premium seat selection + Priority Boarding
+    premium_price = random.uniform(*FARE_BASE_PRICES["premium"]["price_range"])  # noqa: S311
     fares.append(
         {
-            "cabin": "economy",
-            "fare_type": "standard",
-            "price_total": round(standard_price, 2),
+            "fare_type": "premium",
+            "price_total": round(premium_price, 2),
             "currency": "USD",
-            "seats_available": random.randint(2, 10),  # noqa: S311
-            "included_carry_on": True,
-            "included_checked_bag": False,
+            "seats_available": random.randint(2, 8),  # noqa: S311
+            "included_services": [
+                "carry_on",
+                "standard_seat_selection",
+                "refundability",
+                "change_cancel_fee_waived",
+                "premium_seat_selection",
+                "priority_boarding",
+            ],
+            "checked_bags_included": 0,
         }
     )
 
-    # Flexible fare: includes checked bag (+$30-45 more than basic)
-    flexible_price = base_price + random.uniform(30, 45)  # noqa: S311
+    # Business bundle: Premium + 2 checked bags + UpFront Plus Seating
+    business_price = random.uniform(*FARE_BASE_PRICES["business"]["price_range"])  # noqa: S311
     fares.append(
         {
-            "cabin": "economy",
-            "fare_type": "flexible",
-            "price_total": round(flexible_price, 2),
+            "fare_type": "business",
+            "price_total": round(business_price, 2),
             "currency": "USD",
-            "seats_available": random.randint(1, 8),  # noqa: S311
-            "included_carry_on": True,
-            "included_checked_bag": True,
+            "seats_available": random.randint(1, 4),  # noqa: S311
+            "included_services": [
+                "carry_on",
+                "standard_seat_selection",
+                "refundability",
+                "change_cancel_fee_waived",
+                "premium_seat_selection",
+                "priority_boarding",
+                "upfront_plus_seating",
+            ],
+            "checked_bags_included": 2,
         }
     )
-
-    # Randomly add premium economy (30% chance - Frontier has limited premium options)
-    if random.random() < PROBABILITY_PREMIUM_ECONOMY:  # noqa: S311
-        premium_config = CABIN_CONFIGS["premium_economy"]
-        premium_base = random.uniform(*premium_config["price_range"])  # noqa: S311
-
-        # Premium economy basic
-        fares.append(
-            {
-                "cabin": "premium_economy",
-                "fare_type": "basic",
-                "price_total": round(premium_base, 2),
-                "currency": "USD",
-                "seats_available": random.randint(2, 6),  # noqa: S311
-                "included_carry_on": True,  # Premium always includes carry-on
-                "included_checked_bag": False,
-            }
-        )
-
-        # Premium economy flexible (with checked bag)
-        fares.append(
-            {
-                "cabin": "premium_economy",
-                "fare_type": "flexible",
-                "price_total": round(premium_base + random.uniform(20, 35), 2),  # noqa: S311
-                "currency": "USD",
-                "seats_available": random.randint(1, 4),  # noqa: S311
-                "included_carry_on": True,
-                "included_checked_bag": True,
-            }
-        )
-
-    # Randomly add business (20% chance - Frontier has limited business class)
-    if random.random() < PROBABILITY_BUSINESS:  # noqa: S311
-        business_config = CABIN_CONFIGS["business"]
-        business_base = random.uniform(*business_config["price_range"])  # noqa: S311
-
-        # Business class always includes everything
-        fares.append(
-            {
-                "cabin": "business",
-                "fare_type": "flexible",  # Business is always flexible
-                "price_total": round(business_base, 2),
-                "currency": "USD",
-                "seats_available": random.randint(1, 4),  # noqa: S311
-                "included_carry_on": True,
-                "included_checked_bag": True,
-            }
-        )
-
-    # No first class for Frontier Airlines
 
     return fares
 
@@ -300,22 +270,46 @@ def generate_add_ons() -> list[dict]:
             "description": "One carry-on bag (personal item included)",
         },
         {
-            "service_type": "seat_selection",
+            "service_type": "standard_seat_selection",
             "price": round(random.uniform(10, 25), 2),  # noqa: S311
             "currency": "USD",
-            "description": "Select your seat in advance",
+            "description": "Select a standard seat in advance",
+        },
+        {
+            "service_type": "premium_seat_selection",
+            "price": round(random.uniform(25, 45), 2),  # noqa: S311
+            "currency": "USD",
+            "description": "Select a stretch seat with extra legroom",
+        },
+        {
+            "service_type": "upfront_plus_seating",
+            "price": round(random.uniform(50, 100), 2),  # noqa: S311
+            "currency": "USD",
+            "description": "UpFront Plus seating in first two rows with guaranteed empty middle seat",
         },
         {
             "service_type": "priority_boarding",
             "price": round(random.uniform(8, 15), 2),  # noqa: S311
             "currency": "USD",
-            "description": "Priority boarding (Zone 2)",
+            "description": "Priority boarding with overhead bin space",
         },
         {
             "service_type": "travel_insurance",
             "price": round(random.uniform(15, 30), 2),  # noqa: S311
             "currency": "USD",
             "description": "Trip protection insurance",
+        },
+        {
+            "service_type": "refundability",
+            "price": round(random.uniform(30, 60), 2),  # noqa: S311
+            "currency": "USD",
+            "description": "Add refundability to your booking",
+        },
+        {
+            "service_type": "change_cancel_fee_waived",
+            "price": round(random.uniform(20, 40), 2),  # noqa: S311
+            "currency": "USD",
+            "description": "Waive change and cancel fees",
         },
     ]
 
