@@ -145,7 +145,7 @@ Cleanlab's Guardrails help detect and prevent bad responses from your AI app, su
 
 #### 2a. Out-of-the-box Guardrails
 
-Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails help prevent incorrect responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking questions which might elicit incorrect responses from this Agent (keeping in mind this Agent's knowledge base, tools, and capabilities). 
+Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails help prevent incorrect responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking questions which might elicit incorrect responses from this Agent (keeping in mind this Agent's knowledge base, tools, and capabilities).
 
 After asking each query, refresh the Project Logs and expand the log entry to see how the Agent would have responded without Cleanlab’s intervention. In the expanded log entry, you can find Cleanlab's trustworthiness score for this response and `View trustworthiness explanation`.
 
@@ -421,13 +421,13 @@ For demonstration purposes, suppose that Frontier Airlines' Disruption Assistanc
 
 In both cases, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it does not know about the “Peace Pass” is (it may wrongly think this refers to Frontier's GoWild! Pass).
 
-This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better). 
-To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above. 
+This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
+To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above.
 Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
 
 > Peace Pass is another term for Disruption Assistance
 
-After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback.
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
 Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
@@ -439,7 +439,7 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 You’ll now see that the AI provides the correct information about the Disruption Assistance program.
 
-You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project. 
+You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project.
 
 
 ## Conclusion
@@ -552,7 +552,7 @@ Select `No` under *Is this a good AI response?* and provide an explanation like
 
 > Answer depends if flight is international and if it's a service animal. Should have clarified with user, and then used info from all relevant articles: always use the "do you allow pets on plane" article, then if international/service animal, also the "service animals" article
 
-After you submit the SME feedback for this case, Cleanlab auto-generates suggested AI Guidance based on your feedback. 
+After you submit the SME feedback for this case, Cleanlab auto-generates suggested AI Guidance based on your feedback.
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
 Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
