@@ -620,3 +620,5 @@ shasum -a 256 data/kb.json
 ```
 
 Replace the existing hash in `data/CHECKSUMS` with the value these commands print. Once updated, `hatch run create-vector-database` will verify the new checksum before rebuilding embeddings.
+
+If you want to skip the checksum verification step (e.g., for rapid iteration on `kb.json`), you can instead run `hatch run create-vector-database --no-verify-checksum`.

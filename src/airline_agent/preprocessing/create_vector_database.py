@@ -1,3 +1,4 @@
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -14,10 +15,14 @@ from airline_agent.types.knowledge_base import KBArticle
 def main() -> None:
     load_dotenv()
 
+    options = parse_args()
+
     project_root = Path(__file__).resolve().parents[3]
     data_path = project_root / "data" / "kb.json"
     vector_db_path = project_root / "data" / "vector-db"
-    verify_checksum(data_path)
+
+    if not options.no_verify_checksum:
+        verify_checksum(data_path)
 
     with data_path.open() as f:
         data: list[KBArticle] = [KBArticle(**entry) for entry in json.load(f)]
@@ -27,6 +32,14 @@ def main() -> None:
     index = create_index(documents)
 
     save_index(index, vector_db_path)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Create a vector database from the knowledge base.")
+    parser.add_argument(
+        "--no-verify-checksum", action="store_true", help="Skip checksum verification of the knowledge base file"
+    )
+    return parser.parse_args()
 
 
 def to_documents(data: list[KBArticle]) -> list[Document]:
