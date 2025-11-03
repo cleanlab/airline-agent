@@ -7,8 +7,15 @@ Comprehensive coverage for Halloween week 2025 (Oct 31 - Nov 7).
 
 import json
 import random
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
+
+# Constants
+SHORT_FLIGHT_THRESHOLD_HOURS = 2.0  # Threshold for short flights (hours)
+DURATION_ADJUSTMENT = 0.1  # Adjustment for SJC/OAK flights (hours)
+PROBABILITY_PREMIUM_ECONOMY = 0.3  # Probability of premium economy add-ons
+PROBABILITY_BUSINESS = 0.2  # Probability of business add-ons
+SF_BAY_AIRPORTS = {"SJC", "OAK"}  # SF Bay Area airports (excluding SFO)
 
 # San Francisco Bay Area airports
 SF_AIRPORTS = ["SFO", "SJC", "OAK"]
@@ -53,15 +60,27 @@ FLIGHT_DURATIONS = dict(BASE_DURATIONS)
 # SJC routes (slightly shorter than SFO)
 for (orig, dest), duration in BASE_DURATIONS.items():
     if orig == "SFO":
-        FLIGHT_DURATIONS[("SJC", dest)] = duration - 0.1 if duration > 2 else duration
+        if duration > SHORT_FLIGHT_THRESHOLD_HOURS:
+            FLIGHT_DURATIONS[("SJC", dest)] = duration - DURATION_ADJUSTMENT
+        else:
+            FLIGHT_DURATIONS[("SJC", dest)] = duration
     if dest == "SFO":
-        FLIGHT_DURATIONS[(orig, "SJC")] = duration - 0.1 if duration > 2 else duration
+        if duration > SHORT_FLIGHT_THRESHOLD_HOURS:
+            FLIGHT_DURATIONS[(orig, "SJC")] = duration - DURATION_ADJUSTMENT
+        else:
+            FLIGHT_DURATIONS[(orig, "SJC")] = duration
 # OAK routes (slightly shorter than SFO)
 for (orig, dest), duration in BASE_DURATIONS.items():
     if orig == "SFO":
-        FLIGHT_DURATIONS[("OAK", dest)] = duration - 0.1 if duration > 2 else duration
+        if duration > SHORT_FLIGHT_THRESHOLD_HOURS:
+            FLIGHT_DURATIONS[("OAK", dest)] = duration - DURATION_ADJUSTMENT
+        else:
+            FLIGHT_DURATIONS[("OAK", dest)] = duration
     if dest == "SFO":
-        FLIGHT_DURATIONS[(orig, "OAK")] = duration - 0.1 if duration > 2 else duration
+        if duration > SHORT_FLIGHT_THRESHOLD_HOURS:
+            FLIGHT_DURATIONS[(orig, "OAK")] = duration - DURATION_ADJUSTMENT
+        else:
+            FLIGHT_DURATIONS[(orig, "OAK")] = duration
 
 # Hub to NYC routes
 FLIGHT_DURATIONS.update(
@@ -115,8 +134,11 @@ for sf in SF_AIRPORTS:
         if (sf, hub) not in FLIGHT_DURATIONS:
             # Use SFO duration as base
             base_duration = FLIGHT_DURATIONS.get(("SFO", hub), 3.0)
-            if sf == "SJC" or sf == "OAK":
-                FLIGHT_DURATIONS[(sf, hub)] = base_duration - 0.1 if base_duration > 2 else base_duration
+            if sf in SF_BAY_AIRPORTS:
+                if base_duration > SHORT_FLIGHT_THRESHOLD_HOURS:
+                    FLIGHT_DURATIONS[(sf, hub)] = base_duration - DURATION_ADJUSTMENT
+                else:
+                    FLIGHT_DURATIONS[(sf, hub)] = base_duration
             else:
                 FLIGHT_DURATIONS[(sf, hub)] = base_duration
 
@@ -165,7 +187,7 @@ def generate_fares() -> list[dict]:
 
     # Always include economy with multiple fare types
     economy_config = CABIN_CONFIGS["economy"]
-    base_price = random.uniform(*economy_config["price_range"])
+    base_price = random.uniform(*economy_config["price_range"])  # noqa: S311
 
     # Basic fare: no bags included
     fares.append(
@@ -174,44 +196,44 @@ def generate_fares() -> list[dict]:
             "fare_type": "basic",
             "price_total": round(base_price, 2),
             "currency": "USD",
-            "seats_available": random.randint(3, 12),
+            "seats_available": random.randint(3, 12),  # noqa: S311
             "included_carry_on": False,
             "included_checked_bag": False,
         }
     )
 
     # Standard fare: includes carry-on (+$15-25 more than basic)
-    standard_price = base_price + random.uniform(15, 25)
+    standard_price = base_price + random.uniform(15, 25)  # noqa: S311
     fares.append(
         {
             "cabin": "economy",
             "fare_type": "standard",
             "price_total": round(standard_price, 2),
             "currency": "USD",
-            "seats_available": random.randint(2, 10),
+            "seats_available": random.randint(2, 10),  # noqa: S311
             "included_carry_on": True,
             "included_checked_bag": False,
         }
     )
 
     # Flexible fare: includes checked bag (+$30-45 more than basic)
-    flexible_price = base_price + random.uniform(30, 45)
+    flexible_price = base_price + random.uniform(30, 45)  # noqa: S311
     fares.append(
         {
             "cabin": "economy",
             "fare_type": "flexible",
             "price_total": round(flexible_price, 2),
             "currency": "USD",
-            "seats_available": random.randint(1, 8),
+            "seats_available": random.randint(1, 8),  # noqa: S311
             "included_carry_on": True,
             "included_checked_bag": True,
         }
     )
 
     # Randomly add premium economy (30% chance - Frontier has limited premium options)
-    if random.random() < 0.3:
+    if random.random() < PROBABILITY_PREMIUM_ECONOMY:  # noqa: S311
         premium_config = CABIN_CONFIGS["premium_economy"]
-        premium_base = random.uniform(*premium_config["price_range"])
+        premium_base = random.uniform(*premium_config["price_range"])  # noqa: S311
 
         # Premium economy basic
         fares.append(
@@ -220,7 +242,7 @@ def generate_fares() -> list[dict]:
                 "fare_type": "basic",
                 "price_total": round(premium_base, 2),
                 "currency": "USD",
-                "seats_available": random.randint(2, 6),
+                "seats_available": random.randint(2, 6),  # noqa: S311
                 "included_carry_on": True,  # Premium always includes carry-on
                 "included_checked_bag": False,
             }
@@ -231,18 +253,18 @@ def generate_fares() -> list[dict]:
             {
                 "cabin": "premium_economy",
                 "fare_type": "flexible",
-                "price_total": round(premium_base + random.uniform(20, 35), 2),
+                "price_total": round(premium_base + random.uniform(20, 35), 2),  # noqa: S311
                 "currency": "USD",
-                "seats_available": random.randint(1, 4),
+                "seats_available": random.randint(1, 4),  # noqa: S311
                 "included_carry_on": True,
                 "included_checked_bag": True,
             }
         )
 
     # Randomly add business (20% chance - Frontier has limited business class)
-    if random.random() < 0.2:
+    if random.random() < PROBABILITY_BUSINESS:  # noqa: S311
         business_config = CABIN_CONFIGS["business"]
-        business_base = random.uniform(*business_config["price_range"])
+        business_base = random.uniform(*business_config["price_range"])  # noqa: S311
 
         # Business class always includes everything
         fares.append(
@@ -251,7 +273,7 @@ def generate_fares() -> list[dict]:
                 "fare_type": "flexible",  # Business is always flexible
                 "price_total": round(business_base, 2),
                 "currency": "USD",
-                "seats_available": random.randint(1, 4),
+                "seats_available": random.randint(1, 4),  # noqa: S311
                 "included_carry_on": True,
                 "included_checked_bag": True,
             }
@@ -264,39 +286,38 @@ def generate_fares() -> list[dict]:
 
 def generate_add_ons() -> list[dict]:
     """Generate available add-on services for a flight."""
-    add_ons = [
+    return [
         {
             "service_type": "checked_bag",
-            "price": round(random.uniform(30, 40), 2),
+            "price": round(random.uniform(30, 40), 2),  # noqa: S311
             "currency": "USD",
             "description": "One checked bag (up to 50 lbs, 62 linear inches)",
         },
         {
             "service_type": "carry_on",
-            "price": round(random.uniform(20, 30), 2),
+            "price": round(random.uniform(20, 30), 2),  # noqa: S311
             "currency": "USD",
             "description": "One carry-on bag (personal item included)",
         },
         {
             "service_type": "seat_selection",
-            "price": round(random.uniform(10, 25), 2),
+            "price": round(random.uniform(10, 25), 2),  # noqa: S311
             "currency": "USD",
             "description": "Select your seat in advance",
         },
         {
             "service_type": "priority_boarding",
-            "price": round(random.uniform(8, 15), 2),
+            "price": round(random.uniform(8, 15), 2),  # noqa: S311
             "currency": "USD",
             "description": "Priority boarding (Zone 2)",
         },
         {
             "service_type": "travel_insurance",
-            "price": round(random.uniform(15, 30), 2),
+            "price": round(random.uniform(15, 30), 2),  # noqa: S311
             "currency": "USD",
             "description": "Trip protection insurance",
         },
     ]
-    return add_ons
 
 
 def generate_flight_id(origin: str, destination: str, departure: datetime, carrier: str) -> str:
@@ -306,7 +327,10 @@ def generate_flight_id(origin: str, destination: str, departure: datetime, carri
 
 
 def generate_direct_flights(
-    start_date: datetime, num_days: int = 8, origin_airports: list = None, dest_airports: list = None
+    start_date: datetime,
+    num_days: int = 8,
+    origin_airports: list[str] | None = None,
+    dest_airports: list[str] | None = None,
 ) -> list[dict]:
     """Generate direct flights from origin airports to destination airports."""
     if origin_airports is None:
@@ -323,12 +347,12 @@ def generate_direct_flights(
         for origin in origin_airports:
             for destination in dest_airports:
                 # Generate 3-6 flights per origin-destination pair per day
-                num_flights = random.randint(3, 6)
+                num_flights = random.randint(3, 6)  # noqa: S311
 
-                for flight_num in range(num_flights):
+                for _ in range(num_flights):
                     # Random departure time between 6 AM and 10 PM
-                    hour = random.randint(6, 22)
-                    minute = random.choice([0, 15, 30, 45])
+                    hour = random.randint(6, 22)  # noqa: S311
+                    minute = random.choice([0, 15, 30, 45])  # noqa: S311
 
                     carrier_code = CARRIER_CODE
 
@@ -351,7 +375,7 @@ def generate_direct_flights(
                         "destination": destination,
                         "departure": departure_str,
                         "arrival": arrival_str,
-                        "flight_number": f"{carrier_code} {random.randint(100, 999)}",
+                        "flight_number": f"{carrier_code} {random.randint(100, 999)}",  # noqa: S311
                         "carrier": carrier_code,
                         "fares": generate_fares(),
                         "add_ons": generate_add_ons(),
@@ -363,7 +387,10 @@ def generate_direct_flights(
 
 
 def generate_connecting_flights(
-    start_date: datetime, num_days: int = 8, origin_airports: list = None, dest_airports: list = None
+    start_date: datetime,
+    num_days: int = 8,
+    origin_airports: list[str] | None = None,
+    dest_airports: list[str] | None = None,
 ) -> list[dict]:
     """Generate connecting flights from origin airports to destination airports via hub airports."""
     if origin_airports is None:
@@ -383,21 +410,21 @@ def generate_connecting_flights(
                 # Use all hubs to create many transfer options
                 for hub in HUB_AIRPORTS:
                     # Generate 1-3 connecting flights per hub per origin-destination pair per day
-                    num_routes = random.randint(1, 3)
+                    num_routes = random.randint(1, 3)  # noqa: S311
 
                     for _ in range(num_routes):
                         carrier_code = CARRIER_CODE
 
                         # First leg: Origin -> Hub
-                        hour1 = random.randint(6, 18)
-                        minute1 = random.choice([0, 15, 30, 45])
+                        hour1 = random.randint(6, 18)  # noqa: S311
+                        minute1 = random.choice([0, 15, 30, 45])  # noqa: S311
                         departure_time_leg1 = date.replace(hour=hour1, minute=minute1, second=0, microsecond=0)
 
                         duration1 = get_flight_duration(origin, hub)
                         arrival_time_leg1 = departure_time_leg1 + timedelta(hours=duration1)
 
                         # Layover: 45 minutes to 3 hours
-                        layover_hours = random.choice([0.75, 1.0, 1.5, 2.0, 2.5, 3.0])
+                        layover_hours = random.choice([0.75, 1.0, 1.5, 2.0, 2.5, 3.0])  # noqa: S311
                         departure_time_leg2 = arrival_time_leg1 + timedelta(hours=layover_hours)
 
                         # Second leg: Hub -> Destination
@@ -416,7 +443,7 @@ def generate_connecting_flights(
                                 f"%Y-%m-%dT%H:%M:00{departure_offset_leg1:+03d}:00"
                             ),
                             "arrival": arrival_time_leg1.strftime(f"%Y-%m-%dT%H:%M:00{arrival_offset_leg1:+03d}:00"),
-                            "flight_number": f"{carrier_code} {random.randint(100, 999)}",
+                            "flight_number": f"{carrier_code} {random.randint(100, 999)}",  # noqa: S311
                             "carrier": carrier_code,
                             "fares": generate_fares(),
                             "add_ons": generate_add_ons(),
@@ -434,7 +461,7 @@ def generate_connecting_flights(
                                 f"%Y-%m-%dT%H:%M:00{departure_offset_leg2:+03d}:00"
                             ),
                             "arrival": arrival_time_leg2.strftime(f"%Y-%m-%dT%H:%M:00{arrival_offset_leg2:+03d}:00"),
-                            "flight_number": f"{carrier_code} {random.randint(100, 999)}",
+                            "flight_number": f"{carrier_code} {random.randint(100, 999)}",  # noqa: S311
                             "carrier": carrier_code,
                             "fares": generate_fares(),
                             "add_ons": generate_add_ons(),
@@ -451,7 +478,7 @@ def main():
     random.seed(42)
 
     # Start date: Halloween 2025 (October 31) + 1 week
-    start_date = datetime(2025, 10, 31)
+    start_date = datetime(2025, 10, 31, tzinfo=UTC)
     num_days = 8  # Oct 31 - Nov 7
 
     print("Generating comprehensive flight data for Halloween week 2025 (Oct 31 - Nov 7)...")

@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import random
 import uuid
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any, cast
 
@@ -14,10 +14,14 @@ from airline_agent.types.booking import (
     FareType,
     Flight,
     FlightBooking,
-    FlightStatus,
     ServiceAddOn,
     ServiceType,
 )
+
+# Constants for flight status timing (in seconds)
+DEPARTURE_PAST_THRESHOLD = -900  # 15 minutes past departure
+BOARDING_START_THRESHOLD = 900  # 15 minutes until departure
+ON_TIME_THRESHOLD = 1800  # 30 minutes until departure
 
 
 class BookingTools:
@@ -79,7 +83,8 @@ class BookingTools:
         try:
             dep = date.fromisoformat(departure_date)
         except Exception as e:
-            raise ValueError(f"Invalid departure_date: {departure_date}") from e
+            msg = f"Invalid departure_date: {departure_date}"
+            raise ValueError(msg) from e
 
         return [
             fl
@@ -102,7 +107,8 @@ class BookingTools:
             Dictionary with fare details including included services and available add-ons
         """
         if flight_id not in self._flights:
-            raise ValueError(f"Flight not found: {flight_id}")
+            msg = f"Flight not found: {flight_id}"
+            raise ValueError(msg)
 
         flight = self._flights[flight_id]
 
@@ -110,10 +116,11 @@ class BookingTools:
         fare = next((f for f in flight.fares if f.cabin == cabin and f.fare_type == fare_type), None)
         if not fare:
             available_fares = [(f.cabin, f.fare_type) for f in flight.fares]
-            raise ValueError(
+            msg = (
                 f"Fare '{fare_type}' in '{cabin}' cabin not available for flight {flight_id}. "
                 f"Available fares: {available_fares}"
             )
+            raise ValueError(msg)
 
         included_services = []
         if fare.included_carry_on:
@@ -158,9 +165,10 @@ class BookingTools:
             The created booking with booking ID and total price
         """
         if not flight_ids:
-            raise ValueError("At least one flight ID must be provided")
+            msg = "At least one flight ID must be provided"
+            raise ValueError(msg)
 
-        now = datetime.now()
+        now = datetime.now(UTC)
         booking_id = f"BK-{uuid.uuid4().hex[:8].upper()}"
 
         flight_bookings: list[FlightBooking] = []
@@ -168,7 +176,8 @@ class BookingTools:
 
         for flight_id in flight_ids:
             if flight_id not in self._flights:
-                raise ValueError(f"Flight not found: {flight_id}")
+                msg = f"Flight not found: {flight_id}"
+                raise ValueError(msg)
 
             flight = self._flights[flight_id]
 
@@ -176,13 +185,15 @@ class BookingTools:
             fare = next((f for f in flight.fares if f.cabin == cabin and f.fare_type == fare_type), None)
             if not fare:
                 available_fares = [(f.cabin, f.fare_type) for f in flight.fares]
-                raise ValueError(
+                msg = (
                     f"Fare '{fare_type}' in '{cabin}' cabin not available for flight {flight_id}. "
                     f"Available fares: {available_fares}"
                 )
+                raise ValueError(msg)
 
             if fare.seats_available <= 0:
-                raise ValueError(f"No seats available for fare '{fare_type}' in {cabin} cabin for flight {flight_id}")
+                msg = f"No seats available for fare '{fare_type}' in {cabin} cabin for flight {flight_id}"
+                raise ValueError(msg)
 
             # Determine included services
             included_services = []
@@ -231,7 +242,8 @@ class BookingTools:
             The booking details
         """
         if booking_id not in self._reservations:
-            raise ValueError(f"Booking not found: {booking_id}")
+            msg = f"Booking not found: {booking_id}"
+            raise ValueError(msg)
         return self._reservations[booking_id]
 
     def get_my_bookings(self) -> list[Booking]:
@@ -266,7 +278,8 @@ class BookingTools:
             The updated booking with the new service added
         """
         if booking_id not in self._reservations:
-            raise ValueError(f"Booking not found: {booking_id}")
+            msg = f"Booking not found: {booking_id}"
+            raise ValueError(msg)
 
         booking = self._reservations[booking_id]
 
@@ -274,13 +287,13 @@ class BookingTools:
         flight_booking = next((fb for fb in booking.flights if fb.flight_id == flight_id), None)
         if not flight_booking:
             available_flights = [fb.flight_id for fb in booking.flights]
-            raise ValueError(
-                f"Flight {flight_id} not found in booking {booking_id}. " f"Available flights: {available_flights}"
-            )
+            msg = f"Flight {flight_id} not found in booking {booking_id}. Available flights: {available_flights}"
+            raise ValueError(msg)
 
         # Get the flight to check available add-ons
         if flight_id not in self._flights:
-            raise ValueError(f"Flight not found: {flight_id}")
+            msg = f"Flight not found: {flight_id}"
+            raise ValueError(msg)
 
         flight = self._flights[flight_id]
 
@@ -288,29 +301,32 @@ class BookingTools:
         addon_option = next((ao for ao in flight.add_ons if ao.service_type == service_type), None)
         if not addon_option:
             available_addons = [ao.service_type for ao in flight.add_ons]
-            raise ValueError(
-                f"Service '{service_type}' not available for flight {flight_id}. "
-                f"Available add-ons: {available_addons}"
+            msg = (
+                f"Service '{service_type}' not available for flight {flight_id}. Available add-ons: {available_addons}"
             )
+            raise ValueError(msg)
 
         # Check if service is already included in the fare
         if service_type in flight_booking.included_services:
-            raise ValueError(
+            msg = (
                 f"Service '{service_type}' is already included in the {flight_booking.fare_type} fare "
                 f"for flight {flight_id}"
             )
+            raise ValueError(msg)
 
         # Check if add-on already exists
         existing_addon = next((ao for ao in flight_booking.add_ons if ao.service_type == service_type), None)
         if existing_addon:
-            raise ValueError(f"Service '{service_type}' has already been added to flight {flight_id} in this booking")
+            msg = f"Service '{service_type}' has already been added to flight {flight_id} in this booking"
+            raise ValueError(msg)
 
         # Add the service add-on
-        now = datetime.now()
+        now = datetime.now(UTC)
 
         # For seat selection, validate that preferences/assignments are only set for seat_selection
         if service_type != "seat_selection" and (seat_preference or seat_assignment):
-            raise ValueError("seat_preference and seat_assignment can only be set for seat_selection service type")
+            msg = "seat_preference and seat_assignment can only be set for seat_selection service type"
+            raise ValueError(msg)
 
         flight_booking.add_ons.append(
             ServiceAddOn(
@@ -339,13 +355,13 @@ class BookingTools:
         Returns:
             Dictionary with current date in YYYY-MM-DD format and ISO timestamp
         """
-        now = datetime.now()
+        now = datetime.now(UTC)
         return {
             "date": now.date().isoformat(),  # YYYY-MM-DD format
             "datetime": now.isoformat(),  # Full ISO timestamp with timezone
         }
 
-    def _assign_seat(self, flight_booking: FlightBooking, cabin: Cabin, flight_id: str) -> str:
+    def _assign_seat(self, flight_booking: FlightBooking, cabin: Cabin, _flight_id: str) -> str:
         """Assign a seat to a flight booking based on preferences or randomly."""
         # Check if seat_selection add-on exists with an assignment
         seat_addon = next(
@@ -367,19 +383,19 @@ class BookingTools:
             "first": (1, 4),
         }
         row_min, row_max = row_ranges.get(cabin, (1, 40))
-        row = random.randint(row_min, row_max)
+        row = random.randint(row_min, row_max)  # noqa: S311
 
         # Seat letters (typical 3-3 configuration: A, B, C, D, E, F)
         seat_letters = ["A", "B", "C", "D", "E", "F"]
         window_seats = ["A", "F"]
         aisle_seats = ["C", "D"]
-        
+
         if preference == "window":
-            seat_letter = random.choice(window_seats)
+            seat_letter = random.choice(window_seats)  # noqa: S311
         elif preference == "aisle":
-            seat_letter = random.choice(aisle_seats)
+            seat_letter = random.choice(aisle_seats)  # noqa: S311
         else:
-            seat_letter = random.choice(seat_letters)
+            seat_letter = random.choice(seat_letters)  # noqa: S311
 
         return f"{row}{seat_letter}"
 
@@ -388,24 +404,24 @@ class BookingTools:
         # Assign departure terminal and gate if not already assigned
         if not flight.departure_terminal:
             terminals = ["Terminal 1", "Terminal 2", "Terminal 3", "Terminal A", "Terminal B"]
-            flight.departure_terminal = random.choice(terminals)
+            flight.departure_terminal = random.choice(terminals)  # noqa: S311
 
         if not flight.departure_gate:
             # Generate a gate like "A15", "B22", "C8"
             gate_letters = ["A", "B", "C", "D"]
-            gate_letter = random.choice(gate_letters)
-            gate_number = random.randint(1, 50)
+            gate_letter = random.choice(gate_letters)  # noqa: S311
+            gate_number = random.randint(1, 50)  # noqa: S311
             flight.departure_gate = f"{gate_letter}{gate_number}"
 
         # Assign arrival terminal and gate if not already assigned
         if not flight.arrival_terminal:
             terminals = ["Terminal 1", "Terminal 2", "Terminal 3", "Terminal A", "Terminal B"]
-            flight.arrival_terminal = random.choice(terminals)
+            flight.arrival_terminal = random.choice(terminals)  # noqa: S311
 
         if not flight.arrival_gate:
             gate_letters = ["A", "B", "C", "D", "E"]
-            gate_letter = random.choice(gate_letters)
-            gate_number = random.randint(1, 60)
+            gate_letter = random.choice(gate_letters)  # noqa: S311
+            gate_number = random.randint(1, 60)  # noqa: S311
             flight.arrival_gate = f"{gate_letter}{gate_number}"
 
     def _calculate_check_in_timings(self, departure: datetime) -> dict[str, datetime]:
@@ -434,29 +450,32 @@ class BookingTools:
             The updated booking with check-in information
         """
         if booking_id not in self._reservations:
-            raise ValueError(f"Booking not found: {booking_id}")
+            msg = f"Booking not found: {booking_id}"
+            raise ValueError(msg)
 
         booking = self._reservations[booking_id]
         if booking.status.status != "confirmed":
-            raise ValueError(f"Cannot check in for booking {booking_id}: booking status is {booking.status.status}")
+            msg = f"Cannot check in for booking {booking_id}: booking status is {booking.status.status}"
+            raise ValueError(msg)
 
         # Find the flight in the booking
         flight_booking = next((fb for fb in booking.flights if fb.flight_id == flight_id), None)
         if not flight_booking:
             available_flights = [fb.flight_id for fb in booking.flights]
-            raise ValueError(
-                f"Flight {flight_id} not found in booking {booking_id}. Available flights: {available_flights}"
-            )
+            msg = f"Flight {flight_id} not found in booking {booking_id}. Available flights: {available_flights}"
+            raise ValueError(msg)
 
         if flight_booking.checked_in:
-            raise ValueError(f"Already checked in for flight {flight_id} in booking {booking_id}")
+            msg = f"Already checked in for flight {flight_id} in booking {booking_id}"
+            raise ValueError(msg)
 
         # Get the flight details
         if flight_id not in self._flights:
-            raise ValueError(f"Flight not found: {flight_id}")
+            msg = f"Flight not found: {flight_id}"
+            raise ValueError(msg)
 
         flight = self._flights[flight_id]
-        now = datetime.now(flight.departure.tzinfo) if flight.departure.tzinfo else datetime.now()
+        now = datetime.now(flight.departure.tzinfo) if flight.departure.tzinfo else datetime.now(UTC)
 
         # Assign gates and terminals if needed
         self._assign_gates_and_terminals(flight)
@@ -490,7 +509,8 @@ class BookingTools:
             Dictionary with all timing windows and estimated times
         """
         if flight_id not in self._flights:
-            raise ValueError(f"Flight not found: {flight_id}")
+            msg = f"Flight not found: {flight_id}"
+            raise ValueError(msg)
 
         flight = self._flights[flight_id]
         timings = self._calculate_check_in_timings(flight.departure)
@@ -529,26 +549,25 @@ class BookingTools:
             Dictionary with current flight status and operational information
         """
         if flight_id not in self._flights:
-            raise ValueError(f"Flight not found: {flight_id}")
+            msg = f"Flight not found: {flight_id}"
+            raise ValueError(msg)
 
         flight = self._flights[flight_id]
 
         # Auto-update gates/terminals if check-in window is open
         self._assign_gates_and_terminals(flight)
-        
+
         # Update flight status based on current time
-        now = datetime.now(flight.departure.tzinfo) if flight.departure.tzinfo else datetime.now()
+        now = datetime.now(flight.departure.tzinfo) if flight.departure.tzinfo else datetime.now(UTC)
         time_until_departure = flight.departure - now
 
         # Update status based on current time vs scheduled departure
         if flight.status in ("scheduled", "on_time", "boarding"):
-            if time_until_departure.total_seconds() < -900:  # 15 minutes past departure
+            if time_until_departure.total_seconds() < 0:  # Past departure time
                 flight.status = "departed"
-            elif time_until_departure.total_seconds() < 0:  # Past departure time
-                flight.status = "departed"
-            elif time_until_departure.total_seconds() < 900:  # Less than 15 minutes until departure
+            elif time_until_departure.total_seconds() < BOARDING_START_THRESHOLD:
                 flight.status = "boarding"
-            elif time_until_departure.total_seconds() < 1800:  # Less than 30 minutes until departure
+            elif time_until_departure.total_seconds() < ON_TIME_THRESHOLD:
                 flight.status = "on_time"
             else:
                 flight.status = "on_time"

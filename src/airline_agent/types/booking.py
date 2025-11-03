@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, computed_field
+
+if TYPE_CHECKING:
+    from datetime import datetime
 
 Cabin = Literal["economy", "premium_economy", "business", "first"]
 FareType = Literal["basic", "standard", "flexible"]
