@@ -195,7 +195,7 @@ Cleanlab also supports two types of user-configurable *Custom* Guardrails: Seman
 
 #### 2b. Semantic Guardrails
 
-Cleanlab supports creating Guardrails described in natural language. Inspect some Custom Guardrails that we pre-configured in your [Project]](https://codex.cleanlab.ai/) and try making your own Custom Guardrails. Then query the Agent to see how these Guardrails have made it safer.
+Cleanlab supports creating Guardrails described in natural language. Inspect some Custom Guardrails that we pre-configured in your [Project](https://codex.cleanlab.ai/) and try making your own Custom Guardrails. Then query the Agent to see how these Guardrails have made it safer.
 
 **Try starting a new chat and asking *one or more* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
