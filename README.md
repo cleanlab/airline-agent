@@ -337,16 +337,16 @@ Cleanlab supports not only detecting bad outputs but also _remediating_ bad outp
 
 This feature is especially useful for AI applications such as customer support (like this demo), where many users ask similar queries. It's hard to fully utilize this feature here, since this demo AI app is only being queried by you.
 
-Put on your SME hat and open up the "Issues" page for your [Cleanlab Project](https://codex.cleanlab.ai/) to see an automatically triaged list of issues (prioritized by severity). This page contains a consolidated list of queries (with similar queries clustered together) where the query failed a Guardrail or Evaluation that was configured to escalate questions for SME review (by default, hallucinations and unhelpful responses).
+Put on your SME hat and open up the "Expert Workspace" page for your [Cleanlab Project](https://codex.cleanlab.ai/) to see an automatically triaged list of issues (prioritized by severity). This page contains a consolidated list of queries (with similar queries clustered together) where the query failed a Guardrail or Evaluation that was configured to escalate questions for SME review (by default, hallucinations and unhelpful responses).
 
 If you haven't already asked a number of questions where the Agent replied with "I don't know" or a hallucination, you can ask several more questions to populate this page.
 
 #### 4a. Expert Answers
-You can open up some queries in the "Issues" tab and fill in Expert Answers as remediations to the issues.
+You can open up some queries in the "Expert Workspace" tab and fill in Expert Answers as remediations to the issues.
 
 These answers are integrated into the Agent as a semantic cache, so when anyone asks a similar question in the future, it'll be answered correctly thanks to the expert answer. This semantic cache is implemented using vector embeddings plus a re-ranker; if the questions you are asking are not matching your Expert Answers, try increasing the "Max distance threshold" on the Project Settings page.
 
-Here's a concrete query we asked above that you can either try again or look up in the Project's Issues page:
+Here's a concrete query we asked above that you can either try again or look up in the Project's Expert Workspace page:
 
 > *Who founded Frontier Airlines?*
 
@@ -444,7 +444,7 @@ You can review/edit existing Guidance by opening the `AI Guidance` section in th
 
 ## Conclusion
 
-This demo shows one example of an AI Agent integrated with the Cleanlab AI Platform. It demonstrates some of the core functionality of the platform, including observability/logging, Guardrails, Evaluations, and Remediations. To efficiently utilize your SMEs, Cleanlab automatically prioritizes the cases that will have the highest impact to remediate on the Project's Issues page.
+This demo shows one example of an AI Agent integrated with the Cleanlab AI Platform. It demonstrates some of the core functionality of the platform, including observability/logging, Guardrails, Evaluations, and Remediations. To efficiently utilize your SMEs, Cleanlab automatically prioritizes the cases that will have the highest impact to remediate on the Project's Expert Workspace page.
 
 Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easily integrate the Cleanlab AI Platform as a trust/control layer for your own AI applications.
 
