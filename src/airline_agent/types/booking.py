@@ -1,9 +1,7 @@
-from __future__ import annotations
-
-from datetime import datetime  # noqa: TCH003
+from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, computed_field
+from pydantic import BaseModel, Field, computed_field
 
 FareType = Literal["basic", "economy", "premium", "business"]
 ServiceType = Literal[
@@ -34,25 +32,39 @@ class ServiceAddOn(BaseModel):
     service_type: ServiceType
     price: float
     currency: str = "USD"
-    added_at: datetime  # When was this add-on added
-    # Seat selection specific fields
-    seat_preference: str | None = None  # e.g., "window", "aisle", "middle"
-    seat_assignment: str | None = None  # e.g., "12A", "15F" - actual assigned seat
-    seat_type: str | None = None  # e.g., "standard", "stretch", "upfront_plus" - type of seat selected
+    added_at: datetime = Field(..., description="Timestamp when the add-on was added")
+    seat_preference: str | None = Field(
+        default=None,
+        description='Seat preference such as "window", "aisle", or "middle"',
+    )
+    seat_assignment: str | None = Field(
+        default=None,
+        description='Assigned seat identifier, for example "12A" or "15F"',
+    )
+    seat_type: str | None = Field(
+        default=None,
+        description=('Type of seat selected, for example "standard", "stretch", or ' '"upfront_plus"'),
+    )
 
 
 class Fare(BaseModel):
     """Frontier Airlines fare bundle. No separate cabin classes - all passengers in same cabin."""
 
-    fare_type: FareType = "basic"  # Which fare bundle (basic, economy, premium, business)
-    price_total: float  # per passenger
+    fare_type: FareType = Field(
+        default="basic",
+        description="Fare bundle purchased (basic, economy, premium, or business)",
+    )
+    price_total: float = Field(..., description="Per-passenger price of the fare")
     currency: str = "USD"
     seats_available: int
-    # Services included in this fare bundle (flat list, no nested references)
-    included_services: list[
-        str
-    ]  # e.g., ["carry_on", "standard_seat_selection", "refundability", "change_cancel_fee_waived"]
-    checked_bags_included: int = 0  # Number of checked bags included (0, 1, or 2 for business)
+    included_services: list[str] = Field(
+        default_factory=list,
+        description=("Services included in this fare bundle, e.g. carry-on or seat selection"),
+    )
+    checked_bags_included: int = Field(
+        default=0,
+        description="Number of checked bags included (0, 1, or 2 for business)",
+    )
 
 
 class ServiceAddOnOption(BaseModel):
@@ -65,6 +77,8 @@ class ServiceAddOnOption(BaseModel):
 
 
 class Flight(BaseModel):
+    """Inventory and day-of-travel information for a specific flight."""
+
     id: str
     origin: str
     destination: str
@@ -73,21 +87,24 @@ class Flight(BaseModel):
     flight_number: str
     carrier: str = "F9"
     fares: list[Fare]
-    add_ons: list[ServiceAddOnOption] = []  # Available add-ons for this flight
-
-    # Day-of travel information (enriched closer to departure)
-    departure_terminal: str | None = None  # e.g., "Terminal 1", "Terminal A"
-    departure_gate: str | None = None  # e.g., "A15", "B22"
-    arrival_terminal: str | None = None  # e.g., "Terminal 3"
-    arrival_gate: str | None = None  # e.g., "C8"
-
-    # Flight status tracking
+    add_ons: list[ServiceAddOnOption] = Field(
+        default_factory=list,
+        description="Available add-ons that can be purchased for the flight",
+    )
+    departure_terminal: str | None = Field(
+        default=None, description='Departure terminal, e.g. "Terminal 1" or "Terminal A"'
+    )
+    departure_gate: str | None = Field(default=None, description='Departure gate, e.g. "A15" or "B22"')
+    arrival_terminal: str | None = Field(default=None, description='Arrival terminal, e.g. "Terminal 3"')
+    arrival_gate: str | None = Field(default=None, description='Arrival gate, e.g. "C8"')
     status: FlightStatus = "scheduled"
     status_updated_at: datetime | None = None
-    delay_minutes: int | None = None  # If delayed, minutes of delay
+    delay_minutes: int | None = Field(default=None, description="Minutes of delay when the flight is delayed")
 
 
 class BookingStatus(BaseModel):
+    """State and timestamps for a booking."""
+
     status: Literal["confirmed", "cancelled", "pending"]
     created_at: datetime
     updated_at: datetime
@@ -97,26 +114,27 @@ class FlightBooking(BaseModel):
     """Represents a single flight within a booking."""
 
     flight_id: str
-    fare_type: FareType = "basic"  # Which fare bundle was purchased
-
-    # Base fare pricing
-    base_price: float  # Price of the fare itself
+    fare_type: FareType = Field(default="basic", description="Fare bundle purchased for the flight")
+    base_price: float = Field(..., description="Price of the fare itself")
     currency: str = "USD"
-
-    # Services included in the fare (flat list, no nested references)
-    included_services: list[str] = []  # e.g., ["carry_on", "standard_seat_selection", "refundability"]
-    checked_bags_included: int = 0  # Number of checked bags included (0, 1, or 2 for business)
-
-    # Add-on services purchased separately
-    add_ons: list[ServiceAddOn] = []
-
-    # Check-in information
-    checked_in: bool = False
-    checked_in_at: datetime | None = None  # When check-in was completed
-
-    # Final seat assignment (may differ from seat_selection preference/addon)
-    # This is the actual assigned seat after check-in
-    seat_assignment: str | None = None  # e.g., "12A", "15F"
+    included_services: list[str] = Field(
+        default_factory=list,
+        description=("Services bundled with the fare, such as carry-on or standard seat selection"),
+    )
+    checked_bags_included: int = Field(
+        default=0,
+        description="Number of checked bags included (0, 1, or 2 for business)",
+    )
+    add_ons: list[ServiceAddOn] = Field(
+        default_factory=list,
+        description="Add-on services purchased separately from the base fare",
+    )
+    checked_in: bool = Field(default=False, description="Whether the passenger has completed check-in")
+    checked_in_at: datetime | None = Field(default=None, description="Timestamp when check-in was completed")
+    seat_assignment: str | None = Field(
+        default=None,
+        description='Final seat assignment, e.g. "12A" or "15F"',
+    )
 
     @computed_field  # type: ignore[prop-decorator]
     @property
