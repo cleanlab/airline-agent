@@ -106,8 +106,9 @@ cleanlab_enabled_by_thread: dict[str, bool] = {}
 
 async def airline_chat_streaming(
     message: UserMessage,
-    cleanlab_enabled: bool,  # noqa: FBT001
-    stream_intermediate_messages: bool,  # noqa: FBT001
+    *,
+    cleanlab_enabled: bool,
+    stream_intermediate_messages: bool,
 ) -> AsyncGenerator[RunEvent, None]:
     run_id = uuid.uuid4()
     thread_id = message.thread_id
@@ -213,6 +214,7 @@ async def airline_chat_streaming(
                             guardrailed=validation_result.should_guardrail,
                             escalated_to_sme=validation_result.escalated_to_sme,
                             scores=_format_eval_results(validation_result),
+                            log_id=validation_result.log_id,
                         ),
                     ),
                 )

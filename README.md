@@ -145,7 +145,7 @@ Cleanlab's Guardrails help detect and prevent bad responses from your AI app, su
 
 #### 2a. Out-of-the-box Guardrails
 
-Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails help prevent incorrect responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking questions which might elicit incorrect responses from this Agent (keeping in mind this Agent's knowledge base, tools, and capabilities). 
+Cleanlab's out-of-the-box **trustworthiness/hallucination** Guardrails help prevent incorrect responses from your AI (i.e. LLM hallucinations, reasoning errors, misunderstandings). Try asking questions which might elicit incorrect responses from this Agent (keeping in mind this Agent's knowledge base, tools, and capabilities).
 
 After asking each query, refresh the Project Logs and expand the log entry to see how the Agent would have responded without Cleanlab’s intervention. In the expanded log entry, you can find Cleanlab's trustworthiness score for this response and `View trustworthiness explanation`.
 
@@ -195,7 +195,7 @@ Cleanlab also supports two types of user-configurable *Custom* Guardrails: Seman
 
 #### 2b. Semantic Guardrails
 
-Cleanlab supports creating Guardrails described in natural language. Inspect some Custom Guardrails that we pre-configured in your [Project]](https://codex.cleanlab.ai/) and try making your own Custom Guardrails. Then query the Agent to see how these Guardrails have made it safer.
+Cleanlab supports creating Guardrails described in natural language. Inspect some Custom Guardrails that we pre-configured in your [Project](https://codex.cleanlab.ai/) and try making your own Custom Guardrails. Then query the Agent to see how these Guardrails have made it safer.
 
 **Try starting a new chat and asking *one or more* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
@@ -337,16 +337,16 @@ Cleanlab supports not only detecting bad outputs but also _remediating_ bad outp
 
 This feature is especially useful for AI applications such as customer support (like this demo), where many users ask similar queries. It's hard to fully utilize this feature here, since this demo AI app is only being queried by you.
 
-Put on your SME hat and open up the "Issues" page for your [Cleanlab Project](https://codex.cleanlab.ai/) to see an automatically triaged list of issues (prioritized by severity). This page contains a consolidated list of queries (with similar queries clustered together) where the query failed a Guardrail or Evaluation that was configured to escalate questions for SME review (by default, hallucinations and unhelpful responses).
+Put on your SME hat and open up the "Expert Workspace" page for your [Cleanlab Project](https://codex.cleanlab.ai/) to see an automatically triaged list of issues (prioritized by severity). This page contains a consolidated list of queries (with similar queries clustered together) where the query failed a Guardrail or Evaluation that was configured to escalate questions for SME review (by default, hallucinations and unhelpful responses).
 
 If you haven't already asked a number of questions where the Agent replied with "I don't know" or a hallucination, you can ask several more questions to populate this page.
 
 #### 4a. Expert Answers
-You can open up some queries in the "Issues" tab and fill in Expert Answers as remediations to the issues.
+You can open up some queries in the "Expert Workspace" tab and fill in Expert Answers as remediations to the issues.
 
 These answers are integrated into the Agent as a semantic cache, so when anyone asks a similar question in the future, it'll be answered correctly thanks to the expert answer. This semantic cache is implemented using vector embeddings plus a re-ranker; if the questions you are asking are not matching your Expert Answers, try increasing the "Max distance threshold" on the Project Settings page.
 
-Here's a concrete query we asked above that you can either try again or look up in the Project's Issues page:
+Here's a concrete query we asked above that you can either try again or look up in the Project's Expert Workspace page:
 
 > *Who founded Frontier Airlines?*
 
@@ -421,13 +421,13 @@ For demonstration purposes, suppose that Frontier Airlines' Disruption Assistanc
 
 In both cases, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it does not know about the “Peace Pass” is (it may wrongly think this refers to Frontier's GoWild! Pass).
 
-This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better). 
-To create Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above. 
+This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
+To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above.
 Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
 
 > Peace Pass is another term for Disruption Assistance
 
-After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback.
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
 Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
@@ -439,12 +439,12 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 You’ll now see that the AI provides the correct information about the Disruption Assistance program.
 
-You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project. 
+You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project.
 
 
 ## Conclusion
 
-This demo shows one example of an AI Agent integrated with the Cleanlab AI Platform. It demonstrates some of the core functionality of the platform, including observability/logging, Guardrails, Evaluations, and Remediations. To efficiently utilize your SMEs, Cleanlab automatically prioritizes the cases that will have the highest impact to remediate on the Project's Issues page.
+This demo shows one example of an AI Agent integrated with the Cleanlab AI Platform. It demonstrates some of the core functionality of the platform, including observability/logging, Guardrails, Evaluations, and Remediations. To efficiently utilize your SMEs, Cleanlab automatically prioritizes the cases that will have the highest impact to remediate on the Project's Expert Workspace page.
 
 Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easily integrate the Cleanlab AI Platform as a trust/control layer for your own AI applications.
 
@@ -458,24 +458,53 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 > *I'm dizzy should i still fly tmr?*
 
-#### To explore trust scoring
+#### To explore Trust Scoring
 
-> *If theres no overhead bin space for my carry on must i pay extra to check it?*
+> *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
 
 <details>
   <summary>Learn More</summary>
 
 ```text
-AI Response without Cleanlab:
-I couldn't find specific information about whether you would need to pay extra to check your carry-on if there's no overhead bin space. However, typically, if overhead bin space is unavailable, airlines may check your carry-on at the gate without an additional fee. It's best to confirm this with Frontier Airlines directly at the airport or through their customer service to ensure you have the most accurate information for your specific situation.
+AI Response (guardrailed and prevented by Cleanlab):
+
+You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
 ```
+
+Under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.  Here Cleanlab’s trustworthiness guardrail prevented the Agent from giving unlawful advice.
+
+<br><br>
+</details>
+
+
+> *can i do a seat change on same day of flight*
+
+<details>
+  <summary>Learn More</summary>
 
 ```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+AI Response (guardrailed and prevented by Cleanlab):
+
+Yes, you can change your seat on the same day of your flight with Frontier Airlines. If you wish to change to an earlier flight on your day of travel, you can do so by contacting an airport agent, subject to seat availability. A same-day change fee and any difference in fare and options prices will apply. This allows you to fly to your original destination or to an equivalent destination.
 ```
 
-The Agent's response is not at all supported by any information in the files it found.  Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
+Here the AI response incorrectly focuses on same-day flight changes, when the customer was merely asking to change their seat on the same flight.  The Agent should have referenced the `/help/do-i-have-to-purchase-a-seat-assignment` document, and clarified that the latest time to select a seat is during check-in.
+<br><br>
+</details>
+
+
+> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response (guardrailed and prevented by Cleanlab):
+
+According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
+```
+
+Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
 <br><br>
 </details>
 
@@ -486,78 +515,17 @@ The Agent's response is not at all supported by any information in the files it 
   <summary>Learn More</summary>
 
 ```text
-AI Response without Cleanlab:
+AI Response (guardrailed and prevented by Cleanlab):
+
 The Discount Den membership is a separate entity from your flight booking. If you received a Discount Den membership as part of a promotion when booking a flight, canceling the flight within 24 hours should not automatically cancel your Discount Den membership. However, it's important to check the specific terms and conditions of the promotion you received, as there might be unique stipulations.
 
 For general terms, the Discount Den membership provides access to lower fares and other benefits for a year, and it is not typically tied to the status of a specific flight booking. If you have any concerns or specific conditions related to your promotional offer, I recommend reviewing the terms provided at the time of the offer or contacting Frontier Airlines customer service for clarification.
-```
-
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 ```
 
 The Agent has no information regarding this promotion in its knowledge base, yet it implicitly endorses a potential exploit of the promotional terms by reassuring the user that “undoing” the accrual activity would not affect the Discount Den membership earned via the promotion. Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
 <br><br>
 </details>
 
-> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response without Cleanlab:
-According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
-```
-
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
-
-Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
-<br><br>
-</details>
-
-> *can i do a seat change on same day of flight*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response without Cleanlab:
-Yes, you can change your seat on the same day of your flight with Frontier Airlines. If you wish to change to an earlier flight on your day of travel, you can do so by contacting an airport agent, subject to seat availability. A same-day change fee and any difference in fare and options prices will apply. This allows you to fly to your original destination or to an equivalent destination.
-```
-
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
-
-Here the AI response incorrectly focuses on same-day flight changes, when the customer was merely asking to change their seat on the same flight.  The Agent should have referenced the `/help/do-i-have-to-purchase-a-seat-assignment` document, and clarified that the latest time to select a seat is during check-in.
-<br><br>
-</details>
-
-> *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response without Cleanlab:
-You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
-```
-
-```text
-AI Response with Cleanlab:
-I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
-```
-
-Under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.  Here Cleanlab’s trustworthiness guardrail prevented the Agent from giving unlawful advice.
-
-<br><br>
-</details>
 
 #### To explore AI Guidance
 
@@ -570,22 +538,21 @@ Under U.S. federal law, marijuana and all THC products is illegal to fly with, r
 
   > *can i bring a dog with me on a flight?*
 
-The AI retrieves `/help/do-you-allow-pets-on-the-plane` instead and mentions that only service animals are allowed on international flights.
+The AI references `/help/do-you-allow-pets-on-the-plane` and mentions that only service animals are allowed on international flights.
 However, this answer can be improved if the AI first clarified if the passenger is flying domestic or international.
-If the flight is international, the AI should also retrieve `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and explain the requirements for service animals.
+If the flight is international, the AI should also reference `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and explain the requirements for service animals.
 
 > *can i bring my emotional support dog with me on a domestic flight?*
 
-The AI retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not recognize emotional support animals as service animals.
-However, this answer can be improved if the AI also retrieved `/help/do-you-allow-pets-on-the-plane`.
-By including that article, the AI could explain that the passenger may still bring their dog on board if they comply with Frontier’s Pet Policy.
+The AI references `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not recognize emotional support animals as service animals.
+However, this answer can be improved if the AI also referenced the `/help/do-you-allow-pets-on-the-plane` article, which notes that the passenger may still bring their dog on board if they comply with Frontier’s Pet Policy.
 
-To create Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above. 
-Select `No` under *Is this a good AI response?* and provide the following explanation in the `Reason` field:
+To provide AI Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above.
+Select `No` under *Is this a good AI response?* and provide an explanation like the following in the `Reason` field:
 
-> If a user asks about bringing an animal on a flight, first confirm if the flight is international and if the animal is a service animal. Then call get_article with /help/do-you-allow-pets-on-the-plane. If either condition applies, also call get_article with /help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane. Use all retrieved articles in your response.
+> Answer depends if flight is international and if it's a service animal. Should have clarified with user, and then used info from all relevant articles: always use the "do you allow pets on plane" article, then if international/service animal, also the "service animals" article
 
-After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback. 
+After you submit the SME feedback for this case, Cleanlab auto-generates suggested AI Guidance based on your feedback.
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
 Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
@@ -593,25 +560,42 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 > *can i bring a dog with me on a flight?*
 
-... after Agent responds, you can then ask a follow-up question ...
+... after the Agent responds, you can then clarify ...
 
 > *its an international flight. and its a service animal*
 
-You’ll now see that the AI also retrieves `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and includes more details about service animal requirements.
-In contrast, if you followed up with:
+You’ll now see that the AI also references `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and includes more details about service animal requirements.
+In contrast, if you instead followed up with:
 
 > *its a domestic flight. and its a house pet*
 
 The AI will instead reference `/help/do-you-allow-pets-on-the-plane` and tailor its response accordingly.
-This new Guidance ensures the AI combines both articles when appropriate, resulting in a more complete and personalized user experience.
+Your Guidance ensures the AI combines both articles when appropriate, to better serve users.
 
 > *can i bring my emotional support dog with me on a domestic flight?*
 
 In this case, because the user’s question already specifies both the type of flight and the kind of animal, the AI skips asking a clarifying question. You’ll also notice that the AI now adds information that domesticated pets are allowed on the flight. This helps clarify that while emotional support animals are not treated as service animals, pets may still travel under the standard Pet Policy.
-
-You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project. 
 <br><br>
 </details>
+
+
+#### To explore detection of Knowledge Gaps (Helpfulness / Context Sufficiency Evaluations)
+
+> *If theres no overhead bin space for my carry on must i pay extra to check it?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response:
+
+I couldn't find specific information about whether you would need to pay extra to check your carry-on if there's no overhead bin space. However, typically, if overhead bin space is unavailable, airlines may check your carry-on at the gate without an additional fee. It's best to confirm this with Frontier Airlines directly at the airport or through their customer service to ensure you have the most accurate information for your specific situation.
+```
+
+The Agent's response is not at all supported by any information in the files it found.  Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
+<br><br>
+</details>
+
 
 ---
 
@@ -636,3 +620,5 @@ shasum -a 256 data/kb.json
 ```
 
 Replace the existing hash in `data/CHECKSUMS` with the value these commands print. Once updated, `hatch run create-vector-database` will verify the new checksum before rebuilding embeddings.
+
+If you want to skip the checksum verification step (e.g., for rapid iteration on `kb.json`), you can instead run `hatch run create-vector-database --no-verify-checksum`.

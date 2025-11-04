@@ -34,6 +34,7 @@ class MessageMetadata(BaseModel):
     guardrailed: bool | None = None
     escalated_to_sme: bool | None = None
     scores: ResponseScoreMetadata | None = None
+    log_id: str | None = None
 
 
 class ToolCall(BaseModel):
