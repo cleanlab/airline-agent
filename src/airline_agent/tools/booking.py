@@ -5,7 +5,7 @@ import random
 import uuid
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 from airline_agent.types.booking import (
     Booking,
@@ -139,7 +139,7 @@ class BookingTools:
     def book_flights(
         self,
         flight_ids: list[str],
-        fare_type: str = "basic",
+        fare_type: FareType = "basic",
     ) -> Booking:
         """
         Book one or more flights for the current user.
@@ -182,7 +182,7 @@ class BookingTools:
             flight_bookings.append(
                 FlightBooking(
                     flight_id=flight_id,
-                    fare_type=cast(FareType, fare_type),
+                    fare_type=fare_type,
                     base_price=fare.price_total,
                     currency=fare.currency,
                     included_services=fare.included_services.copy(),
@@ -236,7 +236,7 @@ class BookingTools:
         self,
         booking_id: str,
         flight_id: str,
-        service_type: str,
+        service_type: ServiceType,
         seat_preference: str | None = None,
         seat_assignment: str | None = None,
     ) -> Booking:
@@ -325,7 +325,7 @@ class BookingTools:
 
         flight_booking.add_ons.append(
             ServiceAddOn(
-                service_type=cast(ServiceType, service_type),
+                service_type=service_type,
                 price=addon_option.price,
                 currency=addon_option.currency,
                 added_at=now,
