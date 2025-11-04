@@ -32,7 +32,11 @@ This repository contains an example of a production-grade AI Agent that is integ
     ```console
     $ hatch run create-vector-database
     ```
-7. Install frontend dependencies:
+7. Generate flight schedule data:
+    ```console
+    $ hatch run generate-flights
+    ```
+8. Install frontend dependencies:
     ```console
     $ cd frontend
     $ npm install
