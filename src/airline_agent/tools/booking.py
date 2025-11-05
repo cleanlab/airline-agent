@@ -36,6 +36,11 @@ class BookingTools:
         # Initialize seeded random number generator for deterministic behavior
         self._rng = random.Random(RNG_SEED)  # noqa: S311
 
+    def _reset(self) -> None:
+        """Clear all reservations and reset the random number generator for test isolation."""
+        self._reservations = {}
+        self._rng = random.Random(RNG_SEED)  # noqa: S311
+
     def search_flights(self, origin: str, destination: str, departure_date: str) -> list[Flight]:
         """
         Search available flights by route and date.
