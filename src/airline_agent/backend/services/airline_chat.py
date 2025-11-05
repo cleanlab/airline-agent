@@ -63,20 +63,7 @@ def create_agent(kb: KnowledgeBase, booking: BookingTools) -> Agent:
     return Agent(
         model=model,
         instructions=AGENT_INSTRUCTIONS,
-        tools=[
-            kb.get_article,
-            kb.search,
-            kb.list_directory,
-            booking.search_flights,
-            booking.get_fare_details,
-            booking.book_flights,
-            booking.get_booking,
-            booking.get_my_bookings,
-            booking.add_service_to_booking,
-            booking.check_in,
-            booking.get_flight_timings,
-            booking.get_flight_status,
-        ],
+        toolsets=[kb.tools, booking.tools],
     )
 
 

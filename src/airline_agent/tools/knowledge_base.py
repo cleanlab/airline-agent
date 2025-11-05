@@ -4,6 +4,7 @@ import logging
 from llama_index.core import StorageContext, VectorStoreIndex, load_index_from_storage
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore[import-untyped]
 from pydantic_ai import ModelRetry
+from pydantic_ai.toolsets import FunctionToolset
 
 from airline_agent.constants import RAG_EMBED_MODEL
 from airline_agent.types.knowledge_base import DirectoryEntry, KBArticle, SearchResult
@@ -105,3 +106,8 @@ class KnowledgeBase:
                 dir_name = suffix.split("/", 1)[0]
                 entries.add(DirectoryEntry(name=dir_name, kind="directory"))
         return sorted(entries, key=lambda e: e.name)
+
+    @property
+    def tools(self) -> FunctionToolset:
+        """Returns a FunctionToolset containing all knowledge base tools."""
+        return FunctionToolset(tools=[self.get_article, self.search, self.list_directory])

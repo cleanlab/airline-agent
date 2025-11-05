@@ -2,6 +2,8 @@ import random
 from datetime import date, datetime, timedelta
 from typing import Any
 
+from pydantic_ai.toolsets import FunctionToolset
+
 from airline_agent.constants import DEMO_DATETIME
 from airline_agent.data_generation.generate_flights import generate_flight_data
 from airline_agent.types.booking import (
@@ -566,3 +568,20 @@ class BookingTools:
             "scheduled_arrival": flight.arrival.isoformat(),
             "carrier": flight.carrier,
         }
+
+    @property
+    def tools(self) -> FunctionToolset:
+        """Returns a FunctionToolset containing all booking tools."""
+        return FunctionToolset(
+            tools=[
+                self.search_flights,
+                self.get_fare_details,
+                self.book_flights,
+                self.get_booking,
+                self.get_my_bookings,
+                self.add_service_to_booking,
+                self.check_in,
+                self.get_flight_timings,
+                self.get_flight_status,
+            ]
+        )
