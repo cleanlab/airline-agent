@@ -32,7 +32,6 @@ create-demo-project = "python -m airline_agent.cleanlab_utils.create_new_demo_pr
 open-project = "python -m airline_agent.cleanlab_utils.open_project {args}"
 fetch-pages = "python -m airline_agent.data_preparation.fetch_pages {args}"
 create-vector-database = "python -m airline_agent.preprocessing.create_vector_database {args}"
-generate-flights = "python scripts/generate_flights.py {args}"
 backend-server = "python -m airline_agent.backend.app {args}"
 
 

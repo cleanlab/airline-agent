@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 DEMO_DATE = date(2025, 11, 5)
 DEMO_DATETIME = datetime(2025, 11, 5, 14, 0, 0, tzinfo=ZoneInfo("America/Los_Angeles"))
 FLIGHT_DATA_DATE = DEMO_DATE + timedelta(days=7)
+FLIGHT_DATA_NUM_DAYS = 8
 
 OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"  # to copy configuration from
 STAGING_DEMO_PROJECT_ID = "6de236e4-c6e7-456c-b248-872236010992"

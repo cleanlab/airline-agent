@@ -106,9 +106,7 @@ kb = KnowledgeBase(
     kb_path=str(pathlib.Path(__file__).parents[4] / "data/kb.json"),
     vector_index_path=str(pathlib.Path(__file__).parents[4] / "data/vector-db"),
 )
-booking = BookingTools(
-    flights_path=str(pathlib.Path(__file__).parents[4] / "data/flights.json"),
-)
+booking = BookingTools()
 project = get_cleanlab_project()
 agent = create_agent(kb, booking)
 

@@ -1,9 +1,9 @@
-import json
 import random
 from datetime import date, datetime, timedelta
 from typing import Any
 
 from airline_agent.constants import DEMO_DATETIME
+from airline_agent.data_generation.generate_flights import generate_flight_data
 from airline_agent.types.booking import (
     Booking,
     BookingStatus,
@@ -26,11 +26,10 @@ RNG_SEED = 42
 
 
 class BookingTools:
-    def __init__(self, flights_path: str):
-        self._flights_path = flights_path
-        with open(flights_path) as f:
-            raw = json.load(f)
-        self._flights: dict[str, Flight] = {x["id"]: Flight.model_validate(x) for x in raw["flights"]}
+    def __init__(self) -> None:
+        # Generate flight data dynamically at initialization
+        flights = generate_flight_data()
+        self._flights: dict[str, Flight] = {flight.id: flight for flight in flights}
 
         # Initialize reservations storage (in-memory only)
         self._reservations: dict[str, Booking] = {}
