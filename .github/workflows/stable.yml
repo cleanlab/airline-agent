@@ -1,0 +1,19 @@
+name: Stable
+
+on:
+  schedule:
+    # Run 10× per day (every ~2.4 hours)
+    - cron: "0 */2 * * *"
+  workflow_dispatch:  # manual trigger
+
+permissions:
+  contents: write  # required to push README updates
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pypa/hatch@install
+      - run: hatch run tests
