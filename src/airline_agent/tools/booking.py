@@ -36,12 +36,6 @@ class BookingTools:
         # Initialize seeded random number generator for deterministic behavior
         self._rng = random.Random(RNG_SEED)  # noqa: S311
 
-    def _save_flights(self) -> None:
-        """Save flights to JSON file."""
-        data = {"flights": [flight.model_dump(mode="json") for flight in self._flights.values()]}
-        with open(self._flights_path, "w") as f:
-            json.dump(data, f, indent=2, default=str)
-
     def search_flights(self, origin: str, destination: str, departure_date: str) -> list[Flight]:
         """
         Search available flights by route and date.
@@ -461,7 +455,6 @@ class BookingTools:
 
         # Save changes
         self._reservations[booking_id] = booking
-        self._save_flights()
 
         return booking
 
