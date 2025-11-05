@@ -28,7 +28,7 @@ class BookingTools:
         self._flights_path = flights_path
         with open(flights_path) as f:
             raw = json.load(f)
-        self._flights: dict[str, Flight] = {x["id"]: Flight(**x) for x in raw["flights"]}
+        self._flights: dict[str, Flight] = {x["id"]: Flight.model_validate(x) for x in raw["flights"]}
 
         # Initialize reservations storage (in-memory only)
         self._reservations: dict[str, Booking] = {}
