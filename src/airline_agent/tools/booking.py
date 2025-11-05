@@ -1,6 +1,5 @@
 import json
 import random
-import uuid
 from datetime import date, datetime, timedelta
 from typing import Any
 
@@ -20,6 +19,9 @@ DEPARTURE_PAST_THRESHOLD = -900  # 15 minutes past departure
 BOARDING_START_THRESHOLD = 900  # 15 minutes until departure
 ON_TIME_THRESHOLD = 1800  # 30 minutes until departure
 
+# Seed for deterministic random number generation
+RNG_SEED = 42
+
 
 class BookingTools:
     def __init__(self, flights_path: str):
@@ -30,6 +32,9 @@ class BookingTools:
 
         # Initialize reservations storage (in-memory only)
         self._reservations: dict[str, Booking] = {}
+
+        # Initialize seeded random number generator for deterministic behavior
+        self._rng = random.Random(RNG_SEED)  # noqa: S311
 
     def _save_flights(self) -> None:
         """Save flights to JSON file."""
@@ -126,7 +131,8 @@ class BookingTools:
             raise ValueError(msg)
 
         now = DEMO_DATETIME
-        booking_id = f"BK-{uuid.uuid4().hex[:8].upper()}"
+        # Generate deterministic booking ID using seeded random
+        booking_id = f"BK-{self._rng.randint(0, 0xFFFFFFFF):08X}"
 
         flight_bookings: list[FlightBooking] = []
         currency = "USD"
@@ -345,7 +351,7 @@ class BookingTools:
             # Default to standard seating area
             row_min, row_max = (16, 40)
 
-        row = random.randint(row_min, row_max)  # noqa: S311
+        row = self._rng.randint(row_min, row_max)
 
         # Seat letters (typical 3-3 configuration: A, B, C, D, E, F)
         seat_letters = ["A", "B", "C", "D", "E", "F"]
@@ -353,11 +359,11 @@ class BookingTools:
         aisle_seats = ["C", "D"]
 
         if preference == "window":
-            seat_letter = random.choice(window_seats)  # noqa: S311
+            seat_letter = self._rng.choice(window_seats)
         elif preference == "aisle":
-            seat_letter = random.choice(aisle_seats)  # noqa: S311
+            seat_letter = self._rng.choice(aisle_seats)
         else:
-            seat_letter = random.choice(seat_letters)  # noqa: S311
+            seat_letter = self._rng.choice(seat_letters)
 
         return f"{row}{seat_letter}"
 
@@ -366,24 +372,24 @@ class BookingTools:
         # Assign departure terminal and gate if not already assigned
         if not flight.departure_terminal:
             terminals = ["Terminal 1", "Terminal 2", "Terminal 3", "Terminal A", "Terminal B"]
-            flight.departure_terminal = random.choice(terminals)  # noqa: S311
+            flight.departure_terminal = self._rng.choice(terminals)
 
         if not flight.departure_gate:
             # Generate a gate like "A15", "B22", "C8"
             gate_letters = ["A", "B", "C", "D"]
-            gate_letter = random.choice(gate_letters)  # noqa: S311
-            gate_number = random.randint(1, 50)  # noqa: S311
+            gate_letter = self._rng.choice(gate_letters)
+            gate_number = self._rng.randint(1, 50)
             flight.departure_gate = f"{gate_letter}{gate_number}"
 
         # Assign arrival terminal and gate if not already assigned
         if not flight.arrival_terminal:
             terminals = ["Terminal 1", "Terminal 2", "Terminal 3", "Terminal A", "Terminal B"]
-            flight.arrival_terminal = random.choice(terminals)  # noqa: S311
+            flight.arrival_terminal = self._rng.choice(terminals)
 
         if not flight.arrival_gate:
             gate_letters = ["A", "B", "C", "D", "E"]
-            gate_letter = random.choice(gate_letters)  # noqa: S311
-            gate_number = random.randint(1, 60)  # noqa: S311
+            gate_letter = self._rng.choice(gate_letters)
+            gate_number = self._rng.randint(1, 60)
             flight.arrival_gate = f"{gate_letter}{gate_number}"
 
     def _calculate_check_in_timings(self, departure: datetime) -> dict[str, datetime]:

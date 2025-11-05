@@ -181,44 +181,44 @@ def get_timezone_offset(airport: str) -> int:
     return HUB_TZ_OFFSETS.get(airport, -5)
 
 
-def generate_fares() -> list[dict]:
+def generate_fares(rng: random.Random) -> list[dict]:
     """Generate random fares for a flight with different fare bundles (Frontier Airlines model)."""
     fares = []
 
     # Basic fare: no services included
-    basic_price = random.uniform(*FARE_BASE_PRICES["basic"]["price_range"])  # noqa: S311
+    basic_price = rng.uniform(*FARE_BASE_PRICES["basic"]["price_range"])
     fares.append(
         {
             "fare_type": "basic",
             "price_total": round(basic_price, 2),
             "currency": "USD",
-            "seats_available": random.randint(5, 15),  # noqa: S311
+            "seats_available": rng.randint(5, 15),
             "included_services": [],
             "checked_bags_included": 0,
         }
     )
 
     # Economy bundle: Basic + Carry on, Standard seat selection, Refundability, Change/cancel fee waived
-    economy_price = random.uniform(*FARE_BASE_PRICES["economy"]["price_range"])  # noqa: S311
+    economy_price = rng.uniform(*FARE_BASE_PRICES["economy"]["price_range"])
     fares.append(
         {
             "fare_type": "economy",
             "price_total": round(economy_price, 2),
             "currency": "USD",
-            "seats_available": random.randint(3, 12),  # noqa: S311
+            "seats_available": rng.randint(3, 12),
             "included_services": ["carry_on", "standard_seat_selection", "refundability", "change_cancel_fee_waived"],
             "checked_bags_included": 0,
         }
     )
 
     # Premium bundle: Economy + Premium seat selection + Priority Boarding
-    premium_price = random.uniform(*FARE_BASE_PRICES["premium"]["price_range"])  # noqa: S311
+    premium_price = rng.uniform(*FARE_BASE_PRICES["premium"]["price_range"])
     fares.append(
         {
             "fare_type": "premium",
             "price_total": round(premium_price, 2),
             "currency": "USD",
-            "seats_available": random.randint(2, 8),  # noqa: S311
+            "seats_available": rng.randint(2, 8),
             "included_services": [
                 "carry_on",
                 "standard_seat_selection",
@@ -232,13 +232,13 @@ def generate_fares() -> list[dict]:
     )
 
     # Business bundle: Premium + 2 checked bags + UpFront Plus Seating
-    business_price = random.uniform(*FARE_BASE_PRICES["business"]["price_range"])  # noqa: S311
+    business_price = rng.uniform(*FARE_BASE_PRICES["business"]["price_range"])
     fares.append(
         {
             "fare_type": "business",
             "price_total": round(business_price, 2),
             "currency": "USD",
-            "seats_available": random.randint(1, 4),  # noqa: S311
+            "seats_available": rng.randint(1, 4),
             "included_services": [
                 "carry_on",
                 "standard_seat_selection",
@@ -255,60 +255,60 @@ def generate_fares() -> list[dict]:
     return fares
 
 
-def generate_add_ons() -> list[dict]:
+def generate_add_ons(rng: random.Random) -> list[dict]:
     """Generate available add-on services for a flight."""
     return [
         {
             "service_type": "checked_bag",
-            "price": round(random.uniform(30, 40), 2),  # noqa: S311
+            "price": round(rng.uniform(30, 40), 2),
             "currency": "USD",
             "description": "One checked bag (up to 50 lbs, 62 linear inches)",
         },
         {
             "service_type": "carry_on",
-            "price": round(random.uniform(20, 30), 2),  # noqa: S311
+            "price": round(rng.uniform(20, 30), 2),
             "currency": "USD",
             "description": "One carry-on bag (personal item included)",
         },
         {
             "service_type": "standard_seat_selection",
-            "price": round(random.uniform(10, 25), 2),  # noqa: S311
+            "price": round(rng.uniform(10, 25), 2),
             "currency": "USD",
             "description": "Select a standard seat in advance",
         },
         {
             "service_type": "premium_seat_selection",
-            "price": round(random.uniform(25, 45), 2),  # noqa: S311
+            "price": round(rng.uniform(25, 45), 2),
             "currency": "USD",
             "description": "Select a stretch seat with extra legroom",
         },
         {
             "service_type": "upfront_plus_seating",
-            "price": round(random.uniform(50, 100), 2),  # noqa: S311
+            "price": round(rng.uniform(50, 100), 2),
             "currency": "USD",
             "description": "UpFront Plus seating in first two rows with guaranteed empty middle seat",
         },
         {
             "service_type": "priority_boarding",
-            "price": round(random.uniform(8, 15), 2),  # noqa: S311
+            "price": round(rng.uniform(8, 15), 2),
             "currency": "USD",
             "description": "Priority boarding with overhead bin space",
         },
         {
             "service_type": "travel_insurance",
-            "price": round(random.uniform(15, 30), 2),  # noqa: S311
+            "price": round(rng.uniform(15, 30), 2),
             "currency": "USD",
             "description": "Trip protection insurance",
         },
         {
             "service_type": "refundability",
-            "price": round(random.uniform(30, 60), 2),  # noqa: S311
+            "price": round(rng.uniform(30, 60), 2),
             "currency": "USD",
             "description": "Add refundability to your booking",
         },
         {
             "service_type": "change_cancel_fee_waived",
-            "price": round(random.uniform(20, 40), 2),  # noqa: S311
+            "price": round(rng.uniform(20, 40), 2),
             "currency": "USD",
             "description": "Waive change and cancel fees",
         },
@@ -322,6 +322,7 @@ def generate_flight_id(origin: str, destination: str, departure: datetime, carri
 
 
 def generate_direct_flights(
+    rng: random.Random,
     start_date: datetime,
     num_days: int = 8,
     origin_airports: list[str] | None = None,
@@ -342,12 +343,12 @@ def generate_direct_flights(
         for origin in origin_airports:
             for destination in dest_airports:
                 # Generate 3-6 flights per origin-destination pair per day
-                num_flights = random.randint(3, 6)  # noqa: S311
+                num_flights = rng.randint(3, 6)
 
                 for _ in range(num_flights):
                     # Random departure time between 6 AM and 10 PM
-                    hour = random.randint(6, 22)  # noqa: S311
-                    minute = random.choice([0, 15, 30, 45])  # noqa: S311
+                    hour = rng.randint(6, 22)
+                    minute = rng.choice([0, 15, 30, 45])
 
                     carrier_code = CARRIER_CODE
 
@@ -370,10 +371,10 @@ def generate_direct_flights(
                         "destination": destination,
                         "departure": departure_str,
                         "arrival": arrival_str,
-                        "flight_number": f"{carrier_code} {random.randint(100, 999)}",  # noqa: S311
+                        "flight_number": f"{carrier_code} {rng.randint(100, 999)}",
                         "carrier": carrier_code,
-                        "fares": generate_fares(),
-                        "add_ons": generate_add_ons(),
+                        "fares": generate_fares(rng),
+                        "add_ons": generate_add_ons(rng),
                     }
 
                     flights.append(flight)
@@ -382,6 +383,7 @@ def generate_direct_flights(
 
 
 def generate_connecting_flights(
+    rng: random.Random,
     start_date: datetime,
     num_days: int = 8,
     origin_airports: list[str] | None = None,
@@ -405,21 +407,21 @@ def generate_connecting_flights(
                 # Use all hubs to create many transfer options
                 for hub in HUB_AIRPORTS:
                     # Generate 1-3 connecting flights per hub per origin-destination pair per day
-                    num_routes = random.randint(1, 3)  # noqa: S311
+                    num_routes = rng.randint(1, 3)
 
                     for _ in range(num_routes):
                         carrier_code = CARRIER_CODE
 
                         # First leg: Origin -> Hub
-                        hour1 = random.randint(6, 18)  # noqa: S311
-                        minute1 = random.choice([0, 15, 30, 45])  # noqa: S311
+                        hour1 = rng.randint(6, 18)
+                        minute1 = rng.choice([0, 15, 30, 45])
                         departure_time_leg1 = date.replace(hour=hour1, minute=minute1, second=0, microsecond=0)
 
                         duration1 = get_flight_duration(origin, hub)
                         arrival_time_leg1 = departure_time_leg1 + timedelta(hours=duration1)
 
                         # Layover: 45 minutes to 3 hours
-                        layover_hours = random.choice([0.75, 1.0, 1.5, 2.0, 2.5, 3.0])  # noqa: S311
+                        layover_hours = rng.choice([0.75, 1.0, 1.5, 2.0, 2.5, 3.0])
                         departure_time_leg2 = arrival_time_leg1 + timedelta(hours=layover_hours)
 
                         # Second leg: Hub -> Destination
@@ -438,10 +440,10 @@ def generate_connecting_flights(
                                 f"%Y-%m-%dT%H:%M:00{departure_offset_leg1:+03d}:00"
                             ),
                             "arrival": arrival_time_leg1.strftime(f"%Y-%m-%dT%H:%M:00{arrival_offset_leg1:+03d}:00"),
-                            "flight_number": f"{carrier_code} {random.randint(100, 999)}",  # noqa: S311
+                            "flight_number": f"{carrier_code} {rng.randint(100, 999)}",
                             "carrier": carrier_code,
-                            "fares": generate_fares(),
-                            "add_ons": generate_add_ons(),
+                            "fares": generate_fares(rng),
+                            "add_ons": generate_add_ons(rng),
                         }
 
                         # Second leg
@@ -456,10 +458,10 @@ def generate_connecting_flights(
                                 f"%Y-%m-%dT%H:%M:00{departure_offset_leg2:+03d}:00"
                             ),
                             "arrival": arrival_time_leg2.strftime(f"%Y-%m-%dT%H:%M:00{arrival_offset_leg2:+03d}:00"),
-                            "flight_number": f"{carrier_code} {random.randint(100, 999)}",  # noqa: S311
+                            "flight_number": f"{carrier_code} {rng.randint(100, 999)}",
                             "carrier": carrier_code,
-                            "fares": generate_fares(),
-                            "add_ons": generate_add_ons(),
+                            "fares": generate_fares(rng),
+                            "add_ons": generate_add_ons(rng),
                         }
 
                         flights.extend([flight1, flight2])
@@ -469,8 +471,8 @@ def generate_connecting_flights(
 
 def main():
     """Main function to generate and save flight data."""
-    # Set random seed for reproducibility
-    random.seed(42)
+    # Create seeded random number generator for reproducibility
+    rng = random.Random(42)  # noqa: S311
 
     start_date = datetime.combine(FLIGHT_DATA_DATE, datetime.min.time(), tzinfo=UTC)
     num_days = 8
@@ -480,14 +482,14 @@ def main():
     # Generate SF -> NYC flights (direct only)
     print("Generating direct flights (SF -> NYC)...")
     direct_flights_sf_to_nyc = generate_direct_flights(
-        start_date, num_days=num_days, origin_airports=SF_AIRPORTS, dest_airports=NYC_AIRPORTS
+        rng, start_date, num_days=num_days, origin_airports=SF_AIRPORTS, dest_airports=NYC_AIRPORTS
     )
     print(f"Generated {len(direct_flights_sf_to_nyc)} direct flights from SF to NYC")
 
     # Generate NYC -> SF flights (direct only)
     print("Generating direct flights (NYC -> SF)...")
     direct_flights_nyc_to_sf = generate_direct_flights(
-        start_date, num_days=num_days, origin_airports=NYC_AIRPORTS, dest_airports=SF_AIRPORTS
+        rng, start_date, num_days=num_days, origin_airports=NYC_AIRPORTS, dest_airports=SF_AIRPORTS
     )
     print(f"Generated {len(direct_flights_nyc_to_sf)} direct flights from NYC to SF")
 
