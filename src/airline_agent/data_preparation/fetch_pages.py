@@ -19,6 +19,7 @@ from airline_agent.types.knowledge_base import KBArticle, Metadata
 
 FAQ_URL = "https://faq.flyfrontier.com/help"
 HOME_URL = "https://www.flyfrontier.com"
+TNC_URL = "https://www.flyfrontier.com/frontier-miles/terms-and-conditions"
 
 
 def main() -> None:
@@ -35,7 +36,7 @@ def main() -> None:
 
     faq_urls = get_all_faq_urls()
     home_urls = get_home_urls()
-    all_urls = faq_urls + home_urls
+    all_urls = faq_urls + home_urls + [TNC_URL]
 
     entries: list[KBArticle] = [fetch_page(url) for url in tqdm(all_urls, desc="fetching pages")]
 
