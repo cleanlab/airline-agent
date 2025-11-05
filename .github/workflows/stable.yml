@@ -6,9 +6,6 @@ on:
     - cron: "0 */2 * * *"
   workflow_dispatch:  # manual trigger
 
-permissions:
-  contents: write  # required to push README updates
-
 jobs:
   tests:
     name: Tests
@@ -16,4 +13,4 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: pypa/hatch@install
-      - run: hatch run tests
+      - run: hatch test
