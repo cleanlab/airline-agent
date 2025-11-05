@@ -4,6 +4,7 @@ import os
 import pathlib
 import uuid
 from collections.abc import AsyncGenerator
+from textwrap import dedent
 
 from cleanlab_codex import Client, Project
 from codex.types import ProjectValidateResponse
@@ -46,7 +47,7 @@ from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
     run_cleanlab_validation_logging_tools,
 )
-from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
+from airline_agent.constants import AGENT_BASE_INSTRUCTIONS, AGENT_MODEL, DEMO_DATETIME
 from airline_agent.tools.booking import BookingTools
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
@@ -56,17 +57,29 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
+def instructions() -> str:
+    current_date_str = DEMO_DATETIME.date().isoformat()
+    current_datetime_str = DEMO_DATETIME.strftime("%Y-%m-%d %H:%M:%S %Z")
+    return dedent(f"""
+        {AGENT_BASE_INSTRUCTIONS}
+
+        ## Context:
+        - Today's date: {current_date_str}
+        - Current time: {current_datetime_str}
+    """).strip()
+
+
 def create_agent(kb: KnowledgeBase, booking: BookingTools) -> Agent:
     """Create the airline support agent."""
     model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
+
     return Agent(
         model=model,
-        instructions=AGENT_INSTRUCTIONS,
+        instructions=instructions,
         tools=[
             kb.get_article,
             kb.search,
             kb.list_directory,
-            booking.get_current_date,
             booking.search_flights,
             booking.get_fare_details,
             booking.book_flights,

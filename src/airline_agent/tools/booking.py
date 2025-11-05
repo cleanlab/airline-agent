@@ -1,9 +1,10 @@
 import json
 import random
 import uuid
-from datetime import UTC, date, datetime, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any
 
+from airline_agent.constants import DEMO_DATETIME
 from airline_agent.types.booking import (
     Booking,
     BookingStatus,
@@ -124,7 +125,7 @@ class BookingTools:
             msg = "At least one flight ID must be provided"
             raise ValueError(msg)
 
-        now = datetime.now(UTC)
+        now = DEMO_DATETIME
         booking_id = f"BK-{uuid.uuid4().hex[:8].upper()}"
 
         flight_bookings: list[FlightBooking] = []
@@ -274,7 +275,7 @@ class BookingTools:
             raise ValueError(msg)
 
         # Add the service add-on
-        now = datetime.now(UTC)
+        now = DEMO_DATETIME
 
         # For seat selection services, validate that preferences/assignments are only set for seat selection
         seat_selection_types = ["standard_seat_selection", "premium_seat_selection", "upfront_plus_seating"]
@@ -310,19 +311,6 @@ class BookingTools:
         self._reservations[booking_id] = booking
 
         return booking
-
-    def get_current_date(self) -> dict[str, str]:
-        """
-        Get the current date and time.
-
-        Returns:
-            Dictionary with current date in YYYY-MM-DD format and ISO timestamp
-        """
-        now = datetime.now(UTC)
-        return {
-            "date": now.date().isoformat(),  # YYYY-MM-DD format
-            "datetime": now.isoformat(),  # Full ISO timestamp with timezone
-        }
 
     def _assign_seat(self, flight_booking: FlightBooking, _flight_id: str) -> str:
         """Assign a seat to a flight booking based on preferences, fare type, or randomly."""
@@ -449,7 +437,7 @@ class BookingTools:
             raise ValueError(msg)
 
         flight = self._flights[flight_id]
-        now = datetime.now(flight.departure.tzinfo) if flight.departure.tzinfo else datetime.now(UTC)
+        now = DEMO_DATETIME
 
         # Assign gates and terminals if needed
         self._assign_gates_and_terminals(flight)
@@ -531,7 +519,7 @@ class BookingTools:
         self._assign_gates_and_terminals(flight)
 
         # Update flight status based on current time
-        now = datetime.now(flight.departure.tzinfo) if flight.departure.tzinfo else datetime.now(UTC)
+        now = DEMO_DATETIME
         time_until_departure = flight.departure - now
 
         # Update status based on current time vs scheduled departure

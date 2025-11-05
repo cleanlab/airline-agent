@@ -2,13 +2,14 @@
 """
 Script to generate Frontier Airlines (F9) flight data for SF Bay Area to New York routes.
 Includes direct flights and connecting flights with layovers through hub airports.
-Comprehensive coverage for Halloween week 2025 (Oct 31 - Nov 7).
 """
 
 import json
 import random
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+
+from airline_agent.constants import FLIGHT_DATA_DATE
 
 # Constants
 SHORT_FLIGHT_THRESHOLD_HOURS = 2.0  # Threshold for short flights (hours)
@@ -471,11 +472,10 @@ def main():
     # Set random seed for reproducibility
     random.seed(42)
 
-    # Start date: Halloween 2025 (October 31) + 1 week
-    start_date = datetime(2025, 10, 31, tzinfo=UTC)
-    num_days = 8  # Oct 31 - Nov 7
+    start_date = datetime.combine(FLIGHT_DATA_DATE, datetime.min.time(), tzinfo=UTC)
+    num_days = 8
 
-    print("Generating comprehensive flight data for Halloween week 2025 (Oct 31 - Nov 7)...")
+    print(f"Generating comprehensive flight data starting from {FLIGHT_DATA_DATE.isoformat()}...")
 
     # Generate SF -> NYC flights (direct only)
     print("Generating direct flights (SF -> NYC)...")
@@ -506,10 +506,11 @@ def main():
     with open(flights_file, "w") as f:
         json.dump(output_data, f, indent=2)
 
+    end_date = start_date + timedelta(days=num_days - 1)
     print(f"\n✓ Successfully saved {len(all_flights)} total flights to {flights_file}")
     print(f"  - Direct flights SF->NYC: {len(direct_flights_sf_to_nyc)}")
     print(f"  - Direct flights NYC->SF: {len(direct_flights_nyc_to_sf)}")
-    print("  - All flights are DIRECT flights for Halloween week 2025 (Oct 31 - Nov 7)")
+    print(f"  - All flights are DIRECT flights from {start_date.date().isoformat()} to {end_date.date().isoformat()}")
     print("  - No connecting/transfer flights included")
 
 

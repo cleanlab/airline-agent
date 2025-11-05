@@ -1,7 +1,7 @@
 """Convert pydantic-ai message history and responses to OpenAI Chat Completions format."""
 
 import base64
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Any, Literal, cast
 
 from openai.types.chat import ChatCompletion, ChatCompletionFunctionToolParam, ChatCompletionMessageParam
@@ -26,6 +26,8 @@ from pydantic_ai.messages import (
 )
 from pydantic_ai.tools import ToolDefinition
 from pydantic_ai.usage import RequestUsage
+
+from airline_agent.constants import DEMO_DATETIME
 
 
 def convert_to_openai_messages(message_history: list[ModelMessage]) -> list[ChatCompletionMessageParam]:
@@ -234,7 +236,7 @@ def convert_message_to_chat_completion(message: ChatCompletionMessageParam) -> C
                     "message": choice_message,
                 }
             ],
-            "created": int(datetime.now(UTC).timestamp()),
+            "created": int(DEMO_DATETIME.timestamp()),
             "model": "mock-agent",
             "object": "chat.completion",
             "service_tier": "default",
@@ -277,7 +279,7 @@ def convert_string_to_response_message(
     model_name = None
 
     if timestamp is None:
-        timestamp = datetime.now(UTC)
+        timestamp = DEMO_DATETIME
     text_part = TextPart(content=content)
     usage = RequestUsage(input_tokens=0, output_tokens=0)
     return ModelResponse(

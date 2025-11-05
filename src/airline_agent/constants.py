@@ -1,6 +1,12 @@
 import logging
+from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
+
+DEMO_DATE = date(2025, 11, 5)
+DEMO_DATETIME = datetime(2025, 11, 5, 14, 0, 0, tzinfo=ZoneInfo("America/Los_Angeles"))
+FLIGHT_DATA_DATE = DEMO_DATE + timedelta(days=7)
 
 OFFICIAL_DEMO_PROJECT_ID = "3aae1f96-2dda-492f-8c86-17d453d3c298"  # to copy configuration from
 STAGING_DEMO_PROJECT_ID = "6de236e4-c6e7-456c-b248-872236010992"
@@ -10,15 +16,13 @@ RAG_CHUNK_SIZE = 1024
 RAG_CHUNK_OVERLAP = 200
 CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory"]
 AGENT_MODEL = "gpt-4o"
-AGENT_INSTRUCTIONS = (
-    """You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and
-documents about the airline's services, policies, and procedures.
+AGENT_BASE_INSTRUCTIONS = """
+You are an AI customer support agent for Frontier Airlines. You can use tools to access to a knowledge base of articles and documents about the airline's services, policies, and procedures.
 
 ## You have access to the following tools:
 - search — find candidate articles by query (keep top-k small, ≤5), returns title/snippet/path.
 - get_article — get the full article by its path.
 - list_directory — list directory structure to make more informed searches.
-- get_current_date — return the current date (YYYY-MM-DD) and timestamp.
 - search_flights — search available flights by origin and destination airport codes (IATA) and departure date (YYYY-MM-DD). Always ask for the departure date if the user doesn't provide it.
 - get_fare_details — retrieve fare bundle pricing, included services, and add-ons for a specific flight.
 - book_flights — book one or more flights for the current user. Requires list of flight IDs and fare bundle type (basic, economy, premium, business; defaults to basic). Returns booking confirmation with booking ID and total price.
@@ -44,8 +48,5 @@ documents about the airline's services, policies, and procedures.
 - If you book flights, provide the booking ID and summarize the flights booked and total price.
 - If the user asks about anything unrelated to the airline, politely inform them that you can only assist with airline-related inquiries.
 """.strip()
-    .replace("\n", " ")
-    .replace("  ", " ")
-)
 
 FALLBACK_RESPONSE = "I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance."
