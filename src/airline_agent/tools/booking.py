@@ -2,7 +2,6 @@ import json
 import random
 import uuid
 from datetime import UTC, date, datetime, timedelta
-from pathlib import Path
 from typing import Any
 
 from airline_agent.types.booking import (
@@ -22,42 +21,14 @@ ON_TIME_THRESHOLD = 1800  # 30 minutes until departure
 
 
 class BookingTools:
-    def __init__(self, flights_path: str, reservations_path: str | None = None):
+    def __init__(self, flights_path: str):
         self._flights_path = flights_path
         with open(flights_path) as f:
             raw = json.load(f)
         self._flights: dict[str, Flight] = {x["id"]: Flight(**x) for x in raw["flights"]}
 
-        # Initialize reservations storage
-        self._reservations_path = reservations_path
+        # Initialize reservations storage (in-memory only)
         self._reservations: dict[str, Booking] = {}
-        if reservations_path:
-            self._load_reservations()
-
-    def _load_reservations(self) -> None:
-        """Load reservations from JSON file."""
-        if not self._reservations_path:
-            return
-        try:
-            reservations_file = Path(self._reservations_path)
-            if reservations_file.exists():
-                with open(reservations_file) as f:
-                    data = json.load(f)
-                    self._reservations = {bid: Booking(**booking_data) for bid, booking_data in data.items()}
-            else:
-                # Create empty file if it doesn't exist
-                reservations_file.parent.mkdir(parents=True, exist_ok=True)
-                self._save_reservations()
-        except (FileNotFoundError, json.JSONDecodeError):
-            self._reservations = {}
-
-    def _save_reservations(self) -> None:
-        """Save reservations to JSON file."""
-        if not self._reservations_path:
-            return
-        data = {bid: booking.model_dump(mode="json") for bid, booking in self._reservations.items()}
-        with open(self._reservations_path, "w") as f:
-            json.dump(data, f, indent=2, default=str)
 
     def _save_flights(self) -> None:
         """Save flights to JSON file."""
@@ -112,7 +83,7 @@ class BookingTools:
         fare = next((f for f in flight.fares if f.fare_type == fare_type), None)
         if not fare:
             available_fares = [f.fare_type for f in flight.fares]
-            msg = f"Fare '{fare_type}' not available for flight {flight_id}. " f"Available fares: {available_fares}"
+            msg = f"Fare '{fare_type}' not available for flight {flight_id}. Available fares: {available_fares}"
             raise ValueError(msg)
 
         return {
@@ -170,7 +141,7 @@ class BookingTools:
             fare = next((f for f in flight.fares if f.fare_type == fare_type), None)
             if not fare:
                 available_fares = [f.fare_type for f in flight.fares]
-                msg = f"Fare '{fare_type}' not available for flight {flight_id}. " f"Available fares: {available_fares}"
+                msg = f"Fare '{fare_type}' not available for flight {flight_id}. Available fares: {available_fares}"
                 raise ValueError(msg)
 
             if fare.seats_available <= 0:
@@ -202,7 +173,6 @@ class BookingTools:
         )
 
         self._reservations[booking_id] = booking
-        self._save_reservations()
 
         return booking
 
@@ -336,9 +306,8 @@ class BookingTools:
         # Update booking timestamp
         booking.status.updated_at = now
 
-        # Save the updated booking
+        # Save the updated booking in memory
         self._reservations[booking_id] = booking
-        self._save_reservations()
 
         return booking
 
@@ -498,7 +467,6 @@ class BookingTools:
 
         # Save changes
         self._reservations[booking_id] = booking
-        self._save_reservations()
         self._save_flights()
 
         return booking

@@ -95,7 +95,6 @@ kb = KnowledgeBase(
 )
 booking = BookingTools(
     flights_path=str(pathlib.Path(__file__).parents[4] / "data/flights.json"),
-    reservations_path=str(pathlib.Path(__file__).parents[4] / "data/reservations.json"),
 )
 project = get_cleanlab_project()
 agent = create_agent(kb, booking)
