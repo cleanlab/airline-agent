@@ -13,4 +13,4 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: pypa/hatch@install
-      - run: hatch test
+      - run: hatch test -v
