@@ -1,6 +1,6 @@
 """
 Module to generate Frontier Airlines (F9) flight data for SF Bay Area to New York routes.
-Includes direct flights and connecting flights with layovers through hub airports.
+Includes direct flights only.
 """
 
 import random
@@ -18,9 +18,6 @@ SF_BAY_AIRPORTS = {"SJC", "OAK"}  # SF Bay Area airports (excluding SFO)
 
 # San Francisco Bay Area airports
 SF_AIRPORTS = ["SFO", "SJC", "OAK"]
-
-# Common hub airports for layovers between SF and NYC
-HUB_AIRPORTS = ["DEN", "ORD", "ATL", "DFW", "LAS", "PHX", "SEA", "IAH", "MSP", "DTW"]
 
 # New York airports
 NYC_AIRPORTS = ["JFK", "EWR", "LGA"]
@@ -43,16 +40,6 @@ BASE_DURATIONS = {
     ("SFO", "JFK"): 5.5,
     ("SFO", "EWR"): 5.3,
     ("SFO", "LGA"): 5.4,
-    ("SFO", "DEN"): 2.5,
-    ("SFO", "ORD"): 4.0,
-    ("SFO", "ATL"): 4.5,
-    ("SFO", "DFW"): 3.5,
-    ("SFO", "LAS"): 1.5,
-    ("SFO", "PHX"): 1.8,
-    ("SFO", "SEA"): 2.0,
-    ("SFO", "IAH"): 3.8,
-    ("SFO", "MSP"): 3.5,
-    ("SFO", "DTW"): 4.2,
 }
 
 # SJC and OAK are similar to SFO, with slight variations
@@ -82,70 +69,10 @@ for (orig, dest), duration in BASE_DURATIONS.items():
         else:
             FLIGHT_DURATIONS[(orig, "OAK")] = duration
 
-# Hub to NYC routes
-FLIGHT_DURATIONS.update(
-    {
-        ("DEN", "JFK"): 3.5,
-        ("DEN", "EWR"): 3.3,
-        ("DEN", "LGA"): 3.4,
-        ("ORD", "JFK"): 2.0,
-        ("ORD", "EWR"): 2.0,
-        ("ORD", "LGA"): 2.0,
-        ("ATL", "JFK"): 2.5,
-        ("ATL", "EWR"): 2.3,
-        ("ATL", "LGA"): 2.4,
-        ("DFW", "JFK"): 3.5,
-        ("DFW", "EWR"): 3.3,
-        ("DFW", "LGA"): 3.4,
-        ("LAS", "JFK"): 5.0,
-        ("LAS", "EWR"): 4.8,
-        ("LAS", "LGA"): 4.9,
-        ("PHX", "JFK"): 4.5,
-        ("PHX", "EWR"): 4.3,
-        ("PHX", "LGA"): 4.4,
-        ("SEA", "JFK"): 5.5,
-        ("SEA", "EWR"): 5.3,
-        ("SEA", "LGA"): 5.4,
-        ("IAH", "JFK"): 3.0,
-        ("IAH", "EWR"): 2.8,
-        ("IAH", "LGA"): 2.9,
-        ("MSP", "JFK"): 2.8,
-        ("MSP", "EWR"): 2.6,
-        ("MSP", "LGA"): 2.7,
-        ("DTW", "JFK"): 1.8,
-        ("DTW", "EWR"): 1.6,
-        ("DTW", "LGA"): 1.7,
-    }
-)
-
-# NYC to Hub routes (reverse of hub to NYC)
-for (hub, nyc), duration in list(FLIGHT_DURATIONS.items()):
-    if hub in HUB_AIRPORTS and nyc in NYC_AIRPORTS:
-        FLIGHT_DURATIONS[(nyc, hub)] = duration
-
 # NYC to SF routes (reverse of SF to NYC)
 for (sf, nyc), duration in list(FLIGHT_DURATIONS.items()):
     if sf in SF_AIRPORTS and nyc in NYC_AIRPORTS:
         FLIGHT_DURATIONS[(nyc, sf)] = duration
-
-# SF to Hub routes
-for sf in SF_AIRPORTS:
-    for hub in HUB_AIRPORTS:
-        if (sf, hub) not in FLIGHT_DURATIONS:
-            # Use SFO duration as base
-            base_duration = FLIGHT_DURATIONS.get(("SFO", hub), 3.0)
-            if sf in SF_BAY_AIRPORTS:
-                if base_duration > SHORT_FLIGHT_THRESHOLD_HOURS:
-                    FLIGHT_DURATIONS[(sf, hub)] = base_duration - DURATION_ADJUSTMENT
-                else:
-                    FLIGHT_DURATIONS[(sf, hub)] = base_duration
-            else:
-                FLIGHT_DURATIONS[(sf, hub)] = base_duration
-
-# Hub to SF routes (reverse)
-for (sf, hub), duration in list(FLIGHT_DURATIONS.items()):
-    if sf in SF_AIRPORTS and hub in HUB_AIRPORTS:
-        FLIGHT_DURATIONS[(hub, sf)] = duration
 
 # Timezone mappings for airports
 AIRPORT_TIMEZONES = {
@@ -157,17 +84,6 @@ AIRPORT_TIMEZONES = {
     "JFK": ZoneInfo("America/New_York"),
     "EWR": ZoneInfo("America/New_York"),
     "LGA": ZoneInfo("America/New_York"),
-    # Hubs
-    "DEN": ZoneInfo("America/Denver"),
-    "ORD": ZoneInfo("America/Chicago"),
-    "ATL": ZoneInfo("America/New_York"),
-    "DFW": ZoneInfo("America/Chicago"),
-    "LAS": ZoneInfo("America/Los_Angeles"),
-    "PHX": ZoneInfo("America/Phoenix"),
-    "SEA": ZoneInfo("America/Los_Angeles"),
-    "IAH": ZoneInfo("America/Chicago"),
-    "MSP": ZoneInfo("America/Chicago"),
-    "DTW": ZoneInfo("America/Detroit"),
 }
 
 
@@ -385,96 +301,9 @@ def generate_direct_flights(
     return flights
 
 
-def generate_connecting_flights(
-    rng: random.Random,
-    start_date: datetime,
-    num_days: int = 8,
-    origin_airports: list[str] | None = None,
-    dest_airports: list[str] | None = None,
-) -> list[Flight]:
-    """Generate connecting flights from origin airports to destination airports via hub airports."""
-    if origin_airports is None:
-        origin_airports = SF_AIRPORTS
-    if dest_airports is None:
-        dest_airports = NYC_AIRPORTS
-
-    flights = []
-
-    for day in range(num_days):
-        date = start_date + timedelta(days=day)
-
-        # Generate comprehensive connecting routes - all combinations
-        for origin in origin_airports:
-            for destination in dest_airports:
-                # Generate multiple connecting routes through different hubs
-                # Use all hubs to create many transfer options
-                for hub in HUB_AIRPORTS:
-                    # Generate 1-3 connecting flights per hub per origin-destination pair per day
-                    num_routes = rng.randint(1, 3)
-
-                    for _ in range(num_routes):
-                        carrier_code = CARRIER_CODE
-
-                        # First leg: Origin -> Hub
-                        hour1 = rng.randint(6, 18)
-                        minute1 = rng.choice([0, 15, 30, 45])
-
-                        origin_tz = get_airport_timezone(origin)
-                        departure_time_leg1 = date.replace(
-                            hour=hour1, minute=minute1, second=0, microsecond=0, tzinfo=origin_tz
-                        )
-
-                        duration1 = get_flight_duration(origin, hub)
-                        arrival_time_leg1_naive = departure_time_leg1 + timedelta(hours=duration1)
-
-                        hub_tz = get_airport_timezone(hub)
-                        arrival_time_leg1 = arrival_time_leg1_naive.astimezone(hub_tz)
-
-                        # Layover: 45 minutes to 3 hours
-                        layover_hours = rng.choice([0.75, 1.0, 1.5, 2.0, 2.5, 3.0])
-                        departure_time_leg2 = arrival_time_leg1 + timedelta(hours=layover_hours)
-
-                        # Second leg: Hub -> Destination
-                        duration2 = get_flight_duration(hub, destination)
-                        arrival_time_leg2_naive = departure_time_leg2 + timedelta(hours=duration2)
-
-                        dest_tz = get_airport_timezone(destination)
-                        arrival_time_leg2 = arrival_time_leg2_naive.astimezone(dest_tz)
-
-                        # First leg
-                        flight1 = Flight(
-                            id=generate_flight_id(origin, hub, departure_time_leg1, carrier_code),
-                            origin=origin,
-                            destination=hub,
-                            departure=departure_time_leg1,
-                            arrival=arrival_time_leg1,
-                            flight_number=f"{carrier_code} {rng.randint(100, 999)}",
-                            carrier=carrier_code,
-                            fares=generate_fares(rng),
-                            add_ons=generate_add_ons(rng),
-                        )
-
-                        # Second leg
-                        flight2 = Flight(
-                            id=generate_flight_id(hub, destination, departure_time_leg2, carrier_code),
-                            origin=hub,
-                            destination=destination,
-                            departure=departure_time_leg2,
-                            arrival=arrival_time_leg2,
-                            flight_number=f"{carrier_code} {rng.randint(100, 999)}",
-                            carrier=carrier_code,
-                            fares=generate_fares(rng),
-                            add_ons=generate_add_ons(rng),
-                        )
-
-                        flights.extend([flight1, flight2])
-
-    return flights
-
-
 def generate_flight_data() -> list[Flight]:
     """
-    Generate comprehensive flight data for SF Bay Area to New York routes.
+    Generate direct flight data for SF Bay Area to New York routes.
 
     Returns:
         List of Flight objects
@@ -484,17 +313,17 @@ def generate_flight_data() -> list[Flight]:
 
     start_date = datetime.combine(FLIGHT_DATA_DATE, datetime.min.time(), tzinfo=UTC)
 
-    # Generate SF -> NYC flights (direct only)
+    # Generate SF -> NYC flights
     direct_flights_sf_to_nyc = generate_direct_flights(
         rng, start_date, num_days=FLIGHT_DATA_NUM_DAYS, origin_airports=SF_AIRPORTS, dest_airports=NYC_AIRPORTS
     )
 
-    # Generate NYC -> SF flights (direct only)
+    # Generate NYC -> SF flights
     direct_flights_nyc_to_sf = generate_direct_flights(
         rng, start_date, num_days=FLIGHT_DATA_NUM_DAYS, origin_airports=NYC_AIRPORTS, dest_airports=SF_AIRPORTS
     )
 
-    # Combine all flights (direct only, no transfers)
+    # Combine all flights
     all_flights = direct_flights_sf_to_nyc + direct_flights_nyc_to_sf
 
     # Sort by departure time
