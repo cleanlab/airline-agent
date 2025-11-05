@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, Discriminator, Field, computed_field
 
 FareType = Literal["basic", "economy", "premium", "business"]
 ServiceType = Literal[
@@ -15,6 +15,16 @@ ServiceType = Literal[
     "refundability",
     "change_cancel_fee_waived",
 ]
+SeatServiceType = Literal["standard_seat_selection", "premium_seat_selection", "upfront_plus_seating"]
+GenericServiceType = Literal[
+    "checked_bag",
+    "carry_on",
+    "priority_boarding",
+    "travel_insurance",
+    "refundability",
+    "change_cancel_fee_waived",
+]
+SeatType = Literal["standard", "stretch", "upfront_plus"]
 FlightStatus = Literal[
     "scheduled",
     "on_time",
@@ -26,13 +36,18 @@ FlightStatus = Literal[
 ]
 
 
-class ServiceAddOn(BaseModel):
-    """A service add-on purchased for a flight."""
+class ServiceAddOnBase(BaseModel):
+    """Base class for service add-ons with common fields."""
 
-    service_type: ServiceType
     price: float
     currency: str = "USD"
     added_at: datetime = Field(..., description="Timestamp when the add-on was added")
+
+
+class SeatServiceAddOn(ServiceAddOnBase):
+    """Seat selection service add-on with seat-specific fields."""
+
+    service_type: SeatServiceType
     seat_preference: str | None = Field(
         default=None,
         description='Seat preference such as "window", "aisle", or "middle"',
@@ -41,10 +56,22 @@ class ServiceAddOn(BaseModel):
         default=None,
         description='Assigned seat identifier, for example "12A" or "15F"',
     )
-    seat_type: str | None = Field(
-        default=None,
-        description=('Type of seat selected, for example "standard", "stretch", or ' '"upfront_plus"'),
+    seat_type: SeatType = Field(
+        ...,
+        description='Type of seat selected: "standard", "stretch", or "upfront_plus"',
     )
+
+
+class GenericServiceAddOn(ServiceAddOnBase):
+    """Non-seat service add-on (bags, insurance, priority boarding, etc.)."""
+
+    service_type: GenericServiceType
+
+
+ServiceAddOn = Annotated[
+    SeatServiceAddOn | GenericServiceAddOn,
+    Discriminator("service_type"),
+]
 
 
 class Fare(BaseModel):

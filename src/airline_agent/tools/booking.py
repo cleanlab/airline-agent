@@ -10,7 +10,9 @@ from airline_agent.types.booking import (
     FareType,
     Flight,
     FlightBooking,
-    ServiceAddOn,
+    GenericServiceAddOn,
+    SeatServiceAddOn,
+    SeatType,
     ServiceType,
 )
 
@@ -282,32 +284,42 @@ class BookingTools:
         # Add the service add-on
         now = DEMO_DATETIME
 
-        # For seat selection services, validate that preferences/assignments are only set for seat selection
-        seat_selection_types = ["standard_seat_selection", "premium_seat_selection", "upfront_plus_seating"]
-        if service_type not in seat_selection_types and (seat_preference or seat_assignment):
-            msg = "seat_preference and seat_assignment can only be set for seat selection service types"
-            raise ValueError(msg)
+        # Create appropriate add-on type based on service type
+        addon: SeatServiceAddOn | GenericServiceAddOn
+        match service_type:
+            case "standard_seat_selection" | "premium_seat_selection" | "upfront_plus_seating":
+                seat_type: SeatType
+                match service_type:
+                    case "standard_seat_selection":
+                        seat_type = "standard"
+                    case "premium_seat_selection":
+                        seat_type = "stretch"
+                    case "upfront_plus_seating":
+                        seat_type = "upfront_plus"
 
-        # Determine seat type based on service type
-        seat_type = None
-        if service_type == "standard_seat_selection":
-            seat_type = "standard"
-        elif service_type == "premium_seat_selection":
-            seat_type = "stretch"
-        elif service_type == "upfront_plus_seating":
-            seat_type = "upfront_plus"
+                addon = SeatServiceAddOn(
+                    service_type=service_type,
+                    price=addon_option.price,
+                    currency=addon_option.currency,
+                    added_at=now,
+                    seat_preference=seat_preference,
+                    seat_assignment=seat_assignment,
+                    seat_type=seat_type,
+                )
+            case _:
+                # For non-seat services, validate that seat parameters weren't provided
+                if seat_preference or seat_assignment:
+                    msg = "seat_preference and seat_assignment can only be set for seat selection service types"
+                    raise ValueError(msg)
 
-        flight_booking.add_ons.append(
-            ServiceAddOn(
-                service_type=service_type,
-                price=addon_option.price,
-                currency=addon_option.currency,
-                added_at=now,
-                seat_preference=seat_preference,
-                seat_assignment=seat_assignment,
-                seat_type=seat_type,
-            )
-        )
+                addon = GenericServiceAddOn(
+                    service_type=service_type,
+                    price=addon_option.price,
+                    currency=addon_option.currency,
+                    added_at=now,
+                )
+
+        flight_booking.add_ons.append(addon)
 
         # Update booking timestamp
         booking.status.updated_at = now
@@ -320,11 +332,12 @@ class BookingTools:
     def _assign_seat(self, flight_booking: FlightBooking, _flight_id: str) -> str:
         """Assign a seat to a flight booking based on preferences, fare type, or randomly."""
         # Check if any seat selection add-on exists with an assignment
-        seat_selection_types = ["standard_seat_selection", "premium_seat_selection", "upfront_plus_seating"]
-        seat_addon = next(
-            (addon for addon in flight_booking.add_ons if addon.service_type in seat_selection_types),
-            None,
-        )
+        seat_addon: SeatServiceAddOn | None = None
+        for addon in flight_booking.add_ons:
+            if isinstance(addon, SeatServiceAddOn):
+                seat_addon = addon
+                break
+
         if seat_addon and seat_addon.seat_assignment:
             return seat_addon.seat_assignment
 
