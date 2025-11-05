@@ -1,18 +1,10 @@
 """Convert pydantic-ai message history and responses to OpenAI Chat Completions format."""
 
-from __future__ import annotations
-
 import base64
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Any, Literal, cast
+from typing import Any, Literal, cast
 
-from openai.types.chat import ChatCompletion
-
-if TYPE_CHECKING:
-    from openai.types.chat import ChatCompletionMessageParam
-    from pydantic_ai.tools import ToolDefinition
-
-from openai.types.chat import ChatCompletionFunctionToolParam
+from openai.types.chat import ChatCompletion, ChatCompletionFunctionToolParam, ChatCompletionMessageParam
 from pydantic_ai.messages import (
     AudioUrl,
     BinaryContent,
@@ -32,6 +24,7 @@ from pydantic_ai.messages import (
     UserPromptPart,
     VideoUrl,
 )
+from pydantic_ai.tools import ToolDefinition
 from pydantic_ai.usage import RequestUsage
 
 
