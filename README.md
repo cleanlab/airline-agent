@@ -151,8 +151,7 @@ After asking each query, refresh the Project Logs and expand the log entry to se
 
 **Try starting a new chat and asking *one* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
-> *Do my remaining miles stay active if I donate a portion of them?*
-
+> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
 
 <details>
   <summary>Learn More</summary>
@@ -160,10 +159,10 @@ After asking each query, refresh the Project Logs and expand the log entry to se
 ```text
 AI Response (guardrailed and prevented by Cleanlab):
 
-Donating your miles to non-profit charitable organizations is considered an accrual activity, which means it can help prevent your miles from expiring. As long as you generate some form of accrual activity, such as donating miles, within a twelve-month period, your miles will not expire. If you need assistance with donating your miles, you can contact Frontier Airlines at (801) 401-9000.
+According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
 ```
 
-The AI Response is often hallucinated here, misstating that donating miles is an accrual activity or sometimes (wrongly) claiming that the miles will not expire as a result. You can verify yourself that the AI Response was incorrect by searching for `/help/do-travel-miles-expire` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/do-travel-miles-expire)). The article reveals that the correct answer should be: *"Donating miles is not considered an accrual activity, and will therefore not prevent your remaining miles from expiring"* (since the accrual activity definition does not include donations and regular accrual activity is required to prevent miles from expiring).
+Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
 <br><br>
 </details>
 
@@ -489,22 +488,6 @@ Yes, you can change your seat on the same day of your flight with Frontier Airli
 ```
 
 Here the AI response incorrectly focuses on same-day flight changes, when the customer was merely asking to change their seat on the same flight.  The Agent should have referenced the `/help/do-i-have-to-purchase-a-seat-assignment` document, and clarified that the latest time to select a seat is during check-in.
-<br><br>
-</details>
-
-
-> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response (guardrailed and prevented by Cleanlab):
-
-According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
-```
-
-Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
 <br><br>
 </details>
 
