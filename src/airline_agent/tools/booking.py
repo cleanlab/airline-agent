@@ -2,6 +2,7 @@ import random
 from datetime import date, datetime, timedelta
 from typing import Any
 
+from pydantic_ai import ModelRetry
 from pydantic_ai.toolsets import FunctionToolset
 
 from airline_agent.constants import DEMO_DATETIME
@@ -60,9 +61,9 @@ class BookingTools:
         """
         try:
             dep = date.fromisoformat(departure_date)
-        except Exception as e:
+        except Exception:  # noqa: BLE001
             msg = f"Invalid departure_date: {departure_date}"
-            raise ValueError(msg) from e
+            raise ModelRetry(msg) from None
 
         return [
             fl
@@ -85,7 +86,7 @@ class BookingTools:
         """
         if flight_id not in self._flights:
             msg = f"Flight not found: {flight_id}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         flight = self._flights[flight_id]
 
@@ -94,7 +95,7 @@ class BookingTools:
         if not fare:
             available_fares = [f.fare_type for f in flight.fares]
             msg = f"Fare '{fare_type}' not available for flight {flight_id}. Available fares: {available_fares}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         return {
             "flight_id": flight_id,
@@ -132,7 +133,7 @@ class BookingTools:
         """
         if not flight_ids:
             msg = "At least one flight ID must be provided"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         now = DEMO_DATETIME
         # Generate deterministic booking ID using seeded random
@@ -144,7 +145,7 @@ class BookingTools:
         for flight_id in flight_ids:
             if flight_id not in self._flights:
                 msg = f"Flight not found: {flight_id}"
-                raise ValueError(msg)
+                raise ModelRetry(msg)
 
             flight = self._flights[flight_id]
 
@@ -153,11 +154,11 @@ class BookingTools:
             if not fare:
                 available_fares = [f.fare_type for f in flight.fares]
                 msg = f"Fare '{fare_type}' not available for flight {flight_id}. Available fares: {available_fares}"
-                raise ValueError(msg)
+                raise ModelRetry(msg)
 
             if fare.seats_available <= 0:
                 msg = f"No seats available for fare '{fare_type}' for flight {flight_id}"
-                raise ValueError(msg)
+                raise ModelRetry(msg)
 
             flight_bookings.append(
                 FlightBooking(
@@ -199,7 +200,7 @@ class BookingTools:
         """
         if booking_id not in self._reservations:
             msg = f"Booking not found: {booking_id}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
         return self._reservations[booking_id]
 
     def get_my_bookings(self) -> list[Booking]:
@@ -235,7 +236,7 @@ class BookingTools:
         """
         if booking_id not in self._reservations:
             msg = f"Booking not found: {booking_id}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         booking = self._reservations[booking_id]
 
@@ -244,12 +245,12 @@ class BookingTools:
         if not flight_booking:
             available_flights = [fb.flight_id for fb in booking.flights]
             msg = f"Flight {flight_id} not found in booking {booking_id}. Available flights: {available_flights}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         # Get the flight to check available add-ons
         if flight_id not in self._flights:
             msg = f"Flight not found: {flight_id}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         flight = self._flights[flight_id]
 
@@ -260,7 +261,7 @@ class BookingTools:
             msg = (
                 f"Service '{service_type}' not available for flight {flight_id}. Available add-ons: {available_addons}"
             )
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         # Check if service is already included in the fare
         # Special handling for checked_bag (tracked via count, not in included_services)
@@ -270,19 +271,19 @@ class BookingTools:
                     f"Checked bag(s) are already included in the {flight_booking.fare_type} fare "
                     f"for flight {flight_id} ({flight_booking.checked_bags_included} bag(s) included)"
                 )
-                raise ValueError(msg)
+                raise ModelRetry(msg)
         elif service_type in flight_booking.included_services:
             msg = (
                 f"Service '{service_type}' is already included in the {flight_booking.fare_type} fare "
                 f"for flight {flight_id}"
             )
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         # Check if add-on already exists
         existing_addon = next((ao for ao in flight_booking.add_ons if ao.service_type == service_type), None)
         if existing_addon:
             msg = f"Service '{service_type}' has already been added to flight {flight_id} in this booking"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         # Add the service add-on
         now = DEMO_DATETIME
@@ -313,7 +314,7 @@ class BookingTools:
                 # For non-seat services, validate that seat parameters weren't provided
                 if seat_preference or seat_assignment:
                     msg = "seat_preference and seat_assignment can only be set for seat selection service types"
-                    raise ValueError(msg)
+                    raise ModelRetry(msg)
 
                 addon = GenericServiceAddOn(
                     service_type=service_type,
@@ -434,28 +435,28 @@ class BookingTools:
         """
         if booking_id not in self._reservations:
             msg = f"Booking not found: {booking_id}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         booking = self._reservations[booking_id]
         if booking.status.status != "confirmed":
             msg = f"Cannot check in for booking {booking_id}: booking status is {booking.status.status}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         # Find the flight in the booking
         flight_booking = next((fb for fb in booking.flights if fb.flight_id == flight_id), None)
         if not flight_booking:
             available_flights = [fb.flight_id for fb in booking.flights]
             msg = f"Flight {flight_id} not found in booking {booking_id}. Available flights: {available_flights}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         if flight_booking.checked_in:
             msg = f"Already checked in for flight {flight_id} in booking {booking_id}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         # Get the flight details
         if flight_id not in self._flights:
             msg = f"Flight not found: {flight_id}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         flight = self._flights[flight_id]
         now = DEMO_DATETIME
@@ -491,7 +492,7 @@ class BookingTools:
         """
         if flight_id not in self._flights:
             msg = f"Flight not found: {flight_id}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         flight = self._flights[flight_id]
         timings = self._calculate_check_in_timings(flight.departure)
@@ -531,7 +532,7 @@ class BookingTools:
         """
         if flight_id not in self._flights:
             msg = f"Flight not found: {flight_id}"
-            raise ValueError(msg)
+            raise ModelRetry(msg)
 
         flight = self._flights[flight_id]
 
