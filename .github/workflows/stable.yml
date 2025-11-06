@@ -1,6 +1,7 @@
 name: Stable
 
 on:
+  push: # for testing only
   schedule:
     # Run every 2 hours
     - cron: "0 */2 * * *"
@@ -13,4 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: pypa/hatch@install
+      - name: Download knowledge base
+        run: |
+          mkdir -p data
+          curl -o data/kb.json https://cleanlab-public.s3.us-east-1.amazonaws.com/airline-agent/kb.json
+      - name: Create vector database
+        run: hatch run create-vector-database
       - run: hatch test -v
