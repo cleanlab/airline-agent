@@ -476,22 +476,6 @@ Under U.S. federal law, marijuana and all THC products is illegal to fly with, r
 </details>
 
 
-> *can i do a seat change on same day of flight*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response (guardrailed and prevented by Cleanlab):
-
-Yes, you can change your seat on the same day of your flight with Frontier Airlines. If you wish to change to an earlier flight on your day of travel, you can do so by contacting an airport agent, subject to seat availability. A same-day change fee and any difference in fare and options prices will apply. This allows you to fly to your original destination or to an equivalent destination.
-```
-
-Here the AI response incorrectly focuses on same-day flight changes, when the customer was merely asking to change their seat on the same flight.  The Agent should have referenced the `/help/do-i-have-to-purchase-a-seat-assignment` document, and clarified that the latest time to select a seat is during check-in.
-<br><br>
-</details>
-
-
 > *i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?*
 
 <details>
@@ -558,24 +542,6 @@ Your Guidance ensures the AI combines both articles when appropriate, to better 
 > *can i bring my emotional support dog with me on a domestic flight?*
 
 In this case, because the user’s question already specifies both the type of flight and the kind of animal, the AI skips asking a clarifying question. You’ll also notice that the AI now adds information that domesticated pets are allowed on the flight. This helps clarify that while emotional support animals are not treated as service animals, pets may still travel under the standard Pet Policy.
-<br><br>
-</details>
-
-
-#### To explore detection of Knowledge Gaps (Helpfulness / Context Sufficiency Evaluations)
-
-> *If theres no overhead bin space for my carry on must i pay extra to check it?*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response:
-
-I couldn't find specific information about whether you would need to pay extra to check your carry-on if there's no overhead bin space. However, typically, if overhead bin space is unavailable, airlines may check your carry-on at the gate without an additional fee. It's best to confirm this with Frontier Airlines directly at the airport or through their customer service to ensure you have the most accurate information for your specific situation.
-```
-
-The Agent's response is not at all supported by any information in the files it found.  Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
 <br><br>
 </details>
 
