@@ -1,9 +1,8 @@
 from enum import StrEnum
 from typing import Literal
 
-from pydantic import BaseModel, Field, TypeAdapter
-
 from codex.types.project_validate_response import GuardrailedFallback
+from pydantic import BaseModel, Field, TypeAdapter
 
 
 class MessageRole(StrEnum):
