@@ -12,9 +12,6 @@ from airline_agent.types.booking import Fare, Flight, ServiceAddOnOption
 
 # Constants
 RNG_SEED = 42
-SHORT_FLIGHT_THRESHOLD_HOURS = 2.0  # Threshold for short flights (hours)
-DURATION_ADJUSTMENT = 0.1  # Adjustment for SJC/OAK flights (hours)
-SF_BAY_AIRPORTS = {"SJC", "OAK"}  # SF Bay Area airports (excluding SFO)
 
 # San Francisco Bay Area airports
 SF_AIRPORTS = ["SFO", "SJC", "OAK"]
@@ -24,7 +21,6 @@ NYC_AIRPORTS = ["JFK", "EWR", "LGA"]
 
 # Frontier Airlines only
 CARRIER_CODE = "F9"
-CARRIER_NAME = "Frontier"
 
 # Fare bundle base prices (Frontier Airlines style - no separate cabin classes)
 FARE_BASE_PRICES = {
@@ -47,32 +43,16 @@ FLIGHT_DURATIONS = dict(BASE_DURATIONS)
 # SJC routes (slightly shorter than SFO)
 for (orig, dest), duration in BASE_DURATIONS.items():
     if orig == "SFO":
-        if duration > SHORT_FLIGHT_THRESHOLD_HOURS:
-            FLIGHT_DURATIONS[("SJC", dest)] = duration - DURATION_ADJUSTMENT
-        else:
-            FLIGHT_DURATIONS[("SJC", dest)] = duration
-    if dest == "SFO":
-        if duration > SHORT_FLIGHT_THRESHOLD_HOURS:
-            FLIGHT_DURATIONS[(orig, "SJC")] = duration - DURATION_ADJUSTMENT
-        else:
-            FLIGHT_DURATIONS[(orig, "SJC")] = duration
+        FLIGHT_DURATIONS[("SJC", dest)] = duration - 0.2
 # OAK routes (slightly shorter than SFO)
 for (orig, dest), duration in BASE_DURATIONS.items():
     if orig == "SFO":
-        if duration > SHORT_FLIGHT_THRESHOLD_HOURS:
-            FLIGHT_DURATIONS[("OAK", dest)] = duration - DURATION_ADJUSTMENT
-        else:
-            FLIGHT_DURATIONS[("OAK", dest)] = duration
-    if dest == "SFO":
-        if duration > SHORT_FLIGHT_THRESHOLD_HOURS:
-            FLIGHT_DURATIONS[(orig, "OAK")] = duration - DURATION_ADJUSTMENT
-        else:
-            FLIGHT_DURATIONS[(orig, "OAK")] = duration
+        FLIGHT_DURATIONS[("OAK", dest)] = duration - 0.1
 
 # NYC to SF routes (reverse of SF to NYC)
 for (sf, nyc), duration in list(FLIGHT_DURATIONS.items()):
     if sf in SF_AIRPORTS and nyc in NYC_AIRPORTS:
-        FLIGHT_DURATIONS[(nyc, sf)] = duration
+        FLIGHT_DURATIONS[(nyc, sf)] = duration + 1  # jet stream
 
 # Timezone mappings for airports
 AIRPORT_TIMEZONES = {
@@ -89,15 +69,11 @@ AIRPORT_TIMEZONES = {
 
 def get_flight_duration(origin: str, destination: str) -> float:
     """Get flight duration in hours for a route."""
-    route = (origin, destination)
-    return FLIGHT_DURATIONS.get(route, 3.0)  # Default 3 hours if not found
+    return FLIGHT_DURATIONS[(origin, destination)]
 
 
 def get_airport_timezone(airport: str) -> ZoneInfo:
     """Get timezone for an airport."""
-    if airport not in AIRPORT_TIMEZONES:
-        msg = f"Unknown airport timezone: {airport}"
-        raise ValueError(msg)
     return AIRPORT_TIMEZONES[airport]
 
 
@@ -270,8 +246,6 @@ def generate_direct_flights(
                     hour = rng.randint(6, 22)
                     minute = rng.choice([0, 15, 30, 45])
 
-                    carrier_code = CARRIER_CODE
-
                     # Create timezone-aware departure time
                     origin_tz = get_airport_timezone(origin)
                     departure_time = date.replace(hour=hour, minute=minute, second=0, microsecond=0, tzinfo=origin_tz)
@@ -285,13 +259,13 @@ def generate_direct_flights(
                     arrival_time = arrival_time_naive.astimezone(dest_tz)
 
                     flight = Flight(
-                        id=generate_flight_id(origin, destination, departure_time, carrier_code),
+                        id=generate_flight_id(origin, destination, departure_time, CARRIER_CODE),
                         origin=origin,
                         destination=destination,
                         departure=departure_time,
                         arrival=arrival_time,
-                        flight_number=f"{carrier_code} {rng.randint(100, 999)}",
-                        carrier=carrier_code,
+                        flight_number=f"{CARRIER_CODE} {rng.randint(100, 999)}",
+                        carrier=CARRIER_CODE,
                         fares=generate_fares(rng),
                         add_ons=generate_add_ons(rng),
                     )

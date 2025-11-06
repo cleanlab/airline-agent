@@ -19,7 +19,6 @@ from airline_agent.types.booking import (
 )
 
 # Constants for flight status timing (in seconds)
-DEPARTURE_PAST_THRESHOLD = -900  # 15 minutes past departure
 BOARDING_START_THRESHOLD = 900  # 15 minutes until departure
 ON_TIME_THRESHOLD = 1800  # 30 minutes until departure
 
