@@ -40,6 +40,9 @@ class BookingTools:
 
     def _reset(self) -> None:
         """Clear all reservations and reset the random number generator for test isolation."""
+        # Regenerate flights to clear any mutations (gates, terminals, status updates)
+        flights = generate_flight_data()
+        self._flights = {flight.id: flight for flight in flights}
         self._reservations = {}
         self._rng = random.Random(RNG_SEED)  # noqa: S311
 
