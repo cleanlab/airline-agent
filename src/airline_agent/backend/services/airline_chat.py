@@ -199,6 +199,7 @@ async def airline_chat_streaming(
                             escalated_to_sme=validation_result.escalated_to_sme,
                             scores=_format_eval_results(validation_result),
                             log_id=validation_result.log_id,
+                            guardrailed_fallback=validation_result.guardrailed_fallback,
                         ),
                     ),
                 )

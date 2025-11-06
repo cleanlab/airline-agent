@@ -142,7 +142,10 @@ def _get_final_response_message(
     if validation_result.expert_answer:
         replacement_text = validation_result.expert_answer
     elif validation_result.should_guardrail:
-        replacement_text = FALLBACK_RESPONSE
+        if validation_result.guardrailed_fallback is not None:
+            replacement_text = validation_result.guardrailed_fallback.message
+        else:
+            replacement_text = FALLBACK_RESPONSE
 
     if replacement_text:
         return convert_string_to_response_message(replacement_text), replacement_text

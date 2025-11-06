@@ -3,6 +3,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, TypeAdapter
 
+from codex.types.project_validate_response import GuardrailedFallback
+
 
 class MessageRole(StrEnum):
     USER = "user"
@@ -30,6 +32,7 @@ class MessageMetadata(BaseModel):
     original_llm_response: str | None = None
     is_expert_answer: bool | None = None
     guardrailed: bool | None = None
+    guardrailed_fallback: GuardrailedFallback | None = None
     escalated_to_sme: bool | None = None
     scores: ResponseScoreMetadata | None = None
     log_id: str | None = None
