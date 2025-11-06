@@ -1,5 +1,5 @@
+from airline_agent.util import TestAgent as Agent
 from tests.judge import assert_judge
-from tests.util import Agent
 
 
 def test_search_flights() -> None:

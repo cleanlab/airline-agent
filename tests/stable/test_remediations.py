@@ -1,8 +1,9 @@
 import pytest
 
+from airline_agent.util import TestAgent as Agent
 from tests.constants import ERROR_MESSAGE
 from tests.judge import Judge, assert_judge
-from tests.util import Agent, Project, wait_and_get_final_log_for
+from tests.util import Project, wait_and_get_final_log_for
 
 
 @pytest.mark.main

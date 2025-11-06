@@ -1,8 +1,9 @@
 import pytest
 from codex.types.projects import QueryLogListResponse
 
+from airline_agent.util import TestAgent as Agent
 from tests.constants import ERROR_MESSAGE
-from tests.util import Agent, Project, wait_and_get_final_log_for
+from tests.util import Project, wait_and_get_final_log_for
 
 
 def assert_failed_eval(log: QueryLogListResponse, eval_name: str) -> None:
