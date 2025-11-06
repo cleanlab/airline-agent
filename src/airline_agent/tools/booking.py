@@ -323,8 +323,6 @@ class BookingTools:
 
         booking.status.updated_at = now
 
-        self._reservations[booking_id] = booking
-
         return booking
 
     def _assign_seat(self, flight_booking: FlightBooking, _flight_id: str) -> str:
@@ -467,8 +465,6 @@ class BookingTools:
         flight_booking.checked_in_at = now
 
         booking.status.updated_at = now
-
-        self._reservations[booking_id] = booking
 
         return booking
 
