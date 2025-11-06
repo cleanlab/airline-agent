@@ -400,9 +400,9 @@ Suppose a Product Leader / SME has quickly decided that the AI agent should not 
 
 Expand this Log entry in the Project and click `No` under *Is this a good AI response?*, and click `Submit`.
 
-Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
+Then pretend you are a different user **by creating a new chat thread** and ask:
 
-> *What is the maximum time we might be stuck on the tarmac without being let off*
+> *Whats the maximum time we might be stuck on the tarmac without being let off*
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
