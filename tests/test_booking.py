@@ -3,7 +3,6 @@ from tests.util import Agent
 
 
 def test_search_flights() -> None:
-    """Test searching for flights between SF and NYC."""
     agent = Agent(cleanlab_enabled=False)
     answer, _ = agent.chat("I want to fly from SFO to JFK on November 12, 2025")
     assert_judge(
@@ -16,11 +15,8 @@ def test_search_flights() -> None:
 
 
 def test_get_fare_details() -> None:
-    """Test getting fare bundle details for a flight."""
     agent = Agent(cleanlab_enabled=False)
-    # First search for flights
     agent.chat("Show me flights from SFO to EWR on November 12, 2025")
-    # Then ask about fare details
     answer, _ = agent.chat("What's included in the economy fare bundle for the first flight?")
     assert_judge(
         [
@@ -32,9 +28,7 @@ def test_get_fare_details() -> None:
 
 
 def test_book_single_flight() -> None:
-    """Test booking a single flight."""
     agent = Agent(cleanlab_enabled=False)
-    # Search and book
     agent.chat("I need a flight from SFO to JFK on November 12, 2025")
     answer, _ = agent.chat("Book the first available flight with basic fare")
     assert_judge(
@@ -48,13 +42,9 @@ def test_book_single_flight() -> None:
 
 
 def test_book_round_trip() -> None:
-    """Test booking a round trip (outbound and return flights)."""
     agent = Agent(cleanlab_enabled=False)
-    # Search for outbound
     agent.chat("Find flights from OAK to LGA on November 13, 2025")
-    # Search for return
     agent.chat("Find return flights from LGA to OAK on November 15, 2025")
-    # Book both
     answer, _ = agent.chat("Book the first flight for each leg with economy fare")
     assert_judge(
         [
@@ -67,12 +57,9 @@ def test_book_round_trip() -> None:
 
 
 def test_retrieve_booking() -> None:
-    """Test retrieving booking details by booking ID."""
     agent = Agent(cleanlab_enabled=False)
-    # Create a booking first
     agent.chat("Find a flight from SJC to JFK on November 12, 2025")
     booking_response, _ = agent.chat("Book the first flight with basic fare")
-    # Retrieve bookings
     answer, _ = agent.chat("Show me my bookings")
     assert_judge(
         [
@@ -84,12 +71,9 @@ def test_retrieve_booking() -> None:
 
 
 def test_add_service_to_booking() -> None:
-    """Test adding a service (checked bag) to an existing booking."""
     agent = Agent(cleanlab_enabled=False)
-    # Create a booking
     agent.chat("Show me flights from SFO to EWR on November 14, 2025")
     agent.chat("Book the first flight with basic fare")
-    # Add a service
     answer, _ = agent.chat("Add a checked bag to my booking")
     assert_judge(
         [
@@ -101,12 +85,9 @@ def test_add_service_to_booking() -> None:
 
 
 def test_check_in() -> None:
-    """Test checking in for a flight."""
     agent = Agent(cleanlab_enabled=False)
-    # Create a booking
     agent.chat("Find flights from SFO to JFK on November 12, 2025")
     agent.chat("Book the first available flight")
-    # Check in
     answer, _ = agent.chat("Check me in for my flight")
     assert_judge(
         [
@@ -118,11 +99,8 @@ def test_check_in() -> None:
 
 
 def test_flight_status() -> None:
-    """Test getting flight status information."""
     agent = Agent(cleanlab_enabled=False)
-    # Search for a flight first to get context
     agent.chat("Show me flights from OAK to LGA on November 12, 2025")
-    # Ask for status
     answer, _ = agent.chat("What's the status of the first flight?")
     assert_judge(
         [
@@ -134,11 +112,8 @@ def test_flight_status() -> None:
 
 
 def test_flight_timings() -> None:
-    """Test getting flight timing windows (check-in, boarding, etc.)."""
     agent = Agent(cleanlab_enabled=False)
-    # Search for a flight
     agent.chat("Find flights from SJC to EWR on November 13, 2025")
-    # Ask about timings
     answer, _ = agent.chat("When does check-in open for the first flight?")
     assert_judge(
         [
@@ -150,7 +125,6 @@ def test_flight_timings() -> None:
 
 
 def test_fare_comparison() -> None:
-    """Test comparing different fare bundles."""
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Show me flights from SFO to JFK on November 12, 2025")
     answer, _ = agent.chat("What's the difference between basic and premium fare for the first flight?")
@@ -164,7 +138,6 @@ def test_fare_comparison() -> None:
 
 
 def test_invalid_route() -> None:
-    """Test handling of invalid or unavailable routes."""
     agent = Agent(cleanlab_enabled=False)
     answer, _ = agent.chat("Find flights from SFO to Tokyo on November 12, 2025")
     assert_judge(
@@ -177,7 +150,6 @@ def test_invalid_route() -> None:
 
 
 def test_no_date_provided() -> None:
-    """Test that agent asks for date when searching flights without one."""
     agent = Agent(cleanlab_enabled=False)
     answer, _ = agent.chat("I want to fly from SFO to JFK")
     assert_judge(
@@ -190,7 +162,6 @@ def test_no_date_provided() -> None:
 
 
 def test_no_existing_bookings() -> None:
-    """Test isolation: verify no bookings exist from previous tests."""
     agent = Agent(cleanlab_enabled=False)
     answer, _ = agent.chat("Show me my bookings")
     assert_judge(

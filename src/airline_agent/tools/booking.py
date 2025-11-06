@@ -29,14 +29,11 @@ RNG_SEED = 42
 
 class BookingTools:
     def __init__(self) -> None:
-        # Generate flight data dynamically at initialization
         flights = generate_flight_data()
         self._flights: dict[str, Flight] = {flight.id: flight for flight in flights}
 
-        # Initialize reservations storage (in-memory only)
         self._reservations: dict[str, Booking] = {}
 
-        # Initialize seeded random number generator for deterministic behavior
         self._rng = random.Random(RNG_SEED)  # noqa: S311
 
     def _reset(self) -> None:
@@ -285,7 +282,6 @@ class BookingTools:
             msg = f"Service '{service_type}' has already been added to flight {flight_id} in this booking"
             raise ModelRetry(msg)
 
-        # Add the service add-on
         now = DEMO_DATETIME
 
         # Create appropriate add-on type based on service type
@@ -325,10 +321,8 @@ class BookingTools:
 
         flight_booking.add_ons.append(addon)
 
-        # Update booking timestamp
         booking.status.updated_at = now
 
-        # Save the updated booking in memory
         self._reservations[booking_id] = booking
 
         return booking
@@ -472,10 +466,8 @@ class BookingTools:
         flight_booking.checked_in = True
         flight_booking.checked_in_at = now
 
-        # Update booking timestamp
         booking.status.updated_at = now
 
-        # Save changes
         self._reservations[booking_id] = booking
 
         return booking
@@ -574,7 +566,6 @@ class BookingTools:
 
     @property
     def tools(self) -> FunctionToolset:
-        """Returns a FunctionToolset containing all booking tools."""
         return FunctionToolset(
             tools=[
                 self.search_flights,

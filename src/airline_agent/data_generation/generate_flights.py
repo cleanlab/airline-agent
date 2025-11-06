@@ -68,17 +68,14 @@ AIRPORT_TIMEZONES = {
 
 
 def get_flight_duration(origin: str, destination: str) -> float:
-    """Get flight duration in hours for a route."""
     return FLIGHT_DURATIONS[(origin, destination)]
 
 
 def get_airport_timezone(airport: str) -> ZoneInfo:
-    """Get timezone for an airport."""
     return AIRPORT_TIMEZONES[airport]
 
 
 def generate_fares(rng: random.Random) -> list[Fare]:
-    """Generate random fares for a flight with different fare bundles (Frontier Airlines model)."""
     fares = []
 
     # Basic fare: no services included
@@ -152,7 +149,6 @@ def generate_fares(rng: random.Random) -> list[Fare]:
 
 
 def generate_add_ons(rng: random.Random) -> list[ServiceAddOnOption]:
-    """Generate available add-on services for a flight."""
     return [
         ServiceAddOnOption(
             service_type="checked_bag",
@@ -212,7 +208,6 @@ def generate_add_ons(rng: random.Random) -> list[ServiceAddOnOption]:
 
 
 def generate_flight_id(origin: str, destination: str, departure: datetime, carrier: str) -> str:
-    """Generate a unique flight ID."""
     date_str = departure.strftime("%Y-%m-%dT%H:%M")
     return f"{carrier}-{origin}-{destination}-{date_str}"
 
@@ -224,7 +219,6 @@ def generate_direct_flights(
     origin_airports: list[str] | None = None,
     dest_airports: list[str] | None = None,
 ) -> list[Flight]:
-    """Generate direct flights from origin airports to destination airports."""
     if origin_airports is None:
         origin_airports = SF_AIRPORTS
     if dest_airports is None:
@@ -276,12 +270,6 @@ def generate_direct_flights(
 
 
 def generate_flight_data() -> list[Flight]:
-    """
-    Generate direct flight data for SF Bay Area to New York routes.
-
-    Returns:
-        List of Flight objects
-    """
     # Create seeded random number generator for reproducibility
     rng = random.Random(RNG_SEED)  # noqa: S311
 
