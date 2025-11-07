@@ -20,7 +20,7 @@ def assert_failed_eval(log: QueryLogListResponse, eval_name: str) -> None:
 
 
 def test_evaluation_1(project: Project) -> None:
-    question = "Who founded Frontier Airlines?"
+    question = "how did frontier airlines get its name?"
     agent = Agent()
     _, log_id = agent.chat(question)
     assert log_id is not None
