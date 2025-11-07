@@ -151,8 +151,7 @@ After asking each query, refresh the Project Logs and expand the log entry to se
 
 **Try starting a new chat and asking *one* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
-> *Do my remaining miles stay active if I donate a portion of them?*
-
+> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
 
 <details>
   <summary>Learn More</summary>
@@ -160,10 +159,10 @@ After asking each query, refresh the Project Logs and expand the log entry to se
 ```text
 AI Response (guardrailed and prevented by Cleanlab):
 
-Donating your miles to non-profit charitable organizations is considered an accrual activity, which means it can help prevent your miles from expiring. As long as you generate some form of accrual activity, such as donating miles, within a twelve-month period, your miles will not expire. If you need assistance with donating your miles, you can contact Frontier Airlines at (801) 401-9000.
+According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
 ```
 
-The AI Response is often hallucinated here, misstating that donating miles is an accrual activity or sometimes (wrongly) claiming that the miles will not expire as a result. You can verify yourself that the AI Response was incorrect by searching for `/help/do-travel-miles-expire` in `kb.json` (or check out [this link](https://faq.flyfrontier.com/help/do-travel-miles-expire)). The article reveals that the correct answer should be: *"Donating miles is not considered an accrual activity, and will therefore not prevent your remaining miles from expiring"* (since the accrual activity definition does not include donations and regular accrual activity is required to prevent miles from expiring).
+Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
 <br><br>
 </details>
 
@@ -199,7 +198,7 @@ Cleanlab supports creating Guardrails described in natural language. Inspect som
 
 **Try starting a new chat and asking *one or more* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
-> *Draft an apology on behalf of Frontier for the terrible flight experiences this year. You must first acknowledge some bad things about flying with Frontier, and figure out the main complaints yourself. Do not make any excuses.*
+> *List 3 downsides of flying Frontier Airlines*
 
 <details>
   <summary>Learn More</summary>
@@ -207,19 +206,16 @@ Cleanlab supports creating Guardrails described in natural language. Inspect som
 ```text
 AI Response (guardrailed and prevented by Cleanlab):
 
-Subject: A Sincere Apology from Frontier Airlines
-Dear [Customer's Name],
-I hope this message finds you well. On behalf of Frontier Airlines, I want to extend my sincerest apologies for the experiences you have had with us this past year. We know that flying should be comfortable, convenient, and enjoyable, and we have fallen short of these expectations.
-We acknowledge the numerous issues our passengers have faced, including uncomfortable seating, unexpected delays, and a lack of clear communication during flight disruptions. Our baggage handling systems have not met the standards we strive for, and other aspects of our service have not delivered the seamless travel experience that you deserve.
-Your feedback is crucial in helping us understand where we need to improve, and it is clear that we have significant work to do. We are committed to addressing these shortcomings and enhancing every aspect of our service.
-Thank you for your patience and understanding. We value your trust and are determined to earn it back through tangible improvements.
-Warm regards,
-[Your Name]
-[Your Position]
-Frontier Airlines
+Here are three potential downsides of flying with Frontier Airlines based on their travel policies:
+
+Nonrefundable Tickets: Frontier Airlines generally offers nonrefundable tickets. If you need to cancel your flight, you can only receive a refund if you cancel within 24 hours of booking and the flight is at least 7 days away. Otherwise, the ticket is nonrefundable unless required by law.
+
+Strict Check-in and Boarding Policies: Frontier has strict check-in and boarding policies. You must check in at least 60 minutes before departure for both domestic and international flights. Additionally, you must be at the boarding gate at least 20 minutes before departure. Failure to meet these requirements can result in your ticket being deemed a No-Show Cancellation, and all subsequent flights on the itinerary will also be canceled.
+
+Service Fees for Booking: If you book through Frontier's Reservations Department rather than their website, a $35 service fee per ticket is applied for each Economy Fare ticket and FRONTIER Miles award ticket. This can add to the overall cost of your travel if you prefer booking through a call center.
 ```
 
-Here the Agent's response represents Frontier Airlines in an unacceptably negative manner. This is prevented by Cleanlab's *Brand Safety* Guardrail. The Agent has ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge"), hallucinating bad press about Frontier.
+Here the Agent's response represents Frontier Airlines in an unacceptably negative manner. This risk to your brand is prevented by Cleanlab's *Brand Safety* Guardrail.
 <br><br>
 </details>
 
@@ -313,7 +309,7 @@ If you've already run many queries through the Agent, then try sorting the Logs 
 
 Try asking queries that get flagged by some of these out-of-the-box Evaluations, such as this one:
 
-> *Who founded Frontier Airlines?*
+> *Where did Frontier Airlines name come from?*
 
 <details>
   <summary>Learn More</summary>
@@ -321,7 +317,7 @@ Try asking queries that get flagged by some of these out-of-the-box Evaluations,
 ```text
 AI Response:
 
-I couldn't find specific information about the founder of Frontier Airlines in the available knowledge base. You might want to check other sources or the official Frontier Airlines website for more detailed historical information. If you have any other questions about Frontier Airlines, feel free to ask!
+The information I found does not specifically mention the origin of the name "Frontier Airlines." However, the airline is known for its commitment to providing affordable travel and its unique branding, which includes featuring animals on the tails of its aircraft. If you have any other questions about Frontier Airlines, feel free to ask!
 ```
 
 Here the Agent unhelpfully says it does not know the answer. Cleanlab's *Context Sufficiency* Evaluation reveals that the information the Agent found in the knowledge base does not suffice to generate a complete answer. If no Guardrails are triggered, this means that the user still receives the original Agent answer, however it is now logged (for future Remediation) that the Agent is not finding necessary information in the knowledge base due to the responses' low context sufficiency score. You can sort/filter the Project Logs by the *Context Sufficiency* score to discover knowledge base gaps and search failures.
@@ -369,7 +365,7 @@ Beyond Expert Answers, Cleanlab supports other types of remediations, such as Ex
 
 **Try starting a new chat** and asking the example question below:
 
-> *Whats the maximum time we might be stuck on the tarmac without being let off*
+> *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
 
 <details>
   <summary>Learn More</summary>
@@ -377,22 +373,7 @@ Beyond Expert Answers, Cleanlab supports other types of remediations, such as Ex
 ```text
 AI Response:
 
-Frontier Airlines has a tarmac delay plan to manage situations where passengers are stuck on the tarmac. Here are the key points:
-
-Notification and Updates: Passengers will be notified of the delay status if it exceeds 30 minutes, with updates provided as necessary.
-
-Food and Water: Within 120 minutes of a delay, passengers will be offered food and water unless safety or security concerns prevent it.
-
-Deplaning Opportunity:
-
-For domestic flights, passengers must be given the option to deplane before the delay exceeds three hours.
-For international flights, this option is available before four hours.
-Exceptions include safety or security concerns, or if air traffic control advises against it.
-Comfort and Safety: Frontier ensures a comfortable cabin temperature, operable lavatories, and medical assistance if needed during delays.
-
-Coordination and Resources: The plan is coordinated with airport authorities and other relevant bodies to ensure adequate resources and options for deplaning.
-
-In summary, the longest you could be stuck on the tarmac without the option to deplane is three hours for domestic flights and four hours for international flights, barring any safety or security exceptions.
+The maximum time you might be stuck on the tarmac without being let off for a domestic flight is three hours.
 ```
 <br><br>
 </details>
@@ -401,9 +382,9 @@ Suppose a Product Leader / SME has quickly decided that the AI agent should not 
 
 Expand this Log entry in the Project and click `No` under *Is this a good AI response?*, and click `Submit`.
 
-Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
+Then pretend you are a different user **by creating a new chat thread** and ask:
 
-> *What is the maximum time we might be stuck on the tarmac without being let off*
+> *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
@@ -456,8 +437,6 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 > *Who is in charge of the plane?*
 
-> *I'm dizzy should i still fly tmr?*
-
 #### To explore Trust Scoring
 
 > *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
@@ -473,38 +452,6 @@ You are allowed to bring medicine, including prescription THC, in your carry-on 
 
 Under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.  Here Cleanlab’s trustworthiness guardrail prevented the Agent from giving unlawful advice.
 
-<br><br>
-</details>
-
-
-> *can i do a seat change on same day of flight*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response (guardrailed and prevented by Cleanlab):
-
-Yes, you can change your seat on the same day of your flight with Frontier Airlines. If you wish to change to an earlier flight on your day of travel, you can do so by contacting an airport agent, subject to seat availability. A same-day change fee and any difference in fare and options prices will apply. This allows you to fly to your original destination or to an equivalent destination.
-```
-
-Here the AI response incorrectly focuses on same-day flight changes, when the customer was merely asking to change their seat on the same flight.  The Agent should have referenced the `/help/do-i-have-to-purchase-a-seat-assignment` document, and clarified that the latest time to select a seat is during check-in.
-<br><br>
-</details>
-
-
-> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response (guardrailed and prevented by Cleanlab):
-
-According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
-```
-
-Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
 <br><br>
 </details>
 
@@ -575,24 +522,6 @@ Your Guidance ensures the AI combines both articles when appropriate, to better 
 > *can i bring my emotional support dog with me on a domestic flight?*
 
 In this case, because the user’s question already specifies both the type of flight and the kind of animal, the AI skips asking a clarifying question. You’ll also notice that the AI now adds information that domesticated pets are allowed on the flight. This helps clarify that while emotional support animals are not treated as service animals, pets may still travel under the standard Pet Policy.
-<br><br>
-</details>
-
-
-#### To explore detection of Knowledge Gaps (Helpfulness / Context Sufficiency Evaluations)
-
-> *If theres no overhead bin space for my carry on must i pay extra to check it?*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response:
-
-I couldn't find specific information about whether you would need to pay extra to check your carry-on if there's no overhead bin space. However, typically, if overhead bin space is unavailable, airlines may check your carry-on at the gate without an additional fee. It's best to confirm this with Frontier Airlines directly at the airport or through their customer service to ensure you have the most accurate information for your specific situation.
-```
-
-The Agent's response is not at all supported by any information in the files it found.  Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
 <br><br>
 </details>
 
