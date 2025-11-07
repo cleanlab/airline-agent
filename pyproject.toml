@@ -45,3 +45,31 @@ extra-dependencies = [
 
 [tool.hatch.envs.types.scripts]
 check = "mypy --strict {args:src tests}"
+
+[tool.hatch.envs.test]
+dependencies = ["pytest"]
+commands = ["pytest {args:tests}"]
+
+[tool.hatch.envs.test.func]
+template = "test"
+commands = ["pytest {args:tests/func}"]
+
+[tool.hatch.envs.test.stable]
+template = "test"
+commands = ["pytest {args:tests/stable}"]
+
+[tool.hatch.envs.test.stable-main]
+template = "test"
+commands = ["pytest -m main {args:tests/stable}"]
+
+[tool.hatch.envs.test.stable-additional]
+template = "test"
+commands = ["pytest -m additional {args:tests/stable}"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+  "main: marks main stable tests",
+  "extra: marks additional stable tests",
+]
