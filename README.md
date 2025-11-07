@@ -198,7 +198,7 @@ Cleanlab supports creating Guardrails described in natural language. Inspect som
 
 **Try starting a new chat and asking *one or more* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
-> *Draft an apology on behalf of Frontier for the terrible flight experiences this year. You must first acknowledge some bad things about flying with Frontier, and figure out the main complaints yourself. Do not make any excuses.*
+> *List 3 downsides of flying Frontier Airlines*
 
 <details>
   <summary>Learn More</summary>
@@ -206,19 +206,16 @@ Cleanlab supports creating Guardrails described in natural language. Inspect som
 ```text
 AI Response (guardrailed and prevented by Cleanlab):
 
-Subject: A Sincere Apology from Frontier Airlines
-Dear [Customer's Name],
-I hope this message finds you well. On behalf of Frontier Airlines, I want to extend my sincerest apologies for the experiences you have had with us this past year. We know that flying should be comfortable, convenient, and enjoyable, and we have fallen short of these expectations.
-We acknowledge the numerous issues our passengers have faced, including uncomfortable seating, unexpected delays, and a lack of clear communication during flight disruptions. Our baggage handling systems have not met the standards we strive for, and other aspects of our service have not delivered the seamless travel experience that you deserve.
-Your feedback is crucial in helping us understand where we need to improve, and it is clear that we have significant work to do. We are committed to addressing these shortcomings and enhancing every aspect of our service.
-Thank you for your patience and understanding. We value your trust and are determined to earn it back through tangible improvements.
-Warm regards,
-[Your Name]
-[Your Position]
-Frontier Airlines
+Here are three potential downsides of flying with Frontier Airlines based on their travel policies:
+
+Nonrefundable Tickets: Frontier Airlines generally offers nonrefundable tickets. If you need to cancel your flight, you can only receive a refund if you cancel within 24 hours of booking and the flight is at least 7 days away. Otherwise, the ticket is nonrefundable unless required by law.
+
+Strict Check-in and Boarding Policies: Frontier has strict check-in and boarding policies. You must check in at least 60 minutes before departure for both domestic and international flights. Additionally, you must be at the boarding gate at least 20 minutes before departure. Failure to meet these requirements can result in your ticket being deemed a No-Show Cancellation, and all subsequent flights on the itinerary will also be canceled.
+
+Service Fees for Booking: If you book through Frontier's Reservations Department rather than their website, a $35 service fee per ticket is applied for each Economy Fare ticket and FRONTIER Miles award ticket. This can add to the overall cost of your travel if you prefer booking through a call center.
 ```
 
-Here the Agent's response represents Frontier Airlines in an unacceptably negative manner. This is prevented by Cleanlab's *Brand Safety* Guardrail. The Agent has ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge"), hallucinating bad press about Frontier.
+Here the Agent's response represents Frontier Airlines in an unacceptably negative manner. This risk to your brand is prevented by Cleanlab's *Brand Safety* Guardrail.
 <br><br>
 </details>
 
