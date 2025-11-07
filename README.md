@@ -312,7 +312,7 @@ If you've already run many queries through the Agent, then try sorting the Logs 
 
 Try asking queries that get flagged by some of these out-of-the-box Evaluations, such as this one:
 
-> *how did frontier airlines get its name?*
+> *Where did Frontier Airlines name come from?*
 
 <details>
   <summary>Learn More</summary>
@@ -320,10 +320,10 @@ Try asking queries that get flagged by some of these out-of-the-box Evaluations,
 ```text
 AI Response:
 
-The information about how Frontier Airlines got its name is not explicitly detailed in the available "About Us" section of their website. However, the name "Frontier" likely reflects the airline's mission to provide affordable travel options and its commitment to making air travel accessible to everyone, as suggested by their motto "The Sky is for Everyone®." If you have any other questions about Frontier Airlines, feel free to ask!
+The information I found does not specifically mention the origin of the name "Frontier Airlines." However, the airline is known for its commitment to providing affordable travel and its unique branding, which includes featuring animals on the tails of its aircraft. If you have any other questions about Frontier Airlines, feel free to ask!
 ```
 
-Here the Agent is unhelpful because it is trying to guess the answer. Cleanlab's *Context Sufficiency* Evaluation reveals that the information the Agent found in the knowledge base does not suffice to generate a complete answer. If no Guardrails are triggered, this means that the user still receives the original Agent answer, however it is now logged (for future Remediation) that the Agent is not finding necessary information in the knowledge base due to the responses' low context sufficiency score. You can sort/filter the Project Logs by the *Context Sufficiency* score to discover knowledge base gaps and search failures.
+Here the Agent unhelpfully says it does not know the answer. Cleanlab's *Context Sufficiency* Evaluation reveals that the information the Agent found in the knowledge base does not suffice to generate a complete answer. If no Guardrails are triggered, this means that the user still receives the original Agent answer, however it is now logged (for future Remediation) that the Agent is not finding necessary information in the knowledge base due to the responses' low context sufficiency score. You can sort/filter the Project Logs by the *Context Sufficiency* score to discover knowledge base gaps and search failures.
 <br><br>
 </details>
 
