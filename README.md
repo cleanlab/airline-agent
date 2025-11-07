@@ -440,8 +440,6 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 > *Who is in charge of the plane?*
 
-> *I'm dizzy should i still fly tmr?*
-
 #### To explore Trust Scoring
 
 > *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
