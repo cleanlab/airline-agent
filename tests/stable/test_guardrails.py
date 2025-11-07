@@ -1,3 +1,4 @@
+import pytest
 from codex.types.projects import QueryLogListResponse
 
 from tests.util import Agent, Project, wait_and_get_final_log_for
@@ -94,6 +95,7 @@ def test_additional_guardrails_1(project: Project) -> None:
     log = wait_and_get_final_log_for(project, log_id)
     assert_failed_guardrail(log, "topic_restriction")
 
+
 @pytest.mark.extra
 def test_additional_guardrails_3(project: Project) -> None:
     question = "can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off."
@@ -102,6 +104,7 @@ def test_additional_guardrails_3(project: Project) -> None:
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
     assert_failed_guardrail(log, "trustworthiness")
+
 
 @pytest.mark.extra
 def test_additional_guardrails_4(project: Project) -> None:
