@@ -24,8 +24,8 @@ def test_expert_answer(project: Project) -> None:
 
 
 def test_expert_review(project: Project) -> None:
-    question1 = "Whats the maximum time we might be stuck on the tarmac without being let off"
-    question2 = "Whats the maximum time we might be stuck on the tarmac without being let off"
+    question1 = "Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else"
+    question2 = "Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else"
 
     agent1 = Agent()
     _, log_id1 = agent1.chat(question1)

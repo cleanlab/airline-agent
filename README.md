@@ -368,7 +368,7 @@ Beyond Expert Answers, Cleanlab supports other types of remediations, such as Ex
 
 **Try starting a new chat** and asking the example question below:
 
-> *Whats the maximum time we might be stuck on the tarmac without being let off*
+> *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
 
 <details>
   <summary>Learn More</summary>
@@ -376,22 +376,7 @@ Beyond Expert Answers, Cleanlab supports other types of remediations, such as Ex
 ```text
 AI Response:
 
-Frontier Airlines has a tarmac delay plan to manage situations where passengers are stuck on the tarmac. Here are the key points:
-
-Notification and Updates: Passengers will be notified of the delay status if it exceeds 30 minutes, with updates provided as necessary.
-
-Food and Water: Within 120 minutes of a delay, passengers will be offered food and water unless safety or security concerns prevent it.
-
-Deplaning Opportunity:
-
-For domestic flights, passengers must be given the option to deplane before the delay exceeds three hours.
-For international flights, this option is available before four hours.
-Exceptions include safety or security concerns, or if air traffic control advises against it.
-Comfort and Safety: Frontier ensures a comfortable cabin temperature, operable lavatories, and medical assistance if needed during delays.
-
-Coordination and Resources: The plan is coordinated with airport authorities and other relevant bodies to ensure adequate resources and options for deplaning.
-
-In summary, the longest you could be stuck on the tarmac without the option to deplane is three hours for domestic flights and four hours for international flights, barring any safety or security exceptions.
+The maximum time you might be stuck on the tarmac without being let off for a domestic flight is three hours.
 ```
 <br><br>
 </details>
@@ -402,7 +387,7 @@ Expand this Log entry in the Project and click `No` under *Is this a good AI res
 
 Then pretend you are a different user **by creating a new chat thread** and ask:
 
-> *Whats the maximum time we might be stuck on the tarmac without being let off*
+> *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
