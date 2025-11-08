@@ -6,6 +6,7 @@ import pytest
 from cleanlab_codex import Client
 from dotenv import load_dotenv
 
+from airline_agent.backend.services.airline_chat import booking
 from airline_agent.constants import OFFICIAL_DEMO_PROJECT_ID
 from tests.util import Project
 
@@ -13,6 +14,12 @@ from tests.util import Project
 @pytest.fixture(scope="session", autouse=True)
 def load_env() -> None:
     load_dotenv()
+
+
+@pytest.fixture(autouse=True)
+def clear_bookings() -> None:
+    """Clear all bookings before each test to ensure test isolation."""
+    booking._reset()  # noqa: SLF001
 
 
 @pytest.fixture(scope="session")
