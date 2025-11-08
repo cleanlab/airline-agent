@@ -25,7 +25,7 @@ def main() -> None:
         verify_checksum(data_path)
 
     with data_path.open() as f:
-        data: list[KBArticle] = [KBArticle(**entry) for entry in json.load(f)]
+        data: list[KBArticle] = [KBArticle.model_validate(entry) for entry in json.load(f)]
 
     documents = to_documents(data)
 

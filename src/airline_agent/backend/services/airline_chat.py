@@ -47,6 +47,7 @@ from airline_agent.cleanlab_utils.validate_utils import (
     run_cleanlab_validation_logging_tools,
 )
 from airline_agent.constants import AGENT_INSTRUCTIONS, AGENT_MODEL
+from airline_agent.tools.booking import BookingTools
 from airline_agent.tools.knowledge_base import KnowledgeBase
 
 load_dotenv()
@@ -55,13 +56,14 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def create_agent(kb: KnowledgeBase) -> Agent:
+def create_agent(kb: KnowledgeBase, booking: BookingTools) -> Agent:
     """Create the airline support agent."""
     model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
+
     return Agent(
         model=model,
         instructions=AGENT_INSTRUCTIONS,
-        tools=[kb.get_article, kb.search, kb.list_directory],
+        toolsets=[kb.tools, booking.tools],
     )
 
 
@@ -78,8 +80,9 @@ kb = KnowledgeBase(
     kb_path=str(pathlib.Path(__file__).parents[4] / "data/kb.json"),
     vector_index_path=str(pathlib.Path(__file__).parents[4] / "data/vector-db"),
 )
+booking = BookingTools()
 project = get_cleanlab_project()
-agent = create_agent(kb)
+agent = create_agent(kb, booking)
 
 thread_to_messages: dict[str, list[ModelMessage]] = {}
 cleanlab_enabled_by_thread: dict[str, bool] = {}
@@ -196,6 +199,7 @@ async def airline_chat_streaming(
                             escalated_to_sme=validation_result.escalated_to_sme,
                             scores=_format_eval_results(validation_result),
                             log_id=validation_result.log_id,
+                            guardrailed_fallback=validation_result.guardrailed_fallback,
                         ),
                     ),
                 )
