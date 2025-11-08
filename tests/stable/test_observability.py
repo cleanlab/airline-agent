@@ -4,6 +4,7 @@ from tests.judge import assert_judge
 from tests.util import Agent, Project, wait_and_get_final_log_for
 
 
+@pytest.mark.main
 def test_observability(project: Project) -> None:
     question = "Can I bring my cat on a domestic flight?"
     agent = Agent()

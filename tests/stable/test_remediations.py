@@ -78,7 +78,7 @@ def test_ai_guidance(project: Project) -> None:
     disruption_assistance_judge.assert_judge(answer4)
 
 
-@pytest.mark.extra
+@pytest.mark.additional
 def test_additional_ai_guidance(project: Project) -> None:
     question1 = "can i bring a dog with me on a flight?"
     question2 = "can i bring my emotional support dog with me on a domestic flight?"
