@@ -11,6 +11,7 @@ jobs:
   demo:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         marker: [main, additional]
     name: ${{ matrix.marker }} demo examples
