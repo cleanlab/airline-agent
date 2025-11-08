@@ -1,7 +1,6 @@
 name: Stable
 
 on:
-  push: # for testing only
   schedule:
     # Run every 2 hours
     - cron: "0 */2 * * *"
