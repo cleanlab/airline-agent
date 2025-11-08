@@ -45,3 +45,9 @@ extra-dependencies = [
 
 [tool.hatch.envs.types.scripts]
 check = "mypy --strict {args:src tests}"
+
+[tool.pytest.ini_options]
+markers = [
+    "main: marks tests for main demo examples",
+    "additional: marks tests for additional demo examples"
+]
