@@ -1,3 +1,4 @@
+import pytest
 from codex.types.projects import QueryLogListResponse
 
 from tests.util import Agent, Project, wait_and_get_final_log_for
@@ -19,6 +20,7 @@ def assert_failed_eval(log: QueryLogListResponse, eval_name: str) -> None:
         assert score > threshold_value, assistant_msg
 
 
+@pytest.mark.main
 def test_evaluation_1(project: Project) -> None:
     question = "Where did Frontier Airlines name come from?"
     agent = Agent()

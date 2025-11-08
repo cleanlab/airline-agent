@@ -1,7 +1,10 @@
+import pytest
+
 from tests.judge import Judge, assert_judge
 from tests.util import Agent, Project, wait_and_get_final_log_for
 
 
+@pytest.mark.main
 def test_expert_answer(project: Project) -> None:
     question = "Who founded Frontier Airlines?"
     answer = 'Frontier Airlines was founded by Frederick W. "Rick" Brown, Janice Brown, and Bob Schulman in 1994.'
@@ -23,6 +26,7 @@ def test_expert_answer(project: Project) -> None:
     assert answer3 == answer
 
 
+@pytest.mark.main
 def test_expert_review(project: Project) -> None:
     question1 = "Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else"
     question2 = "Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else"
@@ -40,6 +44,7 @@ def test_expert_review(project: Project) -> None:
     assert log2.guardrailed
 
 
+@pytest.mark.main
 def test_ai_guidance(project: Project) -> None:
     question1 = "My flight got canceled how to use my Peace Pass benefit?"
     question2 = "does peace pass still work if trip canceled due to weather?"
@@ -73,6 +78,7 @@ def test_ai_guidance(project: Project) -> None:
     disruption_assistance_judge.assert_judge(answer4)
 
 
+@pytest.mark.additional
 def test_additional_ai_guidance(project: Project) -> None:
     question1 = "can i bring a dog with me on a flight?"
     question2 = "can i bring my emotional support dog with me on a domestic flight?"
