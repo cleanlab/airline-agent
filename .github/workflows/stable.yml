@@ -22,9 +22,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: pypa/hatch@install
       - name: Download knowledge base
-        run: |
-          mkdir -p data
-          curl -o data/kb.json https://cleanlab-public.s3.us-east-1.amazonaws.com/airline-agent/kb.json
+        run: curl -o data/kb.json https://cleanlab-public.s3.us-east-1.amazonaws.com/airline-agent/kb.json
       - name: Create vector database
         run: hatch run create-vector-database
       - name: Run ${{ matrix.marker }} demo examples
