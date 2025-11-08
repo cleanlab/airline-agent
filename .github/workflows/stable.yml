@@ -8,13 +8,16 @@ on:
   workflow_dispatch:  # manual trigger
 
 jobs:
-  main:
-    name: Main demo examples
+  demo:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        marker: [main, additional]
+    name: ${{ matrix.marker }} demo examples
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       CLEANLAB_PROJECT_ID: ${{ secrets.CLEANLAB_PROJECT_ID }}
       CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - uses: pypa/hatch@install
@@ -24,19 +27,5 @@ jobs:
           curl -o data/kb.json https://cleanlab-public.s3.us-east-1.amazonaws.com/airline-agent/kb.json
       - name: Create vector database
         run: hatch run create-vector-database
-      - name: Run main demo examples
-        run: hatch test tests/stable -m main -v
-  additional:
-    name: Additional demo examples
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: pypa/hatch@install
-      - name: Download knowledge base
-        run: |
-          mkdir -p data
-          curl -o data/kb.json https://cleanlab-public.s3.us-east-1.amazonaws.com/airline-agent/kb.json
-      - name: Create vector database
-        run: hatch run create-vector-database
-      - name: Run additional demo examples
-        run: hatch test tests/stable -m additional -v
+      - name: Run ${{ matrix.marker }} demo examples
+        run: hatch test tests/stable -m ${{ matrix.marker }} -v
