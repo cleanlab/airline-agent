@@ -1,6 +1,6 @@
+import pytest
 from codex.types.projects import QueryLogListResponse
 
-import pytest
 from tests.util import Agent, Project, wait_and_get_final_log_for
 
 
