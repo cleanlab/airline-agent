@@ -25,4 +25,4 @@ jobs:
       - name: Create vector database
         run: hatch run create-vector-database
       - name: Run stability tests
-        run: hatch test:stable -v
+        run: hatch test tests/stable -v
