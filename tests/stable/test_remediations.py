@@ -52,7 +52,9 @@ def test_ai_guidance(project: Project) -> None:
     agent1 = Agent()
     answer1, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
-    idk_judge = Judge(["output does NOT include an explanation of Frontier Airlines's Disruption Assistance program"])
+    log = wait_and_get_final_log_for(project, log_id1)
+    assert log.is_bad_response
+    idk_judge = Judge(["output does NOT reference Frontier Airlines’ Disruption Assistance program by name"])
     idk_judge.assert_judge(answer1)
     agent2 = Agent()
     answer2, _ = agent2.chat(question2)
