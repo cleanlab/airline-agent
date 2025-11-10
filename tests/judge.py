@@ -54,7 +54,7 @@ class Judge:
         """
         verdict = self.judge(output)
         if verdict.ruling == "fail":
-            msg = f"Output failed to meet criteria: {verdict.reasoning}"
+            msg = f"Original Assistant Response:\n{output}\n\nOutput failed to meet criteria: {verdict.reasoning}"
             raise AssertionError(msg)
 
 
