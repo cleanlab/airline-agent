@@ -14,7 +14,7 @@ def assert_failed_eval(log: QueryLogListResponse, eval_name: str) -> None:
     threshold_value = threshold["value"]
     assert isinstance(threshold_value, float)
     threshold_below = threshold.get("direction") == "below"
-    error_msg = ERROR_MESSAGE.format(log.original_assistant_response, f"{eval_name} threshold")
+    error_msg = ERROR_MESSAGE.format(assistant_response=log.original_assistant_response, error_message=f"{eval_name} threshold")
     if threshold_below:
         assert score < threshold_value, error_msg
     else:

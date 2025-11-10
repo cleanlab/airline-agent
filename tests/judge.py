@@ -56,7 +56,7 @@ class Judge:
         """
         verdict = self.judge(output)
         if verdict.ruling == "fail":
-            msg = ERROR_MESSAGE.format(output, verdict.reasoning)
+            msg = ERROR_MESSAGE.format(assistant_response=output, error_message=verdict.reasoning)
             raise AssertionError(msg)
 
 

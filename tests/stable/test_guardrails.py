@@ -14,7 +14,7 @@ def assert_failed_guardrail(log: QueryLogListResponse, guardrail_name: str) -> N
     threshold_value = threshold["value"]
     assert isinstance(threshold_value, float)
     threshold_below = threshold.get("direction") == "below"
-    assistant_msg = ERROR_MESSAGE.format(log.original_assistant_response, f"{guardrail_name} threshold")
+    assistant_msg = ERROR_MESSAGE.format(assistant_response=log.original_assistant_response, error_message=f"{guardrail_name} threshold")
     if threshold_below:
         assert score < threshold_value, assistant_msg
     else:

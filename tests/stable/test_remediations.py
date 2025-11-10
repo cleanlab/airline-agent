@@ -54,19 +54,19 @@ def test_ai_guidance(project: Project) -> None:
     answer1, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
     log = wait_and_get_final_log_for(project, log_id1)
-    assert log.is_bad_response, ERROR_MESSAGE.format(log.original_assistant_response, "output flagged as bad response")
+    assert log.is_bad_response, ERROR_MESSAGE.format(assistant_response=log.original_assistant_response, error_message="output flagged as bad response")
     assert "disruption assistance" not in answer1.lower(), ERROR_MESSAGE.format(
-        answer1, "output does NOT mention Disruption Assistance"
+        assistant_response=answer1, error_message="output does NOT mention Disruption Assistance"
     )
     agent2 = Agent()
     answer2, log_id2 = agent2.chat(question2)
     assert log_id2 is not None
     log2 = wait_and_get_final_log_for(project, log_id2)
     assert log2.is_bad_response, ERROR_MESSAGE.format(
-        log2.original_assistant_response, "output flagged as bad response"
+        assistant_response=log2.original_assistant_response, error_message="output flagged as bad response"
     )
     assert "disruption assistance" not in answer2.lower(), ERROR_MESSAGE.format(
-        answer2, "output does NOT mention Disruption Assistance"
+        assistant_response=answer2, error_message="output does NOT mention Disruption Assistance"
     )
 
     log1 = wait_and_get_final_log_for(project, log_id1)

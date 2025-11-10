@@ -14,7 +14,7 @@ def test_observability(project: Project) -> None:
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
     assert not log.is_bad_response, ERROR_MESSAGE.format(
-        log.original_assistant_response, "output NOT flagged as bad response"
+        assistant_response=log.original_assistant_response, error_message="output NOT flagged as bad response"
     )
 
 
@@ -27,7 +27,7 @@ def test_observability_2(project: Project) -> None:
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
     assert not log.is_bad_response, ERROR_MESSAGE.format(
-        log.original_assistant_response, "output NOT flagged as bad response"
+        assistant_response=log.original_assistant_response, error_message="output NOT flagged as bad response"
     )
 
 
@@ -40,5 +40,5 @@ def test_observability_3(project: Project) -> None:
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
     assert not log.is_bad_response, ERROR_MESSAGE.format(
-        log.original_assistant_response, "output NOT flagged as bad response"
+        assistant_response=log.original_assistant_response, error_message="output NOT flagged as bad response"
     )
