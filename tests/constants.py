@@ -1,1 +1,1 @@
-ERROR_MESSAGE = "Failed response: {assistant_response}\n\nCriteria not met: {error_message}"
+ERROR_MESSAGE = "Failed response: {}\n\nCriteria not met: {}"
