@@ -1,13 +1,8 @@
 from dataclasses import dataclass
 
-import uvicorn
-from ag_ui.core.types import RunAgentInput
-from fastapi import FastAPI, Request
-from fastapi.responses import Response
 from openai.types.chat import ChatCompletionMessageParam
 from pydantic import BaseModel
 from pydantic_ai import Agent, RunContext
-from pydantic_ai.ag_ui import handle_ag_ui_request
 
 from airline_agent.backend.services.airline_chat import booking, kb
 from airline_agent.constants import AGENT_INSTRUCTIONS as AUT_INSTRUCTIONS
@@ -135,22 +130,3 @@ def create_agent() -> Agent[Dependencies, str]:
             *booking.tools.tools.values(),
         ],
     )
-
-
-def main() -> None:
-    agent = create_agent()
-
-    app = FastAPI()
-
-    @app.post("/")
-    async def handle_request(request: Request) -> Response:
-        body = await request.json()
-        run_input = RunAgentInput.model_validate(body)
-        deps = Dependencies(thread_id=run_input.thread_id)
-        return await handle_ag_ui_request(agent, request, deps=deps)
-
-    uvicorn.run(app, host="localhost", port=8000)
-
-
-if __name__ == "__main__":
-    main()

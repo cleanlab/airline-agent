@@ -10,7 +10,7 @@ import type {
 export const client = createClient(createConfig())
 
 /**
- * Airline Agent Chat Route
+ * Agent Chat Route
  */
 export const airlineAgentChatRouteApiAirlineAgentStreamPost = <
   ThrowOnError extends boolean = false
@@ -26,6 +26,6 @@ export const airlineAgentChatRouteApiAirlineAgentStreamPost = <
     ThrowOnError
   >({
     ...options,
-    url: '/api/airline-agent/stream'
+    url: '/api/agent/stream'
   })
 }
