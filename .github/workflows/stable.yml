@@ -35,12 +35,12 @@ jobs:
       - name: Upload report-${{ matrix.marker }}.json
         if: always()  # runs even if tests fail
         uses: actions/upload-artifact@v4
-          with:
-            name: report-${{ matrix.marker }}
-            path: results/report-${{ matrix.marker }}.json
+        with:
+          name: report-${{ matrix.marker }}
+          path: results/report-${{ matrix.marker }}.json
   summarize:
     runs-on: ubuntu-latest
-    name: prepare stability report
+    name: prepare stability reports
     needs: demo
     if: always()  # run this job even if tests fail
     steps:
