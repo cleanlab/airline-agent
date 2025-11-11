@@ -12,7 +12,7 @@ if not DATA_FILE.exists():
     print("No stability_data.json found — skipping report.")
     sys.exit(0)
 
-today = datetime.now(datetime.UTC).date()
+today = datetime.datetime.now(datetime.UTC).date()
 cutoff = today - datetime.timedelta(days=10)
 
 # Load all JSON lines

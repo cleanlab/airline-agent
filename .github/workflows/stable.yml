@@ -44,16 +44,14 @@ jobs:
     if: always()  # run this job even if tests fail
     steps:
       - uses: actions/checkout@v5
-        with: # ensures correct branch for PRs / manual runs
-          ref: ${{ github.head_ref || github.ref }}
       - uses: actions/download-artifact@v4
         with:
           path: results
       - name: Merge all reports
         run: |
-          python scripts/append_test_results.py results/report-main.json
-          python scripts/append_test_results.py results/report-additional.json
-          python scripts/aggregrate_test_results.py
+          python scripts/append_test_results.py main
+          python scripts/append_test_results.py additional
+          python scripts/aggregate_test_results.py
       - name: Commit summary
         run: |
           git config user.name "github-actions[bot]"
