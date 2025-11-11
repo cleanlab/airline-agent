@@ -15,7 +15,15 @@ RAG_EMBED_MODEL = "text-embedding-3-small"
 RAG_EMBED_BATCH_SIZE = 100
 RAG_CHUNK_SIZE = 1024
 RAG_CHUNK_OVERLAP = 200
-CONTEXT_RETRIEVAL_TOOLS = ["search", "get_article", "list_directory"]
+CONTEXT_RETRIEVAL_TOOLS = [
+    "search",
+    "get_article",
+    "list_directory",
+    "search_flights",
+    "get_fare_details",
+    "get_flight_timings",
+    "get_flight_status",
+]
 AGENT_MODEL = "gpt-4o"
 FALLBACK_RESPONSE = "I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance."
 AGENT_INSTRUCTIONS = f"""
