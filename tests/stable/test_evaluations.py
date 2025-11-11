@@ -24,9 +24,10 @@ def assert_failed_eval(log: QueryLogListResponse, eval_name: str) -> None:
 
 @pytest.mark.main
 def test_evaluation_1(project: Project) -> None:
-    question = "Where did Frontier Airlines name come from?"
+    query = "Where did Frontier Airlines name come from?"
+    print(query) # noqa: T201
     agent = Agent()
-    _, log_id = agent.chat(question)
+    _, log_id = agent.chat(query)
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
     assert_failed_eval(log, "context_sufficiency")
