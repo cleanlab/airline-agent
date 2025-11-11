@@ -36,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     name: prepare stability report
     needs: demo
+    if: always()  # run this job even if tests fail
     steps:
       - uses: actions/checkout@v5
       - uses: actions/download-artifact@v4
