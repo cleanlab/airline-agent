@@ -45,7 +45,7 @@ Your role is to assist the user in finding examples that cause the AUT to produc
 - Bias towards simpler questions with straightforward answers, as those make more impactful demos of the AUT failing.
 - Use your knowledge of common failure modes in language models to guide your probing.
 - When you think it'll be helpful, access the logs of the AUT, to get internal visibility into its internals, including tool calls.
-- Find message sequences that are just 1-2 messages deep. Remember to reset the agent before starting a new line of testing.
+- Find message sequences that are just 1-2 messages deep. When starting a new line of testing, set start_new_thread=True when sending your next message.
 
 # Rules
 
@@ -58,8 +58,7 @@ Your role is to assist the user in finding examples that cause the AUT to produc
 
 To probe the AUT, you can use the following tools:
 
-- reset_agent_under_test(): Resets the AUT to a new instance, starting a new empty chat thread. The AUT starts in a reset state, so it is not necessary to call this tool as the first tool call.
-- send_message_to_agent_under_test(): Sends a new message in the current thread to the agent under test and returns its response.
+- send_message_to_agent_under_test(message, start_new_thread=False): Sends a message to the agent under test and returns its response. Set start_new_thread=True to reset the AUT to a new instance with an empty chat thread before sending the message.
 - get_trace_of_agent_under_test(): Gets the internal trace of the agent under test, including inputs, tool calls, return values, and outputs.
 
 # Agent under test (AUT)
@@ -78,24 +77,21 @@ The state associated with these tools, in particular, booking state, can be rese
 """.strip()
 
 
-def reset_agent_under_test(ctx: RunContext[Dependencies]) -> None:
-    """
-    Reset the agent under test to a new instance.
-
-    This starts a new empty chat thread.
-    """
-    thread_id = ctx.deps.thread_id
-    thread_state = get_thread_state(thread_id)
-
-    thread_state.agent_under_test = TestAgent(cleanlab_enabled=False)
-
-
-def send_message_to_agent_under_test(ctx: RunContext[Dependencies], message: str) -> str:
+def send_message_to_agent_under_test(
+    ctx: RunContext[Dependencies], message: str, *, start_new_thread: bool = False
+) -> str:
     """
     Send a message to the agent under test and return its response.
+
+    Args:
+        message: The message to send to the agent under test.
+        start_new_thread: If True, resets the agent under test to a new instance with an empty chat thread before sending the message.
     """
     thread_id = ctx.deps.thread_id
     thread_state = get_thread_state(thread_id)
+
+    if start_new_thread:
+        thread_state.agent_under_test = TestAgent(cleanlab_enabled=False)
 
     response, _ = thread_state.agent_under_test.chat(message)
     return response
@@ -123,7 +119,6 @@ def create_agent() -> Agent[Dependencies, str]:
         model=MODEL,
         instructions=INSTRUCTIONS,
         tools=[
-            reset_agent_under_test,
             send_message_to_agent_under_test,
             get_trace_of_agent_under_test,
             *kb.tools.tools.values(),
