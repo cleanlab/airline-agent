@@ -1,4 +1,7 @@
-import json, re, datetime
+import datetime
+import json
+import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -7,9 +10,9 @@ REPORT_FILE = Path("STABILITY.md")
 
 if not DATA_FILE.exists():
     print("No stability_data.json found — skipping report.")
-    exit(0)
+    sys.exit(0)
 
-today = datetime.date.today()
+today = datetime.now(datetime.UTC).date()
 cutoff = today - datetime.timedelta(days=10)
 
 # Load all JSON lines
@@ -47,7 +50,7 @@ with open(REPORT_FILE, "w") as md:
     flaky = {k: v for k, v in summary.items() if v["failures"] > 0}
     if not flaky:
         md.write("✅ All tests passed consistently in the last 10 days.\n")
-        exit(0)
+        sys.exit(0)
 
     md.write("#### ❗ Flaky / Failing Tests\n")
     md.write("| Test | Failures | Passes | Failure Rate |\n")
