@@ -1,4 +1,4 @@
-See @README for a project overview and @DEVELOPMENT.md for a development guide.
+See @README.md for a project overview and @DEVELOPMENT.md for a development guide.
 
 # Additional instructions
 
