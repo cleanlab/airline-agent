@@ -20,10 +20,7 @@ with open(DATA_FILE) as f:
     logs = [json.loads(line) for line in f if line.strip()]
 
 # Filter to last 10 days
-recent = [
-    x for x in logs
-    if datetime.date.fromisoformat(x["date"]) >= cutoff
-]
+recent = [x for x in logs if datetime.date.fromisoformat(x["date"]) >= cutoff]
 
 summary = defaultdict(lambda: {"failures": 0, "passes": 0, "questions": set(), "last_fail": None})
 
