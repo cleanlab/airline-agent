@@ -12,6 +12,7 @@ def test_expert_answer(project: Project) -> None:
     answer = 'Frontier Airlines was founded by Frederick W. "Rick" Brown, Janice Brown, and Bob Schulman in 1994.'
 
     agent1 = Agent()
+    print("QUESTION:", question)  # noqa: T201
     answer1, _ = agent1.chat(question)
     assert answer1 != answer
     assert_judge(["output does not reflect knowledge of who founded Frontier Airlines"], answer1)
@@ -34,6 +35,7 @@ def test_expert_review(project: Project) -> None:
     question2 = "Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else"
 
     agent1 = Agent()
+    print("QUESTION:", question1)  # noqa: T201
     _, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
     log1 = wait_and_get_final_log_for(project, log_id1)
@@ -51,6 +53,7 @@ def test_ai_guidance(project: Project) -> None:
     question1 = "My flight got canceled how to use my Peace Pass benefit?"
     question2 = "does peace pass still work if trip canceled due to weather?"
 
+    print("QUESTION:", question1)  # noqa: T201
     agent1 = Agent()
     answer1, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
@@ -95,6 +98,7 @@ def test_additional_ai_guidance(project: Project) -> None:
     question1 = "can i bring a dog with me on a flight?"
     question2 = "can i bring my emotional support dog with me on a domestic flight?"
 
+    print("QUESTION:", question1)  # noqa: T201
     agent1 = Agent()
     answer1, log_id1 = agent1.chat(question1)
     assert log_id1 is not None

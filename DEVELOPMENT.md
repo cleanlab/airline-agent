@@ -60,7 +60,10 @@ This backend is compatible with the frontend for the airline support agent. The 
 
 ## Continuous integration
 
-Testing, type checking, and formatting/linting is [checked in CI][ci]. The stability of the README examples is also [checked in CI][stability-ci].
+Testing, type checking, and formatting/linting is [checked in CI][ci].
+
+The stability of the README examples is also [checked in CI][stability-ci]. Aggregate data and summary results for the stability tests are kept in the [stability-md] branch.
 
 [ci]: .github/workflows/ci.yml
 [stability-ci]: .github/workflows/stable.yml
+[stability-md]: https://github.com/cleanlab/airline-agent/tree/stability-md
