@@ -53,3 +53,8 @@ markers = [
     "main: marks tests for main demo examples",
     "additional: marks tests for additional demo examples"
 ]
+
+[tool.hatch.envs.hatch-test]
+extra-dependencies = [
+  "pytest-json-report"
+]
