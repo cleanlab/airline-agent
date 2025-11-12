@@ -55,6 +55,10 @@ jobs:
         with:
           name: report-additional
           path: results
+      - name: Retrieve previous stability data
+        run: |
+          git fetch origin stability-md
+          git show origin/stability-md:stability_data.json > stability_data.json || echo '{}' > stability_data.json
       - name: Merge all reports
         run: |
           python scripts/append_test_results.py main
@@ -65,7 +69,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin stability-md
-          git checkout stability-md
+          git worktree add ../stability-md stability-md
+          cp stability_data.json README.md ../stability-md/
+          cd ../stability-md
           git add stability_data.json README.md
-          git commit -m "Update stability report" || echo "No changes to commit"
+          git commit -m "Update stability report ($(date -u '+%Y-%m-%d %H:%M UTC'))" || echo "No changes to commit"
           git push origin stability-md
+          cd ..
+          git worktree remove ../stability-md --force
