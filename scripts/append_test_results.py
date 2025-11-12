@@ -2,8 +2,11 @@
 import argparse
 import datetime
 import json
-import sys
 from pathlib import Path
+
+TIMESTAMP_FORMAT = "%d-%m-%y %H:%M:%S"
+
+RETENTION_WINDOW_DAYS = 10
 
 
 def main() -> None:
@@ -17,25 +20,32 @@ def main() -> None:
 
     if not report_file.exists():
         print(f"No report file found at {report_file}")
-        sys.exit(0)
+        return
 
     with report_file.open() as f:
         report = json.load(f)
 
-    timestamp = datetime.datetime.fromtimestamp(report["created"], tz=datetime.UTC).strftime("%d-%m-%y %H:%M:%S")
+    timestamp = datetime.datetime.fromtimestamp(report["created"], tz=datetime.UTC).strftime(TIMESTAMP_FORMAT)
     tests = report.get("tests", [])
     if not tests:
         print(f"No tests found in {report_file}")
-        sys.exit(0)
+        return
 
-    # Load existing entries or start with empty list
+    today = datetime.datetime.now(datetime.UTC).date()
+    cutoff = today - datetime.timedelta(days=RETENTION_WINDOW_DAYS)
+
     if output_file.exists():
         with output_file.open() as f:
-            existing_entries = json.load(f)
+            all_existing_entries = json.load(f)
+        existing_entries = [
+            entry
+            for entry in all_existing_entries
+            if datetime.datetime.strptime(entry["timestamp"], TIMESTAMP_FORMAT).replace(tzinfo=datetime.UTC).date()
+            >= cutoff
+        ]
     else:
         existing_entries = []
 
-    # Create new entries
     new_entries = []
     for test in tests:
         call = test.get("call", {})
@@ -49,7 +59,6 @@ def main() -> None:
         }
         new_entries.append(entry)
 
-    # Append new entries and write back
     existing_entries.extend(new_entries)
     with output_file.open("w") as f:
         json.dump(existing_entries, f, indent=2)

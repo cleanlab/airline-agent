@@ -27,7 +27,6 @@ jobs:
         run: hatch run create-vector-database
       - name: Run ${{ matrix.marker }} demo examples and collect results
         env:
-          RUN_DATE: ${{ github.run_started_at }}
           MARKER: ${{ matrix.marker }}
         run: |
           mkdir -p results
@@ -68,7 +67,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git fetch origin stability-md
           git worktree add ../stability-md stability-md
           cp stability_data.json README.md ../stability-md/
           cd ../stability-md
