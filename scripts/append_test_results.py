@@ -12,7 +12,6 @@ def main() -> None:
     args = parser.parse_args()
 
     marker = args.marker
-    date = datetime.datetime.now(datetime.UTC).date().isoformat()
     report_file = Path(f"results/report-{marker}.json")
     output_file = Path("stability_data.json")
 
@@ -30,13 +29,14 @@ def main() -> None:
 
     entries = []
     for test in tests:
+        call = test.get("call", {})
         entry = {
-            "date": date,
+            "timestamp": datetime.datetime.fromtimestamp(test["created"], tz=datetime.timezone.utc).strftime("%d-%m-%y %H:%M:%S"),
             "marker": marker,
             "test_name": test["nodeid"],
             "outcome": test["outcome"],
-            "stdout": test.get("stdout", ""),
-            "stderr": test.get("stderr", ""),
+            "stdout": call.get("stdout", ""),
+            "stderr": call.get("stderr", ""),
         }
         entries.append(entry)
 
