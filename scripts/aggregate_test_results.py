@@ -56,7 +56,7 @@ with open(REPORT_FILE, "w") as md:
         md.write("⚠️ No recent tests ran in the last 10 days.\n")
         print(f"Updated {REPORT_FILE}")
         sys.exit(0)
-    
+
     flaky = {k: v for k, v in summary.items() if v["failures"] > 0}
     if not flaky:
         md.write("✅ All tests passed consistently in the last 10 days.\n")
