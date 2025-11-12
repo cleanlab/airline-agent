@@ -69,9 +69,12 @@ with open(REPORT_FILE, "w") as md:
             for q in sorted(data["questions"]):
                 md.write(f"- {q}\n")
         if entry and entry.get("stdout"):
-            md.write("\n**Last failure log (abridged):**\n```\n")
             log = entry["stdout"].strip()
-            md.write(log[:1000])  # truncate long output
-            md.write("\n```\n\n---\n\n")
+            md.write("\n<details>\n")
+            md.write("<summary><strong>View full failure log</strong></summary>\n\n")
+            md.write("\n\n```\n")
+            md.write(log)
+            md.write("\n```\n")
+            md.write("</details>\n\n---\n\n")
 
 print(f"Updated {REPORT_FILE}")
