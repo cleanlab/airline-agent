@@ -109,10 +109,10 @@ def main() -> None:
 
                 for test_name, data in sorted(flaky.items()):
                     entry = data["last_fail"]
-                    md.write(f"##### `{test_name}`\n")
-                    md.write(f"**Failures:** {data['failures']} times\n")
+                    md.write(f"##### `{test_name}`\n\n")
+                    md.write(f"**Failures:** {data['failures']} times\n\n")
                     if data["question"]:
-                        md.write(f"**Question:** {data['question']}\n")
+                        md.write(f"**Question:** {data['question']}\n\n")
                     if entry and entry.get("error_msg"):
                         log = entry["error_msg"].strip()
                         md.write("\n<details>\n")
