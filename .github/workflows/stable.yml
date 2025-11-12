@@ -75,5 +75,3 @@ jobs:
           git add stability_data.json README.md
           git commit -m "Update stability report ($(date -u '+%Y-%m-%d %H:%M UTC'))" || echo "No changes to commit"
           git push origin stability-md
-          cd ..
-          git worktree remove ../stability-md --force
