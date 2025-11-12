@@ -45,7 +45,7 @@ def main() -> None:
             "test_name": test["nodeid"],
             "outcome": test["outcome"],
             "stdout": call.get("stdout", ""),
-            "stderr": call.get("stderr", ""),
+            "error_msg": call.get("crash", {}).get("message", ""),
         }
         new_entries.append(entry)
 

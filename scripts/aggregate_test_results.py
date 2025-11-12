@@ -75,8 +75,8 @@ with open(REPORT_FILE, "w") as md:
             md.write("**Questions observed:**\n")
             for q in sorted(data["questions"]):
                 md.write(f"- {q}\n")
-        if entry and entry.get("stderr"):
-            log = entry["stderr"].strip()
+        if entry and entry.get("error_msg"):
+            log = entry["error_msg"].strip()
             md.write("\n<details>\n")
             md.write("<summary><strong>View full failure log</strong></summary>\n\n")
             md.write("\n\n```\n")
