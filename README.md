@@ -425,6 +425,7 @@ However, the retrieved data **does include flights**, and the **cheapest availab
   ]
 }
 ```
+</details>
 
 In response to the second query, the AI assumes that NYC means JFK airport and reports back on the earliest flight out of JFK, when in fact there is an earlier flight out of EWR departing at **06:45**.
 
