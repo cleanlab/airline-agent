@@ -435,6 +435,7 @@ In response to the second query, the AI assumes that NYC means JFK airport and r
 
 ```
 AI Response without Cleanlab:
+
 The earliest Frontier flight from New York City (JFK) to Oakland (OAK) on November 15, 2025, departs at 9:45 AM and arrives at 1:09 PM local time. The flight number is F9 948.
 ```
 Relevant flight data excerpt:
