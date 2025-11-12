@@ -577,6 +577,22 @@ The Agent has no information regarding this promotion in its knowledge base, yet
 </details>
 
 
+> *if i leave my miles family pool can i join a new one tomorrow or am i blocked for 30 days?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+If you leave a Frontier Airlines Family Pool, you are not immediately blocked from joining a new one. However, there is a 30-day waiting period before you can join another Family Pool.
+```
+
+This AI Response is hallucinated, and could mislead customers into leaving their Family Pool prematurely. The AI incorrectly suggests that you only need to wait **30 days** before you can join a new family pool.  However, according to the correct policy in `frontier-miles/terms-and-conditions`, (search "Upon choosing to leave a Family Pool"). The term states: “Upon choosing to leave a Family Pool, your account will enter a 90-day cooling-off period in which your account may not enter any previous pools or join or create additional pools.” This means the waiting period is 90 days, not 30.
+
+
+<br><br>
+</details>
+
+
 #### To explore Topic Restriction guardrail
 
 > *Who is in charge of the plane?*

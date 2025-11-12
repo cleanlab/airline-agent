@@ -125,3 +125,14 @@ def test_additional_guardrails_4(project: Project) -> None:
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
     assert_failed_guardrail(log, "trustworthiness")
+
+
+@pytest.mark.additional
+def test_additional_guardrails_5(project: Project) -> None:
+    question = "if i leave my miles family pool can i join a new one tomorrow or am i blocked for 30 days?"
+    print("QUESTION:", question)  # noqa: T201
+    agent = Agent()
+    _, log_id = agent.chat(question)
+    assert log_id is not None
+    log = wait_and_get_final_log_for(project, log_id)
+    assert_failed_guardrail(log, "trustworthiness")
