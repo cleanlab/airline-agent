@@ -64,6 +64,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add stability_data.json STABILITY.md
-          git commit -m "Update stability report"
-          git push
+          git fetch origin stability-md
+          git checkout stability-md
+          git add stability_data.json README.md
+          git commit -m "Update stability report" || echo "No changes to commit"
+          git push origin stability-md
