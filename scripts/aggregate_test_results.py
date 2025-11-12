@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 DATA_FILE = Path("stability_data.json")
-REPORT_FILE = Path("STABILITY.md")
+REPORT_FILE = Path("README.md")
 
 if not DATA_FILE.exists():
     print("No stability_data.json found — skipping report.")
