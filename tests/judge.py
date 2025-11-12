@@ -4,6 +4,8 @@ from typing import Literal
 from pydantic import BaseModel
 from pydantic_ai import Agent
 
+from tests.constants import ERROR_MESSAGE
+
 JUDGE_MODEL = "openai:gpt-5-mini"
 
 
@@ -54,7 +56,7 @@ class Judge:
         """
         verdict = self.judge(output)
         if verdict.ruling == "fail":
-            msg = f"Output failed to meet criteria: {verdict.reasoning}"
+            msg = ERROR_MESSAGE.format(output, verdict.reasoning)
             raise AssertionError(msg)
 
 

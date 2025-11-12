@@ -340,7 +340,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         }
 
         response = await fetch(
-          `${baseURL}/api/airline-agent/stream?thread_id=${threadId}&cleanlab_enabled=${cleanlabEnabled}`,
+          `${baseURL}/api/agent/stream?thread_id=${threadId}&cleanlab_enabled=${cleanlabEnabled}`,
           {
             method: 'POST',
             headers: {

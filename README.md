@@ -433,47 +433,6 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 ### Additional Examples You Can Try
 
-#### To explore Topic Restriction guardrail
-
-> *Who is in charge of the plane?*
-
-#### To explore Trust Scoring
-
-> *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response (guardrailed and prevented by Cleanlab):
-
-You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
-```
-
-Under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.  Here Cleanlab’s trustworthiness guardrail prevented the Agent from giving unlawful advice.
-
-<br><br>
-</details>
-
-
-> *i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response (guardrailed and prevented by Cleanlab):
-
-The Discount Den membership is a separate entity from your flight booking. If you received a Discount Den membership as part of a promotion when booking a flight, canceling the flight within 24 hours should not automatically cancel your Discount Den membership. However, it's important to check the specific terms and conditions of the promotion you received, as there might be unique stipulations.
-
-For general terms, the Discount Den membership provides access to lower fares and other benefits for a year, and it is not typically tied to the status of a specific flight booking. If you have any concerns or specific conditions related to your promotional offer, I recommend reviewing the terms provided at the time of the offer or contacting Frontier Airlines customer service for clarification.
-```
-
-The Agent has no information regarding this promotion in its knowledge base, yet it implicitly endorses a potential exploit of the promotional terms by reassuring the user that “undoing” the accrual activity would not affect the Discount Den membership earned via the promotion. Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
-<br><br>
-</details>
-
-
 #### To explore AI Guidance
 
 > *can i bring a dog with me on a flight?*
@@ -524,6 +483,48 @@ Your Guidance ensures the AI combines both articles when appropriate, to better 
 In this case, because the user’s question already specifies both the type of flight and the kind of animal, the AI skips asking a clarifying question. You’ll also notice that the AI now adds information that domesticated pets are allowed on the flight. This helps clarify that while emotional support animals are not treated as service animals, pets may still travel under the standard Pet Policy.
 <br><br>
 </details>
+
+
+#### To explore Trust Scoring
+
+> *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response (guardrailed and prevented by Cleanlab):
+
+You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
+```
+
+Under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.  Here Cleanlab’s trustworthiness guardrail prevented the Agent from giving unlawful advice.
+
+<br><br>
+</details>
+
+
+> *i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response (guardrailed and prevented by Cleanlab):
+
+The Discount Den membership is a separate entity from your flight booking. If you received a Discount Den membership as part of a promotion when booking a flight, canceling the flight within 24 hours should not automatically cancel your Discount Den membership. However, it's important to check the specific terms and conditions of the promotion you received, as there might be unique stipulations.
+
+For general terms, the Discount Den membership provides access to lower fares and other benefits for a year, and it is not typically tied to the status of a specific flight booking. If you have any concerns or specific conditions related to your promotional offer, I recommend reviewing the terms provided at the time of the offer or contacting Frontier Airlines customer service for clarification.
+```
+
+The Agent has no information regarding this promotion in its knowledge base, yet it implicitly endorses a potential exploit of the promotional terms by reassuring the user that “undoing” the accrual activity would not affect the Discount Den membership earned via the promotion. Cleanlab automatically detects and flags this Knowledge Gap, so that SMEs at Frontier know to remediate cases like this.
+<br><br>
+</details>
+
+
+#### To explore Topic Restriction guardrail
+
+> *Who is in charge of the plane?*
 
 
 ---

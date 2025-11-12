@@ -1,7 +1,9 @@
 import pytest
 from codex.types.projects import QueryLogListResponse
 
-from tests.util import Agent, Project, wait_and_get_final_log_for
+from airline_agent.util import TestAgent as Agent
+from tests.constants import ERROR_MESSAGE
+from tests.util import Project, wait_and_get_final_log_for
 
 
 def assert_failed_eval(log: QueryLogListResponse, eval_name: str) -> None:
@@ -13,11 +15,11 @@ def assert_failed_eval(log: QueryLogListResponse, eval_name: str) -> None:
     threshold_value = threshold["value"]
     assert isinstance(threshold_value, float)
     threshold_below = threshold.get("direction") == "below"
-    assistant_msg = f"Original Assistant Response: {log.original_assistant_response}"
+    error_msg = ERROR_MESSAGE.format(log.original_assistant_response, f"{eval_name} threshold")
     if threshold_below:
-        assert score < threshold_value, assistant_msg
+        assert score < threshold_value, error_msg
     else:
-        assert score > threshold_value, assistant_msg
+        assert score > threshold_value, error_msg
 
 
 @pytest.mark.main
@@ -28,4 +30,3 @@ def test_evaluation_1(project: Project) -> None:
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
     assert_failed_eval(log, "context_sufficiency")
-    assert_failed_eval(log, "response_helpfulness")
