@@ -399,6 +399,32 @@ Try asking each of the example queries below (in new chats):
 > when is the earliest flight from NYC to OAK on 11/15?
 
 In response to the first query, the AI searches for flights to the nonexistent [airport code](https://en.wikipedia.org/wiki/IATA_airport_code) "NYC", and incorrectly reports that there are no flights.
+However, the retrieved data **does include flights**, and the **cheapest available option is \$80.84 from SFO to LGA**.
+
+<details>
+  <summary>Excerpt from retrieved flight data</summary>
+
+```json
+{
+  "id": "F9-SFO-LGA-2025-11-11T17:00",
+  "origin": "SFO",
+  "destination": "LGA",
+  "departure": "2025-11-11T17:00:00-08:00",
+  "arrival": "2025-11-12T01:24:00-05:00",
+  "flight_number": "F9 707",
+  "carrier": "F9",
+  "fares": [
+    {
+      "fare_type": "basic",
+      "price_total": 80.84,
+      "currency": "USD",
+      "seats_available": 13,
+      "included_services": [],
+      "checked_bags_included": 0
+    }
+  ]
+}
+```
 
 In response to the second query, the AI assumes that NYC means JFK airport and reports back on the earliest flight out of JFK, when there is in fact an earlier flight out of EWR.
 
