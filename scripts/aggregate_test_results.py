@@ -6,8 +6,9 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-DATA_FILE = Path("stability_data.json")
-REPORT_FILE = Path("README.md")
+ROOT_DIR = Path(__file__).resolve().parent.parent
+DATA_FILE = ROOT_DIR / "stability_data.json"
+REPORT_FILE = ROOT_DIR / "README.md"
 
 if not DATA_FILE.exists():
     print("No stability_data.json found — skipping report.")
@@ -51,9 +52,15 @@ with open(REPORT_FILE, "w") as md:
     md.write(f"### 🧩 Stability Summary ({today})\n")
     md.write(f"*Aggregated from the last 10 days ({cutoff} → {today})*\n\n")
 
+    if not recent:
+        md.write("⚠️ No recent tests ran in the last 10 days.\n")
+        print(f"Updated {REPORT_FILE}")
+        sys.exit(0)
+    
     flaky = {k: v for k, v in summary.items() if v["failures"] > 0}
     if not flaky:
         md.write("✅ All tests passed consistently in the last 10 days.\n")
+        print(f"Updated {REPORT_FILE}")
         sys.exit(0)
 
     md.write("#### ❗ Flaky / Failing Tests\n")
