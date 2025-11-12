@@ -22,6 +22,7 @@ def main() -> None:
     with report_file.open() as f:
         report = json.load(f)
 
+    timestamp = datetime.datetime.fromtimestamp(report["created"], tz=datetime.UTC).strftime("%d-%m-%y %H:%M:%S")
     tests = report.get("tests", [])
     if not tests:
         print(f"No tests found in {report_file}")
@@ -31,9 +32,7 @@ def main() -> None:
     for test in tests:
         call = test.get("call", {})
         entry = {
-            "timestamp": datetime.datetime.fromtimestamp(test["created"], tz=datetime.UTC).strftime(
-                "%d-%m-%y %H:%M:%S"
-            ),
+            "timestamp": timestamp,
             "marker": marker,
             "test_name": test["nodeid"],
             "outcome": test["outcome"],
