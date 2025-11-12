@@ -1,3 +1,5 @@
+import pytest
+
 from airline_agent.util import TestAgent as Agent
 from tests.judge import assert_judge
 
@@ -27,6 +29,7 @@ def test_get_fare_details() -> None:
     )
 
 
+@pytest.mark.skip(reason="book_flights tool disabled")
 def test_book_single_flight() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("I need a flight from SFO to JFK on November 12, 2025")
@@ -41,6 +44,7 @@ def test_book_single_flight() -> None:
     )
 
 
+@pytest.mark.skip(reason="book_flights tool disabled")
 def test_book_round_trip() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Find flights from OAK to LGA on November 13, 2025")
@@ -56,6 +60,7 @@ def test_book_round_trip() -> None:
     )
 
 
+@pytest.mark.skip(reason="book_flights and get_my_bookings tools disabled")
 def test_retrieve_booking() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Find a flight from SJC to JFK on November 12, 2025")
@@ -70,6 +75,7 @@ def test_retrieve_booking() -> None:
     )
 
 
+@pytest.mark.skip(reason="book_flights and add_service_to_booking tools disabled")
 def test_add_service_to_booking() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Show me flights from SFO to EWR on November 14, 2025")
@@ -84,6 +90,7 @@ def test_add_service_to_booking() -> None:
     )
 
 
+@pytest.mark.skip(reason="book_flights and check_in tools disabled")
 def test_check_in() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Find flights from SFO to JFK on November 12, 2025")
@@ -161,6 +168,7 @@ def test_no_date_provided() -> None:
     )
 
 
+@pytest.mark.skip(reason="get_my_bookings tool disabled")
 def test_no_existing_bookings() -> None:
     agent = Agent(cleanlab_enabled=False)
     answer, _ = agent.chat("Show me my bookings")
