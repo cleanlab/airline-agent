@@ -16,9 +16,9 @@ if not DATA_FILE.exists():
 today = datetime.datetime.now(datetime.UTC).date()
 cutoff = today - datetime.timedelta(days=10)
 
-# Load all JSON lines
+# Load all entries
 with open(DATA_FILE) as f:
-    logs = [json.loads(line) for line in f if line.strip()]
+    logs = json.load(f)
 
 # Filter to last 10 days
 recent = [

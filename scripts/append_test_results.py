@@ -28,7 +28,15 @@ def main() -> None:
         print(f"No tests found in {report_file}")
         sys.exit(0)
 
-    entries = []
+    # Load existing entries or start with empty list
+    if output_file.exists():
+        with output_file.open() as f:
+            existing_entries = json.load(f)
+    else:
+        existing_entries = []
+
+    # Create new entries
+    new_entries = []
     for test in tests:
         call = test.get("call", {})
         entry = {
@@ -39,13 +47,14 @@ def main() -> None:
             "stdout": call.get("stdout", ""),
             "stderr": call.get("stderr", ""),
         }
-        entries.append(entry)
+        new_entries.append(entry)
 
-    with output_file.open("a") as f:
-        for entry in entries:
-            f.write(json.dumps(entry) + "\n")
+    # Append new entries and write back
+    existing_entries.extend(new_entries)
+    with output_file.open("w") as f:
+        json.dump(existing_entries, f, indent=2)
 
-    print(f"Appended {len(entries)} results to {output_file}")
+    print(f"Appended {len(new_entries)} results to {output_file}")
 
 
 if __name__ == "__main__":
