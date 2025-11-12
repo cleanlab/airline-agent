@@ -24,10 +24,7 @@ with open(DATA_FILE) as f:
 recent = [
     x
     for x in logs
-    if datetime.datetime.strptime(x["timestamp"], "%d-%m-%y %H:%M:%S")
-    .replace(tzinfo=datetime.UTC)
-    .date()
-    >= cutoff
+    if datetime.datetime.strptime(x["timestamp"], "%d-%m-%y %H:%M:%S").replace(tzinfo=datetime.UTC).date() >= cutoff
 ]
 
 summary = defaultdict[Any, dict[str, int | set | None]](
