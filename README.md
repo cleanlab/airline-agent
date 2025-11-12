@@ -426,7 +426,31 @@ However, the retrieved data **does include flights**, and the **cheapest availab
 }
 ```
 
-In response to the second query, the AI assumes that NYC means JFK airport and reports back on the earliest flight out of JFK, when there is in fact an earlier flight out of EWR.
+In response to the second query, the AI assumes that NYC means JFK airport and reports back on the earliest flight out of JFK, when in fact there is an earlier flight out of EWR departing at **06:45**.
+
+
+<details>
+<summary>Learn More</summary>
+
+```
+AI Response without Cleanlab:
+The earliest Frontier flight from New York City (JFK) to Oakland (OAK) on November 15, 2025, departs at 9:45 AM and arrives at 1:09 PM local time. The flight number is F9 948.
+```
+Relevant flight data excerpt:
+
+```json
+[
+  {
+    "id": "F9-EWR-OAK-2025-11-15T06:45",
+    "origin": "EWR",
+    "destination": "OAK",
+    "departure": "2025-11-15T06:45:00-05:00",
+    "arrival": "2025-11-15T09:57:00-08:00",
+    "flight_number": "F9 278",
+    "carrier": "F9",
+    "fares": [
+```
+</details>
 
 This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
 To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above.
