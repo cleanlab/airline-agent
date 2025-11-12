@@ -4,9 +4,9 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 1 | 2 | 33% |
-| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 1 | 2 | 33% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 1 | 2 | 33% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 1 | 3 | 25% |
+| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 1 | 3 | 25% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 2 | 2 | 50% |
 
 ---
 
@@ -63,7 +63,7 @@ assert 0.9964867790518531 < 0.35
 ---
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
-**Failures:** 1 times
+**Failures:** 2 times
 **Question:** can i bring a dog with me on a flight?
 
 <details>
@@ -72,28 +72,9 @@ assert 0.9964867790518531 < 0.35
 
 
 ```
-AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines to consider:
+AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-- Pets must stay in their travel container at all times.
-- Checked pets are not allowed.
-- Only service dogs are allowed on international flights, and they must meet CDC requirements.
-- Pets must be at least 8 weeks old to travel.
-
-**Pet Carrier Requirements:**
-
-- The carrier must be large enough for your pet to stand, turn around, and lie down naturally.
-- It must fit under the seat in front of you.
-- Maximum size for hard-sided carriers: 18" L x 14" W x 8" H.
-- Maximum size for soft-sided carriers: 18" L x 14" W x 11" H.
-- Soft-sided carriers are recommended.
-- Only one adult dog or cat per container is allowed.
-- You may bring one personal item or a carry-on in addition to your pet (carry-on fees apply).
-
-You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section, or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
-
-If your dog is a service animal, please let me know, as there are different guidelines for service animals.
-
-Criteria not met: The agent output does not ask a clarifying question about whether the user means a domestic or international flight. It provides information about domestic travel and mentions international rules for service animals, but it does not prompt the user to clarify which type of flight they are asking about. Therefore it does not meet the criterion.
+Criteria not met: The agent output does not ask any clarifying question about whether the user means a domestic or an international flight. It only apologizes and tells the user to rephrase or contact Frontier Airlines, so it fails the criterion.
 ```
 </details>
 
