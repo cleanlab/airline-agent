@@ -4,6 +4,7 @@ import re
 import sys
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 DATA_FILE = Path("stability_data.json")
 REPORT_FILE = Path("STABILITY.md")
@@ -22,7 +23,9 @@ with open(DATA_FILE) as f:
 # Filter to last 10 days
 recent = [x for x in logs if datetime.date.fromisoformat(x["date"]) >= cutoff]
 
-summary = defaultdict(lambda: {"failures": 0, "passes": 0, "questions": set(), "last_fail": None})
+summary = defaultdict[Any, dict[str, int | set | None]](
+    lambda: {"failures": 0, "passes": 0, "questions": set(), "last_fail": None}
+)
 
 for entry in recent:
     name = entry["test_name"]
@@ -68,8 +71,8 @@ with open(REPORT_FILE, "w") as md:
             md.write("**Questions observed:**\n")
             for q in sorted(data["questions"]):
                 md.write(f"- {q}\n")
-        if entry and entry.get("stdout"):
-            log = entry["stdout"].strip()
+        if entry and entry.get("stderr"):
+            log = entry["stderr"].strip()
             md.write("\n<details>\n")
             md.write("<summary><strong>View full failure log</strong></summary>\n\n")
             md.write("\n\n```\n")

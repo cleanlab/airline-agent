@@ -31,7 +31,9 @@ def main() -> None:
     for test in tests:
         call = test.get("call", {})
         entry = {
-            "timestamp": datetime.datetime.fromtimestamp(test["created"], tz=datetime.UTC).strftime("%d-%m-%y %H:%M:%S"),
+            "timestamp": datetime.datetime.fromtimestamp(test["created"], tz=datetime.UTC).strftime(
+                "%d-%m-%y %H:%M:%S"
+            ),
             "marker": marker,
             "test_name": test["nodeid"],
             "outcome": test["outcome"],
