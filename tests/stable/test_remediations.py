@@ -1,7 +1,6 @@
 import pytest
 
 from airline_agent.util import TestAgent as Agent
-from tests.constants import ERROR_MESSAGE
 from tests.judge import Judge, assert_judge
 from tests.util import Project, wait_and_get_final_log_for
 
@@ -48,46 +47,41 @@ def test_expert_review(project: Project) -> None:
 
 @pytest.mark.main
 def test_ai_guidance(project: Project) -> None:
-    question1 = "My flight got canceled how to use my Peace Pass benefit?"
-    question2 = "does peace pass still work if trip canceled due to weather?"
+    question1 = "what is the cheapest Frontier flight from SFO to NYC on 11/11?"
+    question2 = "when is the earliest Frontier flight from NYC to OAK on 11/15?"
 
     agent1 = Agent()
     answer1, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
-    log = wait_and_get_final_log_for(project, log_id1)
-    assert log.is_bad_response, ERROR_MESSAGE.format(log.original_assistant_response, "output flagged as bad response")
-    assert "disruption assistance" not in answer1.lower(), ERROR_MESSAGE.format(
-        answer1, "output does NOT mention string 'Disruption Assistance'"
+    assert_judge(
+        ["output does NOT identify a flight that costs $80.84"],
+        answer1,
     )
+
     agent2 = Agent()
-    answer2, log_id2 = agent2.chat(question2)
-    assert log_id2 is not None
-    log2 = wait_and_get_final_log_for(project, log_id2)
-    assert log2.is_bad_response, ERROR_MESSAGE.format(
-        log2.original_assistant_response, "output flagged as bad response"
-    )
-    assert "disruption assistance" not in answer2.lower(), ERROR_MESSAGE.format(
-        answer2, "output does NOT mention string 'Disruption Assistance'"
+    answer2, _ = agent2.chat(question2)
+    assert_judge(
+        ["output does NOT identify that the earliest flight is from EWR to OAK"],
+        answer2,
     )
 
     log1 = wait_and_get_final_log_for(project, log_id1)
     guidance_id = project.add_expert_review(
-        log1.id, is_good=False, reason="Peace Pass is another term for Disruption Assistance"
+        log1.id,
+        is_good=False,
+        reason="when the user uses NYC as an airport code, consider the three major New York area airports",
     )
     assert guidance_id is not None
     project.get_draft_guidance(guidance_id)  # wait for guidance to be generated
     project.publish_guidance(guidance_id)
 
     agent3 = Agent()
-    answer3, _ = agent3.chat(question2)
-    disruption_assistance_judge = Judge(
-        ["output includes an explanation of Frontier Airlines's Disruption Assistance program"]
-    )
-    disruption_assistance_judge.assert_judge(answer3)
+    answer3, _ = agent3.chat(question1)
+    assert_judge(["output says that the cheapest Frontier flight is $80.84"], answer3)
 
     agent4 = Agent()
-    answer4, _ = agent4.chat(question1)
-    disruption_assistance_judge.assert_judge(answer4)
+    answer4, _ = agent4.chat(question2)
+    assert_judge(["output identifies that the earliest flight is from EWR to OAK"], answer4)
 
 
 @pytest.mark.additional

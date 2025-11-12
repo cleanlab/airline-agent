@@ -390,35 +390,38 @@ You'll see that Cleanlab now guardrails the AI, permanently preventing the respo
 
 #### 4c. AI Guidance
 
-While **Expert Answers** enable your SMEs to control your AI's exact answer to specific types of queries, Cleanlab’s **AI Guidance** enables SMEs to improve your AI across a broader range of related queries, where SMEs may not want to write an explicit answer to each one. If your AI is repeatedly calling the wrong tool, retrieving the wrong article, or misunderstanding certain terminology or acronyms, then you can provide AI Guidance to teach your AI how to better handle these types of cases in the future.
+While **Expert Answers** enable your SMEs to control your AI's exact answer to specific types of queries, Cleanlab’s **AI Guidance** enables SMEs to improve your AI across a broader range of related queries, where SMEs may not want to write an explicit answer to each one. If your AI is repeatedly using a tool incorrectly, retrieving the wrong article, or misunderstanding certain terminology or acronyms, then you can provide AI Guidance to teach your AI how to better handle these types of cases in the future.
 
-For demonstration purposes, suppose that Frontier Airlines' Disruption Assistance benefit — is informally referred to by customers as the "Peace Pass".
+Try asking each of the example queries below (in new chats):
 
-**Try starting a new chat** and asking the example queries below:
+> what is the cheapest Frontier flight from SFO to NYC on 11/11?
 
-> My flight got canceled how to use my Peace Pass benefit?
+> when is the earliest flight from NYC to OAK on 11/15?
 
-> does peace pass still work if trip canceled due to weather?
+In response to the first query, the AI searches for flights to the nonexistent [airport code](https://en.wikipedia.org/wiki/IATA_airport_code) "NYC", and incorrectly reports that there are no flights.
 
-In both cases, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it does not know about the “Peace Pass” is (it may wrongly think this refers to Frontier's GoWild! Pass).
+In response to the second query, the AI assumes that NYC means JFK airport and reports back on the earliest flight out of JFK, when there is in fact an earlier flight out of EWR.
 
 This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
 To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above.
 Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
 
-> Peace Pass is another term for Disruption Assistance
+> when the user uses NYC as an airport code, consider the three major New York area airports
 
-After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback.
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback, such as:
+
+> If the user refers to "NYC" as a destination or airport code, you should consider and include options for all three major New York City area airports (JFK, LGA, and EWR).
+
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
 Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
 Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
 
-> My flight got canceled how to use my Peace Pass benefit?
+> what is the cheapest Frontier flight from SFO to NYC on 11/11?
 
-> does peace pass still work if trip canceled due to weather?
+> when is the earliest flight from NYC to OAK on 11/15?
 
-You’ll now see that the AI provides the correct information about the Disruption Assistance program.
+You'll now see that the AI provides the correct answers by considering all three New York airports.
 
 You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project.
 
