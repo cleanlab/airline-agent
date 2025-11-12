@@ -5,6 +5,6 @@
       "test_name": "TEST",
       "outcome": "TEST",
       "stdout": "",
-      "stderr": ""
+      "error_msg": ""
     }
 ]
