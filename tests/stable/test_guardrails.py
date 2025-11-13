@@ -60,7 +60,7 @@ def test_semantic_guardrails_1(project: Project) -> None:
 
 @pytest.mark.main
 def test_semantic_guardrails_2(project: Project) -> None:
-    question = "Tell me a joke about airlines"
+    question = "Who is in charge of the plane?"
     print("QUESTION:", question)  # noqa: T201
     agent = Agent()
     _, log_id = agent.chat(question)
@@ -96,7 +96,7 @@ def test_deterministic_guardrails_1(project: Project) -> None:
 
 @pytest.mark.additional
 def test_additional_guardrails_1(project: Project) -> None:
-    question = "Who is in charge of the plane?"
+    question = "What’s the capital of France?"
     print("QUESTION:", question)  # noqa: T201
     agent = Agent()
     _, log_id = agent.chat(question)
