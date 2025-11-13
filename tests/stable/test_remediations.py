@@ -2,7 +2,7 @@ import pytest
 
 from airline_agent.util import TestAgent as Agent
 from tests.judge import Judge, assert_judge
-from tests.util import Project, wait_and_get_final_log_for
+from tests.util import Project, assert_log_guardrail
 
 
 @pytest.mark.main
@@ -12,9 +12,12 @@ def test_expert_answer(project: Project) -> None:
 
     agent1 = Agent()
     print("QUESTION:", question)  # noqa: T201
-    answer1, _ = agent1.chat(question)
-    assert answer1 != answer
-    assert_judge(["output does not reflect knowledge of who founded Frontier Airlines"], answer1)
+    answer1, log_id1 = agent1.chat(question)
+    assert_log_guardrail(project, log_id1, guardrailed=False)
+    assert_judge(
+        ["output does not reflect knowledge of who founded Frontier Airlines"],
+        answer1,
+    )
 
     project.add_expert_answer(question, answer)
 
@@ -35,16 +38,17 @@ def test_expert_review(project: Project) -> None:
 
     agent1 = Agent()
     print("QUESTION:", question1)  # noqa: T201
-    _, log_id1 = agent1.chat(question1)
-    assert log_id1 is not None
-    log1 = wait_and_get_final_log_for(project, log_id1)
+    answer1, log_id1 = agent1.chat(question1)
+    log1 = assert_log_guardrail(project, log_id1, guardrailed=False)
+    assert_judge(
+        ["output DOES identify the maximum time you might be stuck on the tarmac without being let off for a domestic flight"],
+        answer1,
+    )
     project.add_expert_review(log1.id, is_good=False)
 
     agent2 = Agent()
     _, log_id2 = agent2.chat(question2)
-    assert log_id2 is not None
-    log2 = wait_and_get_final_log_for(project, log_id2)
-    assert log2.guardrailed
+    assert_log_guardrail(project, log_id2, guardrailed=True)
 
 
 @pytest.mark.main
@@ -55,20 +59,20 @@ def test_ai_guidance(project: Project) -> None:
     print("QUESTION:", question1)  # noqa: T201
     agent1 = Agent()
     answer1, log_id1 = agent1.chat(question1)
-    assert log_id1 is not None
+    log1 = assert_log_guardrail(project, log_id1, guardrailed=False)
     assert_judge(
         ["output does NOT identify a flight that costs $80.84"],
         answer1,
     )
 
     agent2 = Agent()
-    answer2, _ = agent2.chat(question2)
+    answer2, log_id2 = agent2.chat(question2)
+    assert_log_guardrail(project, log_id2, guardrailed=False)
     assert_judge(
         ["output does NOT identify that the earliest flight is from EWR to OAK"],
         answer2,
     )
 
-    log1 = wait_and_get_final_log_for(project, log_id1)
     guidance_id = project.add_expert_review(
         log1.id,
         is_good=False,
@@ -95,7 +99,7 @@ def test_additional_ai_guidance(project: Project) -> None:
     print("QUESTION:", question1)  # noqa: T201
     agent1 = Agent()
     answer1, log_id1 = agent1.chat(question1)
-    assert log_id1 is not None
+    log1 = assert_log_guardrail(project, log_id1, guardrailed=False)
     no_clarifying_judge = Judge(
         [
             "output does NOT ask a clarifying question about whether the user is asking about a domestic or international flight"
@@ -103,10 +107,10 @@ def test_additional_ai_guidance(project: Project) -> None:
     )
     no_clarifying_judge.assert_judge(answer1)
     agent2 = Agent()
-    answer2, _ = agent2.chat(question2)
+    answer2, log_id2 = agent2.chat(question2)
+    assert_log_guardrail(project, log_id2, guardrailed=False)
     no_clarifying_judge.assert_judge(answer2)
 
-    log1 = wait_and_get_final_log_for(project, log_id1)
     guidance_id = project.add_expert_review(
         log1.id,
         is_good=False,
@@ -140,5 +144,6 @@ def test_additional_ai_guidance(project: Project) -> None:
     )
 
     agent5 = Agent()
-    answer7, _ = agent5.chat(question2)
+    answer7, log_id7 = agent5.chat(question2)
+    assert_log_guardrail(project, log_id7, guardrailed=False)
     no_clarifying_judge.assert_judge(answer7)

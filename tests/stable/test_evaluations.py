@@ -3,6 +3,7 @@ from codex.types.projects import QueryLogListResponse
 
 from airline_agent.util import TestAgent as Agent
 from tests.constants import ERROR_MESSAGE
+from tests.judge import assert_judge
 from tests.util import Project, wait_and_get_final_log_for
 
 
@@ -30,4 +31,5 @@ def test_evaluation_1(project: Project) -> None:
     _, log_id = agent.chat(question)
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
+    assert_judge(["output attempts to explain the origin of the Frontier Airlines name regardless of accuracy"], log.original_assistant_response)
     assert_failed_eval(log, "context_sufficiency")
