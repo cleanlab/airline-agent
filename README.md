@@ -542,14 +542,14 @@ In this case, because the user’s question already specifies both the type of f
 
 #### To explore Expert Review guardrail
 
-> *does frontier accomodate passengers with allergies*
+> *do i have to worry about losing my miles because frontier decides to shut its miles program?*
 
 <details>
   <summary>Learn More</summary>
 
 ```text
 AI Response without Cleanlab:
-Frontier Airlines cannot guarantee an allergen-free environment on its flights due to the presence of food allergens in the snacks served and the possibility of passengers bringing products containing nuts or other allergens onboard. If you have a severe nut or food allergy, you should notify a flight attendant so they can attempt to inform nearby passengers to refrain from eating allergen-containing products. However, the airline cannot prevent passengers from consuming their own food. It's recommended to consult with your physician regarding any health concerns before flying.
+Frontier Airlines reserves the right to change its Frontier Miles program, including its terms and conditions, at any time without notice. This means that while there is always the potential risk that a miles program could be modified or terminated, such changes could also come with advance notice giving members an opportunity to use their accrued miles. It’s a good idea to regularly check any updates from Frontier regarding the program policies and terms.
 ```
 
 Suppose a Product Leader / SME has quickly decided that the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
@@ -558,7 +558,7 @@ Expand this Log entry in the Project and click `No` under *Is this a good AI res
 
 Then pretend you are a different user **by creating a new chat thread** and ask a similar query:
 
-> *does frontier accomodate passengers with allergies*
+> *do i have to worry about losing my miles because frontier decides to shut its miles program?*
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 <br><br>

@@ -47,6 +47,25 @@ def test_expert_review(project: Project) -> None:
     assert log2.guardrailed
 
 
+@pytest.mark.additional
+def test_additional_expert_review(project: Project) -> None:
+    question1 = "do i have to worry about losing my miles because frontier decides to shut its miles program?"
+    question2 = "do i have to worry about losing my miles because frontier decides to shut its miles program?"
+
+    agent1 = Agent()
+    print("QUESTION:", question1)  # noqa: T201
+    _, log_id1 = agent1.chat(question1)
+    assert log_id1 is not None
+    log1 = wait_and_get_final_log_for(project, log_id1)
+    project.add_expert_review(log1.id, is_good=False)
+
+    agent2 = Agent()
+    _, log_id2 = agent2.chat(question2)
+    assert log_id2 is not None
+    log2 = wait_and_get_final_log_for(project, log_id2)
+    assert log2.guardrailed
+
+
 @pytest.mark.main
 def test_ai_guidance(project: Project) -> None:
     question1 = "what is the cheapest Frontier flight from SFO to NYC on 11/11?"
