@@ -41,7 +41,9 @@ def test_expert_review(project: Project) -> None:
     answer1, log_id1 = agent1.chat(question1)
     log1 = assert_log_guardrail(project, log_id1, guardrailed=False)
     assert_judge(
-        ["output DOES identify the maximum time you might be stuck on the tarmac without being let off for a domestic flight"],
+        [
+            "output DOES identify the maximum time you might be stuck on the tarmac without being let off for a domestic flight"
+        ],
         answer1,
     )
     project.add_expert_review(log1.id, is_good=False)

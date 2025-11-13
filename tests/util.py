@@ -97,13 +97,15 @@ def wait_and_get_final_log_for(project: Project, log_id: str) -> QueryLogListRes
     return find(logs, lambda log: log.id == log_id)
 
 
-def assert_log_guardrail(
-    project: Project, log_id: str | None, *, guardrailed: bool
-) -> QueryLogListResponse:
+def assert_log_guardrail(project: Project, log_id: str | None, *, guardrailed: bool) -> QueryLogListResponse:
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
     if guardrailed:
-        assert log.guardrailed, ERROR_MESSAGE.format(log.original_assistant_response, "guardrail should have been triggered")
+        assert log.guardrailed, ERROR_MESSAGE.format(
+            log.original_assistant_response, "guardrail should have been triggered"
+        )
     else:
-        assert not log.guardrailed, ERROR_MESSAGE.format(log.original_assistant_response, "guardrail should not have been triggered")
+        assert not log.guardrailed, ERROR_MESSAGE.format(
+            log.original_assistant_response, "guardrail should not have been triggered"
+        )
     return log
