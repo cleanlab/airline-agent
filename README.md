@@ -342,19 +342,19 @@ You can open up some queries in the "Expert Workspace" tab and fill in Expert An
 
 These answers are integrated into the Agent as a semantic cache, so when anyone asks a similar question in the future, it'll be answered correctly thanks to the expert answer. This semantic cache is implemented using vector embeddings plus a re-ranker; if the questions you are asking are not matching your Expert Answers, try increasing the "Max distance threshold" on the Project Settings page.
 
-Here's a concrete query we asked above that you can either try again or look up in the Project's Expert Workspace page:
+Try asking queries that reveal knowledge gaps in the Agent, such as this one:
 
-> *Who founded Frontier Airlines?*
+> *tell me about the bogo promo going on right now*
 
-The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries like this. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
+The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries about this promotion. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
 
 ```text
-Frontier Airlines was founded by Frederick W. "Rick" Brown, Janice Brown, and Bob Schulman in 1994.
+Frontier offers a BOGO promo: if you fly on your birthday, you can get a free companion ticket using promo code BOGOF9 (taxes, fees, and availability apply). For more questions on this promo specifically, please reach out to Frontier staff at 801-401-9000.
 ```
 
 After submitting your Remediation, imagine you are a different user **by creating a new chat thread** and asking a similar question:
 
-> *list the founders of Frontier Airlines*
+> *i heard about a bogo promo whats that about*
 
 You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
 

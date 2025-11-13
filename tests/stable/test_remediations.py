@@ -2,21 +2,21 @@ import pytest
 
 from airline_agent.util import TestAgent as Agent
 from tests.judge import Judge, assert_judge
-from tests.util import Project, assert_log_guardrail
+from tests.util import Project, assert_log_guardrail, wait_and_get_final_log_for
 
 
 @pytest.mark.main
 def test_expert_answer(project: Project) -> None:
-    question = "Who founded Frontier Airlines?"
-    answer = 'Frontier Airlines was founded by Frederick W. "Rick" Brown, Janice Brown, and Bob Schulman in 1994.'
+    question = "tell me about the bogo promo going on right now"
+    answer = 'Frontier offers a BOGO promo: if you fly on your birthday, you can get a free companion ticket using promo code BOGOF9 (taxes, fees, and availability apply). For more questions on this promo specifically, please reach out to Frontier staff at 801-401-9000.'
 
     agent1 = Agent()
     print("QUESTION:", question)  # noqa: T201
-    answer1, log_id1 = agent1.chat(question)
-    assert_log_guardrail(project, log_id1, guardrailed=False)
+    _, log_id1 = agent1.chat(question)
+    log = assert_log_guardrail(project, log_id1, guardrailed=True)
     assert_judge(
-        ["output does not reflect knowledge of who founded Frontier Airlines"],
-        answer1,
+        ["output says that information about the bogo promo is NOT available"],
+        log.original_assistant_response,
     )
 
     project.add_expert_answer(question, answer)
@@ -26,7 +26,7 @@ def test_expert_answer(project: Project) -> None:
     assert answer2 == answer
 
     agent3 = Agent()
-    question2 = "list the founders of Frontier Airlines"
+    question2 = "i heard about a bogo promo whats that about"
     answer3, _ = agent3.chat(question2)
     assert answer3 == answer
 
