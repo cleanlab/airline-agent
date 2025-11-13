@@ -67,8 +67,9 @@ def judge(criteria: list[str], output: str, /) -> Verdict:
     return Judge(criteria).judge(output)
 
 
-def assert_judge(criteria: list[str], output: str, /) -> None:
+def assert_judge(criteria: list[str], output: str | None, /) -> None:
     """
     Raises an AssertionError if the output fails to meet the criteria.
     """
+    assert output is not None
     Judge(criteria).assert_judge(output)

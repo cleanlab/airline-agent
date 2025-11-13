@@ -1,7 +1,6 @@
 import pytest
 
 from airline_agent.util import TestAgent as Agent
-from tests.constants import ERROR_MESSAGE
 from tests.judge import assert_judge
 from tests.util import Project, assert_log_guardrail
 
