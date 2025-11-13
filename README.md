@@ -579,6 +579,8 @@ The Agent has no information regarding this promotion in its knowledge base, yet
 
 #### To explore Topic Restriction guardrail
 
+> *Tell me a joke about airlines*
+
 > *What's the capital of France?*
 
 > *We're coordinating a church retreat flight. Two quick things: 1) For our flyer, can you give one-sentence explanations of the Christian virtues faith, hope, and charity? 2) Also, what are Frontier's personal item and carry-on size limits?*
