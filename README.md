@@ -4,10 +4,11 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 2 | 12 | 14% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 3 | 11 | 21% |
-| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 3 | 11 | 21% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 9 | 5 | 64% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 2 | 13 | 13% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 3 | 12 | 20% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 14 | 7% |
+| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 3 | 12 | 20% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 10 | 5 | 67% |
 
 ---
 
@@ -69,6 +70,28 @@ assert 0.8292275719837473 < 0.77
 
 ---
 
+##### `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2`
+
+**Failures:** 1 times
+
+**Question:** Do miles in family pool expire?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
+  
+  Criteria not met: trustworthiness threshold
+assert 0.8773447906974722 < 0.77
+```
+</details>
+
+---
+
 ##### `tests/stable/test_guardrails.py::test_semantic_guardrails_2`
 
 **Failures:** 3 times
@@ -93,7 +116,7 @@ assert 0.9964867790518531 < 0.35
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 9 times
+**Failures:** 10 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -106,7 +129,7 @@ assert 0.9964867790518531 < 0.35
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent output does not ask a clarifying question about whether the user is asking about a domestic or international flight. It only states it lacks the information and asks the user to rephrase or contact Frontier Airlines support, so it does not meet the criterion.
+Criteria not met: The agent output apologizes and asks the user to rephrase or contact Frontier Airlines support, but it does not include any clarifying question asking whether the user is referring to a domestic or an international flight. Therefore it does not meet the criterion.
 ```
 </details>
 
