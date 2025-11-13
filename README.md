@@ -4,10 +4,10 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 2 | 9 | 18% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 2 | 9 | 18% |
-| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 3 | 8 | 27% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 8 | 3 | 73% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 2 | 10 | 17% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 3 | 9 | 25% |
+| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 3 | 9 | 25% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 9 | 3 | 75% |
 
 ---
 
@@ -49,7 +49,7 @@ assert 0.8449570192342041 < 0.77
 
 ##### `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -60,10 +60,10 @@ assert 0.8449570192342041 < 0.77
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
   
   Criteria not met: trustworthiness threshold
-assert 0.806321477855272 < 0.77
+assert 0.8292275719837473 < 0.77
 ```
 </details>
 
@@ -93,7 +93,7 @@ assert 0.9964867790518531 < 0.35
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -106,7 +106,7 @@ assert 0.9964867790518531 < 0.35
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent output does not ask any clarifying question about whether the user is asking about a domestic or international flight. It only apologizes and suggests rephrasing or contacting Frontier Airlines support, so it fails the criterion.
+Criteria not met: The agent output does not ask a clarifying question about whether the user is asking about a domestic or international flight. It only states it lacks the information and asks the user to rephrase or contact Frontier Airlines support, so it does not meet the criterion.
 ```
 </details>
 
