@@ -4,13 +4,13 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 16 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 16 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 4 | 13 | 24% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 3 | 14 | 18% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 16 | 6% |
-| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 4 | 13 | 24% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 11 | 6 | 65% |
+| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 17 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 17 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 4 | 14 | 22% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 3 | 15 | 17% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 17 | 6% |
+| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 4 | 14 | 22% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 12 | 6 | 67% |
 
 ---
 
@@ -159,7 +159,7 @@ assert 0.9964867790518531 < 0.35
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 11 times
+**Failures:** 12 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -172,7 +172,7 @@ assert 0.9964867790518531 < 0.35
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent response does not ask any clarifying question about whether the user means a domestic or an international flight. It only apologizes and suggests rephrasing or contacting customer support, so it fails to meet the criterion.
+Criteria not met: The agent output only states it lacks information and suggests rephrasing or contacting Frontier Airlines. It does not ask any clarifying question about whether the user is asking about a domestic or international flight, so it fails the criterion.
 ```
 </details>
 
