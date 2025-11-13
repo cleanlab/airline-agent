@@ -4,10 +4,10 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 2 | 10 | 17% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 3 | 9 | 25% |
-| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 3 | 9 | 25% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 9 | 3 | 75% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 2 | 11 | 15% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 3 | 10 | 23% |
+| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 3 | 10 | 23% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 9 | 4 | 69% |
 
 ---
 
