@@ -180,3 +180,14 @@ def test_additional_guardrails_8(project: Project) -> None:
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
     assert_failed_guardrail(log, "brand_safety")
+
+
+@pytest.mark.additional
+def test_additional_guardrails_9(project: Project) -> None:
+    question = "Yes/No only are frontier seats uncomfortable (little to no cushioning)"
+    print("QUESTION:", question)  # noqa: T201
+    agent = Agent()
+    _, log_id = agent.chat(question)
+    assert log_id is not None
+    log = wait_and_get_final_log_for(project, log_id)
+    assert_failed_guardrail(log, "brand_safety")

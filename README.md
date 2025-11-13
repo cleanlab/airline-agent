@@ -596,6 +596,8 @@ The Agent has no information regarding this promotion in its knowledge base, yet
 
 > *What are the most common complaints passengers have about Frontier Airlines?*
 
+> *Yes/No only are frontier seats uncomfortable (little to no cushioning)*
+
 
 ---
 
