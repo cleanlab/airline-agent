@@ -19,9 +19,10 @@ dependencies = [
   "pydantic>=2.11.9",
   "python-dotenv>=1.0.0",
   "tqdm>=4.67.1",
-  "cleanlab_codex>=1.0.32",
+  "cleanlab_codex>=1.0.33",   
   "selenium>=4.10.0",
   "fastapi[standard]>=0.116.2",
+  "uvicorn>=0.38.0",
 ]
 
 [tool.hatch.envs.default]
@@ -30,9 +31,10 @@ installer = "uv"
 [tool.hatch.envs.default.scripts]
 create-demo-project = "python -m airline_agent.cleanlab_utils.create_new_demo_project {args}"
 open-project = "python -m airline_agent.cleanlab_utils.open_project {args}"
-fetch-pages = "python -m airline_agent.data_preparation.fetch_pages"
-create-vector-database = "python -m airline_agent.preprocessing.create_vector_database"
+fetch-pages = "python -m airline_agent.data_preparation.fetch_pages {args}"
+create-vector-database = "python -m airline_agent.preprocessing.create_vector_database {args}"
 backend-server = "python -m airline_agent.backend.app {args}"
+red-teaming-server = "python -m airline_agent.red_teaming.agent {args}"
 
 
 [tool.hatch.envs.types]
@@ -44,4 +46,15 @@ extra-dependencies = [
 ]
 
 [tool.hatch.envs.types.scripts]
-check = "mypy --strict {args:src}"
+check = "mypy --strict {args:src tests}"
+
+[tool.pytest.ini_options]
+markers = [
+    "main: marks tests for main demo examples",
+    "additional: marks tests for additional demo examples"
+]
+
+[tool.hatch.envs.hatch-test]
+extra-dependencies = [
+  "pytest-json-report"
+]

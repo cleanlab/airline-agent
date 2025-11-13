@@ -1,0 +1,75 @@
+name: Stable
+
+on:
+  schedule:
+    # Run every 2 hours
+    - cron: "0 */2 * * *"
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        marker: [main, additional]
+    name: ${{ matrix.marker }} demo examples
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      CLEANLAB_PROJECT_ID: ${{ secrets.CLEANLAB_PROJECT_ID }}
+      CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pypa/hatch@install
+      - name: Download knowledge base
+        run: curl -o data/kb.json https://cleanlab-public.s3.us-east-1.amazonaws.com/airline-agent/kb.json
+      - name: Create vector database
+        run: hatch run create-vector-database
+      - name: Run ${{ matrix.marker }} demo examples and collect results
+        env:
+          MARKER: ${{ matrix.marker }}
+        run: |
+          mkdir -p results
+          hatch test tests/stable -v -m {env:MARKER:main} --capture=tee-sys --json-report --json-report-file=results/report-${{ matrix.marker }}.json
+      - name: Upload report-${{ matrix.marker }}.json
+        if: always()  # runs even if tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-${{ matrix.marker }}
+          path: results/report-${{ matrix.marker }}.json
+  summarize:
+    runs-on: ubuntu-latest
+    name: prepare stability reports
+    needs: demo
+    if: always()  # run this job even if tests fail
+    steps:
+      - uses: actions/checkout@v5
+      - name: Download main report
+        uses: actions/download-artifact@v4
+        with:
+          name: report-main
+          path: results
+      - name: Download additional report
+        uses: actions/download-artifact@v4
+        with:
+          name: report-additional
+          path: results
+      - name: Retrieve previous stability data
+        run: |
+          git fetch origin stability-md
+          git show origin/stability-md:stability_data.json > stability_data.json || echo '{}' > stability_data.json
+      - name: Merge all reports
+        run: |
+          python scripts/append_test_results.py main
+          python scripts/append_test_results.py additional
+          python scripts/aggregate_test_results.py
+      - name: Commit summary
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git worktree add ../stability-md stability-md
+          cp stability_data.json README.md ../stability-md/
+          cd ../stability-md
+          git add stability_data.json README.md
+          git commit -m "Update stability report ($(date -u '+%Y-%m-%d %H:%M UTC'))" || echo "No changes to commit"
+          git push origin stability-md

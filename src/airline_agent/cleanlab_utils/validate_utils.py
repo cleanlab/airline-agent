@@ -1,25 +1,20 @@
-from __future__ import annotations
-
 import logging
 import re
 import warnings
-from typing import TYPE_CHECKING, Any, cast
+from typing import Any, cast
 
-if TYPE_CHECKING:
-    from cleanlab_codex import Project
-    from codex.types.project_validate_response import ProjectValidateResponse
-    from pydantic_ai.agent import Agent, AgentRunResult
-    from pydantic_ai.tools import ToolDefinition
-
+from cleanlab_codex import Project
 from cleanlab_tlm.utils.chat import _ASSISTANT_PREFIX as ASSISTANT_PREFIX
 from cleanlab_tlm.utils.chat import (
     _form_prompt_chat_completions_api as form_prompt_chat_completions_api,
 )
+from codex.types.project_validate_response import ProjectValidateResponse
 from openai.types.chat import (
     ChatCompletionAssistantMessageParam,
     ChatCompletionFunctionToolParam,
     ChatCompletionMessageParam,
 )
+from pydantic_ai.agent import Agent, AgentRunResult
 from pydantic_ai.messages import (
     ModelMessage,
     ModelRequest,
@@ -27,6 +22,7 @@ from pydantic_ai.messages import (
     SystemPromptPart,
     UserPromptPart,
 )
+from pydantic_ai.tools import ToolDefinition
 
 from airline_agent.cleanlab_utils.conversion_utils import (
     convert_message_to_chat_completion,
@@ -146,7 +142,10 @@ def _get_final_response_message(
     if validation_result.expert_answer:
         replacement_text = validation_result.expert_answer
     elif validation_result.should_guardrail:
-        replacement_text = FALLBACK_RESPONSE
+        if validation_result.guardrailed_fallback is not None:
+            replacement_text = validation_result.guardrailed_fallback.message
+        else:
+            replacement_text = FALLBACK_RESPONSE
 
     if replacement_text:
         return convert_string_to_response_message(replacement_text), replacement_text
