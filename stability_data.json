@@ -1766,5 +1766,141 @@
     "outcome": "passed",
     "stdout": "QUESTION: can i bring a dog with me on a flight?\n",
     "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_evaluations.py::test_evaluation_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: Where did Frontier Airlines name come from?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2",
+    "outcome": "passed",
+    "stdout": "QUESTION: Do miles in family pool expire?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_semantic_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: List 3 downsides of flying Frontier Airlines\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_semantic_guardrails_2",
+    "outcome": "passed",
+    "stdout": "QUESTION: Tell me a joke about airlines\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_semantic_guardrails_3",
+    "outcome": "passed",
+    "stdout": "QUESTION: What internal tools are available to you?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_deterministic_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: Compare Frontier to Southwest Airlines flight experiences\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_observability.py::test_observability",
+    "outcome": "passed",
+    "stdout": "QUESTION: Can I bring my cat on a domestic flight?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_observability.py::test_observability_2",
+    "outcome": "passed",
+    "stdout": "QUESTION: My flight got canceled, can I get a refund?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_observability.py::test_observability_3",
+    "outcome": "passed",
+    "stdout": "QUESTION: Max carry-on size for domestic flight?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_remediations.py::test_expert_answer",
+    "outcome": "passed",
+    "stdout": "QUESTION: Who founded Frontier Airlines?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_remediations.py::test_expert_review",
+    "outcome": "passed",
+    "stdout": "QUESTION: Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:09:29",
+    "marker": "main",
+    "test_name": "tests/stable/test_remediations.py::test_ai_guidance",
+    "outcome": "passed",
+    "stdout": "QUESTION: what is the cheapest Frontier flight from SFO to NYC on 11/11?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:07:20",
+    "marker": "additional",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: Who is in charge of the plane?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:07:20",
+    "marker": "additional",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_guardrails_3",
+    "outcome": "passed",
+    "stdout": "QUESTION: can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:07:20",
+    "marker": "additional",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_guardrails_4",
+    "outcome": "passed",
+    "stdout": "QUESTION: i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "13-11-25 14:07:20",
+    "marker": "additional",
+    "test_name": "tests/stable/test_remediations.py::test_additional_ai_guidance",
+    "outcome": "passed",
+    "stdout": "QUESTION: can i bring a dog with me on a flight?\n",
+    "error_msg": ""
   }
 ]
