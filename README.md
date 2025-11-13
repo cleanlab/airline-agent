@@ -388,9 +388,9 @@ Then pretend you are a different user **by creating a new chat thread** and ask:
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
-#### 4c. AI Guidance
+#### 4c. Expert Guidance
 
-While **Expert Answers** enable your SMEs to control your AI's exact answer to specific types of queries, Cleanlab’s **AI Guidance** enables SMEs to improve your AI across a broader range of related queries, where SMEs may not want to write an explicit answer to each one. If your AI is repeatedly using a tool incorrectly, retrieving the wrong article, or misunderstanding certain terminology or acronyms, then you can provide AI Guidance to teach your AI how to better handle these types of cases in the future.
+While **Expert Answers** enable your SMEs to control your AI's exact answer to specific types of queries, Cleanlab’s **Expert Guidance** enables SMEs to improve your AI across a broader range of related queries, where SMEs may not want to write an explicit answer to each one. If your AI is repeatedly using a tool incorrectly, retrieving the wrong article, or misunderstanding certain terminology or acronyms, then you can provide Expert Guidance to teach your AI how to better handle these types of cases in the future.
 
 Try asking each of the example queries below (in new chats):
 
@@ -454,18 +454,18 @@ Relevant flight data excerpt:
 ```
 </details>
 
-This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
+This misunderstanding reflects a systematic issue that you can fix with Expert Guidance (imagining you are a SME who wants to teach the AI to do better).
 To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above.
 Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
 
 > when the user uses NYC as an airport code, consider the three major New York area airports
 
-After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback, such as:
+After you submit the SME feedback for this case, Cleanlab auto-generates some proposed Expert Guidance based on your feedback, such as:
 
 > If the user refers to "NYC" as a destination or airport code, you should consider and include options for all three major New York City area airports (JFK, LGA, and EWR).
 
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
-Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+Once saved, this Expert Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
 Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
 
@@ -475,7 +475,7 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 You'll now see that the AI provides the correct answers by considering all three New York airports.
 
-You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project.
+You can review/edit existing Guidance by opening the `Expert Guidance` section in the left sidebar of your Cleanlab Project.
 
 
 ## Conclusion
@@ -488,7 +488,7 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 ### Additional Examples You Can Try
 
-#### To explore AI Guidance
+#### To explore Expert Guidance
 
 > *can i bring a dog with me on a flight?*
 
@@ -508,14 +508,14 @@ If the flight is international, the AI should also reference `/help/may-i-bring-
 The AI references `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not recognize emotional support animals as service animals.
 However, this answer can be improved if the AI also referenced the `/help/do-you-allow-pets-on-the-plane` article, which notes that the passenger may still bring their dog on board if they comply with Frontier’s Pet Policy.
 
-To provide AI Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above.
+To provide Expert Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above.
 Select `No` under *Is this a good AI response?* and provide an explanation like the following in the `Reason` field:
 
 > Answer depends if flight is international and if it's a service animal. Should have clarified with user, and then used info from all relevant articles: always use the "do you allow pets on plane" article, then if international/service animal, also the "service animals" article
 
-After you submit the SME feedback for this case, Cleanlab auto-generates suggested AI Guidance based on your feedback.
+After you submit the SME feedback for this case, Cleanlab auto-generates suggested Expert Guidance based on your feedback.
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
-Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+Once saved, this Expert Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
 Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
 
