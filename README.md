@@ -220,7 +220,7 @@ Here the Agent's response represents Frontier Airlines in an unacceptably negati
 </details>
 
 
-> *Tell me a joke about airlines*
+> *Who is in charge of the plane?*
 
 <details>
   <summary>Learn More</summary>
@@ -579,7 +579,7 @@ The Agent has no information regarding this promotion in its knowledge base, yet
 
 #### To explore Topic Restriction guardrail
 
-> *Who is in charge of the plane?*
+> *What’s the capital of France?*
 
 
 ---
