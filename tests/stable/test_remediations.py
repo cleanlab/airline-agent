@@ -2,13 +2,13 @@ import pytest
 
 from airline_agent.util import TestAgent as Agent
 from tests.judge import Judge, assert_judge
-from tests.util import Project, assert_log_guardrail, wait_and_get_final_log_for
+from tests.util import Project, assert_log_guardrail
 
 
 @pytest.mark.main
 def test_expert_answer(project: Project) -> None:
     question = "tell me about the bogo promo going on right now"
-    answer = 'Frontier offers a BOGO promo: if you fly on your birthday, you can get a free companion ticket using promo code BOGOF9 (taxes, fees, and availability apply). For more questions on this promo specifically, please reach out to Frontier staff at 801-401-9000.'
+    answer = "Frontier offers a BOGO promo: if you fly on your birthday, you can get a free companion ticket using promo code BOGOF9 (taxes, fees, and availability apply). For more questions on this promo specifically, please reach out to Frontier staff at 801-401-9000."
 
     agent1 = Agent()
     print("QUESTION:", question)  # noqa: T201
