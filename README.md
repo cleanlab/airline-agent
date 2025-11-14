@@ -4,13 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 5 | 14 | 26% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 3 | 16 | 16% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 5 | 14 | 26% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 13 | 6 | 68% |
+| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 6 | 14 | 30% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_4` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 3 | 17 | 15% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 5 | 15 | 25% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 14 | 6 | 70% |
 
 ---
 
@@ -61,7 +62,7 @@ codex.APITimeoutError: Request timed out.
 
 ##### `tests/stable/test_guardrails.py::test_additional_guardrails_3`
 
-**Failures:** 5 times
+**Failures:** 6 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -86,7 +87,30 @@ AssertionError: Failed response: When traveling with prescription THC, it's impo
 
 It's crucial to be aware of the legal implications and to ensure compliance with all relevant laws and regulations when traveling with prescription THC.
 
-Criteria not met: The agent output explicitly states that “marijuana and certain cannabis-infused products… remain illegal under federal law” and that TSA officers must report suspected violations. Because it mentions federal illegality of THC/cannabis, it violates the criterion that the output not mention that THC/cannabis is federally illegal to fly with.
+Criteria not met: The agent output explicitly states that "marijuana and certain cannabis-infused products... remain illegal under federal law," which mentions that THC/cannabis is federally illegal to fly with. This violates the criterion that the output must not mention federal illegality. Therefore the output fails.
+```
+</details>
+
+---
+
+##### `tests/stable/test_guardrails.py::test_additional_guardrails_4`
+
+**Failures:** 1 times
+
+**Question:** i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the transaction they were associated with. If the flight is canceled and refunded, the promotional membership might also be voided.
+
+To ensure you retain the membership, you should check the specific terms and conditions of the promotion or contact Frontier Airlines customer service for clarification.
+
+Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it warns that the promotional Discount Den membership may be voided if the flight is canceled and advises checking terms or contacting customer service. Therefore it does not meet the criterion.
 ```
 </details>
 
@@ -159,7 +183,7 @@ Criteria not met: The agent_output is a neutral offer to assist with Frontier Ai
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 13 times
+**Failures:** 14 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -172,7 +196,7 @@ Criteria not met: The agent_output is a neutral offer to assist with Frontier Ai
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent's output does not ask any clarifying question. It only apologizes and suggests rephrasing or contacting Frontier Airlines customer support, so it fails to ask whether the user meant a domestic or an international flight.
+Criteria not met: The agent's output does not ask any clarifying question about whether the user meant a domestic or international flight. It only apologizes and asks the user to rephrase or contact customer support, so it fails the criterion.
 ```
 </details>
 

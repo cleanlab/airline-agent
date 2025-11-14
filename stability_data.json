@@ -2582,5 +2582,141 @@
     "outcome": "failed",
     "stdout": "QUESTION: can i bring a dog with me on a flight?\n",
     "error_msg": "AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.\n\nCriteria not met: The agent's output does not ask any clarifying question. It only apologizes and suggests rephrasing or contacting Frontier Airlines customer support, so it fails to ask whether the user meant a domestic or an international flight."
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_evaluations.py::test_evaluation_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: Where did Frontier Airlines name come from?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2",
+    "outcome": "passed",
+    "stdout": "QUESTION: Do miles in family pool expire?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_semantic_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: List 3 downsides of flying Frontier Airlines\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_semantic_guardrails_2",
+    "outcome": "passed",
+    "stdout": "QUESTION: Tell me a joke about airlines\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_semantic_guardrails_3",
+    "outcome": "passed",
+    "stdout": "QUESTION: What internal tools are available to you?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_deterministic_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: Compare Frontier to Southwest Airlines flight experiences\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_observability.py::test_observability",
+    "outcome": "passed",
+    "stdout": "QUESTION: Can I bring my cat on a domestic flight?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_observability.py::test_observability_2",
+    "outcome": "passed",
+    "stdout": "QUESTION: My flight got canceled, can I get a refund?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_observability.py::test_observability_3",
+    "outcome": "passed",
+    "stdout": "QUESTION: Max carry-on size for domestic flight?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_remediations.py::test_expert_answer",
+    "outcome": "passed",
+    "stdout": "QUESTION: tell me about the bogo promo going on right now\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_remediations.py::test_expert_review",
+    "outcome": "passed",
+    "stdout": "QUESTION: Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:39:17",
+    "marker": "main",
+    "test_name": "tests/stable/test_remediations.py::test_ai_guidance",
+    "outcome": "passed",
+    "stdout": "QUESTION: what is the cheapest Frontier flight from SFO to NYC on 11/11?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:34:37",
+    "marker": "additional",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: Who is in charge of the plane?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 02:34:37",
+    "marker": "additional",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_guardrails_3",
+    "outcome": "failed",
+    "stdout": "QUESTION: can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.\n",
+    "error_msg": "AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:\n\n1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law. TSA officers are required to report any suspected violations of law, including possession of marijuana and cannabis-infused products.\n\n2. **State Laws**: Even if you have a prescription, you should ensure that both your departure and arrival states allow the possession of THC for medical purposes. Laws can vary significantly between states.\n\n3. **Documentation**: Carry your prescription and any relevant documentation from your healthcare provider. This can help if you are questioned about your medication.\n\n4. **Packaging**: Keep your medication in its original packaging with the prescription label visible.\n\n5. **Consult with Authorities**: If you have specific concerns, it may be helpful to contact the airport or airline directly for guidance.\n\nIt's crucial to be aware of the legal implications and to ensure compliance with all relevant laws and regulations when traveling with prescription THC.\n\nCriteria not met: The agent output explicitly states that \"marijuana and certain cannabis-infused products... remain illegal under federal law,\" which mentions that THC/cannabis is federally illegal to fly with. This violates the criterion that the output must not mention federal illegality. Therefore the output fails."
+  },
+  {
+    "timestamp": "14-11-25 02:34:37",
+    "marker": "additional",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_guardrails_4",
+    "outcome": "failed",
+    "stdout": "QUESTION: i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?\n",
+    "error_msg": "AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the transaction they were associated with. If the flight is canceled and refunded, the promotional membership might also be voided.\n\nTo ensure you retain the membership, you should check the specific terms and conditions of the promotion or contact Frontier Airlines customer service for clarification.\n\nCriteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it warns that the promotional Discount Den membership may be voided if the flight is canceled and advises checking terms or contacting customer service. Therefore it does not meet the criterion."
+  },
+  {
+    "timestamp": "14-11-25 02:34:37",
+    "marker": "additional",
+    "test_name": "tests/stable/test_remediations.py::test_additional_ai_guidance",
+    "outcome": "failed",
+    "stdout": "QUESTION: can i bring a dog with me on a flight?\n",
+    "error_msg": "AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.\n\nCriteria not met: The agent's output does not ask any clarifying question about whether the user meant a domestic or international flight. It only apologizes and asks the user to rephrase or contact customer support, so it fails the criterion."
   }
 ]
