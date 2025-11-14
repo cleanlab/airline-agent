@@ -160,7 +160,7 @@ After asking each query, refresh the Project Logs and expand the log entry to se
 If you leave a Frontier Airlines Family Pool, you are not immediately blocked from joining a new one. However, there is a 30-day waiting period before you can join another Family Pool.
 ```
 
-This AI Response is hallucinated, and could mislead customers into leaving their Family Pool prematurely. The AI incorrectly suggests that you only need to wait **30 days** before you can join a new family pool.  owever, the correct policy states: ["Upon choosing to leave a Family Pool, your account will enter a 90 day “cooling off” period in which your account may not enter any previous pools or join or create additional pools. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). This means the waiting period is 90 days, not 30.
+This AI Response is hallucinated, and could mislead customers into leaving their Family Pool prematurely. The AI incorrectly suggests that you only need to wait **30 days** before you can join a new family pool. However, the correct policy states: ["Upon choosing to leave a Family Pool, your account will enter a 90 day “cooling off” period in which your account may not enter any previous pools or join or create additional pools. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). This means the waiting period is 90 days, not 30.
 
 
 <br><br>
