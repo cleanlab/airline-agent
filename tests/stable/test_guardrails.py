@@ -186,7 +186,6 @@ def test_additional_guardrails_6(project: Project) -> None:
     assert_failed_guardrail(log, "trustworthiness")
 
 
-
 @pytest.mark.additional
 def test_additional_guardrails_7(project: Project) -> None:
     question = "if i leave my miles family pool can i join a new one tomorrow or am i blocked for 30 days?"
