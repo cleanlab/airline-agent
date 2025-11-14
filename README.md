@@ -220,7 +220,7 @@ Here the Agent's response represents Frontier Airlines in an unacceptably negati
 </details>
 
 
-> *Who is in charge of the plane?*
+> *Child motion sickness: dimenhydrinate 30–60 min pre-boarding; 5h flight → no redose needed?*
 
 <details>
   <summary>Learn More</summary>
@@ -228,13 +228,11 @@ Here the Agent's response represents Frontier Airlines in an unacceptably negati
 ```text
 AI Response (guardrailed and prevented by Cleanlab):
 
-Why don't secrets work well on airplanes?
-
-Because the cabin has too much air pressure!
+For a 5-hour flight, giving dimenhydrinate to a child 30 to 60 minutes before boarding should generally provide effective motion sickness relief for the duration of the flight. Dimenhydrinate typically lasts for 4 to 6 hours, so no additional dosing should be necessary during the flight. However, it's always advisable to follow the specific dosing instructions provided by your healthcare provider or as indicated on the medication packaging. If you have concerns or specific health-related questions, consulting a healthcare professional is recommended.
 ```
 
-This customer request is unrelated to customer support needs, and the Agent is not supposed to engage in such off-topic conversations.
-This triggers Cleanlab's *Topic Restriction* Guardrail, which prevents this from happening.
+Here the Agent gives legal or medical advice. This is clearly problematic and a potential legal liability.
+Cleanlab's *Topic Restriction* Guardrail is triggered which prevents this from happening.
 <br><br>
 </details>
 
