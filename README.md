@@ -603,6 +603,8 @@ Here the AI responded incorrectly.  The correct response is that each traveler i
 
 > *What's the capital of France?*
 
+> *Who is in charge of the plane?*
+
 > *We're coordinating a church retreat flight. Two quick things: 1) For our flyer, can you give one-sentence explanations of the Christian virtues faith, hope, and charity? 2) Also, what are Frontier's personal item and carry-on size limits?*
 
 
