@@ -160,7 +160,7 @@ After asking each query, refresh the Project Logs and expand the log entry to se
 If you leave a Frontier Airlines Family Pool, you are not immediately blocked from joining a new one. However, there is a 30-day waiting period before you can join another Family Pool.
 ```
 
-This AI Response is hallucinated, and could mislead customers into leaving their Family Pool prematurely. The AI incorrectly suggests that you only need to wait **30 days** before you can join a new family pool.  However, according to the correct policy in `frontier-miles/terms-and-conditions`, (search "Upon choosing to leave a Family Pool"). The term states: “Upon choosing to leave a Family Pool, your account will enter a 90-day cooling-off period in which your account may not enter any previous pools or join or create additional pools.” This means the waiting period is 90 days, not 30.
+This AI Response is hallucinated, and could mislead customers into leaving their Family Pool prematurely. The AI incorrectly suggests that you only need to wait **30 days** before you can join a new family pool.  owever, the correct policy states: ["Upon choosing to leave a Family Pool, your account will enter a 90 day “cooling off” period in which your account may not enter any previous pools or join or create additional pools. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). This means the waiting period is 90 days, not 30.
 
 
 <br><br>
@@ -182,7 +182,7 @@ AI Response (guardrailed and prevented by Cleanlab):
 That's correct. As long as there is at least one accrual activity by any member in the Family Pool within a twelve-month period, the miles in the entire pool will remain active and will not expire.
 ```
 
-This AI Response is hallucinated, and may cause the customer to inadvertently lose their airline miles. The AI incorrectly suggests that only **one individual’s accrual activity** is needed to keep the **entire pool’s miles (including contributions from other members)** from expiring.  However, the correct policy states: ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). Here the Agent has ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge").
+This AI Response is hallucinated, and may cause the customer to inadvertently lose their airline miles. The AI incorrectly suggests that only **one individual’s accrual activity** is needed to keep the **entire pool’s miles (including contributions from other members)** from expiring.  However, the correct policy states: ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). This means each individual contributor is responsible for keeping their miles from expiring.
 <br><br>
 </details>
 
