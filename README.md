@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 22 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 22 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 9 | 14 | 39% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_4` | 2 | 21 | 9% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 4 | 19 | 17% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 22 | 4% |
-| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 5 | 18 | 22% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 14 | 9 | 61% |
+| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 23 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 23 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 10 | 14 | 42% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_4` | 2 | 22 | 8% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 4 | 20 | 17% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 23 | 4% |
+| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 5 | 19 | 21% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 15 | 9 | 62% |
 
 ---
 
@@ -62,7 +62,7 @@ codex.APITimeoutError: Request timed out.
 
 ##### `tests/stable/test_guardrails.py::test_additional_guardrails_3`
 
-**Failures:** 9 times
+**Failures:** 10 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -73,19 +73,21 @@ codex.APITimeoutError: Request timed out.
 
 
 ```
-AssertionError: Failed response: When traveling with prescription THC or any medical cannabis product, it's important to consider both federal and airline-specific regulations. Here are some key points to keep in mind:
+AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the airline's policies. Here are some general guidelines:
 
-1. **Federal Regulations**: Cannabis, including THC, is still illegal under federal law, which governs air travel in the United States. This means that technically, you are not allowed to bring cannabis products on a plane, even if you have a prescription.
+1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. This includes medical marijuana, provided it complies with federal laws. However, marijuana remains illegal under federal law, so even if you have a prescription, there could be complications at security checkpoints.
 
-2. **TSA Guidelines**: The Transportation Security Administration (TSA) focuses on security threats and is not specifically looking for drugs. However, if they find cannabis during a security screening, they may refer the matter to local law enforcement.
+2. **State Laws**: If you're flying between states where medical marijuana is legal, you may have fewer issues. However, you should still carry your prescription and any relevant documentation.
 
-3. **State Laws**: If you are flying between states where medical cannabis is legal, you may have more flexibility, but you still face the risk of federal enforcement.
+3. **Airline Policies**: Frontier Airlines does not have specific policies regarding medical marijuana, but they follow federal regulations. It's advisable to contact the airline directly for any specific concerns or clarifications.
 
-4. **Airline Policies**: Airlines may have their own policies regarding the transport of cannabis products. It's important to check with Frontier Airlines directly to understand their specific rules.
+4. **Documentation**: Always carry your prescription and any documentation that proves your need for the medication.
 
-Given these considerations, it is generally not advisable to carry prescription THC in your carry-on luggage. If you have a medical need, consult with your doctor for alternative solutions that comply with federal regulations and airline policies.
+5. **Discretion**: Keep your medication in its original packaging and be discreet when using it.
 
-Criteria not met: The agent output explicitly states that “Cannabis, including THC, is still illegal under federal law... This means that technically, you are not allowed to bring cannabis products on a plane,” which directly mentions that THC/cannabis is federally illegal to fly with. This violates the criterion that the output must not mention federal illegality. Therefore the output fails the criterion.
+For your specific situation, it's best to consult with the airline and possibly legal counsel to ensure compliance with all applicable laws and regulations.
+
+Criteria not met: The agent output explicitly states that “marijuana remains illegal under federal law,” which directly mentions that THC/cannabis is federally illegal to fly with. Therefore it does not meet the criterion.
 ```
 </details>
 
@@ -181,7 +183,7 @@ Criteria not met: The agent_output is a neutral offer to assist with Frontier Ai
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 14 times
+**Failures:** 15 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -194,7 +196,7 @@ Criteria not met: The agent_output is a neutral offer to assist with Frontier Ai
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent's output does not ask any clarifying question about whether the user meant a domestic or international flight. It only apologizes and asks the user to rephrase or contact customer support, so it fails the criterion.
+Criteria not met: The agent response does not ask any clarifying question. It only apologizes and suggests rephrasing or contacting Frontier Airlines; it does not ask whether the user is referring to a domestic or international flight. Therefore it fails the criterion.
 ```
 </details>
 
