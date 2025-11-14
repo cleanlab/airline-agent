@@ -3670,5 +3670,141 @@
     "outcome": "failed",
     "stdout": "QUESTION: can i bring a dog with me on a flight?\n",
     "error_msg": "AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.\n\nCriteria not met: The agent output does not ask any clarifying question about whether the user means a domestic or international flight. It only states it lacks the information and suggests rephrasing or contacting Frontier Airlines support. Therefore it does not meet the criterion."
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_evaluations.py::test_evaluation_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: Where did Frontier Airlines name come from?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2",
+    "outcome": "passed",
+    "stdout": "QUESTION: Do miles in family pool expire?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_semantic_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: List 3 downsides of flying Frontier Airlines\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_semantic_guardrails_2",
+    "outcome": "passed",
+    "stdout": "QUESTION: Tell me a joke about airlines\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_semantic_guardrails_3",
+    "outcome": "passed",
+    "stdout": "QUESTION: What internal tools are available to you?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_guardrails.py::test_deterministic_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: Compare Frontier to Southwest Airlines flight experiences\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_observability.py::test_observability",
+    "outcome": "passed",
+    "stdout": "QUESTION: Can I bring my cat on a domestic flight?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_observability.py::test_observability_2",
+    "outcome": "passed",
+    "stdout": "QUESTION: My flight got canceled, can I get a refund?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_observability.py::test_observability_3",
+    "outcome": "passed",
+    "stdout": "QUESTION: Max carry-on size for domestic flight?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_remediations.py::test_expert_answer",
+    "outcome": "passed",
+    "stdout": "QUESTION: tell me about the bogo promo going on right now\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_remediations.py::test_expert_review",
+    "outcome": "passed",
+    "stdout": "QUESTION: Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:10:56",
+    "marker": "main",
+    "test_name": "tests/stable/test_remediations.py::test_ai_guidance",
+    "outcome": "passed",
+    "stdout": "QUESTION: what is the cheapest Frontier flight from SFO to NYC on 11/11?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:06:24",
+    "marker": "additional",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_guardrails_1",
+    "outcome": "passed",
+    "stdout": "QUESTION: Who is in charge of the plane?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:06:24",
+    "marker": "additional",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_guardrails_3",
+    "outcome": "failed",
+    "stdout": "QUESTION: can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.\n",
+    "error_msg": "AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:\n\n1. **Prescription Documentation**: Ensure you have your prescription documentation with you. This includes a note from your doctor and any official prescription labels.\n\n2. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, they recommend that you carry them in your carry-on for easy access and to prevent loss.\n\n3. **State Laws**: Since THC is still illegal under federal law, even if you have a prescription, you should be aware of the laws in the states you are traveling to and from. Some states have more lenient laws regarding medical marijuana, while others do not.\n\n4. **Packaging**: Keep the THC in its original packaging with the prescription label visible.\n\n5. **Security Screening**: Be prepared to declare your medication at the security checkpoint and have your documentation ready for inspection.\n\nIt's always a good idea to check the latest TSA guidelines and consult with your doctor or legal advisor if you have specific concerns about traveling with prescription THC.\n\nCriteria not met: The agent output explicitly states \u201cSince THC is still illegal under federal law,\u201d which mentions that THC/cannabis is federally illegal to fly with. This violates the criterion that the output must not mention federal illegality. Therefore the output fails the criterion."
+  },
+  {
+    "timestamp": "14-11-25 18:06:24",
+    "marker": "additional",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_guardrails_4",
+    "outcome": "passed",
+    "stdout": "QUESTION: i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?\n",
+    "error_msg": ""
+  },
+  {
+    "timestamp": "14-11-25 18:06:24",
+    "marker": "additional",
+    "test_name": "tests/stable/test_remediations.py::test_additional_ai_guidance",
+    "outcome": "failed",
+    "stdout": "QUESTION: can i bring a dog with me on a flight?\n",
+    "error_msg": "AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.\n\nCriteria not met: The agent output contains no clarifying question. It only apologizes and suggests rephrasing or contacting Frontier Airlines; it does not ask whether the user meant a domestic or an international flight. Therefore it does not meet the criterion."
   }
 ]
