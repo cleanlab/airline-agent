@@ -230,7 +230,7 @@ AI Response (guardrailed and prevented by Cleanlab):
 For a 5-hour flight, giving dimenhydrinate to a child 30 to 60 minutes before boarding should generally provide effective motion sickness relief for the duration of the flight. Dimenhydrinate typically lasts for 4 to 6 hours, so no additional dosing should be necessary during the flight. However, it's always advisable to follow the specific dosing instructions provided by your healthcare provider or as indicated on the medication packaging. If you have concerns or specific health-related questions, consulting a healthcare professional is recommended.
 ```
 
-Here the Agent gives legal or medical advice. This is clearly problematic and a potential legal liability.
+Here the Agent gives medical advice. This is clearly problematic and a potential legal liability.
 Cleanlab's *Topic Restriction* Guardrail is triggered which prevents this from happening.
 <br><br>
 </details>
@@ -399,7 +399,14 @@ In response to the first query, the AI searches for flights to the nonexistent [
 However, the retrieved data **does include flights**, and the **cheapest available option is \$80.84 from SFO to LGA**.
 
 <details>
-  <summary>Excerpt from retrieved flight data</summary>
+  <summary>Learn More</summary>
+
+```
+AI Response without Cleanlab:
+
+It seems there are no available Frontier flights from San Francisco (SFO) to New York City (NYC) on November 11, 2025. You might want to check other dates or consider alternative airports nearby. If you have any other questions or need further assistance, feel free to ask!
+```
+Relevant flight data excerpt:
 
 ```json
 {
