@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 24 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 24 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 11 | 14 | 44% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_4` | 2 | 23 | 8% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 4 | 21 | 16% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 24 | 4% |
-| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 5 | 20 | 20% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 16 | 9 | 64% |
+| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 25 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 25 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 11 | 15 | 42% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_4` | 2 | 24 | 8% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 4 | 22 | 15% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 25 | 4% |
+| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 5 | 21 | 19% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 16 | 10 | 62% |
 
 ---
 
