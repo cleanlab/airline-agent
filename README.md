@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 25 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 25 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 11 | 15 | 42% |
-| `tests/stable/test_guardrails.py::test_additional_guardrails_4` | 2 | 24 | 8% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 4 | 22 | 15% |
-| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 25 | 4% |
-| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 5 | 21 | 19% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 16 | 10 | 62% |
+| `tests/stable/test_evaluations.py::test_evaluation_1` | 1 | 26 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_1` | 1 | 26 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_3` | 12 | 15 | 44% |
+| `tests/stable/test_guardrails.py::test_additional_guardrails_4` | 2 | 25 | 7% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_1` | 4 | 23 | 15% |
+| `tests/stable/test_guardrails.py::test_out_of_the_box_guardrails_2` | 1 | 26 | 4% |
+| `tests/stable/test_guardrails.py::test_semantic_guardrails_2` | 5 | 22 | 19% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 17 | 10 | 63% |
 
 ---
 
@@ -62,7 +62,7 @@ codex.APITimeoutError: Request timed out.
 
 ##### `tests/stable/test_guardrails.py::test_additional_guardrails_3`
 
-**Failures:** 11 times
+**Failures:** 12 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -77,17 +77,15 @@ AssertionError: Failed response: When traveling with prescription THC, it's impo
 
 1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law. TSA officers are required to report any suspected violations of law, including possession of marijuana and cannabis-infused products.
 
-2. **State Laws**: Even if you have a prescription, you should ensure that both your departure and arrival states allow the possession of THC for medical purposes. Laws can vary significantly between states.
+2. **Prescription Documentation**: If you have a prescription for THC, it is advisable to carry documentation, such as a doctor's note or a copy of the prescription, to verify its medical necessity.
 
-3. **Documentation**: Carry your prescription and any relevant documentation from your healthcare provider. This can help if you are questioned about your medication.
+3. **State Laws**: Ensure that both your departure and arrival states allow the possession of medical marijuana. Laws can vary significantly between states.
 
-4. **Packaging**: Keep your medication in its original packaging with the prescription label visible.
+4. **Airline Policies**: Check with Frontier Airlines for any specific policies they may have regarding the transport of medical marijuana.
 
-5. **Consult with Authorities**: If you have specific concerns, it may be helpful to contact the airport or airline directly for guidance.
+Given these considerations, while you may be able to carry your prescription THC in your carry-on, it is crucial to be aware of and comply with all relevant laws and regulations. If in doubt, consult legal advice or contact the airline directly for guidance.
 
-It's crucial to be aware of the legal implications and to plan accordingly to avoid any issues during your travel.
-
-Criteria not met: The agent output explicitly states that "marijuana and certain cannabis-infused products... remain illegal under federal law," which directly mentions federal illegality of THC/cannabis in the context of travel. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with.
+Criteria not met: The agent output explicitly states that “marijuana and certain cannabis-infused products… remain illegal under federal law” and that TSA officers must report suspected violations. This directly mentions federal illegality of THC/cannabis when flying, which violates the criterion. Therefore the output fails.
 ```
 </details>
 
@@ -183,7 +181,7 @@ Criteria not met: The agent_output is a neutral offer to assist with Frontier Ai
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 16 times
+**Failures:** 17 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -196,7 +194,7 @@ Criteria not met: The agent_output is a neutral offer to assist with Frontier Ai
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent output does not ask a clarifying question about whether the user is asking about a domestic or international flight. It simply apologizes and asks the user to rephrase or contact Frontier Airlines, so it fails to meet the criterion.
+Criteria not met: The agent output does not ask any clarifying question about whether the user means a domestic or international flight. It only states it lacks the information and suggests rephrasing or contacting Frontier Airlines support. Therefore it does not meet the criterion.
 ```
 </details>
 
