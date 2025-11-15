@@ -366,7 +366,7 @@ Beyond Expert Answers, Cleanlab supports other types of remediations, such as Ex
 
 **Try starting a new chat** and asking the example question below:
 
-> *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
+> *does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?*
 
 <details>
   <summary>Learn More</summary>
@@ -374,7 +374,7 @@ Beyond Expert Answers, Cleanlab supports other types of remediations, such as Ex
 ```text
 AI Response:
 
-The maximum time you might be stuck on the tarmac without being let off for a domestic flight is three hours.
+Frontier Airlines reserves the right to change its Frontier Miles program and its terms and conditions at any time without notice. This means that while the program can be altered or even terminated, such changes would typically be communicated to members. However, there is always a risk that changes could affect your ability to use your miles as planned. It's a good idea to stay informed about any updates from Frontier Airlines regarding their loyalty program.
 ```
 <br><br>
 </details>
@@ -385,7 +385,7 @@ Expand this Log entry in the Project and click `No` under *Is this a good AI res
 
 Then pretend you are a different user **by creating a new chat thread** and ask:
 
-> *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
+> *does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?*
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
@@ -495,6 +495,32 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 ---
 
 ### Additional Examples You Can Try
+
+#### To explore Expert Review
+
+> *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response:
+
+The maximum time you might be stuck on the tarmac without being let off for a domestic flight is three hours.
+```
+
+Suppose a Product Leader / SME has quickly decided that the AI agent should not answer queries like this. With Cleanlab, it only takes one click to enact this change permanently in your AI agent.
+
+Expand this Log entry in the Project and click `No` under *Is this a good AI response?*, and click `Submit`.
+
+Then pretend you are a different user **by creating a new chat thread** and ask:
+
+> *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
+
+You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
+
+<br><br>
+</details>
 
 #### To explore AI Guidance
 

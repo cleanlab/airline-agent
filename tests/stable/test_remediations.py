@@ -33,6 +33,28 @@ def test_expert_answer(project: Project) -> None:
 
 @pytest.mark.main
 def test_expert_review(project: Project) -> None:
+    question1 = "does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?"
+    question2 = "does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?"
+
+    agent1 = Agent()
+    print("QUESTION:", question1)  # noqa: T201
+    answer1, log_id1 = agent1.chat(question1)
+    log1 = assert_log_guardrail(project, log_id1, guardrailed=False)
+    assert_judge(
+        [
+            "output suggests there is a risk of losing miles"
+        ],
+        answer1,
+    )
+    project.add_expert_review(log1.id, is_good=False)
+
+    agent2 = Agent()
+    _, log_id2 = agent2.chat(question2)
+    assert_log_guardrail(project, log_id2, guardrailed=True)
+
+
+@pytest.mark.additional
+def test_additional_expert_review_1(project: Project) -> None:
     question1 = "Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else"
     question2 = "Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else"
 
