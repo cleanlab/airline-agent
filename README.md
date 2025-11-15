@@ -157,10 +157,12 @@ After asking each query, refresh the Project Logs and expand the log entry to se
   <summary>Learn More</summary>
 
 ```text
+AI Response (guardrailed and prevented by Cleanlab):
+
 If you leave a Frontier Airlines Family Pool, you are not immediately blocked from joining a new one. However, there is a 30-day waiting period before you can join another Family Pool.
 ```
 
-This AI Response is hallucinated, and could mislead customers into leaving their Family Pool prematurely. The AI incorrectly suggests that you only need to wait **30 days** before you can join a new family pool. However, the correct policy states: ["Upon choosing to leave a Family Pool, your account will enter a 90 day “cooling off” period in which your account may not enter any previous pools or join or create additional pools. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). This means the waiting period is 90 days, not 30.
+Here the AI responded incorrectly. The correct response is that you need to wait 90 days to join or create a new pool. The policy states: ["Upon choosing to leave a Family Pool, your account will enter a 90 day “cooling off” period in which your account may not enter any previous pools or join or create additional pools. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true).
 
 
 <br><br>
@@ -182,7 +184,9 @@ AI Response (guardrailed and prevented by Cleanlab):
 That's correct. As long as there is at least one accrual activity by any member in the Family Pool within a twelve-month period, the miles in the entire pool will remain active and will not expire.
 ```
 
-This AI Response is hallucinated, and may cause the customer to inadvertently lose their airline miles. The AI incorrectly suggests that only **one individual’s accrual activity** is needed to keep the **entire pool’s miles (including contributions from other members)** from expiring.  However, the correct policy states: ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). This means each individual contributor is responsible for keeping their miles from expiring.
+Here the AI responded incorrectly. The correct response is that each member needs accrual activity to prevent their contributed miles from expiring. The policy states: ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true).
+
+
 <br><br>
 </details>
 
@@ -557,7 +561,7 @@ AI Response (guardrailed and prevented by Cleanlab):
 You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
 ```
 
-Under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.  Here Cleanlab’s trustworthiness guardrail prevented the Agent from giving unlawful advice.
+Here the AI responded incorrectly. The correct response is that under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.
 
 <br><br>
 </details>
