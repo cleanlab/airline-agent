@@ -385,7 +385,7 @@ Expand this Log entry in the Project and click `No` under *Is this a good AI res
 
 Then pretend you are a different user **by creating a new chat thread** and ask:
 
-> *does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?*
+> *Does Frontier have the right to cancel the miles program at any time? Could i risk losing all my miles?*
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 

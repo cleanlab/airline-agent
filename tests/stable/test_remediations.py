@@ -37,7 +37,7 @@ def test_expert_review(project: Project) -> None:
         "does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?"
     )
     question2 = (
-        "does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?"
+        "Does Frontier have the right to cancel the miles program at any time? Could i risk losing all my miles?"
     )
 
     agent1 = Agent()
