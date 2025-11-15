@@ -26,16 +26,13 @@ def assert_failed_guardrail(log: QueryLogListResponse, guardrail_name: str) -> N
 
 @pytest.mark.main
 def test_trustworthiness_guardrail_1(project: Project) -> None:
-    question = "If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?"
+    question = "if i leave my miles family pool can i join a new one tomorrow or am i blocked for 30 days?"
     print("QUESTION:", question)  # noqa: T201
     agent = Agent()
     _, log_id = agent.chat(question)
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
-    assert_judge(
-        ["output confirms that both of the user's small bags count as one personal item"],
-        log.original_assistant_response,
-    )
+    assert_judge(["output does NOT say the user is blocked for 90 days"], log.original_assistant_response)
     assert_failed_guardrail(log, "trustworthiness")
 
 
@@ -204,13 +201,16 @@ def test_additional_trustworthiness_guardrail_2(project: Project) -> None:
 
 @pytest.mark.additional
 def test_additional_trustworthiness_guardrail_3(project: Project) -> None:
-    question = "if i leave my miles family pool can i join a new one tomorrow or am i blocked for 30 days?"
+    question = "If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?"
     print("QUESTION:", question)  # noqa: T201
     agent = Agent()
     _, log_id = agent.chat(question)
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
-    assert_judge(["output does NOT say the user is blocked for 90 days"], log.original_assistant_response)
+    assert_judge(
+        ["output confirms that both of the user's small bags count as one personal item"],
+        log.original_assistant_response,
+    )
     assert_failed_guardrail(log, "trustworthiness")
 
 
