@@ -4522,7 +4522,7 @@
   {
     "timestamp": "15-11-25 01:56:58",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -4666,7 +4666,7 @@
   {
     "timestamp": "15-11-25 01:55:33",
     "marker": "additional",
-    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
+    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
     "outcome": "passed",
     "stdout": "QUESTION: if i leave my miles family pool can i join a new one tomorrow or am i blocked for 30 days?\n",
     "error_msg": ""
