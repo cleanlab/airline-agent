@@ -10,7 +10,7 @@
   {
     "timestamp": "12-11-25 07:46:53",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -146,7 +146,7 @@
   {
     "timestamp": "12-11-25 07:54:50",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -282,7 +282,7 @@
   {
     "timestamp": "12-11-25 18:41:50",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -418,7 +418,7 @@
   {
     "timestamp": "12-11-25 19:49:10",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -554,7 +554,7 @@
   {
     "timestamp": "12-11-25 21:21:37",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "failed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": "AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each must individually fit the size requirements for a personal item. Combining two bags to count as one personal item is not allowed. Each bag would be considered separately, and you would need to pay for an additional carry-on if you wish to bring both on board.\n  \n  Criteria not met: trustworthiness threshold\nassert 0.9164736810704669 < 0.77"
@@ -690,7 +690,7 @@
   {
     "timestamp": "12-11-25 22:08:28",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -826,7 +826,7 @@
   {
     "timestamp": "13-11-25 00:15:11",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -962,7 +962,7 @@
   {
     "timestamp": "13-11-25 02:38:01",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -1098,7 +1098,7 @@
   {
     "timestamp": "13-11-25 04:11:54",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -1234,7 +1234,7 @@
   {
     "timestamp": "13-11-25 06:09:15",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "failed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": "AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.\n  \n  Criteria not met: trustworthiness threshold\nassert 0.806321477855272 < 0.77"
@@ -1370,7 +1370,7 @@
   {
     "timestamp": "13-11-25 08:08:51",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -1506,7 +1506,7 @@
   {
     "timestamp": "13-11-25 10:08:56",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "failed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": "AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14\u201d H x 18\u201d W x 8\u201d D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.\n  \n  Criteria not met: trustworthiness threshold\nassert 0.8292275719837473 < 0.77"
@@ -1642,7 +1642,7 @@
   {
     "timestamp": "13-11-25 12:10:42",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -1778,7 +1778,7 @@
   {
     "timestamp": "13-11-25 14:09:29",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -1914,7 +1914,7 @@
   {
     "timestamp": "13-11-25 16:09:24",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -2042,7 +2042,7 @@
   {
     "timestamp": "13-11-25 18:13:51",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -2162,7 +2162,7 @@
   {
     "timestamp": "13-11-25 20:09:11",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -2298,7 +2298,7 @@
   {
     "timestamp": "13-11-25 22:08:48",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -2434,7 +2434,7 @@
   {
     "timestamp": "14-11-25 00:17:04",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -2570,7 +2570,7 @@
   {
     "timestamp": "14-11-25 02:39:17",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -2706,7 +2706,7 @@
   {
     "timestamp": "14-11-25 04:11:31",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -2842,7 +2842,7 @@
   {
     "timestamp": "14-11-25 06:09:42",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "failed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": "AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14\u201d H x 18\u201d W x 8\u201d D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.\n  \n  Criteria not met: trustworthiness threshold\nassert 0.806321477855272 < 0.77"
@@ -2978,7 +2978,7 @@
   {
     "timestamp": "14-11-25 08:09:58",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -3114,7 +3114,7 @@
   {
     "timestamp": "14-11-25 10:10:46",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -3250,7 +3250,7 @@
   {
     "timestamp": "14-11-25 12:11:50",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -3386,7 +3386,7 @@
   {
     "timestamp": "14-11-25 14:10:38",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -3522,7 +3522,7 @@
   {
     "timestamp": "14-11-25 16:11:22",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -3658,7 +3658,7 @@
   {
     "timestamp": "14-11-25 18:10:56",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -3794,7 +3794,7 @@
   {
     "timestamp": "14-11-25 20:10:34",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -3970,7 +3970,7 @@
   {
     "timestamp": "14-11-25 22:10:34",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -4146,7 +4146,7 @@
   {
     "timestamp": "15-11-25 00:16:23",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -4322,7 +4322,7 @@
   {
     "timestamp": "15-11-25 01:42:21",
     "marker": "main",
-    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
+    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
     "outcome": "passed",
     "stdout": "QUESTION: If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?\n",
     "error_msg": ""
@@ -4466,7 +4466,7 @@
   {
     "timestamp": "15-11-25 01:40:58",
     "marker": "additional",
-    "test_name": "tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3",
+    "test_name": "tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1",
     "outcome": "passed",
     "stdout": "QUESTION: if i leave my miles family pool can i join a new one tomorrow or am i blocked for 30 days?\n",
     "error_msg": ""
