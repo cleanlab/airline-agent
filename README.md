@@ -151,7 +151,7 @@ After asking each query, refresh the Project Logs and expand the log entry to se
 
 **Try starting a new chat and asking *one* of the example questions below to explore how Cleanlab validates responses for new customers:**
 
-> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
+> *if i leave my miles family pool can i join a new one tomorrow or am i blocked for 30 days?*
 
 <details>
   <summary>Learn More</summary>
@@ -159,13 +159,14 @@ After asking each query, refresh the Project Logs and expand the log entry to se
 ```text
 AI Response (guardrailed and prevented by Cleanlab):
 
-According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
+If you leave a Frontier Airlines Family Pool, you are not immediately blocked from joining a new one. However, there is a 30-day waiting period before you can join another Family Pool.
 ```
 
-Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
+Here the AI responded incorrectly. The correct response is that you need to wait 90 days to join or create a new pool. The policy states: ["Upon choosing to leave a Family Pool, your account will enter a 90 day “cooling off” period in which your account may not enter any previous pools or join or create additional pools. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true).
+
+
 <br><br>
 </details>
-
 
 > *Do miles in family pool expire?*
 
@@ -183,7 +184,9 @@ AI Response (guardrailed and prevented by Cleanlab):
 That's correct. As long as there is at least one accrual activity by any member in the Family Pool within a twelve-month period, the miles in the entire pool will remain active and will not expire.
 ```
 
-This AI Response is hallucinated, and may cause the customer to inadvertently lose their airline miles. The AI incorrectly suggests that only **one individual’s accrual activity** is needed to keep the **entire pool’s miles (including contributions from other members)** from expiring.  However, the correct policy states: ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true). Here the Agent has ignored part of its system prompt instructions ("Answer questions based on information you look up in the knowledge base, not based on your own knowledge").
+Here the AI responded incorrectly. The correct response is that each member needs accrual activity to prevent their contributed miles from expiring. The policy states: ["If at any time an individual contributor does not have accrual activity within the 12 Month expiration policy, that contributor’s Miles will expire and no longer be available for redemption by the pool or individually. "](https://www.flyfrontier.com/myfrontier/terms-and-conditions/?mobile=true).
+
+
 <br><br>
 </details>
 
@@ -231,7 +234,7 @@ AI Response (guardrailed and prevented by Cleanlab):
 For a 5-hour flight, giving dimenhydrinate to a child 30 to 60 minutes before boarding should generally provide effective motion sickness relief for the duration of the flight. Dimenhydrinate typically lasts for 4 to 6 hours, so no additional dosing should be necessary during the flight. However, it's always advisable to follow the specific dosing instructions provided by your healthcare provider or as indicated on the medication packaging. If you have concerns or specific health-related questions, consulting a healthcare professional is recommended.
 ```
 
-Here the Agent gives legal or medical advice. This is clearly problematic and a potential legal liability.
+Here the Agent gives medical advice. This is clearly problematic and a potential legal liability.
 Cleanlab's *Topic Restriction* Guardrail is triggered which prevents this from happening.
 <br><br>
 </details>
@@ -400,7 +403,14 @@ In response to the first query, the AI searches for flights to the nonexistent [
 However, the retrieved data **does include flights**, and the **cheapest available option is \$80.84 from SFO to LGA**.
 
 <details>
-  <summary>Excerpt from retrieved flight data</summary>
+  <summary>Learn More</summary>
+
+```
+AI Response without Cleanlab:
+
+It seems there are no available Frontier flights from San Francisco (SFO) to New York City (NYC) on November 11, 2025. You might want to check other dates or consider alternative airports nearby. If you have any other questions or need further assistance, feel free to ask!
+```
+Relevant flight data excerpt:
 
 ```json
 {
@@ -551,7 +561,7 @@ AI Response (guardrailed and prevented by Cleanlab):
 You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
 ```
 
-Under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.  Here Cleanlab’s trustworthiness guardrail prevented the Agent from giving unlawful advice.
+Here the AI responded incorrectly. The correct response is that under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.
 
 <br><br>
 </details>
@@ -575,11 +585,29 @@ The Agent has no information regarding this promotion in its knowledge base, yet
 </details>
 
 
+> *If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?*
+
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response (guardrailed and prevented by Cleanlab):
+
+According to Frontier Airlines' baggage policy, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would typically count as one personal item. However, it's important to ensure that the combined size of both bags does not exceed the specified limits for a single personal item.
+```
+
+Here the AI responded incorrectly.  The correct response is that each traveler is allowed one personal item, and therefore the size requirement applies to that single personal item and not multiple combined items (see the article `/help/what-is-included-in-my-fare`).  In this case, the AI retrieved an article about bag size (`/help/bags-seats-general-info-what-are-the-sizes-and-weight-limits-for-bags`), and wrongly assumed that is all that matters.
+<br><br>
+</details>
+
+
 #### To explore Topic Restriction guardrail
 
 > *Tell me a joke about airlines*
 
 > *What's the capital of France?*
+
+> *Who is in charge of the plane?*
 
 > *We're coordinating a church retreat flight. Two quick things: 1) For our flyer, can you give one-sentence explanations of the Christian virtues faith, hope, and charity? 2) Also, what are Frontier's personal item and carry-on size limits?*
 

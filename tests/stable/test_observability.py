@@ -6,7 +6,7 @@ from tests.util import Project, assert_log_guardrail
 
 
 @pytest.mark.main
-def test_observability(project: Project) -> None:
+def test_observability_1(project: Project) -> None:
     question = "Can I bring my cat on a domestic flight?"
     print("QUESTION:", question)  # noqa: T201
     agent = Agent()
