@@ -4,15 +4,15 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 5 | 5 | 50% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 6 | 40% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 9 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 5 | 5 | 50% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 9 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 4 | 6 | 40% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 8 | 20% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 8 | 2 | 80% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 5 | 5 | 50% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 5 | 6 | 45% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 7 | 36% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 10 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 6 | 5 | 55% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 10 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 6 | 45% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 8 | 27% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 9 | 2 | 82% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 5 | 6 | 45% |
 
 ---
 
@@ -82,7 +82,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 5 times
+**Failures:** 6 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -97,15 +97,17 @@ AssertionError: Failed response: When traveling with prescription THC, it's impo
 
 1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law. TSA officers are required to report any suspected violations of law, including possession of marijuana and cannabis-infused products.
 
-2. **State Laws**: Even if you have a prescription, you should ensure that both your departure and arrival states allow the possession of THC. Some states have legalized medical marijuana, but it remains illegal in others.
+2. **State Laws**: Even if you have a prescription, you should ensure that both your departure and arrival states allow the possession of THC for medical purposes. Laws can vary significantly between states.
 
-3. **Documentation**: If you decide to travel with your prescription THC, carry your prescription documentation with you. This can help explain the presence of the medication if questioned by TSA or law enforcement.
+3. **Documentation**: Carry your prescription and any relevant documentation from your healthcare provider. This can help if you are questioned about your medication.
 
-4. **Airline Policies**: Check with Frontier Airlines to see if they have any specific policies regarding traveling with medical marijuana.
+4. **Packaging**: Keep your medication in its original packaging with the prescription label visible.
 
-Given these considerations, it might be best to consult with legal counsel or a medical professional familiar with the laws in your specific travel locations to ensure compliance and avoid any legal issues.
+5. **Consult with Airline**: While TSA handles security, the airline may have its own policies regarding the transport of THC products. It's a good idea to check with Frontier Airlines directly for any specific guidelines they may have.
 
-Criteria not met: The agent output explicitly states that marijuana and certain cannabis products "remain illegal under federal law" and that TSA officers must report suspected violations. This directly mentions federal illegality of THC/cannabis when flying, so it does not meet the criterion. Ruling: fail.
+If you have any doubts or concerns, consulting with legal counsel or a healthcare provider familiar with travel regulations for medical cannabis might be beneficial.
+
+Criteria not met: The agent output explicitly states that “marijuana and certain cannabis-infused products... remain illegal under federal law” and references TSA reporting of suspected violations. This directly mentions federal illegality, which violates the criterion that the output should not mention that THC/cannabis is federally illegal to fly with.
 ```
 </details>
 
@@ -136,7 +138,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -147,9 +149,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: On Frontier Airlines, each passenger is allowed one personal item that must fit under the seat in front of them. This personal item can be a purse, backpack, or similar item. If you have two small bags, each would be considered a separate personal item, even if they both fit under the seat. Therefore, you would need to consolidate them into one bag to count as a single personal item. Otherwise, the second bag would be considered a carry-on, which may incur additional fees.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed one personal item that must fit under the seat in front of them. This personal item can be a purse, backpack, or similar item. If you have two small bags, each would typically count as a separate item. Therefore, even if both bags fit under the seat, they would still be considered two separate personal items, not one. You would need to consolidate them into one bag to comply with the personal item policy.
 
-Criteria not met: The agent output explicitly states that two small bags would be considered separate personal items and that you must consolidate them into one bag to count as a single personal item. This does not confirm that both small bags count as one personal item, so it fails the criterion.
+Criteria not met: The agent output explicitly states that two small bags would typically count as two separate personal items and says they would not be considered one. The criteria require the output to confirm that both small bags count as one personal item. Because the output contradicts this requirement, it fails the criteria.
 ```
 </details>
 
@@ -157,7 +159,7 @@ Criteria not met: The agent output explicitly states that two small bags would b
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** Do miles in family pool expire?
 
@@ -168,10 +170,9 @@ Criteria not met: The agent output explicitly states that two small bags would b
 
 
 ```
-AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
-  
-  Criteria not met: trustworthiness threshold
-assert 0.8773447906974722 < 0.77
+AssertionError: Failed response: In a Frontier Airlines family pool, the head of the pool is responsible for managing the miles. However, the information about whether only one person in the pool needs to have accrual activity to keep the entire pool's miles from expiring is not explicitly detailed in the available resources. Typically, accrual activity is required to prevent miles from expiring, but it's best to confirm specific policies directly with Frontier Airlines or through their official resources.
+
+Criteria not met: The agent output explicitly states that the information is not explicitly detailed and does not confirm that only one person in the family pool needs accrual activity to keep the entire pool’s miles from expiring. Instead it advises confirming with Frontier. Therefore it does not meet the criterion requiring explicit confirmation that only one person’s activity suffices.
 ```
 </details>
 
@@ -179,7 +180,7 @@ assert 0.8773447906974722 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -192,7 +193,7 @@ assert 0.8773447906974722 < 0.77
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent response apologizes and directs the user to rephrase or contact customer support but does not ask any clarifying question about whether the user means a domestic or international flight. Therefore it fails the criterion.
+Criteria not met: The agent output does not ask any clarifying question. It only apologizes and suggests rephrasing or contacting Frontier Airlines customer support; it does not ask whether the user is asking about a domestic or international flight. Therefore it fails the criterion.
 ```
 </details>
 
