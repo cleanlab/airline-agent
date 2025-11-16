@@ -4,11 +4,11 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 1 | 50% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 1 | 1 | 50% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 2 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 1 | 1 | 50% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 2 | 33% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 1 | 2 | 33% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 1 | 67% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 3 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 2 | 1 | 67% |
 
 ---
 
@@ -80,7 +80,7 @@ Criteria not met: The agent output explicitly states that two small bags would b
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -91,7 +91,9 @@ Criteria not met: The agent output explicitly states that two small bags would b
 
 
 ```
-httpx.ReadTimeout: The read operation timed out
+AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+
+Criteria not met: The agent output does not ask any clarifying question about whether the user means a domestic or international flight. It only offers an apology and suggests rephrasing or contacting Frontier Airlines support. Therefore it fails the criterion.
 ```
 </details>
 
@@ -99,7 +101,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
