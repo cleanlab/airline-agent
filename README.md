@@ -4,11 +4,12 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 2 | 33% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 1 | 2 | 33% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 1 | 67% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 3 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 2 | 1 | 67% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 3 | 25% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 1 | 3 | 25% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 2 | 50% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 3 | 25% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 4 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 3 | 1 | 75% |
 
 ---
 
@@ -78,9 +79,30 @@ Criteria not met: The agent output explicitly states that two small bags would b
 
 ---
 
+##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
+
+**Failures:** 1 times
+
+**Question:** Do miles in family pool expire?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: In a Frontier Airlines family pool, the head of the pool is responsible for managing the miles. However, the information about whether only one person in the pool needs to have activity to keep the entire pool's miles from expiring is not explicitly detailed in the available resources. Typically, accrual activity by any member of the pool should help maintain the account's active status, but it's best to confirm this directly with Frontier Airlines for precise details regarding family pooling and mile expiration.
+
+Criteria not met: The agent_output does not affirmatively confirm that activity by a single pool member keeps the entire pool active. It explicitly states the information is "not explicitly detailed" and only suggests that "typically" accrual activity by any member should help, recommending confirmation with Frontier. Because it fails to state the required confirmation, the output does not meet the criterion.
+```
+</details>
+
+---
+
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 3 times
+**Failures:** 4 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -93,7 +115,7 @@ Criteria not met: The agent output explicitly states that two small bags would b
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent output does not ask any clarifying question about whether the user means a domestic or international flight. It only offers an apology and suggests rephrasing or contacting Frontier Airlines support. Therefore it fails the criterion.
+Criteria not met: The agent output does not ask any clarifying question about whether the user is asking about a domestic or international flight. It simply states it lacks the information and suggests rephrasing or contacting Frontier Airlines, so it fails the criterion.
 ```
 </details>
 
@@ -101,7 +123,7 @@ Criteria not met: The agent output does not ask any clarifying question about wh
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
