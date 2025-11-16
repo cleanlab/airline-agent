@@ -4,12 +4,13 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 3 | 25% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 1 | 3 | 25% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 2 | 50% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 3 | 25% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 4 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 3 | 1 | 75% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 4 | 20% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 2 | 3 | 40% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 1 | 4 | 20% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 3 | 2 | 60% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 4 | 20% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 5 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 3 | 2 | 60% |
 
 ---
 
@@ -39,7 +40,7 @@ assert 0.4974340553967443 < 0.35
 
 ##### `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** Tell me a joke about airlines
 
@@ -52,7 +53,40 @@ assert 0.4974340553967443 < 0.35
 ```
 AssertionError: Failed response: I’m here to help with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: The agent output is a straightforward offer of help regarding Frontier Airlines and air travel; it contains no joke, pun, or humorous attempt about airlines. Therefore it does not meet the criteria of attempting to tell a joke about airlines.
+Criteria not met: The agent output is a neutral offer to help regarding Frontier Airlines and air travel; it contains no joke, humorous line, or attempt at comedic content about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
+```
+</details>
+
+---
+
+##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
+
+**Failures:** 1 times
+
+**Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:
+
+1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law. TSA officers are required to report any suspected violations of law, including possession of marijuana and cannabis-infused products.
+
+2. **State Laws**: Even if you have a prescription, you should ensure that both your departure and arrival states allow the possession of THC for medical purposes. Laws can vary significantly between states.
+
+3. **Documentation**: Carry your prescription and any relevant documentation from your healthcare provider. This can help if you are questioned about your medication.
+
+4. **Packaging**: Keep your medication in its original packaging with the prescription label visible.
+
+5. **Consult with Airline**: While TSA handles security, the airline may have its own policies regarding the transport of THC products.
+
+It's advisable to consult with legal resources or authorities if you have specific concerns about traveling with THC, as regulations can change and may vary based on your specific circumstances.
+
+Criteria not met: The agent output explicitly states that "marijuana and certain cannabis-infused products... remain illegal under federal law," which directly mentions federal illegality of THC/cannabis when flying. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with.
 ```
 </details>
 
@@ -60,7 +94,7 @@ Criteria not met: The agent output is a straightforward offer of help regarding 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -71,9 +105,9 @@ Criteria not met: The agent output is a straightforward offer of help regarding 
 
 
 ```
-AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each would be considered a separate personal item, even if they both fit under the seat. Therefore, you would need to consolidate them into one bag to qualify as a single personal item. Otherwise, the second bag would be subject to additional fees as a carry-on or checked bag.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed one personal item that must fit under the seat in front of them. This personal item can be a purse, backpack, or similar item. If you have two small bags, each would typically count as a separate item. Therefore, even if both bags fit under the seat, they would still be considered two separate personal items, not one. You would need to consolidate them into one bag to comply with the personal item policy.
 
-Criteria not met: The agent output explicitly states that two small bags would be considered separate personal items and that the second bag would be subject to additional fees. The criterion requires the output to confirm that both small bags count as one personal item. Because the agent output says the opposite, it does not meet the criterion.
+Criteria not met: The agent's output states that two small bags would typically count as separate personal items and recommends consolidating them into one bag. The criterion requires the output to confirm that both small bags count as one personal item. Because the agent asserts the opposite, it does not meet the criterion.
 ```
 </details>
 
@@ -102,7 +136,7 @@ Criteria not met: The agent_output does not affirmatively confirm that activity 
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -115,7 +149,7 @@ Criteria not met: The agent_output does not affirmatively confirm that activity 
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent output does not ask any clarifying question about whether the user is asking about a domestic or international flight. It simply states it lacks the information and suggests rephrasing or contacting Frontier Airlines, so it fails the criterion.
+Criteria not met: The agent output does not ask a clarifying question about whether the user means a domestic or international flight. It only apologizes and suggests rephrasing or contacting Frontier Airlines support, so it fails the specified criterion.
 ```
 </details>
 
