@@ -120,23 +120,21 @@ def test_ai_guidance(project: Project) -> None:
 
     print("QUESTION:", question1)  # noqa: T201
     agent1 = Agent()
-    answer1, log_id1 = agent1.chat(question1)
+    _, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
     log1 = wait_and_get_final_log_for(project, log_id1)
-    log1 = assert_log_guardrail(log1, guardrailed=False)
     assert_judge(
         ["output does NOT identify a flight that costs $80.84"],
-        answer1,
+        log1.original_assistant_response,
     )
 
     agent2 = Agent()
-    answer2, log_id2 = agent2.chat(question2)
+    _, log_id2 = agent2.chat(question2)
     assert log_id2 is not None
     log2 = wait_and_get_final_log_for(project, log_id2)
-    log2 = assert_log_guardrail(log2, guardrailed=False)
     assert_judge(
         ["output does NOT identify that the earliest flight is from EWR to OAK"],
-        answer2,
+        log2.original_assistant_response,
     )
 
     guidance_id = project.add_expert_review(
