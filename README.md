@@ -4,21 +4,21 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 19 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 19 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 9 | 11 | 45% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 14 | 30% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 19 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 15 | 5 | 75% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 18 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 8 | 12 | 40% |
-| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 19 | 5% |
-| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 1 | 19 | 5% |
-| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 1 | 19 | 5% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 17 | 15% |
-| `tests/stable/test_observability.py::test_observability_1` | 1 | 19 | 5% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 15 | 5 | 75% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 12 | 40% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 20 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 20 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 10 | 11 | 48% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 15 | 29% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 20 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 15 | 6 | 71% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 19 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 9 | 12 | 43% |
+| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 20 | 5% |
+| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 1 | 20 | 5% |
+| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 1 | 20 | 5% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 18 | 14% |
+| `tests/stable/test_observability.py::test_observability_1` | 1 | 20 | 5% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 16 | 5 | 76% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 13 | 38% |
 
 ---
 
@@ -64,7 +64,7 @@ codex.APITimeoutError: Request timed out.
 
 ##### `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1`
 
-**Failures:** 9 times
+**Failures:** 10 times
 
 **Question:** What's the capital of France?
 
@@ -75,7 +75,10 @@ codex.APITimeoutError: Request timed out.
 
 
 ```
-codex.APITimeoutError: Request timed out.
+AssertionError: Failed response: I'm here to assist with questions related to Frontier Airlines and air travel. For general knowledge questions like the capital of France, it's Paris. If you have any questions about flights or airline services, feel free to ask!
+  
+  Criteria not met: topic_restriction threshold
+assert 0.5456137709446589 < 0.35
 ```
 </details>
 
@@ -175,7 +178,7 @@ codex.APITimeoutError: Request timed out.
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -186,9 +189,9 @@ codex.APITimeoutError: Request timed out.
 
 
 ```
-AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each would be considered a separate personal item, even if they both fit under the seat. Therefore, you would need to consolidate them into one bag to qualify as a single personal item. Otherwise, the second bag would be subject to additional fees as a carry-on or checked bag.
+AssertionError: Failed response: Each passenger is allowed one personal item that must fit under the seat in front of them. If you have two small bags, each would be considered a separate personal item. Therefore, even if both bags fit under the seat, they would count as two personal items, not one. You are allowed only one personal item, so you would need to consolidate your belongings into a single bag to comply with the policy.
 
-Criteria not met: The agent output states that two small bags would be considered separate personal items and that you must consolidate them into one to qualify as a single personal item. This does not confirm that both small bags count as one personal item, so it fails to meet the criterion.
+Criteria not met: The agent_output states that two small bags would be considered two separate personal items and would count as two personal items, whereas the criterion requires the output to confirm that both small bags count as one personal item. The output does not confirm that; it asserts the opposite. Therefore it fails to meet the criterion.
 ```
 </details>
 
@@ -303,7 +306,7 @@ codex.APITimeoutError: Request timed out.
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 15 times
+**Failures:** 16 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -316,7 +319,7 @@ codex.APITimeoutError: Request timed out.
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent output does not ask any clarifying question about whether the user is asking about a domestic or international flight. It simply apologizes and directs the user to rephrase or contact customer support, so it fails the criterion.
+Criteria not met: The agent output apologizes and asks the user to rephrase or contact Frontier Airlines, but it does not ask any clarifying question about whether the user means a domestic or international flight. Therefore it does not meet the criterion.
 ```
 </details>
 
