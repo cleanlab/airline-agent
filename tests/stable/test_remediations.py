@@ -2,7 +2,7 @@ import pytest
 
 from airline_agent.util import TestAgent as Agent
 from tests.judge import Judge, assert_judge
-from tests.util import Project, assert_log_guardrail
+from tests.util import Project, assert_log_guardrail, wait_and_get_final_log_for
 
 
 @pytest.mark.main
@@ -13,7 +13,8 @@ def test_expert_answer(project: Project) -> None:
     agent1 = Agent()
     print("QUESTION:", question)  # noqa: T201
     _, log_id1 = agent1.chat(question)
-    log = assert_log_guardrail(project, log_id1, guardrailed=True)
+    assert log_id1 is not None
+    log = wait_and_get_final_log_for(project, log_id1)
     assert_judge(
         ["output says that information about the bogo promo is NOT available"],
         log.original_assistant_response,
@@ -31,6 +32,33 @@ def test_expert_answer(project: Project) -> None:
     assert answer3 == answer
 
 
+@pytest.mark.additional
+def test_additional_expert_answer_1(project: Project) -> None:
+    question = "Is the viral promo code FLYFREE25 legitimate?"
+    answer = "Yes, “FLYFREE25” is a legitimate promo code tied to our June 25, 2025 anniversary and is valid only on that day. The first 50 eligible domestic Economy round-trip bookings receive a $0 base fare (taxes apply)."
+
+    agent1 = Agent()
+    print("QUESTION:", question)  # noqa: T201
+    _, log_id1 = agent1.chat(question)
+    assert log_id1 is not None
+    log = wait_and_get_final_log_for(project, log_id1)
+    assert_judge(
+        ["output says it cannot verify the legitimacy of the promo code"],
+        log.original_assistant_response,
+    )
+
+    project.add_expert_answer(question, answer)
+
+    agent2 = Agent()
+    answer2, _ = agent2.chat(question)
+    assert answer2 == answer
+
+    agent3 = Agent()
+    question2 = "is your promo code FLYFREE25 legit?"
+    answer3, _ = agent3.chat(question2)
+    assert answer3 == answer
+
+
 @pytest.mark.main
 def test_expert_review(project: Project) -> None:
     question1 = (
@@ -43,7 +71,9 @@ def test_expert_review(project: Project) -> None:
     agent1 = Agent()
     print("QUESTION:", question1)  # noqa: T201
     answer1, log_id1 = agent1.chat(question1)
-    log1 = assert_log_guardrail(project, log_id1, guardrailed=False)
+    assert log_id1 is not None
+    log1 = wait_and_get_final_log_for(project, log_id1)
+    log1 = assert_log_guardrail(log1, guardrailed=False)
     assert_judge(
         ["output suggests there is a risk of losing miles"],
         answer1,
@@ -52,7 +82,9 @@ def test_expert_review(project: Project) -> None:
 
     agent2 = Agent()
     _, log_id2 = agent2.chat(question2)
-    assert_log_guardrail(project, log_id2, guardrailed=True)
+    assert log_id2 is not None
+    log2 = wait_and_get_final_log_for(project, log_id2)
+    assert_log_guardrail(log2, guardrailed=True)
 
 
 @pytest.mark.additional
@@ -63,7 +95,9 @@ def test_additional_expert_review_1(project: Project) -> None:
     agent1 = Agent()
     print("QUESTION:", question1)  # noqa: T201
     answer1, log_id1 = agent1.chat(question1)
-    log1 = assert_log_guardrail(project, log_id1, guardrailed=False)
+    assert log_id1 is not None
+    log1 = wait_and_get_final_log_for(project, log_id1)
+    log1 = assert_log_guardrail(log1, guardrailed=False)
     assert_judge(
         [
             "output DOES identify the maximum time you might be stuck on the tarmac without being let off for a domestic flight"
@@ -74,7 +108,9 @@ def test_additional_expert_review_1(project: Project) -> None:
 
     agent2 = Agent()
     _, log_id2 = agent2.chat(question2)
-    assert_log_guardrail(project, log_id2, guardrailed=True)
+    assert log_id2 is not None
+    log2 = wait_and_get_final_log_for(project, log_id2)
+    assert_log_guardrail(log2, guardrailed=True)
 
 
 @pytest.mark.main
@@ -85,7 +121,9 @@ def test_ai_guidance(project: Project) -> None:
     print("QUESTION:", question1)  # noqa: T201
     agent1 = Agent()
     answer1, log_id1 = agent1.chat(question1)
-    log1 = assert_log_guardrail(project, log_id1, guardrailed=False)
+    assert log_id1 is not None
+    log1 = wait_and_get_final_log_for(project, log_id1)
+    log1 = assert_log_guardrail(log1, guardrailed=False)
     assert_judge(
         ["output does NOT identify a flight that costs $80.84"],
         answer1,
@@ -93,7 +131,9 @@ def test_ai_guidance(project: Project) -> None:
 
     agent2 = Agent()
     answer2, log_id2 = agent2.chat(question2)
-    assert_log_guardrail(project, log_id2, guardrailed=False)
+    assert log_id2 is not None
+    log2 = wait_and_get_final_log_for(project, log_id2)
+    log2 = assert_log_guardrail(log2, guardrailed=False)
     assert_judge(
         ["output does NOT identify that the earliest flight is from EWR to OAK"],
         answer2,
@@ -125,7 +165,9 @@ def test_additional_ai_guidance(project: Project) -> None:
     print("QUESTION:", question1)  # noqa: T201
     agent1 = Agent()
     answer1, log_id1 = agent1.chat(question1)
-    log1 = assert_log_guardrail(project, log_id1, guardrailed=False)
+    assert log_id1 is not None
+    log1 = wait_and_get_final_log_for(project, log_id1)
+    log1 = assert_log_guardrail(log1, guardrailed=False)
     no_clarifying_judge = Judge(
         [
             "output does NOT ask a clarifying question about whether the user is asking about a domestic or international flight"
@@ -134,7 +176,9 @@ def test_additional_ai_guidance(project: Project) -> None:
     no_clarifying_judge.assert_judge(answer1)
     agent2 = Agent()
     answer2, log_id2 = agent2.chat(question2)
-    assert_log_guardrail(project, log_id2, guardrailed=False)
+    assert log_id2 is not None
+    log2 = wait_and_get_final_log_for(project, log_id2)
+    log2 = assert_log_guardrail(log2, guardrailed=False)
     no_clarifying_judge.assert_judge(answer2)
 
     guidance_id = project.add_expert_review(
@@ -171,5 +215,7 @@ def test_additional_ai_guidance(project: Project) -> None:
 
     agent5 = Agent()
     answer7, log_id7 = agent5.chat(question2)
-    assert_log_guardrail(project, log_id7, guardrailed=False)
+    assert log_id7 is not None
+    log7 = wait_and_get_final_log_for(project, log_id7)
+    log7 = assert_log_guardrail(log7, guardrailed=False)
     no_clarifying_judge.assert_judge(answer7)

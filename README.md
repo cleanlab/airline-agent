@@ -522,6 +522,26 @@ You'll see that Cleanlab now guardrails the AI, permanently preventing the respo
 <br><br>
 </details>
 
+#### To explore Expert Answer
+
+> *Is the viral promo code FLYFREE25 legitimate?*
+
+<details>
+<summary>Learn More</summary>
+
+The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries about this promotion. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
+
+```text
+Yes, “FLYFREE25” is a legitimate promo code tied to our June 25, 2025 anniversary and is valid only on that day. The first 50 eligible domestic Economy round-trip bookings receive a $0 base fare (taxes apply).
+```
+
+After submitting your Remediation, imagine you are a different user **by creating a new chat thread** and asking a similar question:
+
+> *is your promo code FLYFREE25 legit?*
+
+You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
+</details>
+
 #### To explore AI Guidance
 
 > *can i bring a dog with me on a flight?*
