@@ -25,7 +25,7 @@ def test_observability_2(project: Project) -> None:
     answer, log_id = agent.chat(question)
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
-    log = assert_log_guardrail(log, guardrailed=False)
+    assert_log_guardrail(log, guardrailed=False)
     assert_judge(["output explains the refund policy for canceled flights"], answer)
 
 
@@ -37,5 +37,5 @@ def test_observability_3(project: Project) -> None:
     answer, log_id = agent.chat(question)
     assert log_id is not None
     log = wait_and_get_final_log_for(project, log_id)
-    log = assert_log_guardrail(log, guardrailed=False)
+    assert_log_guardrail(log, guardrailed=False)
     assert_judge(["output provides the maximum carry-on size for domestic flights on Frontier Airlines"], answer)

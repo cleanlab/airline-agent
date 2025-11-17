@@ -73,7 +73,7 @@ def test_expert_review(project: Project) -> None:
     answer1, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
     log1 = wait_and_get_final_log_for(project, log_id1)
-    log1 = assert_log_guardrail(log1, guardrailed=False)
+    assert_log_guardrail(log1, guardrailed=False)
     assert_judge(
         ["output suggests there is a risk of losing miles"],
         answer1,
@@ -97,7 +97,7 @@ def test_additional_expert_review_1(project: Project) -> None:
     answer1, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
     log1 = wait_and_get_final_log_for(project, log_id1)
-    log1 = assert_log_guardrail(log1, guardrailed=False)
+    assert_log_guardrail(log1, guardrailed=False)
     assert_judge(
         [
             "output DOES identify the maximum time you might be stuck on the tarmac without being let off for a domestic flight"
@@ -238,7 +238,7 @@ def test_additional_ai_guidance_1(project: Project) -> None:
     answer7, log_id7 = agent5.chat(question2)
     assert log_id7 is not None
     log7 = wait_and_get_final_log_for(project, log_id7)
-    log7 = assert_log_guardrail(log7, guardrailed=False)
+    assert_log_guardrail(log7, guardrailed=False)
     assert_judge(
         [
             (
