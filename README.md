@@ -433,6 +433,7 @@ Relevant flight data excerpt:
   ]
 }
 ```
+<br><br>
 </details>
 
 In response to the second query, the AI assumes that NYC means JFK airport and reports back on the earliest flight out of JFK, when in fact there is an earlier flight out of EWR departing at **06:45**.
@@ -460,6 +461,7 @@ Relevant flight data excerpt:
     "carrier": "F9",
     "fares": [
 ```
+<br><br>
 </details>
 
 This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
@@ -540,6 +542,7 @@ After submitting your Remediation, imagine you are a different user **by creatin
 > *is your promo code FLYFREE25 legit?*
 
 You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
+<br><br>
 </details>
 
 #### To explore AI Guidance
