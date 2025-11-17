@@ -4,15 +4,15 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 8 | 9 | 47% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 11 | 35% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 16 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 12 | 5 | 71% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 16 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 7 | 10 | 41% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 14 | 18% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 14 | 3 | 82% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 7 | 10 | 41% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 8 | 10 | 44% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 12 | 33% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 17 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 13 | 5 | 72% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 17 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 8 | 10 | 44% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 15 | 17% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 14 | 4 | 78% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 7 | 11 | 39% |
 
 ---
 
@@ -82,7 +82,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 12 times
+**Failures:** 13 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -93,21 +93,21 @@ httpx.ReadTimeout: The read operation timed out
 
 
 ```
-AssertionError: Failed response: Traveling with prescription THC can be complex due to varying laws and regulations. Here are some general guidelines:
+AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:
 
-1. **Prescription and Documentation**: Ensure you have a valid prescription and any necessary documentation from your healthcare provider. This documentation should clearly state that the THC is for medical use.
+1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law. TSA officers are required to report any suspected violations of law, including possession of marijuana and cannabis-infused products.
 
-2. **TSA Regulations**: The Transportation Security Administration (TSA) allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oils, remain illegal under federal law, except for products that contain no more than 0.3% THC on a dry weight basis or are approved by the FDA.
+2. **State Laws**: Even if you have a prescription, you should ensure that both your departure and arrival states allow the possession of THC for medical purposes. Laws can vary significantly between states.
 
-3. **State Laws**: Check the laws of the state you are departing from and your destination. Some states have legalized medical and recreational marijuana, while others have not.
+3. **Documentation**: Carry your prescription and any relevant documentation from your healthcare provider. This can help if you are questioned about your medication.
 
-4. **Airline Policies**: Verify with Frontier Airlines if they have specific policies regarding traveling with medical marijuana.
+4. **Packaging**: Keep your medication in its original packaging with the prescription label visible.
 
-5. **Security Screening**: Be prepared for additional screening. Keep your medication in its original packaging and have your prescription and documentation readily available.
+5. **Consult with Authorities**: If you have specific concerns, it may be helpful to contact the airport or airline directly for guidance.
 
-It's important to ensure compliance with all applicable laws and regulations to avoid any issues during your travel.
+It's crucial to be aware of the legal implications and to plan accordingly to avoid any issues during your travel.
 
-Criteria not met: The agent output explicitly states that “marijuana and certain cannabis-infused products... remain illegal under federal law,” which directly mentions federal illegality of THC/cannabis in the context of travel. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with.
+Criteria not met: The agent output explicitly states that “marijuana and certain cannabis-infused products... remain illegal under federal law” and that TSA officers report suspected violations. This directly mentions federal illegality of THC/cannabis when flying, which violates the criterion. Therefore the output fails.
 ```
 </details>
 
@@ -138,7 +138,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -149,9 +149,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: Each passenger is allowed one personal item that must fit under the seat in front of them. If you have two small bags, each would be considered a separate personal item. Therefore, even if both bags fit under the seat, they would count as two personal items, not one. You are allowed only one personal item, so you would need to consolidate your belongings into a single bag to comply with the policy.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each would be considered a separate personal item, even if they both fit under the seat. Therefore, you would need to consolidate them into one bag to qualify as a single personal item. Otherwise, the second bag would be subject to additional fees as a carry-on or checked bag.
 
-Criteria not met: The agent output explicitly states that two small bags would be considered two personal items and must be consolidated into one; it does not confirm that both bags count as one personal item. Therefore it does not meet the criterion.
+Criteria not met: The agent output states that two small bags would be considered separate personal items and that you must consolidate them into one to qualify as a single personal item. This does not confirm that both small bags count as one personal item, so it fails to meet the criterion.
 ```
 </details>
 
