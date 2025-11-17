@@ -4,21 +4,21 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 21 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 21 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 11 | 11 | 50% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 16 | 27% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 21 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 16 | 6 | 73% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 20 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 9 | 13 | 41% |
-| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 21 | 5% |
-| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 1 | 21 | 5% |
-| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 1 | 21 | 5% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 19 | 14% |
-| `tests/stable/test_observability.py::test_observability_1` | 1 | 21 | 5% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 17 | 5 | 77% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 9 | 13 | 41% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 22 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 22 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 11 | 12 | 48% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 17 | 26% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 22 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 16 | 7 | 70% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 21 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 10 | 13 | 43% |
+| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 22 | 4% |
+| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 1 | 22 | 4% |
+| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 1 | 22 | 4% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 19 | 17% |
+| `tests/stable/test_observability.py::test_observability_1` | 1 | 22 | 4% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 18 | 5 | 78% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 9 | 14 | 39% |
 
 ---
 
@@ -178,7 +178,7 @@ codex.APITimeoutError: Request timed out.
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 9 times
+**Failures:** 10 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -189,9 +189,9 @@ codex.APITimeoutError: Request timed out.
 
 
 ```
-AssertionError: Failed response: Each passenger is allowed one personal item that must fit under the seat in front of them. If you have two small bags, each would be considered a separate personal item. Therefore, even if both bags fit under the seat, they would count as two personal items, not one. You are allowed only one personal item, so you would need to consolidate your belongings into a single bag to comply with the policy.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each would be considered a separate personal item, even if they both fit under the seat. Therefore, you would need to consolidate them into one bag to qualify as a single personal item. Otherwise, the second bag would be subject to additional fees as a carry-on or checked bag.
 
-Criteria not met: The agent_output states that two small bags would be considered two separate personal items and would count as two personal items, whereas the criterion requires the output to confirm that both small bags count as one personal item. The output does not confirm that; it asserts the opposite. Therefore it fails to meet the criterion.
+Criteria not met: The agent output states that two small bags would be considered separate personal items and that you must consolidate them to qualify as a single personal item. It does not confirm that both small bags count as one personal item, so it does not meet the criterion.
 ```
 </details>
 
@@ -266,7 +266,7 @@ TimeoutError: timeout waiting for predicate to be true
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 3 times
+**Failures:** 4 times
 
 **Question:** Do miles in family pool expire?
 
@@ -277,9 +277,10 @@ TimeoutError: timeout waiting for predicate to be true
 
 
 ```
-AssertionError: Failed response: In a Frontier Airlines family pool, the head of the pool is responsible for managing the miles. However, the information about whether only one person in the pool needs to have accrual activity to keep the entire pool's miles from expiring is not explicitly detailed in the available resources. Typically, accrual activity is required to prevent miles from expiring, but it's best to confirm specific policies directly with Frontier Airlines or through their official resources.
-
-Criteria not met: The agent output explicitly states that the information is not explicitly detailed and does not confirm that only one person in the family pool needs accrual activity to keep the entire pool’s miles from expiring. Instead it advises confirming with Frontier. Therefore it does not meet the criterion requiring explicit confirmation that only one person’s activity suffices.
+AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
+  
+  Criteria not met: trustworthiness threshold
+assert 0.8317347297004729 < 0.77
 ```
 </details>
 
@@ -306,7 +307,7 @@ codex.APITimeoutError: Request timed out.
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 17 times
+**Failures:** 18 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -319,7 +320,7 @@ codex.APITimeoutError: Request timed out.
 ```
 AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: The agent output does not ask any clarifying question about whether the user is asking about a domestic or international flight. It only apologizes and suggests rephrasing or contacting Frontier Airlines customer support, so it does not meet the specified criteria.
+Criteria not met: The agent output does not contain any clarifying question about whether the user is asking about a domestic or international flight. It only apologizes and suggests rephrasing or contacting Frontier Airlines support, so it fails to meet the specified criteria.
 ```
 </details>
 
