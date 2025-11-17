@@ -4,21 +4,21 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 9 | 10 | 47% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 13 | 32% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 14 | 5 | 74% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 17 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 8 | 11 | 42% |
-| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 16 | 16% |
-| `tests/stable/test_observability.py::test_observability_1` | 1 | 18 | 5% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 15 | 4 | 79% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 7 | 12 | 37% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 9 | 11 | 45% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 14 | 30% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 15 | 5 | 75% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 18 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 8 | 12 | 40% |
+| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 17 | 15% |
+| `tests/stable/test_observability.py::test_observability_1` | 1 | 19 | 5% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 15 | 5 | 75% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 12 | 40% |
 
 ---
 
@@ -123,7 +123,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 14 times
+**Failures:** 15 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -134,7 +134,21 @@ httpx.ReadTimeout: The read operation timed out
 
 
 ```
-codex.APITimeoutError: Request timed out.
+AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:
+
+1. **Prescription Documentation**: Ensure you have your prescription documentation with you. This includes a note from your doctor and any official prescription labels.
+
+2. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, they recommend that you keep medications in your carry-on for easy access and to prevent loss.
+
+3. **State Laws**: Since THC is not federally legal in the United States, you should be aware of the laws in the states you are traveling to and from. Some states have specific regulations regarding the transportation of THC, even if it is prescribed.
+
+4. **Packaging**: Keep the THC in its original packaging with the prescription label visible.
+
+5. **Security Screening**: Be prepared to declare your medication at the security checkpoint and provide documentation if requested.
+
+It's always a good idea to check the latest TSA guidelines and consult with your doctor or legal advisor if you have specific concerns about traveling with prescription THC.
+
+Criteria not met: The agent output explicitly states: 'Since THC is not federally legal in the United States,' which directly mentions that THC/cannabis is federally illegal to fly with. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with. Therefore the output fails the criterion.
 ```
 </details>
 
@@ -310,7 +324,7 @@ Criteria not met: The agent output does not ask any clarifying question about wh
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
