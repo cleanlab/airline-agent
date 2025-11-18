@@ -143,8 +143,7 @@ def test_ai_guidance(project: Project) -> None:
         reason="when the user uses NYC as an airport code, consider the three major New York area airports",
     )
     assert guidance_id is not None
-    project.get_draft_guidance(guidance_id)  # wait for guidance to be generated
-    project.publish_guidance(guidance_id)
+    project.get_guidance(guidance_id)  # wait for guidance to be generated
 
     agent3 = Agent()
     answer3, _ = agent3.chat(question1)
@@ -190,8 +189,7 @@ def test_additional_ai_guidance_1(project: Project) -> None:
         reason="""Answer depends if flight is international and if it's a service animal. Should have clarified with user, and then used info from all relevant articles: always use the "do you allow pets on plane" article, then if international/service animal, also the "service animals" article""",
     )
     assert guidance_id is not None
-    project.get_draft_guidance(guidance_id)  # wait for guidance to be generated
-    project.publish_guidance(guidance_id)
+    project.get_guidance(guidance_id)  # wait for guidance to be generated
 
     agent3 = Agent()
     answer3, log_id3 = agent3.chat(question1)
