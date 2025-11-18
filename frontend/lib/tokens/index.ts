@@ -1,6 +1,0 @@
-export { borderRadius } from './borderRadius'
-export { colors } from './colors'
-export { shadows } from './shadows'
-export { spacing, spacingPx } from './spacing'
-export { twPresetCleanlab } from './twPresetCleanlab'
-export * as typography from './typography'

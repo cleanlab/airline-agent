@@ -9,21 +9,18 @@ import {
   useScrollToBottom
 } from '@/lib/hooks/use-scroll-to-bottom'
 import { useMessagesStore } from '@/providers/messages-store-provider'
-import { cn } from '@/lib/utils/tailwindUtils'
+import { cn } from '@cleanlab/design-system/utils'
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { CurrentThreadStatus } from '../lib/hooks/useStreamMessage'
 import { getThreadBufferSnapshot } from '../lib/hooks/useStreamMessage'
 import type { CurrentThread } from '../stores/messages-store'
 import { PromptForm } from './prompt-form'
-import { ChatInputPanel } from './design-system-components/ChatInputPanel'
+import { ChatInputPanel } from '@cleanlab/design-system/chat'
+import { Tooltip } from '@cleanlab/design-system/components'
 import { useAssistantHistory } from '@/providers/rag-app-store-provider'
 import { useAppSettings } from '@/lib/hooks/use-app-settings'
-import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '@/lib/consts'
 import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group'
-import { Tooltip } from './design-system-components/Tooltip'
-
-export type DemoMode = 'cleanlab-enabled' | 'cleanlab-disabled'
 export interface ChatProps {
   threadId?: string
   className?: string
@@ -49,7 +46,7 @@ export function Chat({
   const setCurrentThread = useMessagesStore(state => state.setCurrentThread)
   const currentThread = useMessagesStore(state => state.currentThread)
   const [appSettings] = useAppSettings()
-  const assistantId = appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG
+  const assistantId = appSettings.assistantId ?? ''
   const history = useAssistantHistory(assistantId || undefined)
   const [cleanlabEnabled, setCleanlabEnabled] = useState<boolean>(() => {
     try {

@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react'
 import { useMessagesStore } from '@/providers/messages-store-provider'
 import { useStreamMessage } from '../lib/hooks/useStreamMessage'
-import { ButtonRetryMessage } from './design-system-components/ButtonRetryMessage'
+import { ButtonRetryMessage } from '@cleanlab/design-system/chat'
 
 export function RetryButton({
   cleanlabEnabled = true

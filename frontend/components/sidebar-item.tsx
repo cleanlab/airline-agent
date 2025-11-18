@@ -8,8 +8,8 @@ import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { truncateString } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import type { HistoryThread } from '../stores/history-thread-store'
-import { Tooltip } from './design-system-components/Tooltip'
-import { cn } from '@/lib/utils/tailwindUtils'
+import { Tooltip } from '@cleanlab/design-system/components'
+import { cn } from '@cleanlab/design-system/utils'
 
 interface SidebarItemProps {
   index: number

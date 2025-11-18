@@ -1,18 +1,19 @@
 'use client'
 
-import { Tooltip } from './design-system-components/Tooltip'
+import {
+  Button,
+  ModalAlertBasic,
+  Tooltip
+} from '@cleanlab/design-system/components'
 import Link from 'next/link'
 import { useState, type ReactNode } from 'react'
 import * as React from 'react'
 import { NewChatButton } from './new-chat-button'
-import { cn } from '@/lib/utils/tailwindUtils'
+import { cn } from '@cleanlab/design-system/utils'
 import { SidebarList } from './sidebar-list'
-import { Button } from './design-system-components/Button'
-import { ModalAlertBasic } from './design-system-components/ModalAlertBasic'
 import { useClearHistory } from '@/lib/hooks/useClearHistory'
 import { useAssistantHistory } from '@/providers/rag-app-store-provider'
 import { useAppSettings } from '@/lib/hooks/use-app-settings'
-import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '@/lib/consts'
 
 interface ChatHistoryProps {
   mobile?: boolean
@@ -53,7 +54,8 @@ export function UrlsList({ urls }: { urls?: string[] }) {
 export function ChatHistory({ mobile, logoLockup }: ChatHistoryProps) {
   const [showClearHistoryModal, setShowClearHistoryModal] = useState(false)
   const [appSettings] = useAppSettings()
-  const appId = appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG
+  const appId = appSettings.assistantId ?? ''
+  console.log('appId', appId)
   const history = useAssistantHistory(appId || undefined)
 
   const clearHistory = useClearHistory()

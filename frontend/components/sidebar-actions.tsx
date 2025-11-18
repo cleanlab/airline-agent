@@ -1,8 +1,7 @@
 'use client'
 
-import { IconTrash } from './icons'
-import { Tooltip } from './design-system-components/Tooltip'
-import { IconFrameButton } from './design-system-components/IconFrameButton'
+import { IconTrash } from '@cleanlab/design-system/icons'
+import { IconFrameButton, Tooltip } from '@cleanlab/design-system/components'
 import { HistoryThread } from '@/stores/history-thread-store'
 import { useRagAppStore } from '@/providers/rag-app-store-provider'
 

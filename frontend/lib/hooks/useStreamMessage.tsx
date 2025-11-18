@@ -7,11 +7,10 @@ import {
 } from '@/providers/messages-store-provider'
 import { useRagAppStore } from '@/providers/rag-app-store-provider'
 import type { StoreMessage, ThreadError } from '@/stores/messages-store'
-import type { UserMessage } from '@/client/types.gen'
+import type { MessageMetadata, UserMessage } from '@/client/types.gen'
 import ENV_VARS from '@/lib/envVars'
 import { useCallback, useMemo, useRef } from 'react'
 import { useAppSettings } from './use-app-settings'
-import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '../consts'
 import type { SetOptional } from 'type-fest'
 
 export const CurrentThreadStatus = {
@@ -67,15 +66,7 @@ const getErrorFromCurrentStatus = (status: CurrentThreadStatus | undefined) => {
   return error
 }
 
-const createInitialMessages = ({
-  content,
-  threadId
-}: {
-  content: string
-  threadId: string
-}) => {
-  const dateString = new Date().toISOString()
-
+const createInitialMessages = ({ content }: { content: string }) => {
   return [
     {
       localId: nanoid(),
@@ -142,8 +133,8 @@ const bufferAppendTool = ({
   metadata
 }: {
   threadId: string
-  content: any
-  metadata?: any
+  content: string
+  metadata?: MessageMetadata
 }) => {
   const buffer = getOrInitBuffer(threadId)
   buffer.push({
@@ -161,7 +152,7 @@ const bufferAppendAssistantChunk = ({
 }: {
   threadId: string
   content: string
-  metadata?: any
+  metadata?: MessageMetadata
 }) => {
   const buffer = getOrInitBuffer(threadId)
   const last = buffer[buffer.length - 1]
@@ -231,8 +222,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         const buffered = threadBuffers.get(threadId) || []
         if (!buffered.length) return
         updateHistoryThread({
-          assistantId:
-            appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG,
+          assistantId: appSettings.assistantId ?? '',
           threadId,
           thread: {
             messages: buffered.map(msg => ({
@@ -468,9 +458,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                         if (firstUserMessage) {
                           addHistoryThread({
                             title: firstUserMessage.content || 'New thread',
-                            assistantId:
-                              appSettings.assistantId ??
-                              AGILITY_DEFAULT_ASSISTANT_SLUG,
+                            assistantId: appSettings.assistantId ?? '',
                             thread: { id: threadId } as any,
                             cleanlabEnabled: cleanlabRef.current,
                             snapshot: lastAssistantMessage
@@ -568,7 +556,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
       const localThreadId = nanoid()
       addHistoryThread({
         title: messageContent || 'New thread',
-        assistantId: appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG,
+        assistantId: appSettings.assistantId ?? '',
         thread: { id: localThreadId } as any,
         cleanlabEnabled: cleanlabRef.current,
         snapshot: {

@@ -5,7 +5,7 @@ import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import type { Metadata } from 'next'
 import { ScrollRestoration } from '../components/next-scroll-restoration'
-import { cn } from '@/lib/utils/tailwindUtils'
+import { cn } from '@cleanlab/design-system/utils'
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = 'Support Agent'

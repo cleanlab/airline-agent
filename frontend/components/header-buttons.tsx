@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils/tailwindUtils'
+import { cn } from '@cleanlab/design-system/utils'
 import { ThemeToggle } from './theme-toggle'
 import { NewChatButton } from './new-chat-button'
 import { getChatPath } from '@/lib/consts'

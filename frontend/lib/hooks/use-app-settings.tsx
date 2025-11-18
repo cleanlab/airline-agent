@@ -1,6 +1,5 @@
 'use client'
 
-import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '../consts'
 import { useLocalStorage } from './use-local-storage'
 
 type AppSettings = {
@@ -13,7 +12,7 @@ export const useAppSettings = () => {
   const [appSettings, setAppSettings] = useLocalStorage<AppSettings>(
     'appSettings',
     {
-      assistantId: AGILITY_DEFAULT_ASSISTANT_SLUG ?? null,
+      assistantId: '',
       orgName: null,
       iframeSrc: null
     }

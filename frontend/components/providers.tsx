@@ -7,8 +7,10 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes'
 
 import type { ComponentProps } from 'react'
 import { SidebarProvider } from '@/lib/hooks/use-sidebar'
-import { ThemeProvider } from './design-system-components/ThemeProvider'
-import { TooltipProvider } from './design-system-components/Tooltip'
+import {
+  ThemeProvider,
+  TooltipProvider
+} from '@cleanlab/design-system/components'
 type ThemeProviderProps = ComponentProps<typeof NextThemesProvider>
 
 export function Providers({ children, ...props }: ThemeProviderProps) {

@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { useEffect } from 'react'
 import { useMessageIsPending } from '@/providers/messages-store-provider'
-import { useStreamMessage } from '../lib/hooks/useStreamMessage'
-import { InputMessage } from './design-system-components/InputMessage'
+import { useStreamMessage } from '@/lib/hooks/useStreamMessage'
+import { InputMessage } from '@cleanlab/design-system/chat'
 
 export function PromptForm({
   input,

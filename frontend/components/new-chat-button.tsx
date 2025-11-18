@@ -2,13 +2,12 @@
 
 import type { ButtonHTMLAttributes, ComponentProps } from 'react'
 import type Link from 'next/link'
-import { cn } from '@/lib/utils/tailwindUtils'
+import { cn } from '@cleanlab/design-system/utils'
 import { useMessagesStore } from '@/providers/messages-store-provider'
 import { Slot } from '@radix-ui/react-slot'
 import { analytics } from '@/services/analytics'
-import { AsChildProps } from '@/lib/utils/AsChildProps'
-import { Tooltip } from './design-system-components/Tooltip'
-import { SlotChild } from './design-system-components/SlotChild'
+import { AsChildProps } from '@cleanlab/design-system/utils'
+import { SlotChild, Tooltip } from '@cleanlab/design-system/components'
 
 const IconEdit = () => {
   return (

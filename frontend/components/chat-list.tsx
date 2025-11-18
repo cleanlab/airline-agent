@@ -9,15 +9,16 @@ import type { RefObject } from 'react'
 import { useEffect, useRef } from 'react'
 import { useAutoScrollMessage } from '../lib/hooks/use-auto-scroll-message'
 import { RetryButton } from './message'
-import { MessageUser } from './design-system-components/MessageUser'
 import {
+  ChatCodeBlock,
   MessageAssistant,
-  MessageAssistantStatus
-} from './design-system-components/MessageAssistant'
-import { MessageError } from './design-system-components/MessageError'
-import { ChatCodeBlock } from './design-system-components/ChatCodeBlock'
+  MessageError,
+  MessageAssistantStatus,
+  MessageUser
+} from '@cleanlab/design-system/chat'
 import { Collapsible } from 'radix-ui'
-import { IconAirplane, IconChevronDown } from './icons'
+import { IconAirplane } from './icons'
+import { IconChevronDown } from '@cleanlab/design-system/icons'
 
 export interface ChatListProps {
   threadId?: string
