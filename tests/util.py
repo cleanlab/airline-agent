@@ -25,7 +25,7 @@ class Project:
         return list(self._sdk_client.projects.query_logs.list(self._project.id))
 
     def add_expert_answer(self, question: str, answer: str) -> None:
-        self._sdk_client.projects.remediations.create(self._project.id, question=question, answer=answer)
+        self._sdk_client.projects.remediations.create(self._project.id, question=question, answer=answer) # FIXME: update to use the new API
 
     def add_expert_review(self, log_id: str, *, is_good: bool, reason: str | None = None) -> str | None:
         status = "good" if is_good else "bad"
@@ -39,7 +39,7 @@ class Project:
         )
         return response.get("ai_guidance_id")
 
-    def get_draft_guidance(self, guidance_id: str) -> str:
+    def get_guidance(self, guidance_id: str) -> str:
         while True:
             response = self._sdk_client.get(
                 f"/api/projects/{self._project.id}/guidance_remediations/{guidance_id}",
@@ -48,15 +48,11 @@ class Project:
             pending = response["pending"]
             assert isinstance(pending, bool)
             if not pending:
-                draft_guidance = response.get("draft_guidance")
-                assert isinstance(draft_guidance, str)
-                return draft_guidance
+                guidance = response.get("guidance")
+                assert guidance is not None, "guidance was not generated"
+                assert isinstance(guidance, str), "guidance is not a string"
+                return guidance
             time.sleep(0.5)
-
-    def publish_guidance(self, guidance_id: str) -> None:
-        self._sdk_client.patch(
-            f"/api/projects/{self._project.id}/guidance_remediations/{guidance_id}/publish", cast_to=dict[str, Any]
-        )
 
 
 def find[T](iterable: list[T], predicate: Callable[[T], bool]) -> T:
