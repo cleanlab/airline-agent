@@ -524,7 +524,7 @@ You'll see that Cleanlab now guardrails the AI, permanently preventing the respo
 <br><br>
 </details>
 
-#### To explore Expert Answer
+#### To explore Expert Answers
 
 > *Is the viral promo code FLYFREE25 legitimate?*
 
