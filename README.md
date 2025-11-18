@@ -4,16 +4,16 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 15 | 17 | 47% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 27 | 18% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 23 | 9 | 72% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 31 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 13 | 20 | 39% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 29 | 12% |
-| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 24 | 8 | 75% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 14 | 19 | 42% |
-| `tests/stable/test_remediations.py::test_ai_guidance` | 5 | 28 | 15% |
-| `tests/stable/test_remediations.py::test_expert_answer` | 5 | 28 | 15% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 15 | 18 | 45% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 28 | 18% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 23 | 10 | 70% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 32 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 14 | 20 | 41% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 30 | 12% |
+| `tests/stable/test_remediations.py::test_additional_ai_guidance` | 25 | 8 | 76% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 15 | 19 | 44% |
+| `tests/stable/test_remediations.py::test_ai_guidance` | 6 | 28 | 18% |
+| `tests/stable/test_remediations.py::test_expert_answer` | 6 | 28 | 18% |
 
 ---
 
@@ -120,7 +120,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 13 times
+**Failures:** 14 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -131,9 +131,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two items to fit within the size limit might not be accepted. It's best to ensure that your combined items fit within the specified dimensions and check with the airline if you have any doubts.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions collectively, they would count as one personal item. However, if they are separate items, each would need to fit within the personal item size limit individually.
 
-Criteria not met: Fail — The agent output does not clearly confirm that both small bags count as one personal item. It gives a conditional statement (“if they fit together... they would count”) but immediately hedges by saying combining two items might not be accepted, so it fails to unambiguously confirm the required point.
+Criteria not met: The agent output does not unambiguously confirm that both small bags count as one personal item. It states only conditionally that they "would count as one personal item" if they "fit completely under the seat" and "do not exceed these dimensions collectively," then adds a contrary statement that if they are separate items each must individually fit. Because the message is conditional and internally inconsistent rather than a clear confirmation that both bags count as one personal item, it fails the criterion.
 ```
 </details>
 
@@ -163,7 +163,7 @@ assert 0.8317347297004729 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_ai_guidance`
 
-**Failures:** 24 times
+**Failures:** 25 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -182,7 +182,7 @@ AssertionError
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 14 times
+**Failures:** 15 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
@@ -203,7 +203,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `tests/stable/test_remediations.py::test_ai_guidance`
 
-**Failures:** 5 times
+**Failures:** 6 times
 
 **Question:** what is the cheapest Frontier flight from SFO to NYC on 11/11?
 
@@ -222,7 +222,7 @@ AssertionError
 
 ##### `tests/stable/test_remediations.py::test_expert_answer`
 
-**Failures:** 5 times
+**Failures:** 6 times
 
 **Question:** tell me about the bogo promo going on right now
 
