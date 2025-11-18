@@ -25,7 +25,9 @@ class Project:
         return list(self._sdk_client.projects.query_logs.list(self._project.id))
 
     def add_expert_answer(self, question: str, answer: str) -> None:
-        self._sdk_client.projects.remediations.create(self._project.id, question=question, answer=answer) # FIXME: update to use the new API
+        self._sdk_client.projects.remediations.create(
+            self._project.id, question=question, answer=answer
+        )  # FIXME: update to use the new API
 
     def add_expert_review(self, log_id: str, *, is_good: bool, reason: str | None = None) -> str | None:
         status = "good" if is_good else "bad"
