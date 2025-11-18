@@ -347,6 +347,17 @@ Try asking queries that reveal knowledge gaps in the Agent, such as this one:
 
 > *tell me about the bogo promo going on right now*
 
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+
+I couldn't find specific information about a current BOGO (Buy One, Get One) promotion for Frontier Airlines. If you have more details or specific aspects of the promotion you're interested in, please let me know, and I can help further. Alternatively, you might want to check Frontier Airlines' official website or contact their customer service for the most up-to-date promotional offers.
+```
+<br><br>
+</details>
+
 The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries about this promotion. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
 
 ```text
@@ -530,6 +541,12 @@ You'll see that Cleanlab now guardrails the AI, permanently preventing the respo
 
 <details>
 <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+
+I can't verify the legitimacy of specific promo codes like FLYFREE25. It's best to check directly on the official Frontier Airlines website or contact their customer service for confirmation. Be cautious of any codes that are not officially advertised by the airline.
+```
 
 The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries about this promotion. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
 
