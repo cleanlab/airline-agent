@@ -114,7 +114,7 @@ def test_additional_expert_review_1(project: Project) -> None:
 
 
 @pytest.mark.main
-def test_ai_guidance(project: Project) -> None:
+def test_expert_guidance(project: Project) -> None:
     question1 = "what is the cheapest Frontier flight from SFO to NYC on 11/11?"
     question2 = "when is the earliest Frontier flight from NYC to OAK on 11/15?"
 
@@ -155,7 +155,7 @@ def test_ai_guidance(project: Project) -> None:
 
 
 @pytest.mark.additional
-def test_additional_ai_guidance_1(project: Project) -> None:
+def test_additional_expert_guidance_1(project: Project) -> None:
     question1 = "can i bring a dog with me on a flight?"
     question2 = "can i bring my emotional support dog with me on a domestic flight?"
 
