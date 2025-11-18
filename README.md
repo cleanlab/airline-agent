@@ -347,6 +347,17 @@ Try asking queries that reveal knowledge gaps in the Agent, such as this one:
 
 > *tell me about the bogo promo going on right now*
 
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+
+I couldn't find specific information about a current BOGO (Buy One, Get One) promotion for Frontier Airlines. If you have more details or specific aspects of the promotion you're interested in, please let me know, and I can help further. Alternatively, you might want to check Frontier Airlines' official website or contact their customer service for the most up-to-date promotional offers.
+```
+<br><br>
+</details>
+
 The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries about this promotion. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
 
 ```text
@@ -433,6 +444,7 @@ Relevant flight data excerpt:
   ]
 }
 ```
+<br><br>
 </details>
 
 In response to the second query, the AI assumes that NYC means JFK airport and reports back on the earliest flight out of JFK, when in fact there is an earlier flight out of EWR departing at **06:45**.
@@ -460,6 +472,7 @@ Relevant flight data excerpt:
     "carrier": "F9",
     "fares": [
 ```
+<br><br>
 </details>
 
 This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
@@ -519,6 +532,33 @@ Then pretend you are a different user **by creating a new chat thread** and ask:
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
+<br><br>
+</details>
+
+#### To explore Expert Answers
+
+> *Is the viral promo code FLYFREE25 legitimate?*
+
+<details>
+<summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+
+I can't verify the legitimacy of specific promo codes like FLYFREE25. It's best to check directly on the official Frontier Airlines website or contact their customer service for confirmation. Be cautious of any codes that are not officially advertised by the airline.
+```
+
+The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries about this promotion. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
+
+```text
+Yes, “FLYFREE25” is a legitimate promo code tied to our June 25, 2025 anniversary and is valid only on that day. The first 50 eligible domestic Economy round-trip bookings receive a $0 base fare (taxes apply).
+```
+
+After submitting your Remediation, imagine you are a different user **by creating a new chat thread** and asking a similar question:
+
+> *is your promo code FLYFREE25 legit?*
+
+You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
 <br><br>
 </details>
 
