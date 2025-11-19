@@ -28,14 +28,10 @@ class Project:
         self._sdk_client.projects.remediations.expert_answers.create(self._project.id, query=question, answer=answer)
 
     def add_expert_review(self, log_id: str, *, is_good: bool, reason: str | None = None) -> str | None:
-        status = "good" if is_good else "bad"
-        body = {"status": status}
-        if not is_good:
-            body["explanation"] = reason if reason is not None else ""
         self._sdk_client.projects.remediations.expert_reviews.create(
             self._project.id,
             original_query_log_id=log_id,
-            review_status=status,
+            review_status="good" if is_good else "bad",
             generate_guidance=True,
             explanation=reason if reason is not None else "",
         )
