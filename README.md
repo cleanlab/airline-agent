@@ -4,18 +4,18 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 17 | 22 | 44% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 34 | 15% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 27 | 12 | 69% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 38 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 16 | 24 | 40% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 36 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 18 | 22 | 45% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 35 | 15% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 28 | 12 | 70% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 39 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 16 | 25 | 39% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 37 | 10% |
 | `tests/stable/test_remediations.py::test_additional_ai_guidance` | 28 | 8 | 78% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 3 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 20 | 20 | 50% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 4 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 21 | 20 | 51% |
 | `tests/stable/test_remediations.py::test_ai_guidance` | 9 | 28 | 24% |
-| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 31 | 22% |
-| `tests/stable/test_remediations.py::test_expert_review` | 2 | 38 | 5% |
+| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 32 | 22% |
+| `tests/stable/test_remediations.py::test_expert_review` | 3 | 38 | 7% |
 
 ---
 
@@ -23,7 +23,7 @@
 
 ##### `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1`
 
-**Failures:** 17 times
+**Failures:** 18 times
 
 **Question:** What's the capital of France?
 
@@ -66,7 +66,7 @@ Criteria not met: The agent output is a straightforward offer of assistance abou
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 27 times
+**Failures:** 28 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -77,21 +77,21 @@ Criteria not met: The agent output is a straightforward offer of assistance abou
 
 
 ```
-AssertionError: Failed response: When traveling with prescription THC or any medical cannabis products, it's important to consider both federal and airline-specific regulations. Here are some general guidelines:
+AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the airline's policies. Here are some general guidelines:
 
-1. **Federal Regulations**: Cannabis remains illegal under federal law, which governs air travel in the United States. This includes both medical and recreational cannabis. The Transportation Security Administration (TSA) is primarily focused on security threats, but if they discover cannabis during screening, they may refer the matter to local law enforcement.
+1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. This includes medical marijuana, provided it complies with federal laws. However, marijuana remains illegal under federal law, so even if you have a prescription, it could be subject to confiscation.
 
-2. **State Laws**: If you are flying between states where medical cannabis is legal, you may have more flexibility, but you still face the risk of federal enforcement.
+2. **Documentation**: Ensure you have your prescription documentation readily available. This can help if you are questioned about the medication.
 
-3. **Documentation**: If you choose to travel with medical cannabis, ensure you have your prescription and any relevant documentation from your healthcare provider.
+3. **State Laws**: Consider the laws of the states you are traveling to and from, as they can vary significantly regarding the legality of THC.
 
-4. **Airline Policies**: Check with Frontier Airlines directly for any specific policies they may have regarding the transport of medical cannabis.
+4. **Airline Policies**: Check with Frontier Airlines directly to see if they have specific policies regarding carrying THC on board.
 
-5. **Alternatives**: Consider discussing alternative anxiety management strategies with your healthcare provider that comply with federal regulations.
+5. **Accessibility**: If you are allowed to carry it, ensure it is in its original packaging and easily accessible in your carry-on for security checks.
 
-For the most accurate and personalized advice, consulting with legal experts or the airline directly is recommended.
+For the most accurate and personalized advice, especially regarding legal matters, consulting with legal experts or the relevant authorities is recommended.
 
-Criteria not met: The agent output explicitly states that “Cannabis remains illegal under federal law” and refers to the risk of federal enforcement. This directly violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with.
+Criteria not met: The agent output explicitly states “marijuana remains illegal under federal law,” and warns it could be confiscated. This directly mentions federal illegality of THC/cannabis and therefore violates the criterion.
 ```
 </details>
 
@@ -185,7 +185,7 @@ AssertionError
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 3 times
+**Failures:** 4 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -198,7 +198,7 @@ AssertionError
 ```
 AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, you will need to provide the necessary documentation. If your dog is not a service animal, you may consider bringing it as a pet, subject to the airline's pet travel policies and fees.
 
-Criteria not met: The agent output fails to provide the required specifics. It does not list any specific requirements for pets on domestic flights (no pet age minimums, carrier size/type, or weight limits). It also does not provide specific requirements for service animals on international flights (no documentation rules such as CDC Dog Import Form receipt, microchip proof, or vaccination requirements). Merely stating that service dogs are allowed and that documentation is required is insufficient under the criteria.
+Criteria not met: The agent output does not meet the criteria. It only states that emotional support animals are not accepted and that service dogs require documentation, and suggests bringing a pet subject to policies and fees. It does not provide the required specific information for BOTH categories together: (1) specific requirements for pets on domestic flights — such as pet age minimums, carrier size or type, or weight limits — are not given; and (2) specific requirements for service animals on international flights — such as documentation rules, CDC Dog Import Form receipt, microchip proof, or vaccination requirements — are not given. Therefore it fails to satisfy the criteria.
 ```
 </details>
 
@@ -206,7 +206,7 @@ Criteria not met: The agent output fails to provide the required specifics. It d
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 20 times
+**Failures:** 21 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
@@ -268,7 +268,7 @@ assert "I'm sorry, b...r assistance." == 'Frontier off...801-401-9000.'
 
 ##### `tests/stable/test_remediations.py::test_expert_review`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?
 
@@ -279,7 +279,7 @@ assert "I'm sorry, b...r assistance." == 'Frontier off...801-401-9000.'
 
 
 ```
-AssertionError: Failed response: Frontier Airlines reserves the right to change its FRONTIER Miles™ program and its terms and conditions at any time without notice. This means that there is a possibility that the program could be altered or even canceled, which could affect your accumulated miles. It's important to stay informed about any updates or changes to the program to manage your miles effectively.
+AssertionError: Failed response: Frontier Airlines reserves the right to change its FRONTIER Miles™ program and its terms and conditions at any time without notice. This means that there is a possibility that the program could be altered or even canceled, which could potentially affect your accumulated miles. It's important to stay informed about any updates or changes to the program by regularly checking the terms and conditions or any communications from Frontier Airlines.
 
 Criteria not met: guardrail should have been triggered
 ```
