@@ -4,17 +4,18 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 16 | 21 | 43% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 32 | 16% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 27 | 10 | 73% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 36 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 16 | 22 | 42% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 34 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 16 | 22 | 42% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 33 | 15% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 27 | 11 | 71% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 37 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 16 | 23 | 41% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 35 | 10% |
 | `tests/stable/test_remediations.py::test_additional_ai_guidance` | 28 | 8 | 78% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 1 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 19 | 19 | 50% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 2 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 19 | 20 | 49% |
 | `tests/stable/test_remediations.py::test_ai_guidance` | 9 | 28 | 24% |
-| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 29 | 24% |
+| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 30 | 23% |
+| `tests/stable/test_remediations.py::test_expert_review` | 1 | 38 | 3% |
 
 ---
 
@@ -184,7 +185,7 @@ AssertionError
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -195,20 +196,9 @@ AssertionError
 
 
 ```
-AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines to keep in mind:
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it can accompany you on the flight, provided it meets the necessary requirements and documentation is available. If your dog is not a service animal, it would need to travel as a pet, subject to the airline's pet travel policies and fees.
 
-- Pets must stay in their travel container at all times during the flight.
-- Only service dogs are allowed on international flights.
-- The pet carrier must be large enough for your pet to stand, turn around, and lie down naturally, and it must fit under the seat in front of you.
-- The maximum size for a hard-sided carrier is 18" L x 14" W x 8" H, and for a soft-sided carrier, it's 18" L x 14" W x 11" H. Soft-sided carriers are recommended.
-- Only one adult dog or cat is allowed per container.
-- You can bring one personal item or a carry-on in addition to your pet, but carry-on fees may apply.
-
-You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section, or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
-
-If your travel involves an international flight or a service animal, please let me know for more specific information.
-
-Criteria not met: guardrail should not have been triggered
+Criteria not met: The agent output does not provide the two required sets of details together. It fails to list any specific requirements for pets on domestic flights (no pet age minimums, carrier size/type, or weight limits were given). It also fails to list specific requirements for service animals on international flights (no documentation rules, CDC Dog Import Form receipt, microchip proof, or vaccination requirements were provided). Merely stating that service dogs are allowed does not satisfy the criteria. Therefore the output does not meet the criteria.
 ```
 </details>
 
@@ -271,6 +261,27 @@ assert "I'm sorry, b...r assistance." == 'Frontier off...801-401-9000.'
   
   - Frontier offers a BOGO promo: if you fly on your birthday, you can get a free companion ticket using promo code BOGOF9 (taxes, fees, and availability apply). For more questions on this promo specifically, please reach out to Frontier staff at 801-401-9000.
   + I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+```
+</details>
+
+---
+
+##### `tests/stable/test_remediations.py::test_expert_review`
+
+**Failures:** 1 times
+
+**Question:** does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: Frontier Airlines reserves the right to change its FRONTIER Miles™ program and its terms and conditions at any time without notice. This means that there is a possibility that the program could be altered or even canceled, which could affect your accumulated miles. Therefore, there is a risk of losing your miles if the program is discontinued or if changes are made that impact your ability to use them.
+
+Criteria not met: guardrail should have been triggered
 ```
 </details>
 
