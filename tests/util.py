@@ -28,16 +28,16 @@ class Project:
         self._sdk_client.projects.remediations.expert_answers.create(self._project.id, query=question, answer=answer)
 
     def add_expert_review(self, log_id: str, *, is_good: bool, reason: str | None = None) -> str | None:
-        status = "good" if is_good else "bad"
-        body = {"status": status}
-        if not is_good:
-            body["explanation"] = reason if reason is not None else ""
-        response = self._sdk_client.post(
-            f"/api/projects/{self._project.id}/query_logs/{log_id}/expert_review?generate_guidance=true",
-            body=body,
-            cast_to=dict[str, Any],
+        self._sdk_client.projects.remediations.expert_reviews.create(
+            self._project.id,
+            original_query_log_id=log_id,
+            review_status="good" if is_good else "bad",
+            generate_guidance=True,
+            explanation=reason if reason is not None else "",
         )
-        return response.get("ai_guidance_id")
+        log = self._sdk_client.projects.query_logs.retrieve(log_id, project_id=self._project.id)
+        assert log is not None, "log not found"
+        return log.ai_guidance_id
 
     def get_guidance(self, guidance_id: str) -> str:
         while True:
