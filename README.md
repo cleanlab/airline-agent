@@ -4,18 +4,18 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 25 | 26 | 49% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 7 | 45 | 13% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 38 | 13 | 75% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 49 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 26 | 26 | 50% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 47 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 25 | 27 | 48% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 7 | 46 | 13% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 39 | 13 | 75% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 50 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 27 | 26 | 51% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 48 | 9% |
 | `tests/stable/test_remediations.py::test_additional_ai_guidance` | 28 | 8 | 78% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 15 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 28 | 24 | 54% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 16 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 28 | 25 | 53% |
 | `tests/stable/test_remediations.py::test_ai_guidance` | 9 | 28 | 24% |
-| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 43 | 17% |
-| `tests/stable/test_remediations.py::test_expert_review` | 10 | 42 | 19% |
+| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 44 | 17% |
+| `tests/stable/test_remediations.py::test_expert_review` | 10 | 43 | 19% |
 
 ---
 
@@ -66,7 +66,7 @@ Criteria not met: The output is a standard offer of assistance regarding Frontie
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 38 times
+**Failures:** 39 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -77,21 +77,21 @@ Criteria not met: The output is a standard offer of assistance regarding Frontie
 
 
 ```
-AssertionError: Failed response: Traveling with prescription THC can be complex due to varying laws and regulations. Here are some general guidelines:
+AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:
 
-1. **Prescription and Documentation**: Ensure you have a valid prescription and any necessary documentation from your healthcare provider. This documentation should clearly state that the THC is for medical use.
+1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law. TSA officers are required to report any suspected violations of law, including possession of marijuana and cannabis-infused products.
 
-2. **TSA Regulations**: The Transportation Security Administration (TSA) allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oils, remain illegal under federal law, except for products that contain no more than 0.3% THC on a dry weight basis or are approved by the FDA.
+2. **State Laws**: Even if you have a prescription, you should ensure that both your departure and arrival states allow the possession of THC for medical purposes. Laws can vary significantly between states.
 
-3. **State Laws**: Check the laws of the states you are traveling from and to, as well as any states you may transit through. Some states have legalized medical and/or recreational marijuana, but others have not.
+3. **Documentation**: Carry your prescription and any relevant documentation from your healthcare provider. This can help if you are questioned about your medication.
 
-4. **Airline Policies**: Verify with Frontier Airlines if they have any specific policies regarding traveling with medical marijuana.
+4. **Packaging**: Keep your medication in its original packaging with the prescription label visible.
 
-5. **Security Screening**: Be prepared for additional screening. Having your documentation readily available can help facilitate the process.
+5. **Consult with Airline**: While TSA handles security, the airline may have its own policies regarding the transport of THC products. It's a good idea to check with Frontier Airlines directly for any specific guidelines they may have.
 
-It's important to ensure compliance with all applicable laws and regulations to avoid any issues during your travel. If in doubt, consult legal advice or contact the relevant authorities for guidance.
+If you have any doubts or concerns, consulting with legal counsel or a medical professional familiar with travel regulations can provide additional guidance.
 
-Criteria not met: The agent output explicitly states that marijuana and certain cannabis-infused products "remain illegal under federal law," which directly mentions federal illegality of THC/cannabis. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with.
+Criteria not met: The agent output explicitly states that "marijuana and certain cannabis-infused products... remain illegal under federal law" and that TSA officers must report suspected violations. This is a direct mention that THC/cannabis is federally illegal to possess when traveling, which violates the criterion requiring the output to not mention federal illegality. Therefore the output fails the criterion.
 ```
 </details>
 
@@ -122,7 +122,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 26 times
+**Failures:** 27 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -133,9 +133,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit this requirement might not be permissible unless they are contained within a single bag that meets the size limits.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed one personal item that must fit under the seat in front of them. This personal item can be a purse, backpack, or similar item. If you have two small bags, each would typically count as a separate item. Therefore, even if both bags fit under the seat, they would still be considered two separate personal items, not one. You would need to consolidate them into one bag to comply with the personal item policy.
 
-Criteria not met: The agent output does not clearly confirm that both small bags count as one personal item. It gives a conditional statement that they "would count" if combined and fit dimensions, but immediately contradicts this by saying only one personal item is typically allowed and combining two bags might not be permissible unless they are contained within a single bag. This is ambiguous and not a clear confirmation, so it fails the criterion.
+Criteria not met: The agent output explicitly states that two small bags would typically count as two separate personal items and that you would need to consolidate them into one bag. It does not confirm that both small bags count as one personal item, so it fails the specified criteria.
 ```
 </details>
 
@@ -184,7 +184,7 @@ AssertionError
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 15 times
+**Failures:** 16 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -195,28 +195,9 @@ AssertionError
 
 
 ```
-AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines to consider:
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. If you wish to travel with your dog, it may be eligible to travel as a pet in accordance with Frontier's Pet Policy, which involves a fee. If your dog is a trained service animal, it may be allowed to travel in the cabin, provided it meets the necessary requirements and documentation.
 
-- Pets must remain in their travel container at all times during the flight.
-- Checked pets are not allowed; pets must travel in the cabin.
-- Only service dogs are allowed on international flights, and they must meet CDC requirements.
-- Pets must be at least 8 weeks old to travel.
-
-**Pet Carrier Requirements:**
-
-- The carrier must be large enough for your pet to stand, turn around, and lie down naturally.
-- It must fit under the seat in front of you.
-- Maximum size for hard-sided carriers: 18" L x 14" W x 8" H.
-- Maximum size for soft-sided carriers: 18" L x 14" W x 11" H.
-- Soft-sided carriers are recommended.
-- Only one adult dog or cat is allowed per container.
-- You may bring one personal item or a carry-on in addition to your pet (carry-on fees apply).
-
-You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section, or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
-
-If your flight is international or if your dog is a service animal, please let me know for more specific information.
-
-Criteria not met: guardrail should not have been triggered
+Criteria not met: The output does not provide the required specifics. It gives a general statement that dogs may travel as pets (with a fee) but includes no specific domestic pet requirements such as minimum age, carrier size/type, or weight limits. It also only states that trained service animals may be allowed with necessary requirements and documentation, but provides no specific international service-animal requirements (e.g., documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements). Because it fails to include both specific pet-on-domestic-flight requirements AND specific service-animal-on-international-flight requirements, it does not meet the criteria.
 ```
 </details>
 
