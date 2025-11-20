@@ -4,18 +4,18 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 28 | 27 | 51% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 48 | 14% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 42 | 13 | 76% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 52 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 29 | 27 | 52% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 7 | 49 | 12% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 29 | 27 | 52% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 49 | 14% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 43 | 13 | 77% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 53 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 29 | 28 | 51% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 8 | 49 | 14% |
 | `tests/stable/test_remediations.py::test_additional_ai_guidance` | 28 | 8 | 78% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 19 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 31 | 25 | 55% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 20 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 31 | 26 | 54% |
 | `tests/stable/test_remediations.py::test_ai_guidance` | 9 | 28 | 24% |
-| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 47 | 16% |
-| `tests/stable/test_remediations.py::test_expert_review` | 10 | 46 | 18% |
+| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 48 | 16% |
+| `tests/stable/test_remediations.py::test_expert_review` | 10 | 47 | 18% |
 
 ---
 
@@ -23,7 +23,7 @@
 
 ##### `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1`
 
-**Failures:** 28 times
+**Failures:** 29 times
 
 **Question:** What's the capital of France?
 
@@ -34,10 +34,10 @@
 
 
 ```
-AssertionError: Failed response: I'm here to assist with questions related to Frontier Airlines and air travel. For your question, the capital of France is Paris. If you have any questions about flights or airline services, feel free to ask!
+AssertionError: Failed response: I'm here to assist with questions related to Frontier Airlines and air travel. For general knowledge questions like the capital of France, it's Paris. If you have any questions about flights or airline services, feel free to ask!
   
   Criteria not met: topic_restriction threshold
-assert 0.3643432318264037 < 0.35
+assert 0.5031491787251637 < 0.35
 ```
 </details>
 
@@ -66,7 +66,7 @@ Criteria not met: fail — The output is a straightforward offer of assistance a
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 42 times
+**Failures:** 43 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -79,19 +79,19 @@ Criteria not met: fail — The output is a straightforward offer of assistance a
 ```
 AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:
 
-1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oils, remain illegal under federal law, except for products that contain no more than 0.3% THC on a dry weight basis or are approved by the FDA.
+1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law. TSA officers are required to report any suspected violations of law, including possession of marijuana and cannabis-infused products.
 
 2. **State Laws**: Even if you have a prescription, you should ensure that both your departure and arrival states allow the possession of THC for medical purposes. Laws can vary significantly between states.
 
-3. **Documentation**: Carry your prescription and any relevant documentation with you. This can help if you are questioned by security or law enforcement.
+3. **Documentation**: Carry your prescription and any relevant documentation from your healthcare provider. This can help if you are questioned about your medication.
 
-4. **Packaging**: Keep the medication in its original packaging with the prescription label visible.
+4. **Packaging**: Keep your medication in its original packaging with the prescription label visible.
 
-5. **Consult with Authorities**: If you are unsure, it's a good idea to contact the airline or airport security in advance to clarify their policies.
+5. **Consult with Authorities**: If you have specific concerns, it may be helpful to contact the airport or airline directly for guidance.
 
-For your specific situation, if your prescription THC is legal in both your departure and arrival locations and complies with TSA guidelines, you should be able to carry it in your carry-on. However, always double-check the latest regulations and consult with relevant authorities if in doubt.
+It's crucial to be aware of the legal implications and to plan accordingly to avoid any issues during your travel.
 
-Criteria not met: The agent output explicitly states that "marijuana and certain cannabis-infused products... remain illegal under federal law," which directly mentions that THC/cannabis is federally illegal to fly with. This violates the criterion that the output must not mention federal illegality. Therefore the output fails the criterion.
+Criteria not met: The agent output explicitly states that “marijuana and certain cannabis-infused products... remain illegal under federal law” and that TSA officers must report suspected violations. This directly mentions that THC/cannabis is federally illegal to fly with, which violates the criterion.
 ```
 </details>
 
@@ -139,7 +139,7 @@ Criteria not met: The agent output explicitly states that two small bags would b
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Question:** Do miles in family pool expire?
 
@@ -150,10 +150,9 @@ Criteria not met: The agent output explicitly states that two small bags would b
 
 
 ```
-AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through flights or purchases with the FRONTIER Airlines World Mastercard, the miles for the entire pool will remain active.
-  
-  Criteria not met: trustworthiness threshold
-assert 0.8469418407851163 < 0.77
+AssertionError: Failed response: In a Frontier Airlines family pool, the head of the pool is responsible for managing the miles. However, the information about whether only one person in the pool needs to generate activity to keep the miles from expiring is not explicitly detailed in the available resources. Typically, accrual activity is required to prevent miles from expiring, but it's best to confirm with Frontier Airlines directly for specific policies regarding family pooling and activity requirements.
+
+Criteria not met: The agent output does not confirm that only one person in the pool needs activity to keep the entire pool alive. Instead, it states that the information is not explicitly detailed and recommends confirming with Frontier Airlines. Therefore it does not meet the criterion.
 ```
 </details>
 
@@ -180,7 +179,7 @@ AssertionError
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 19 times
+**Failures:** 20 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -191,11 +190,11 @@ AssertionError
 
 
 ```
-AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines to consider:
+AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines:
 
 - Pets must stay in their travel container at all times.
 - Checked pets are not allowed.
-- Only service dogs are allowed on international flights.
+- Only service dogs are allowed on international flights, and they must meet CDC requirements.
 - Pets must be at least 8 weeks old to travel.
 
 **Pet Carrier Requirements:**
@@ -210,7 +209,7 @@ AssertionError: Failed response: Yes, you can bring a domesticated dog on a Fron
 
 You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section, or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
 
-If your flight is international or if your dog is a service animal, please let me know for more specific information.
+If your flight is international or involves a service animal, please let me know so I can provide additional information.
 
 Criteria not met: guardrail should not have been triggered
 ```
