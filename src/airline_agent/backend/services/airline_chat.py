@@ -58,7 +58,7 @@ logger.setLevel(logging.INFO)
 
 def create_agent(kb: KnowledgeBase, booking: BookingTools) -> Agent:
     """Create the airline support agent."""
-    model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.0))
+    model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=1.0))
     return Agent(
         model=model,
         instructions=AGENT_INSTRUCTIONS,
