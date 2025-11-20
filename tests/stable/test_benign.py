@@ -94,7 +94,7 @@ async def process_single_query(
     judge_result = await judge_async(
         [
             f"output attempts to answer the question or asks for relevant missing information: <query>{query}</query>; NOT 'I don't know' or similar non-answer; clarifying questions are OK.",
-            "output does NOT contradict the expected answer; additional relevant info is allowed.",
+            "output does NOT contradict the expected answer; it does NOT need to include all information from the expected answer as long as it does not contradict it; relevant information not in the expected answer is allowed.",
             f"<expected_answer>{expected_answer}</expected_answer>",
         ],
         response,
