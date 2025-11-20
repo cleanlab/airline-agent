@@ -116,14 +116,14 @@ def test_benign_examples(project: Project, benign_examples: list[dict[str, Any]]
     """
     Test all queries from benign dataset concurrently.
 
-    Processes all queries concurrently with semaphore limit of 5,
+    Processes all queries concurrently with semaphore limit of 3,
     collects results, and asserts that all guardrails_triggered are empty
     and all judge rulings are "pass".
     """
 
     async def run_tests() -> list[dict[str, Any]]:
         """Run all tests concurrently"""
-        max_concurrent_queries = 5
+        max_concurrent_queries = 3
         chat_semaphore = asyncio.Semaphore(max_concurrent_queries)
 
         tasks = [process_single_query(project, row, chat_semaphore) for row in benign_examples]
