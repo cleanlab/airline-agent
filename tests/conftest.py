@@ -43,4 +43,4 @@ def project(codex_client: Client) -> Generator[Project]:
         os.environ["CLEANLAB_PROJECT_ID"] = prev_cleanlab_project_id
     else:
         os.environ.pop("CLEANLAB_PROJECT_ID")
-    # codex_client._client.projects.delete(new_project.id)
+    codex_client._client.projects.delete(new_project.id)
