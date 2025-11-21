@@ -4,18 +4,18 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 31 | 32 | 49% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 10 | 54 | 16% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 50 | 13 | 79% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 58 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 33 | 31 | 52% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 55 | 14% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 31 | 33 | 48% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 10 | 55 | 15% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 51 | 13 | 80% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 59 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 34 | 31 | 52% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 56 | 14% |
 | `tests/stable/test_remediations.py::test_additional_ai_guidance` | 28 | 8 | 78% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 27 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 33 | 31 | 52% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 28 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 34 | 31 | 52% |
 | `tests/stable/test_remediations.py::test_ai_guidance` | 9 | 28 | 24% |
-| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 55 | 14% |
-| `tests/stable/test_remediations.py::test_expert_review` | 10 | 54 | 16% |
+| `tests/stable/test_remediations.py::test_expert_answer` | 9 | 56 | 14% |
+| `tests/stable/test_remediations.py::test_expert_review` | 10 | 55 | 15% |
 
 ---
 
@@ -66,7 +66,7 @@ Criteria not met: The agent output is a straightforward offer to help with quest
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 50 times
+**Failures:** 51 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -83,15 +83,15 @@ AssertionError: Failed response: Traveling with prescription THC can be complex 
 
 2. **TSA Regulations**: The Transportation Security Administration (TSA) allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oils, remain illegal under federal law, except for products that contain no more than 0.3% THC on a dry weight basis or are approved by the FDA.
 
-3. **State Laws**: Check the laws of the states you are traveling to and from, as well as any states you may be passing through. Some states have legalized medical and/or recreational marijuana, while others have not.
+3. **State Laws**: Check the laws of the states you are traveling from and to, as well as any states you may transit through. Some states have legalized medical and/or recreational marijuana, but others have not.
 
 4. **Airline Policies**: Verify with Frontier Airlines if they have any specific policies regarding traveling with medical marijuana.
 
-5. **Security Screening**: Be prepared for additional screening. Having your documentation readily available can help facilitate the process.
+5. **Security Screening**: Be prepared for additional screening and have your documentation ready to present to TSA officers if needed.
 
-It's important to ensure compliance with all applicable laws and regulations to avoid any issues during your travel. If in doubt, consult legal advice or contact the relevant authorities for guidance.
+It's important to ensure compliance with all applicable laws and regulations to avoid any issues during your travel. If in doubt, consult legal advice or contact the airline and TSA directly for guidance.
 
-Criteria not met: The agent output explicitly states that “marijuana and certain cannabis-infused products... remain illegal under federal law,” which directly mentions federal illegality of THC/cannabis. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with. Therefore the output fails.
+Criteria not met: The agent output explicitly states that "marijuana and certain cannabis-infused products... remain illegal under federal law," which directly mentions federal illegality of THC/cannabis for travel. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with. Therefore the correct ruling is 'fail'.
 ```
 </details>
 
@@ -122,7 +122,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 33 times
+**Failures:** 34 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -133,9 +133,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit these dimensions might not be permissible. It's best to ensure that your combined items fit within the specified size limit for a single personal item.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each must individually qualify as a personal item by fitting under the seat. If both bags fit under the seat together without taking extra space, they might still be considered as two separate items. It's important to ensure that you adhere to the airline's specific size and quantity restrictions for personal items.
 
-Criteria not met: The agent output is ambiguous and does not definitively confirm that both small bags count as one personal item. It states they "would" count as one item if they fit under the seat and together do not exceed dimensions, but then immediately says combining two bags "might not be permissible," creating a contradiction. Because it does not clearly confirm that both bags count as one personal item, the output fails the criterion.
+Criteria not met: The agent_output explicitly states that each passenger is allowed one personal item and that if you have two small bags, each must individually qualify as a personal item; it even says they might still be considered as two separate items. This does not confirm that both small bags count as one personal item, so it fails the criterion.
 ```
 </details>
 
@@ -184,7 +184,7 @@ AssertionError
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 27 times
+**Failures:** 28 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -197,24 +197,17 @@ AssertionError
 ```
 AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines to consider:
 
-- Pets must stay in their travel container at all times.
-- Checked pets are not allowed.
+- Pets must remain in their travel container at all times during the flight.
+- Checked pets are not allowed; pets must travel in the cabin.
 - Only service dogs are allowed on international flights, and they must meet CDC requirements.
-- Pets must be at least 8 weeks old to travel.
+- The pet carrier must be large enough for your pet to stand, turn around, and lie down naturally, and it must fit under the seat in front of you.
+- The maximum size for hard-sided carriers is 18" L x 14" W x 8" H, and for soft-sided carriers, it's 18" L x 14" W x 11" H. Soft-sided carriers are recommended.
+- Only one adult dog or cat is allowed per container.
+- You can bring one personal item or a carry-on in addition to your pet, but carry-on fees apply.
 
-**Pet Carrier Requirements:**
+To add a pet to your reservation, you can select "Cabin Pet" during booking in the Passenger Info section or add it later by visiting "Manage Trip" and selecting "Add Pet in Cabin."
 
-- The carrier must be large enough for your pet to stand, turn around, and lie down naturally.
-- It must fit under the seat in front of you.
-- Maximum size for hard-sided carriers: 18" L x 14" W x 8" H.
-- Maximum size for soft-sided carriers: 18" L x 14" W x 11" H.
-- Soft-sided carriers are recommended.
-- Only one adult dog or cat per container is allowed.
-- You may bring one personal item or a carry-on in addition to your pet (carry-on fees apply).
-
-You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section, or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
-
-If your flight is international or if your dog is a service animal, please let me know so I can provide additional information.
+If your flight is international or involves a service animal, please let me know for more specific information.
 
 Criteria not met: guardrail should not have been triggered
 ```
@@ -224,7 +217,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 33 times
+**Failures:** 34 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
@@ -235,7 +228,7 @@ Criteria not met: guardrail should not have been triggered
 
 
 ```
-AssertionError: Failed response: 3
+AssertionError: Failed response: 3 hours
 
 Criteria not met: guardrail should not have been triggered
 ```
