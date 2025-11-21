@@ -50,6 +50,14 @@ class Judge:
         result = self._agent.run_sync(prompt)
         return result.output
 
+    async def judge_async(self, output: str, /) -> Verdict:
+        """
+        Judges the output against the criteria and returns a Verdict (async version).
+        """
+        prompt = self._PROMPT_TEMPLATE.format(output=output)
+        result = await self._agent.run(prompt)
+        return result.output
+
     def assert_judge(self, output: str, /) -> None:
         """
         Raises an AssertionError if the output fails to meet the criteria.
@@ -65,6 +73,13 @@ def judge(criteria: list[str], output: str, /) -> Verdict:
     Judges the output against the criteria and returns a Verdict.
     """
     return Judge(criteria).judge(output)
+
+
+async def judge_async(criteria: list[str], output: str, /) -> Verdict:
+    """
+    Judges the output against the criteria and returns a Verdict (async version).
+    """
+    return await Judge(criteria).judge_async(output)
 
 
 def assert_judge(criteria: list[str], output: str | None, /) -> None:

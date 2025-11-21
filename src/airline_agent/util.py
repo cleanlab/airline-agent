@@ -14,24 +14,44 @@ class TestAgent:
         self._thread_id: str = str(uuid.uuid4())
         self._cleanlab_enabled = cleanlab_enabled
 
-    def chat_messages(self, message: str) -> list[RunEvent]:
-        async def run() -> list[RunEvent]:
-            return [
-                event
-                async for event in airline_chat_streaming(
-                    UserMessage(thread_id=self._thread_id, content=message),
-                    cleanlab_enabled=self._cleanlab_enabled,
-                    stream_intermediate_messages=False,
-                )
-            ]
+    async def _chat_messages_async(self, message: str) -> list[RunEvent]:
+        """Internal async method to collect chat events."""
+        return [
+            event
+            async for event in airline_chat_streaming(
+                UserMessage(thread_id=self._thread_id, content=message),
+                cleanlab_enabled=self._cleanlab_enabled,
+                stream_intermediate_messages=False,
+            )
+        ]
 
-        return asyncio.run(run())
+    def chat_messages(self, message: str) -> list[RunEvent]:
+        return asyncio.run(self._chat_messages_async(message))
 
     def chat(self, message: str) -> tuple[str, str | None]:
         events = self.chat_messages(message)
         for event in events[::-1]:
             if isinstance(event, RunEventThreadMessage) and isinstance(event.data, AssistantMessage):
                 return event.data.content, event.data.metadata.log_id
+        msg = "agent did not return an assistant message"
+        raise ValueError(msg)
+
+    async def chat_async(self, message: str) -> tuple[str, str | None]:
+        """
+        Async version of chat.
+
+        Args:
+            message: The message to send
+
+        Returns:
+            Tuple of (response, log_id)
+        """
+        events = await self._chat_messages_async(message)
+
+        for event in events[::-1]:
+            if isinstance(event, RunEventThreadMessage) and isinstance(event.data, AssistantMessage):
+                return event.data.content, event.data.metadata.log_id
+
         msg = "agent did not return an assistant message"
         raise ValueError(msg)
 

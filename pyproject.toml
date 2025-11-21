@@ -41,6 +41,7 @@ red-teaming-server = "python -m airline_agent.red_teaming.agent {args}"
 extra-dependencies = [
   "mypy>=1.18.2",
   "pytest",
+  "pandas-stubs",
   "types-requests>=2.32.4.20250913",
   "types-tqdm>=4.67.0.20250809",
 ]
