@@ -564,73 +564,41 @@ You should see the Agent now responds with the desired Expert Answer instead of 
 
 #### To explore Expert Guidance
 
-> *can i bring a dog with me on a flight?*
+> *My flight got canceled how to use my Peace Pass benefit?*
 
-> *can i bring my emotional support dog with me on a domestic flight?*
+> *does peace pass still work if trip canceled due to weather?*
 
 <details>
   <summary>Learn More</summary>
 
-  > *can i bring a dog with me on a flight?*
+For demonstration purposes, suppose that Frontier Airlines' Disruption Assistance benefit is informally referred to by customers as the "Peace Pass".
 
-The AI references `/help/do-you-allow-pets-on-the-plane` and mentions that only service animals are allowed on international flights.
-However, this answer can be improved if the AI first clarified if the passenger is flying domestic or international.
-If the flight is international, the AI should also reference `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and explain the requirements for service animals.
+In both cases above, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it does not know about the “Peace Pass” is (it may wrongly think this refers to Frontier's GoWild! Pass).
 
-> *can i bring my emotional support dog with me on a domestic flight?*
+This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
+To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above.
+Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
 
-The AI references `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not recognize emotional support animals as service animals.
-However, this answer can be improved if the AI also referenced the `/help/do-you-allow-pets-on-the-plane` article, which notes that the passenger may still bring their dog on board if they comply with Frontier’s Pet Policy.
+> Peace Pass is another term for Disruption Assistance
 
-To provide Expert Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above.
-Select `No` under *Is this a good AI response?* and provide an explanation like the following in the `Reason` field:
-
-> Answer depends if flight is international and if it's a service animal. Should have clarified with user, and then used info from all relevant articles: always use the "do you allow pets on plane" article, then if international/service animal, also the "service animals" article
-
-After you submit the SME feedback for this case, Cleanlab auto-generates suggested Expert Guidance based on your feedback.
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback.
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
-Once saved, this Expert Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
 Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
 
-> *can i bring a dog with me on a flight?*
+> My flight got canceled how to use my Peace Pass benefit?
 
-... after the Agent responds, you can then clarify ...
+> does peace pass still work if trip canceled due to weather?
 
-> *its an international flight. and its a service animal*
+You’ll now see that the AI provides the correct information about the Disruption Assistance program.
 
-You’ll now see that the AI also references `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and includes more details about service animal requirements.
-In contrast, if you instead followed up with:
+You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project.
 
-> *its a domestic flight. and its a house pet*
-
-The AI will instead reference `/help/do-you-allow-pets-on-the-plane` and tailor its response accordingly.
-Your Guidance ensures the AI combines both articles when appropriate, to better serve users.
-
-> *can i bring my emotional support dog with me on a domestic flight?*
-
-In this case, because the user’s question already specifies both the type of flight and the kind of animal, the AI skips asking a clarifying question. You’ll also notice that the AI now adds information that domesticated pets are allowed on the flight. This helps clarify that while emotional support animals are not treated as service animals, pets may still travel under the standard Pet Policy.
-<br><br>
 </details>
 
 
 #### To explore Trust Scoring
-
-> *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response (guardrailed and prevented by Cleanlab):
-
-You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
-```
-
-Here the AI responded incorrectly. The correct response is that under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.
-
-<br><br>
-</details>
 
 
 > *i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?*
