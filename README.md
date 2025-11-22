@@ -4,11 +4,11 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 2 | 1 | 67% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 2 | 33% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 2 | 33% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 3 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 1 | 2 | 33% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 2 | 2 | 50% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 3 | 25% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 3 | 25% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 4 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 2 | 2 | 50% |
 
 ---
 
@@ -92,7 +92,7 @@ assert 0.8276758670071535 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 3 times
+**Failures:** 4 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -103,28 +103,9 @@ assert 0.8276758670071535 < 0.77
 
 
 ```
-AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines:
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, you will need to provide the necessary documentation. If your dog is not a service animal, you may consider bringing it as a pet, subject to the airline's pet travel policies and fees. Pets must travel in a carrier that fits under the seat in front of you.
 
-- Pets must stay in their travel container at all times.
-- Checked pets are not allowed.
-- Only service dogs are allowed on international flights.
-- Pets must be at least 8 weeks old to travel.
-
-**Pet Carrier Requirements:**
-
-- The carrier must be large enough for your pet to stand, turn around, and lie down naturally.
-- It must fit under the seat in front of you.
-- Maximum size for hard-sided carriers: 18" L x 14" W x 8" H.
-- Maximum size for soft-sided carriers: 18" L x 14" W x 11" H.
-- Soft-sided carriers are recommended.
-- Only one adult dog or cat per container is allowed.
-- You may bring one personal item or a carry-on in addition to your pet (carry-on fees apply).
-
-You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section, or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
-
-If your flight is international or involves a service animal, please let me know so I can provide additional information.
-
-Criteria not met: guardrail should not have been triggered
+Criteria not met: The agent output does not meet the criteria. For pets on domestic flights it only states that pets must travel in a carrier that fits under the seat; it does not provide specific requirements such as pet age minimums, detailed carrier size/type specifications, or weight limits. For service animals on international flights it only says "you will need to provide the necessary documentation" without giving specific documentation rules (e.g., CDC Dog Import Form receipt, microchip proof, vaccination requirements). Therefore it does not provide both required sets of specific requirements together.
 ```
 </details>
 
@@ -132,7 +113,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
@@ -143,7 +124,7 @@ Criteria not met: guardrail should not have been triggered
 
 
 ```
-AssertionError: Failed response: 3
+AssertionError: Failed response: 3 hours
 
 Criteria not met: guardrail should not have been triggered
 ```
