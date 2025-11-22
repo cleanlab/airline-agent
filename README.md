@@ -575,15 +575,15 @@ For demonstration purposes, suppose that Frontier Airlines' Disruption Assistanc
 
 In both cases above, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it does not know about the “Peace Pass” is (it may wrongly think this refers to Frontier's GoWild! Pass).
 
-This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
+This misunderstanding reflects a systematic issue that you can fix with Expert Guidance (imagining you are a SME who wants to teach the AI to do better).
 To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above.
 Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
 
 > Peace Pass is another term for Disruption Assistance
 
-After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback.
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested Expert Guidance based on your feedback.
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
-Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+Once saved, this Expert Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
 Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
 
@@ -593,7 +593,7 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 You’ll now see that the AI provides the correct information about the Disruption Assistance program.
 
-You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project.
+You can review/edit existing Guidance by opening the `Expert Guidance` section in the left sidebar of your Cleanlab Project.
 
 </details>
 
