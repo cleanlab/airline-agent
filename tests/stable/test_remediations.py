@@ -166,7 +166,7 @@ def test_additional_expert_guidance_1(project: Project) -> None:
     assert log_id1 is not None
     log1 = wait_and_get_final_log_for(project, log_id1)
     assert_log_guardrail(log1, guardrailed=True)
-    assert "disruption assistance" not in log1.original_assistant_response.lower(), ERROR_MESSAGE.format(
+    assert "disruption assistance" not in (log1.original_assistant_response or "").lower(), ERROR_MESSAGE.format(
         log1.original_assistant_response, "output does NOT mention string 'Disruption Assistance'"
     )
 
@@ -175,7 +175,7 @@ def test_additional_expert_guidance_1(project: Project) -> None:
     assert log_id2 is not None
     log2 = wait_and_get_final_log_for(project, log_id2)
     assert_log_guardrail(log2, guardrailed=True)
-    assert "disruption assistance" not in log2.original_assistant_response.lower(), ERROR_MESSAGE.format(
+    assert "disruption assistance" not in (log2.original_assistant_response or "").lower(), ERROR_MESSAGE.format(
         log2.original_assistant_response, "output does NOT mention string 'Disruption Assistance'"
     )
 
