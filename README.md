@@ -4,11 +4,12 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 5 | 2 | 71% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 6 | 14% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 6 | 14% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 7 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 3 | 4 | 43% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 5 | 3 | 62% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 6 | 25% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 7 | 12% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 7 | 12% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 8 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 3 | 5 | 38% |
 
 ---
 
@@ -49,7 +50,7 @@ Criteria not met: The agent output explicitly states that cannabis/THC "remains 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?
 
@@ -60,11 +61,11 @@ Criteria not met: The agent output explicitly states that cannabis/THC "remains 
 
 
 ```
-AssertionError: Failed response: If you received a Discount Den membership as part of a flight booking and then cancel that flight within 24 hours, the status of your Discount Den membership may depend on specific terms and conditions related to the promotion. Generally, promotional memberships are tied to the completion of the transaction they were associated with. Therefore, canceling the flight might affect the validity of the membership.
+AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the qualifying activity (in this case, the flight booking). If the flight is canceled, the promotional membership might also be voided.
 
-To get a definitive answer, I recommend checking the specific terms and conditions of the promotion you participated in or contacting Frontier Airlines customer service directly for clarification.
+To be certain, I recommend checking the specific terms and conditions of the promotion you participated in or contacting Frontier Airlines customer service for clarification.
 
-Criteria not met: The agent_output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership 'may depend' on promotion terms and that canceling 'might affect' the membership, and it advises checking terms or contacting customer service. Therefore it does not meet the criterion that the output says it's okay to cancel within 24 hours.
+Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership 'may depend' on the promotion and that the membership 'might also be voided,' and recommends checking terms or contacting customer service. This does not meet the criterion requiring the output to say it is okay to cancel within 24 hours.
 ```
 </details>
 
@@ -92,9 +93,31 @@ assert 0.8276758670071535 < 0.77
 
 ---
 
+##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
+
+**Failures:** 1 times
+
+**Question:** Do miles in family pool expire?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: In a Frontier Airlines family pool, miles do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the family pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
+  
+  Criteria not met: trustworthiness threshold
+assert 0.8621433663829671 < 0.77
+```
+</details>
+
+---
+
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -105,20 +128,11 @@ assert 0.8276758670071535 < 0.77
 
 
 ```
-AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines to keep in mind:
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on flights. Only dogs that are individually trained to perform tasks for individuals with disabilities are accepted as service animals. If your dog is a trained service animal, it can accompany you on the flight, provided it meets the necessary requirements and documentation is submitted.
 
-- Pets must stay in their travel container at all times.
-- Only service dogs are allowed on international flights.
-- Pets must be at least 8 weeks old to travel.
-- The pet carrier must be large enough for your pet to stand, turn around, and lie down naturally, and it must fit under the seat in front of you.
-- Maximum dimensions for a hard-sided carrier are 18" L x 14" W x 8" H, and for a soft-sided carrier, 18" L x 14" W x 11" H. Soft-sided carriers are recommended.
-- Only one adult dog or cat is allowed per container.
+For pets that are not service animals, domesticated dogs, cats, rabbits, guinea pigs, hamsters, and small household birds are allowed on domestic flights within the U.S. for a one-way fee. Pets must remain in their travel containers at all times during the flight. If you wish to bring a pet, you can add it to your reservation during booking or through the "Manage Trip" section on the Frontier Airlines website.
 
-You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section, or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
-
-For more details, you can visit Frontier's [Traveling with Pets page](https://www.flyfrontier.com/travel/travel-info/family-pets).
-
-Criteria not met: The agent output includes specific domestic pet requirements (age minimum of 8 weeks; carrier size/dimensions and that it must fit under seat; one pet per container). However, it does NOT provide specific requirements for service animals on international flights — it only states that service dogs are allowed on international flights and gives no documentation, CDC Dog Import Form, microchip, or vaccination requirements. Because both requirement types are not provided together, the output fails the criteria.
+Criteria not met: Fail. The agent output does not provide the required specific details. For domestic pets it lists allowed species and that pets must remain in travel containers and can be added to reservations, but it omits specific requirements such as minimum pet age, carrier size/type, and weight limits. For service animals on international flights it only states that trained service dogs may accompany passengers if documentation is submitted, but it does not provide the required specific international documentation and health requirements (e.g., CDC Dog Import Form receipt, microchip proof, vaccination requirements). Therefore it does not meet both required criteria.
 ```
 </details>
 
