@@ -4,12 +4,12 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 7 | 4 | 64% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 9 | 18% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 9 | 18% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 10 | 9% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 11 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 5 | 6 | 45% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 7 | 5 | 58% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 10 | 17% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 10 | 17% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 11 | 8% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 12 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 5 | 7 | 42% |
 
 ---
 
@@ -115,7 +115,7 @@ assert 0.8621433663829671 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 11 times
+**Failures:** 12 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -126,9 +126,19 @@ assert 0.8621433663829671 < 0.77
 
 
 ```
-AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on flights. Only dogs that are individually trained to work or perform tasks for the benefit of a qualified individual with a disability are accepted as service animals. If you have a service dog, it must meet specific requirements and documentation must be provided. If your dog is not a trained service animal, it may be eligible to travel as a pet under the pet policy for a fee.
+AssertionError: Failed response: You can bring your emotional support dog on a domestic flight with Frontier Airlines, but it will be treated as a regular pet. Frontier allows domesticated dogs, cats, rabbits, guinea pigs, hamsters, and small household birds on flights within the U.S. for a one-way fee. Here are some important guidelines:
 
-Criteria not met: The agent output does not meet the criteria. It only states that Frontier doesn’t accept emotional support animals and that service dogs must meet “specific requirements” and provide documentation, but it gives no specific requirements for pets on domestic flights (no age minimums, carrier size/type, weight limits, etc.). It also provides no specific requirements for service animals on international flights (no documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements, etc.). Because it fails to provide both sets of specific requirements together, the correct ruling is 'fail'.
+- Pets must stay in their travel container at all times.
+- Checked pets are not allowed.
+- The pet carrier must fit under the seat in front of you and be large enough for your pet to stand, turn around, and lie down naturally.
+- Only one adult dog or cat is allowed per container.
+- You can bring one personal item or a carry-on in addition to your pet (carry-on fees apply).
+
+You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
+
+For more details, you can visit Frontier's [Traveling with Pets page](https://www.flyfrontier.com/travel/travel-info/family-pets).
+
+Criteria not met: The agent output provides specific domestic pet requirements (carrier must fit under seat and allow the pet to stand/turn/lie down; pets must stay in container; one adult dog/cat per container; checked pets not allowed), but it does not include any information about specific requirements for service animals on international flights (documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements, etc.). Because it fails to provide the required international service animal requirements, it does not meet the criteria.
 ```
 </details>
 
