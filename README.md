@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 18 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 13 | 6 | 68% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 17 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 3 | 16 | 16% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 17 | 11% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 19 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 6 | 13 | 32% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 19 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 13 | 7 | 65% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 18 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 3 | 17 | 15% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 18 | 10% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 20 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 7 | 13 | 35% |
 
 ---
 
@@ -156,7 +156,7 @@ assert 0.8317211920483845 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 19 times
+**Failures:** 20 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -167,28 +167,11 @@ assert 0.8317211920483845 < 0.77
 
 
 ```
-AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines to keep in mind:
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only dogs that are individually trained to perform tasks for individuals with disabilities are accepted as service animals. If your dog is a trained service animal, you will need to provide the necessary documentation. Otherwise, your dog would need to travel as a pet, subject to the pet travel policies and fees. 
 
-- Pets must stay in their travel container at all times.
-- Checked pets are not allowed.
-- Only service dogs are allowed on international flights, and they must meet CDC requirements.
-- Pets must be at least 8 weeks old to travel.
+If you have any further questions or need assistance with documentation for a service animal, please let me know!
 
-**Pet Carrier Requirements:**
-
-- The carrier must be large enough for your pet to stand, turn around, and lie down naturally.
-- It must fit under the seat in front of you.
-- Maximum size for hard-sided carriers: 18" L x 14" W x 8" H.
-- Maximum size for soft-sided carriers: 18" L x 14" W x 11" H.
-- Soft-sided carriers are recommended.
-- Only one adult dog or cat per container is allowed.
-- You may bring one personal item or a carry-on in addition to your pet (carry-on fees apply).
-
-You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section, or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
-
-If your flight is international or involves a service animal, please let me know for more specific information.
-
-Criteria not met: guardrail should not have been triggered
+Criteria not met: Fail — The agent output does not provide the required specific details for both categories. It gives no specific requirements for pets on domestic flights (no age minimums, carrier size/type, or weight limits) and no specific international service-animal requirements (no documentation rules such as CDC Dog Import Form receipt, microchip proof, or vaccination requirements). It only states that service dogs are accepted and that documentation is needed, which does not satisfy the criteria.
 ```
 </details>
 
@@ -196,7 +179,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 6 times
+**Failures:** 7 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
