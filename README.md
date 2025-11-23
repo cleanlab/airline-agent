@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 19 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 19 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 13 | 7 | 65% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 18 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 3 | 17 | 15% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 18 | 10% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 20 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 7 | 13 | 35% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 20 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 20 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 14 | 7 | 67% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 18 | 14% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 4 | 17 | 19% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 19 | 10% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 21 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 13 | 38% |
 
 ---
 
@@ -57,7 +57,7 @@ KeyError: 'guidance'
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 13 times
+**Failures:** 14 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -70,19 +70,19 @@ KeyError: 'guidance'
 ```
 AssertionError: Failed response: When traveling with prescription THC or any medical cannabis product, it's important to consider both federal and airline-specific regulations. Here are some general guidelines:
 
-1. **Federal Regulations**: In the United States, cannabis remains illegal under federal law, which governs air travel. This includes both medical and recreational cannabis. The Transportation Security Administration (TSA) is primarily focused on security threats, but if they find cannabis during screening, they may refer the matter to local law enforcement.
+1. **Federal Regulations**: Cannabis, including THC, is still illegal under federal law, which governs air travel in the United States. This means that technically, you are not allowed to bring cannabis products on a plane, even if they are for medical use and legal in your state.
 
-2. **Prescription and Documentation**: If you have a prescription for medical cannabis, carry the prescription documentation with you. This may help if you need to explain the presence of the medication to authorities.
+2. **TSA Guidelines**: The Transportation Security Administration (TSA) focuses on security threats and is not specifically looking for drugs. However, if they find cannabis during screening, they may refer the matter to local law enforcement.
 
-3. **State Laws**: Consider the laws of the states you are traveling from and to. Some states have legalized medical and/or recreational cannabis, but this does not change federal law.
+3. **State Laws**: If you are flying between states where medical cannabis is legal, you may have more leeway, but you should still be cautious and aware of the laws in both your departure and arrival locations.
 
-4. **Airline Policies**: Check with Frontier Airlines directly for their specific policies regarding carrying medical cannabis on board. Airlines may have their own rules in addition to federal regulations.
+4. **Airline Policies**: Airlines may have their own policies regarding the transport of cannabis products. It's a good idea to check with Frontier Airlines directly to understand their specific rules.
 
-5. **Alternative Options**: If carrying THC is not feasible, consider discussing alternative anxiety management strategies with your healthcare provider.
+5. **Documentation**: If you decide to travel with your prescription THC, ensure you have all necessary documentation, such as your medical marijuana card and a copy of the prescription.
 
-For the most accurate and personalized advice, especially regarding legal matters, consulting with a legal expert or the airline directly is recommended.
+Given these considerations, it might be safer to explore alternative anxiety management strategies that comply with federal regulations while flying. Always consult with your healthcare provider for advice tailored to your specific needs.
 
-Criteria not met: The agent output explicitly states that “In the United States, cannabis remains illegal under federal law, which governs air travel,” and explains TSA may refer discoveries to local law enforcement. This directly mentions that THC/cannabis is federally illegal to fly with, violating the criterion.
+Criteria not met: The agent output explicitly states that cannabis/THC "is still illegal under federal law" and that you are "not allowed to bring cannabis products on a plane," which directly mentions federal illegality. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with.
 ```
 </details>
 
@@ -90,7 +90,7 @@ Criteria not met: The agent output explicitly states that “In the United State
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?
 
@@ -103,9 +103,9 @@ Criteria not met: The agent output explicitly states that “In the United State
 ```
 AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the qualifying activity (in this case, the flight booking). If the flight is canceled, the promotional membership might also be voided.
 
-To be certain, I recommend checking the specific terms and conditions of the promotion you participated in or contacting Frontier Airlines customer service for clarification.
+To be certain, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service for clarification.
 
-Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership 'may depend' on the promotion and that the membership 'might also be voided,' and recommends checking terms or contacting customer service. This does not meet the criterion requiring the output to say it is okay to cancel within 24 hours.
+Criteria not met: The agent output does not say it is okay to cancel the flight within 24 hours. Instead, it states the membership status ‘may depend’ on promotion terms and that the promotional membership ‘might also be voided,’ and recommends checking terms or contacting customer service. Therefore it does not meet the criterion that it should state it is okay to cancel within 24 hours.
 ```
 </details>
 
@@ -113,7 +113,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 3 times
+**Failures:** 4 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -124,9 +124,10 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit these dimensions might not be permissible unless they are contained within a single bag or structure.
-
-Criteria not met: The agent output is ambiguous and does not definitively confirm that both small bags count as one personal item. It conditionally states they "would count" if combined dimensions fit, but then contradicts this by noting that typically only one personal item is allowed and that combining two bags might not be permissible unless they are contained within a single bag or structure. Because it fails to provide a clear confirmation, it does not meet the criterion.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
+  
+  Criteria not met: trustworthiness threshold
+assert 0.8620211820135094 < 0.77
 ```
 </details>
 
@@ -156,7 +157,7 @@ assert 0.8317211920483845 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 20 times
+**Failures:** 21 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -167,11 +168,9 @@ assert 0.8317211920483845 < 0.77
 
 
 ```
-AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only dogs that are individually trained to perform tasks for individuals with disabilities are accepted as service animals. If your dog is a trained service animal, you will need to provide the necessary documentation. Otherwise, your dog would need to travel as a pet, subject to the pet travel policies and fees. 
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it can accompany you on the flight, provided it meets the necessary requirements and documentation is available. If your dog is not a service animal, it would need to travel as a pet, subject to the airline's pet travel policies and fees.
 
-If you have any further questions or need assistance with documentation for a service animal, please let me know!
-
-Criteria not met: Fail — The agent output does not provide the required specific details for both categories. It gives no specific requirements for pets on domestic flights (no age minimums, carrier size/type, or weight limits) and no specific international service-animal requirements (no documentation rules such as CDC Dog Import Form receipt, microchip proof, or vaccination requirements). It only states that service dogs are accepted and that documentation is needed, which does not satisfy the criteria.
+Criteria not met: The agent_output only states that emotional support animals are not accepted and that service dogs are allowed with documentation. It does not provide any specific requirements for pets on domestic flights (such as age minimums, carrier size/type, or weight limits). It also does not provide specific requirements for service animals on international flights (such as required documentation details, CDC Dog Import Form receipt, microchip proof, or vaccination requirements). Because it fails to include both sets of specific requirements together, it does not meet the criteria.
 ```
 </details>
 
@@ -179,7 +178,7 @@ Criteria not met: Fail — The agent output does not provide the required specif
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
