@@ -4,12 +4,12 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 6 | 4 | 60% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 8 | 20% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 8 | 20% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 9 | 10% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 10 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 6 | 40% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 7 | 4 | 64% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 9 | 18% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 9 | 18% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 10 | 9% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 11 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 5 | 6 | 45% |
 
 ---
 
@@ -17,7 +17,7 @@
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 6 times
+**Failures:** 7 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -28,21 +28,19 @@
 
 
 ```
-AssertionError: Failed response: When traveling with prescription THC or any medical cannabis products, it's important to consider both federal and airline-specific regulations. Here are some general guidelines:
+AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:
 
-1. **Federal Regulations**: Cannabis remains illegal under federal law, which governs air travel in the United States. This includes both medical and recreational cannabis. The Transportation Security Administration (TSA) is primarily focused on security threats, but if they find cannabis during screening, they may refer the matter to local law enforcement.
+1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law. TSA officers are required to report any suspected violations of law, including possession of marijuana and cannabis-infused products.
 
-2. **Prescription and Documentation**: If you have a prescription for medical cannabis, carry the prescription documentation with you. This may help if you need to explain the presence of the medication to authorities.
+2. **State Laws**: Even if you have a prescription, you should be aware of the laws regarding THC in the states you are traveling to and from. Some states have legalized medical and recreational marijuana, while others have not.
 
-3. **State Laws**: Consider the laws of the states you are traveling to and from. Some states have more lenient laws regarding medical cannabis, but these do not apply in federal jurisdictions like airports.
+3. **Documentation**: If you decide to travel with your prescription THC, ensure you have your prescription documentation readily available. This can help if you are questioned by TSA or law enforcement.
 
-4. **Airline Policies**: Check with Frontier Airlines for any specific policies they may have regarding the transport of medical cannabis.
+4. **Airline Policies**: Check with Frontier Airlines for any specific policies they may have regarding traveling with medical marijuana.
 
-5. **Alternatives**: If possible, consider alternative medications that are not subject to these restrictions for managing anxiety during your flight.
+Given these considerations, it is advisable to consult with legal resources or authorities to ensure compliance with all applicable laws and regulations before traveling with prescription THC.
 
-For the most accurate and personalized advice, consult with legal experts or the relevant authorities.
-
-Criteria not met: The agent output explicitly states that "Cannabis remains illegal under federal law, which governs air travel" and discusses federal enforcement—therefore it mentions that THC/cannabis is federally illegal to fly with, violating the criterion.
+Criteria not met: The agent output explicitly states that “marijuana and certain cannabis-infused products… remain illegal under federal law,” which directly mentions that THC/cannabis is federally illegal to fly with. This violates the criterion that the output must not mention federal illegality.
 ```
 </details>
 
@@ -117,7 +115,7 @@ assert 0.8621433663829671 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 10 times
+**Failures:** 11 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -128,9 +126,9 @@ assert 0.8621433663829671 < 0.77
 
 
 ```
-AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it must meet specific requirements and documentation may be needed. For more details on service animals, you can visit Frontier's [Special Services page](https://www.flyfrontier.com/travel/travel-info/special-services/?according=trained%20service%20animals).
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on flights. Only dogs that are individually trained to work or perform tasks for the benefit of a qualified individual with a disability are accepted as service animals. If you have a service dog, it must meet specific requirements and documentation must be provided. If your dog is not a trained service animal, it may be eligible to travel as a pet under the pet policy for a fee.
 
-Criteria not met: The agent output only states that emotional support animals are not accepted and that service dogs are allowed, with a link. It does not provide any specific requirements for pets on domestic flights (such as pet age minimums, carrier size or type, weight limits). It also does not provide any specific requirements for service animals on international flights (such as documentation rules, CDC Dog Import Form receipt, microchip proof, or vaccination requirements). Because it fails to include both required sets of specific requirements, the correct ruling is 'fail'.
+Criteria not met: The agent output does not meet the criteria. It only states that Frontier doesn’t accept emotional support animals and that service dogs must meet “specific requirements” and provide documentation, but it gives no specific requirements for pets on domestic flights (no age minimums, carrier size/type, weight limits, etc.). It also provides no specific requirements for service animals on international flights (no documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements, etc.). Because it fails to provide both sets of specific requirements together, the correct ruling is 'fail'.
 ```
 </details>
 
@@ -138,7 +136,7 @@ Criteria not met: The agent output only states that emotional support animals ar
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
