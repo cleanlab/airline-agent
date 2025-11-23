@@ -1,15 +1,15 @@
-### 🧩 Stability Summary (2025-11-22)
-*Aggregated from the last 10 days (2025-11-12 → 2025-11-22)*
+### 🧩 Stability Summary (2025-11-23)
+*Aggregated from the last 10 days (2025-11-13 → 2025-11-23)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 6 | 3 | 67% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 7 | 22% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 8 | 11% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 8 | 11% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 9 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 5 | 44% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 6 | 4 | 60% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 8 | 20% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 8 | 20% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 9 | 10% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 10 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 6 | 40% |
 
 ---
 
@@ -73,7 +73,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -87,7 +87,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
   
   Criteria not met: trustworthiness threshold
-assert 0.8276758670071535 < 0.77
+assert 0.8311652800560171 < 0.77
 ```
 </details>
 
@@ -117,7 +117,7 @@ assert 0.8621433663829671 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 9 times
+**Failures:** 10 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -130,7 +130,7 @@ assert 0.8621433663829671 < 0.77
 ```
 AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it must meet specific requirements and documentation may be needed. For more details on service animals, you can visit Frontier's [Special Services page](https://www.flyfrontier.com/travel/travel-info/special-services/?according=trained%20service%20animals).
 
-Criteria not met: The agent output only states that Frontier does not accept emotional support animals and that service dogs may be allowed with possible documentation and a link. It does NOT include any specific requirements for pets on domestic flights (no pet age minimums, carrier size/type, or weight limits are given). It also does NOT include any specific requirements for service animals on international flights (no documentation rules, no mention of CDC Dog Import Form receipt, microchip proof, or vaccination requirements). Because both required types of specific requirements are not provided together, the output fails the criteria.
+Criteria not met: The agent output only states that emotional support animals are not accepted and that service dogs are allowed, with a link. It does not provide any specific requirements for pets on domestic flights (such as pet age minimums, carrier size or type, weight limits). It also does not provide any specific requirements for service animals on international flights (such as documentation rules, CDC Dog Import Form receipt, microchip proof, or vaccination requirements). Because it fails to include both required sets of specific requirements, the correct ruling is 'fail'.
 ```
 </details>
 
