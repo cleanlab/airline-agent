@@ -4,13 +4,13 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 16 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 11 | 6 | 65% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 15 | 12% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 3 | 14 | 18% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 16 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 17 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 6 | 11 | 35% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 17 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 12 | 6 | 67% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 16 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 3 | 15 | 17% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 16 | 11% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 18 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 6 | 12 | 33% |
 
 ---
 
@@ -37,7 +37,7 @@ KeyError: 'guidance'
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 11 times
+**Failures:** 12 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -48,21 +48,19 @@ KeyError: 'guidance'
 
 
 ```
-AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:
+AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the airline's policies. Here are some general guidelines:
 
-1. **Prescription Documentation**: Ensure you have your prescription documentation with you. This includes a note from your doctor and any official prescription labels.
+1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law, except for products that contain no more than 0.3% THC on a dry weight basis or are approved by the FDA.
 
-2. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, they recommend keeping medications in your carry-on for easy access and to prevent loss.
+2. **Prescription Documentation**: If you have a prescription for THC, it's advisable to carry documentation, such as a doctor's note or the prescription label, to verify that it is for medical use.
 
-3. **State Laws**: Check the laws regarding THC in both your departure and arrival states. While some states have legalized medical and recreational marijuana, others have not, and federal law still classifies marijuana as a controlled substance.
+3. **State Laws**: Be aware of the laws regarding THC in both your departure and arrival locations, as they can vary significantly.
 
-4. **Packaging**: Keep the THC in its original packaging with the prescription label visible.
+4. **Airline Policies**: While Frontier Airlines does not have a specific policy on carrying THC, it's important to ensure that you comply with federal regulations and have the necessary documentation.
 
-5. **Security Screening**: Be prepared to declare your medication at the security checkpoint. TSA officers have the discretion to allow or prohibit items through the checkpoint.
+For your specific situation, if your THC medication is legally prescribed and you have the appropriate documentation, you should be able to carry it in your carry-on. However, always check the latest TSA guidelines and consider contacting Frontier Airlines directly for any specific concerns or updates to their policies.
 
-It's always a good idea to check the latest TSA guidelines and consult with your airline if you have specific concerns.
-
-Criteria not met: The output explicitly states that “federal law still classifies marijuana as a controlled substance,” which mentions federal illegality. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with.
+Criteria not met: The agent output explicitly states that “marijuana and certain cannabis-infused products ... remain illegal under federal law,” which directly mentions federal illegality of THC/cannabis. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with. Therefore the output fails the criterion.
 ```
 </details>
 
@@ -114,7 +112,7 @@ Criteria not met: The agent output is ambiguous and does not definitively confir
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** Do miles in family pool expire?
 
@@ -125,10 +123,10 @@ Criteria not met: The agent output is ambiguous and does not definitively confir
 
 
 ```
-AssertionError: Failed response: In a Frontier Airlines family pool, miles do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the family pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
+AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
   
   Criteria not met: trustworthiness threshold
-assert 0.8621433663829671 < 0.77
+assert 0.8317211920483845 < 0.77
 ```
 </details>
 
@@ -136,7 +134,7 @@ assert 0.8621433663829671 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 17 times
+**Failures:** 18 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -147,9 +145,11 @@ assert 0.8621433663829671 < 0.77
 
 
 ```
-AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it must meet specific requirements and documentation may be needed. For more details on service animal requirements, you can visit Frontier's Special Services page.
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it must meet specific requirements and documentation may be needed. For more details on service animals, you can visit Frontier's [Special Services page](https://www.flyfrontier.com/travel/travel-info/special-services/?according=trained%20service%20animals).
 
-Criteria not met: The agent output only states general policy points (no emotional support animals; service dogs allowed and may require documentation) and refers to Frontier's Special Services page. It does not provide any specific requirements for pets on domestic flights (no age minimums, carrier size/type, or weight limits) nor any specific requirements for service animals on international flights (no documentation details such as CDC Dog Import Form receipt, microchip proof, or vaccination requirements). Therefore it fails to meet the criteria requiring BOTH sets of specific requirements.
+If your dog is not a service animal, you may still bring it as a pet on domestic flights within the U.S. for a one-way fee, provided it meets the pet travel guidelines. Pets must remain in their travel container at all times, and the container must fit under the seat in front of you.
+
+Criteria not met: The agent output does not meet the criteria. For pets on domestic flights it only mentions that pets must remain in a travel container that fits under the seat and a one-way fee, but it fails to provide specific requirements such as pet age minimums, carrier size/type details, or weight limits. For service animals on international flights it only states that documentation may be needed and links to more info, but it does not provide specific international requirements (e.g., documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements). Simply stating service dogs are allowed is insufficient. Therefore the output fails to provide both required sets of specific requirements together.
 ```
 </details>
 
