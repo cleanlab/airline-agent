@@ -4,12 +4,12 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 10 | 5 | 67% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 13 | 13% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 3 | 12 | 20% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 14 | 7% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 15 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 6 | 9 | 40% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 10 | 6 | 62% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 14 | 12% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 3 | 13 | 19% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 15 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 16 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 6 | 10 | 38% |
 
 ---
 
@@ -116,7 +116,7 @@ assert 0.8621433663829671 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 15 times
+**Failures:** 16 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -127,9 +127,11 @@ assert 0.8621433663829671 < 0.77
 
 
 ```
-AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. However, if your dog is a trained service animal, it may be eligible to travel with you. Service animals must be individually trained to perform tasks for the benefit of a qualified individual with a disability, including psychiatric service dogs. If your dog does not qualify as a service animal, it may be eligible to travel under Frontier's Pet Policy for a fee.
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it must meet specific requirements and documentation may be needed. For more details on service animals, you can visit Frontier's [Special Services page](https://www.flyfrontier.com/travel/travel-info/special-services/?according=trained%20service%20animals).
 
-Criteria not met: fail — The agent output does not provide BOTH required details. It gives only general statements: that emotional support animals are not accepted and that trained service animals may be eligible. It does not supply specific requirements for pets on domestic flights (e.g., pet age minimums, carrier size/type, weight limits), nor does it supply specific requirements for service animals on international flights (e.g., documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements). Therefore it fails the criteria.
+If your dog is not a service animal, you may still bring it as a pet on domestic flights within the U.S. for a one-way fee, provided it meets the pet travel guidelines. Pets must stay in their travel container at all times, and the container must fit under the seat in front of you.
+
+Criteria not met: The agent output fails to meet the criteria because it does not provide the required specifics for both categories together. For pets on domestic flights it only mentions that pets must stay in their travel container and that the container must fit under the seat, but it omits other specific requirements such as pet age minimums, carrier size/type dimensions, and weight limits. For service animals on international flights it merely states that service animals may need documentation and links to a page, but it does not provide the specific international requirements (e.g., required documentation rules, CDC Dog Import Form receipt, microchip proof, or vaccination requirements). Therefore the output does not include both sets of specific requirements as required by the criteria.
 ```
 </details>
 
