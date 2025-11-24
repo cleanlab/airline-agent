@@ -1,17 +1,17 @@
-### 🧩 Stability Summary (2025-11-23)
-*Aggregated from the last 10 days (2025-11-13 → 2025-11-23)*
+### 🧩 Stability Summary (2025-11-24)
+*Aggregated from the last 10 days (2025-11-14 → 2025-11-24)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 20 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 20 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 14 | 7 | 67% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 18 | 14% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 4 | 17 | 19% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 19 | 10% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 21 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 13 | 38% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 21 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 21 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 14 | 8 | 64% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 19 | 14% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 17 | 23% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 19 | 14% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 22 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 14 | 36% |
 
 ---
 
@@ -113,7 +113,7 @@ Criteria not met: The agent output does not say it is okay to cancel the flight 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -124,10 +124,9 @@ Criteria not met: The agent output does not say it is okay to cancel the flight 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
-  
-  Criteria not met: trustworthiness threshold
-assert 0.8620211820135094 < 0.77
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit this requirement might not be permissible unless they are contained within a single bag that meets the size limits.
+
+Criteria not met: The agent's output is conditional and ambiguous rather than a clear confirmation. It says the two bags 'would count' only if they fit combined within the size limits, then immediately notes that typically only one personal item is allowed and combining two bags 'might not be permissible' unless they are contained within a single bag. This does not unambiguously confirm that both small bags count as one personal item, so it fails the criteria.
 ```
 </details>
 
@@ -135,7 +134,7 @@ assert 0.8620211820135094 < 0.77
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** Do miles in family pool expire?
 
@@ -146,10 +145,10 @@ assert 0.8620211820135094 < 0.77
 
 
 ```
-AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
+AssertionError: Failed response: In a Frontier Airlines family pool, the miles do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the family pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
   
   Criteria not met: trustworthiness threshold
-assert 0.8317211920483845 < 0.77
+assert 0.8165291503013313 < 0.77
 ```
 </details>
 
@@ -157,7 +156,7 @@ assert 0.8317211920483845 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 21 times
+**Failures:** 22 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -168,9 +167,9 @@ assert 0.8317211920483845 < 0.77
 
 
 ```
-AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it can accompany you on the flight, provided it meets the necessary requirements and documentation is available. If your dog is not a service animal, it would need to travel as a pet, subject to the airline's pet travel policies and fees.
+AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it can accompany you on the flight, provided it meets the necessary requirements and documentation is available. If your dog is not a service animal, it would need to travel as a pet, subject to the airline's pet travel policies.
 
-Criteria not met: The agent_output only states that emotional support animals are not accepted and that service dogs are allowed with documentation. It does not provide any specific requirements for pets on domestic flights (such as age minimums, carrier size/type, or weight limits). It also does not provide specific requirements for service animals on international flights (such as required documentation details, CDC Dog Import Form receipt, microchip proof, or vaccination requirements). Because it fails to include both sets of specific requirements together, it does not meet the criteria.
+Criteria not met: The agent output does not include the required specifics for either category. It fails to provide any specific requirements for pets on domestic flights (no information on minimum pet age, carrier size/type, weight limits, etc.). It also fails to provide specific requirements for service animals on international flights (no documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements, or similar). Therefore it does not meet the criteria.
 ```
 </details>
 
