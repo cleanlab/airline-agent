@@ -4,9 +4,9 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 5 | 1 | 83% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 1 | 5 | 17% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 2 | 67% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 6 | 1 | 86% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 2 | 5 | 29% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 3 | 57% |
 
 ---
 
@@ -14,7 +14,7 @@
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 5 times
+**Failures:** 6 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -25,21 +25,19 @@
 
 
 ```
-AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the airline's policies. Here are some general guidelines:
+AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:
 
-1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. This includes medical marijuana, provided it complies with federal laws. However, marijuana remains illegal under federal law, so even if you have a prescription, it may be subject to confiscation.
+1. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, marijuana and certain cannabis-infused products, including some cannabidiol (CBD) oil, remain illegal under federal law. TSA officers are required to report any suspected violations of law, including possession of marijuana and cannabis-infused products.
 
-2. **Documentation**: Carry your prescription and any relevant documentation from your doctor. This can help if you are questioned about your medication.
+2. **Prescription Documentation**: If you have a prescription for THC, it is advisable to carry documentation from your doctor. This can help explain the necessity of the medication if questioned.
 
-3. **State Laws**: Be aware of the laws regarding medical marijuana in both your departure and arrival locations, as they can vary significantly.
+3. **State Laws**: Ensure that both your departure and arrival states allow the possession of THC for medical purposes. Laws can vary significantly between states.
 
-4. **Airline Policies**: Check with Frontier Airlines directly to see if they have specific policies regarding the transport of medical marijuana.
+4. **Airline Policies**: Check with Frontier Airlines for any specific policies they might have regarding the transport of medical marijuana.
 
-5. **Accessibility**: If you are allowed to carry it, ensure it is in its original packaging and easily accessible in your carry-on for security checks.
+Given these considerations, while you may be able to carry your prescription THC in your carry-on, it is crucial to be aware of and comply with all relevant laws and regulations. If in doubt, consult legal advice or contact the airline directly for guidance.
 
-For the most accurate and personalized advice, consider contacting Frontier Airlines and reviewing TSA guidelines directly before your flight.
-
-Criteria not met: The agent output explicitly states that “marijuana remains illegal under federal law,” and suggests it may be confiscated. This directly violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with. Therefore the output fails the criterion.
+Criteria not met: The agent_output explicitly states that "marijuana and certain cannabis-infused products ... remain illegal under federal law," which directly mentions federal illegality. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with. Therefore: fail.
 ```
 </details>
 
@@ -47,7 +45,7 @@ Criteria not met: The agent output explicitly states that “marijuana remains i
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -58,7 +56,7 @@ Criteria not met: The agent output explicitly states that “marijuana remains i
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier’s Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline how Frontier manages both controllable and uncontrollable disruptions to customer travel, including rebooking options.
 
 Criteria not met: guardrail should have been triggered
 ```
