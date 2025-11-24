@@ -19,7 +19,6 @@ from pydantic_ai.messages import (
     ModelMessage,
     ModelRequest,
     ModelResponse,
-    SystemPromptPart,
     UserPromptPart,
 )
 from pydantic_ai.tools import ToolDefinition
@@ -173,15 +172,15 @@ def _get_system_messages(
                 instructions_added = True
 
             # Add SystemPromptPart content from message history
-            for part in message.parts:
-                if isinstance(part, SystemPromptPart) and part.content not in system_prompts_seen:
-                    system_messages.append(
-                        cast(
-                            ChatCompletionMessageParam,
-                            {"role": "system", "content": part.content},
-                        )
-                    )
-                    system_prompts_seen.add(part.content)
+            # for part in message.parts:
+            #     if isinstance(part, SystemPromptPart) and part.content not in system_prompts_seen:
+            #         system_messages.append(
+            #             cast(
+            #                 ChatCompletionMessageParam,
+            #                 {"role": "system", "content": part.content},
+            #             )
+            #         )
+            #         system_prompts_seen.add(part.content)
 
     return system_messages
 

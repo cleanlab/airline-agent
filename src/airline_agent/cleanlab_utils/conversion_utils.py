@@ -39,8 +39,9 @@ def convert_to_openai_messages(message_history: list[ModelMessage]) -> list[Chat
             # Handle request messages (sent TO the model)
             for part in message.parts:
                 if isinstance(part, SystemPromptPart):
-                    # Skip SystemPromptPart - handled separately in _get_system_messages()
-                    continue
+                    # # Skip SystemPromptPart - handled separately in _get_system_messages()
+                    # continue
+                    openai_messages.append({"role": "system", "content": part.content})
                 if isinstance(part, UserPromptPart):
                     openai_messages.append(_convert_user_prompt(part))
                 elif isinstance(part, ToolReturnPart):

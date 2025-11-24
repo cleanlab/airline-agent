@@ -13,8 +13,10 @@ from pydantic_ai import (
     Agent,
     CallToolsNode,
     ModelMessage,
+    ModelRequest,
     ModelRequestNode,
     ModelSettings,
+    SystemPromptPart,
     TextPart,
     ToolCallPart,
     ToolReturnPart,
@@ -40,7 +42,6 @@ from airline_agent.backend.schemas.run_event import (
 )
 from airline_agent.cleanlab_utils.consult_utils import (
     consult_cleanlab,
-    update_prompt_with_guidance,
 )
 from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
@@ -120,13 +121,15 @@ async def airline_chat_streaming(
     current_tool_calls: dict[str, ToolCall] = {}
 
     original_user_query = message.content
+    user_prompt = original_user_query
+    original_message_history = thread_to_messages[thread_id].copy()
     if cleanlab_enabled:
         guidance = consult_cleanlab(original_user_query, thread_to_messages[thread_id])
-        user_prompt = update_prompt_with_guidance(original_user_query, guidance)
-    else:
-        user_prompt = original_user_query
+        if guidance:
+            original_message_history.append(ModelRequest(
+                parts=[SystemPromptPart(content=f"<advice_to_consider>\n{'\n'.join(guidance)}\n</advice_to_consider>")],
+            ))
 
-    original_message_history = thread_to_messages[thread_id].copy()
     try:
         async with agent.iter(user_prompt=user_prompt, message_history=original_message_history) as run:
             async for node in run:
