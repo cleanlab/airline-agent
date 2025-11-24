@@ -4,9 +4,9 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 3 | 1 | 75% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 1 | 3 | 25% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 2 | 2 | 50% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 4 | 1 | 80% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 1 | 4 | 20% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 3 | 2 | 60% |
 
 ---
 
@@ -14,7 +14,7 @@
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 3 times
+**Failures:** 4 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -25,21 +25,19 @@
 
 
 ```
-AssertionError: Failed response: When traveling with prescription THC, it's important to consider both TSA regulations and the laws of the states you are traveling to and from. Here are some general guidelines:
+AssertionError: Failed response: When traveling with prescription THC or any medical cannabis product, it's important to consider both federal and airline-specific regulations. Here are some key points to keep in mind:
 
-1. **Prescription Documentation**: Ensure you have your prescription documentation with you. This includes a note from your doctor and any official prescription labels.
+1. **Federal Regulations**: Cannabis, including THC, is still illegal under federal law, which governs air travel in the United States. This means that even if you have a prescription, carrying THC on a flight can be problematic.
 
-2. **TSA Regulations**: The TSA allows passengers to travel with medications in both carry-on and checked baggage. However, they recommend that you carry them in your carry-on for easy access and to prevent loss.
+2. **TSA Guidelines**: The Transportation Security Administration (TSA) focuses on security threats and is not specifically looking for drugs. However, if they find cannabis during screening, they will refer the matter to local law enforcement.
 
-3. **State Laws**: Check the laws regarding THC in both your departure and arrival states. While some states have legalized medical and recreational marijuana, others have not, and federal law still classifies marijuana as a controlled substance.
+3. **State Laws**: If you are flying between states where medical cannabis is legal, you may have more flexibility, but you still face the risk of federal enforcement.
 
-4. **Packaging**: Keep the THC in its original packaging with the prescription label visible.
+4. **Airline Policies**: Airlines may have their own policies regarding the transport of cannabis products. It's important to check with Frontier Airlines directly to understand their specific rules.
 
-5. **Security Screening**: Be prepared to declare your medication at the security checkpoint. TSA officers have the discretion to allow or prohibit items through the checkpoint.
+Given these considerations, it is generally not advisable to carry THC in your carry-on luggage. If you have a medical need, consult with your doctor and consider alternative medications that comply with federal regulations for air travel.
 
-It's always a good idea to check the latest TSA guidelines and consult with your airline if you have specific concerns.
-
-Criteria not met: The agent output explicitly states that “federal law still classifies marijuana as a controlled substance,” which directly mentions the federal legal status (i.e., that it is federally illegal). This violates the criterion. Ruling: fail.
+Criteria not met: The agent output explicitly states, "Cannabis, including THC, is still illegal under federal law," and discusses federal enforcement and risks when carrying THC on a flight. Because it directly mentions that THC/cannabis is federally illegal to fly with, it violates the criterion.
 ```
 </details>
 
@@ -68,7 +66,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
