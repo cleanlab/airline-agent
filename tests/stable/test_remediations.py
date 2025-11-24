@@ -1,6 +1,7 @@
 import pytest
 
 from airline_agent.util import TestAgent as Agent
+from tests.constants import ERROR_MESSAGE
 from tests.judge import Judge, assert_judge
 from tests.util import Project, assert_log_guardrail, wait_and_get_final_log_for
 
@@ -156,95 +157,44 @@ def test_expert_guidance(project: Project) -> None:
 
 @pytest.mark.additional
 def test_additional_expert_guidance_1(project: Project) -> None:
-    question1 = "can i bring a dog with me on a flight?"
-    question2 = "can i bring my emotional support dog with me on a domestic flight?"
+    question1 = "My flight got canceled how to use my Peace Pass benefit?"
+    question2 = "does peace pass still work if trip canceled due to weather?"
 
     print("QUESTION:", question1)  # noqa: T201
     agent1 = Agent()
     answer1, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
     log1 = wait_and_get_final_log_for(project, log_id1)
-    assert_log_guardrail(log1, guardrailed=False)
-    incomplete_judge = Judge(
-        [
-            (
-                "output does NOT provide BOTH requirements TOGETHER for:\n"
-                "- specific requirements for pets on domestic flights (e.g., pet age minimums, carrier size or type, weight limits), AND\n"
-                "- specific requirements for service animals on international flights (e.g., documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements).\n\n"
-                "stating that service dogs are allowed do NOT count as providing requirements."
-            )
-        ]
+    assert_log_guardrail(log1, guardrailed=True)
+    assert "disruption assistance" not in (log1.original_assistant_response or "").lower(), ERROR_MESSAGE.format(
+        log1.original_assistant_response, "output does NOT mention string 'Disruption Assistance'"
     )
-    incomplete_judge.assert_judge(answer1)
+
     agent2 = Agent()
-    answer2, log_id2 = agent2.chat(question2)
+    _, log_id2 = agent2.chat(question2)
     assert log_id2 is not None
     log2 = wait_and_get_final_log_for(project, log_id2)
-    assert_log_guardrail(log2, guardrailed=False)
-    incomplete_judge.assert_judge(answer2)
+    assert_log_guardrail(log2, guardrailed=True)
+    assert "disruption assistance" not in (log2.original_assistant_response or "").lower(), ERROR_MESSAGE.format(
+        log2.original_assistant_response, "output does NOT mention string 'Disruption Assistance'"
+    )
 
     guidance_id = project.add_expert_review(
         log1.id,
         is_good=False,
-        reason="""Answer depends if flight is international and if it's a service animal. Should have clarified with user, and then used info from all relevant articles: always use the "do you allow pets on plane" article, then if international/service animal, also the "service animals" article""",
+        reason="Peace Pass is another term for Disruption Assistance",
     )
     assert guidance_id is not None
     project.get_guidance(guidance_id)  # wait for guidance to be generated
 
+    disruption_assistance_judge = Judge(
+        ["output includes an explanation of Frontier Airlines's Disruption Assistance program"]
+    )
+
     agent3 = Agent()
-    answer3, log_id3 = agent3.chat(question1)
-    assert log_id3 is not None
-    log3 = wait_and_get_final_log_for(project, log_id3)
-    assert_log_guardrail(log3, guardrailed=False)
-    clarifying_judge = Judge(
-        [
-            (
-                "output either (a) asks the user to clarify BOTH if the flight is domestic or international"
-                "AND whether the animal is a pet or a service animal, "
-                "OR (b) provides information for only one case and clearly instructs the user to specify if the other case applies"
-            )
-        ]
-    )
-    clarifying_judge.assert_judge(answer3)
-    answer4, log_id4 = agent3.chat("its an international flight. and its a service animal")
-    assert log_id4 is not None
-    log4 = wait_and_get_final_log_for(project, log_id4)
-    assert_log_guardrail(log4, guardrailed=False)
-    assert_judge(
-        ["output describes the requirements of service dogs on Frontier Airlines international flights"], answer4
-    )
+    answer3, _ = agent3.chat(question1)
+    disruption_assistance_judge.assert_judge(answer3)
 
     agent4 = Agent()
-    answer5, log_id5 = agent4.chat(question1)
-    assert log_id5 is not None
-    log5 = wait_and_get_final_log_for(project, log_id5)
-    assert_log_guardrail(log5, guardrailed=False)
-    clarifying_judge.assert_judge(answer5)
-    answer6, log_id6 = agent4.chat("its a domestic flight. and its a house pet")
-    assert log_id6 is not None
-    log6 = wait_and_get_final_log_for(project, log_id6)
-    assert_log_guardrail(log6, guardrailed=False)
-    assert_judge(
-        [
-            "output states that domesticated dogs are allowed on domestic flights with Frontier Airlines",
-            "output describes the requirements for bringing a dog on board a Frontier Airlines domestic flight",
-        ],
-        answer6,
-    )
-
-    agent5 = Agent()
-    answer7, log_id7 = agent5.chat(question2)
-    assert log_id7 is not None
-    log7 = wait_and_get_final_log_for(project, log_id7)
-    assert_log_guardrail(log7, guardrailed=False)
-    assert_judge(
-        [
-            (
-                "output DOES provide BOTH requirements TOGETHER for:\n"
-                "- specific requirements for pets on domestic flights (e.g., pet age minimums, carrier size or type, weight limits), AND\n"
-                "- specific requirements for service animals on international flights (e.g., documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements).\n\n"
-                "stating that service dogs are allowed do NOT count as providing requirements."
-            )
-        ],
-        answer7,
-    )
+    answer4, _ = agent4.chat(question2)
+    disruption_assistance_judge.assert_judge(answer4)
