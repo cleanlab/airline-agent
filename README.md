@@ -4,9 +4,9 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 2 | 1 | 67% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 1 | 2 | 33% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 2 | 1 | 67% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 3 | 1 | 75% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 1 | 3 | 25% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 2 | 2 | 50% |
 
 ---
 
@@ -14,7 +14,7 @@
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -39,7 +39,7 @@ AssertionError: Failed response: When traveling with prescription THC, it's impo
 
 It's always a good idea to check the latest TSA guidelines and consult with your airline if you have specific concerns.
 
-Criteria not met: The agent output explicitly states, “federal law still classifies marijuana as a controlled substance,” which mentions federal status/illegality. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with. Therefore the output fails the criterion.
+Criteria not met: The agent output explicitly states that “federal law still classifies marijuana as a controlled substance,” which directly mentions the federal legal status (i.e., that it is federally illegal). This violates the criterion. Ruling: fail.
 ```
 </details>
 
