@@ -4,9 +4,9 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 2 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 1 | 1 | 50% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 1 | 1 | 50% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 2 | 1 | 67% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 1 | 2 | 33% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 2 | 1 | 67% |
 
 ---
 
@@ -68,7 +68,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
