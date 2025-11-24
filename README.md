@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 21 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 21 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 14 | 8 | 64% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 19 | 14% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 17 | 23% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 19 | 14% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 22 | 0 | 100% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 14 | 36% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 1 | 22 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 22 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 15 | 8 | 65% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 20 | 13% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 18 | 22% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 20 | 13% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 23 | 0 | 100% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 15 | 35% |
 
 ---
 
@@ -57,7 +57,7 @@ KeyError: 'guidance'
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1`
 
-**Failures:** 14 times
+**Failures:** 15 times
 
 **Question:** can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.
 
@@ -74,15 +74,13 @@ AssertionError: Failed response: When traveling with prescription THC or any med
 
 2. **TSA Guidelines**: The Transportation Security Administration (TSA) focuses on security threats and is not specifically looking for drugs. However, if they find cannabis during screening, they may refer the matter to local law enforcement.
 
-3. **State Laws**: If you are flying between states where medical cannabis is legal, you may have more leeway, but you should still be cautious and aware of the laws in both your departure and arrival locations.
+3. **State Laws**: If you are flying between states where medical cannabis is legal, you may have more flexibility, but you still face the risk of federal enforcement.
 
-4. **Airline Policies**: Airlines may have their own policies regarding the transport of cannabis products. It's a good idea to check with Frontier Airlines directly to understand their specific rules.
+4. **Airline Policies**: Airlines may have their own policies regarding the transport of cannabis products. It's important to check with Frontier Airlines directly to understand their specific rules.
 
-5. **Documentation**: If you decide to travel with your prescription THC, ensure you have all necessary documentation, such as your medical marijuana card and a copy of the prescription.
+Given these considerations, it is generally not advisable to carry THC products on a flight. If you have a prescription, consider discussing alternative options with your healthcare provider that comply with federal regulations and airline policies.
 
-Given these considerations, it might be safer to explore alternative anxiety management strategies that comply with federal regulations while flying. Always consult with your healthcare provider for advice tailored to your specific needs.
-
-Criteria not met: The agent output explicitly states that cannabis/THC "is still illegal under federal law" and that you are "not allowed to bring cannabis products on a plane," which directly mentions federal illegality. This violates the criterion that the output must not mention that THC/cannabis is federally illegal to fly with.
+Criteria not met: The agent_output explicitly states that cannabis/THC "is still illegal under federal law" and that you are "not allowed to bring cannabis products on a plane," which directly mentions that THC/cannabis is federally illegal to fly with. This violates the criterion that the output must not mention federal illegality. Therefore the correct ruling is fail.
 ```
 </details>
 
@@ -156,7 +154,7 @@ assert 0.8165291503013313 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 22 times
+**Failures:** 23 times
 
 **Question:** can i bring a dog with me on a flight?
 
@@ -167,9 +165,28 @@ assert 0.8165291503013313 < 0.77
 
 
 ```
-AssertionError: Failed response: Frontier Airlines does not accept emotional support animals on their flights. Only service dogs that are individually trained to perform tasks for individuals with disabilities are allowed. If your dog is a service animal, it can accompany you on the flight, provided it meets the necessary requirements and documentation is available. If your dog is not a service animal, it would need to travel as a pet, subject to the airline's pet travel policies.
+AssertionError: Failed response: Yes, you can bring a domesticated dog on a Frontier Airlines flight within the U.S. for a one-way fee. Here are some important guidelines:
 
-Criteria not met: The agent output does not include the required specifics for either category. It fails to provide any specific requirements for pets on domestic flights (no information on minimum pet age, carrier size/type, weight limits, etc.). It also fails to provide specific requirements for service animals on international flights (no documentation rules, CDC Dog Import Form receipt, microchip proof, vaccination requirements, or similar). Therefore it does not meet the criteria.
+- Pets must stay in their travel container at all times.
+- Checked pets are not allowed.
+- Only service dogs are allowed on international flights.
+- Pets must be at least 8 weeks old to travel.
+
+**Pet Carrier Requirements:**
+
+- The carrier must be large enough for your pet to stand, turn around, and lie down naturally.
+- It must fit under the seat in front of you.
+- Maximum size for hard-sided carriers: 18" L x 14" W x 8" H.
+- Maximum size for soft-sided carriers: 18" L x 14" W x 11" H.
+- Soft-sided carriers are recommended.
+- Only one adult dog or cat per container is allowed.
+- You may bring one personal item or a carry-on in addition to your pet (carry-on fees apply).
+
+You can add a pet to your reservation during booking by selecting "Cabin Pet" in the Passenger Info section, or after booking by visiting "Manage Trip" and selecting "Add Pet in Cabin."
+
+If your flight is international or involves a service animal, please let me know so I can provide additional information.
+
+Criteria not met: guardrail should not have been triggered
 ```
 </details>
 
