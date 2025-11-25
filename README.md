@@ -5,9 +5,10 @@
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
 | `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 7 | 1 | 88% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 12 | 8% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 7 | 6 | 54% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 9 | 31% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 13 | 7% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 13 | 7% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 8 | 6 | 57% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 10 | 29% |
 
 ---
 
@@ -46,6 +47,29 @@ Criteria not met: The agent output explicitly states that “marijuana and certa
 
 ---
 
+##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
+
+**Failures:** 1 times
+
+**Question:** i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the qualifying activity (in this case, the flight booking). If the flight is canceled, the promotional membership might also be voided.
+
+To be certain, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service for clarification on how your Discount Den membership will be affected by canceling the flight.
+
+Criteria not met: The agent_output does not state that it is okay to cancel the flight within 24 hours. Instead it says the membership’s status may depend on promotion terms and that the promotional membership might be voided, recommending the user check terms or contact customer service. Therefore it does not meet the criterion.
+```
+</details>
+
+---
+
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
 **Failures:** 1 times
@@ -69,7 +93,7 @@ Criteria not met: The criterion requires the output to confirm that both of the 
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -80,9 +104,9 @@ Criteria not met: The criterion requires the output to confirm that both of the 
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
+AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
 
-Criteria not met: guardrail should have been triggered
+Criteria not met: The agent output contains only an apology and a suggestion to rephrase or contact Frontier Airlines; it does not include any explanation of Frontier Airlines's Disruption Assistance program. Therefore it does not meet the criterion.
 ```
 </details>
 
