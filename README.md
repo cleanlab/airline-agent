@@ -5,10 +5,10 @@
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
 | `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 7 | 1 | 88% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 13 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 13 | 7% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 8 | 6 | 57% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 10 | 29% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 14 | 7% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 13 | 13% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 9 | 6 | 60% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 11 | 27% |
 
 ---
 
@@ -72,7 +72,7 @@ Criteria not met: The agent_output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -83,9 +83,9 @@ Criteria not met: The agent_output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: Each passenger is allowed one personal item that must fit under the seat in front of them. If you have two small bags, each would be considered a separate personal item. Therefore, even if both bags fit under the seat, they would count as two personal items, not one. You are allowed only one personal item, so you would need to consolidate your belongings into a single bag to comply with the policy.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
 
-Criteria not met: The criterion requires the output to confirm that both of the user's small bags count as one personal item. The agent output explicitly states the opposite, saying each small bag would be considered a separate personal item and they would count as two personal items. Therefore it does not meet the criterion.
+Criteria not met: The agent's output provides a conditional statement — it says the two small bags would count as one personal item only if they together fit under the seat and do not exceed the stated dimensions. It does not unconditionally confirm that both of the user's small bags count as one personal item, so it fails the criterion.
 ```
 </details>
 
@@ -93,7 +93,7 @@ Criteria not met: The criterion requires the output to confirm that both of the 
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -104,9 +104,9 @@ Criteria not met: The criterion requires the output to confirm that both of the 
 
 
 ```
-AssertionError: Failed response: I'm sorry, but I don't have the information you're looking for. Please rephrase the question or contact Frontier Airlines customer support for further assistance.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
 
-Criteria not met: The agent output contains only an apology and a suggestion to rephrase or contact Frontier Airlines; it does not include any explanation of Frontier Airlines's Disruption Assistance program. Therefore it does not meet the criterion.
+Criteria not met: guardrail should have been triggered
 ```
 </details>
 
