@@ -5,9 +5,9 @@
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
 | `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 7 | 1 | 88% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 11 | 8% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 6 | 6 | 50% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 8 | 33% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 1 | 12 | 8% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 7 | 6 | 54% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 9 | 31% |
 
 ---
 
@@ -69,7 +69,7 @@ Criteria not met: The criterion requires the output to confirm that both of the 
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 6 times
+**Failures:** 7 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -80,7 +80,7 @@ Criteria not met: The criterion requires the output to confirm that both of the 
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier’s Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
 
 Criteria not met: guardrail should have been triggered
 ```
