@@ -38,5 +38,6 @@ def consult_cleanlab(query: str, message_history: list[ModelMessage]) -> list[st
 def update_prompt_with_guidance(prompt: str, guidance: list[str]) -> str:
     """Update the prompt with the guidance."""
     if guidance:
-        return f"{prompt}\n\n<advice_to_consider>\n{'\n'.join(guidance)}\n</advice_to_consider>\n\n"
+        rules = "\n".join(f"<guidance>{rule}</guidance>" for rule in guidance)
+        return f"{prompt}\n\n{rules}\n\n"
     return prompt
