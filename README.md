@@ -5,10 +5,10 @@
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
 | `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_1` | 7 | 1 | 88% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 14 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 2 | 13 | 13% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 9 | 6 | 60% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 4 | 11 | 27% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 1 | 15 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 3 | 13 | 19% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 9 | 7 | 56% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 5 | 11 | 31% |
 
 ---
 
@@ -72,7 +72,7 @@ Criteria not met: The agent_output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -83,9 +83,9 @@ Criteria not met: The agent_output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each must individually fit the size requirements for a personal item. Combining two bags to count as one personal item is not allowed. Each bag would be considered separately, and you would need to pay for an additional carry-on if you wish to bring both on board.
 
-Criteria not met: The agent's output provides a conditional statement — it says the two small bags would count as one personal item only if they together fit under the seat and do not exceed the stated dimensions. It does not unconditionally confirm that both of the user's small bags count as one personal item, so it fails the criterion.
+Criteria not met: The agent output explicitly states that combining two small bags to count as one personal item is not allowed and that each bag would be considered separately; it therefore does not confirm that both small bags count as one personal item. This contradicts the criterion, so the ruling is fail.
 ```
 </details>
 
@@ -114,7 +114,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
