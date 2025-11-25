@@ -1,0 +1,39 @@
+name: Benign
+
+on:
+  schedule:
+    # Run every day
+    - cron: "0 0 * * *"
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    name: benign examples
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      CLEANLAB_PROJECT_ID: ${{ secrets.CLEANLAB_PROJECT_ID }}
+      CODEX_API_KEY: ${{ secrets.CODEX_API_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pypa/hatch@install
+      - name: Download knowledge base
+        run: curl -o data/kb.json https://cleanlab-public.s3.us-east-1.amazonaws.com/airline-agent/kb.json
+      - name: Create vector database
+        run: hatch run create-vector-database
+      - name: Run benign examples and collect results
+        run: |
+          mkdir -p results
+          hatch test -v tests/stable/test_benign.py
+      - name: Commit results
+        if: always()  # runs even if tests fail
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin stability-md
+          git worktree add ../stability-md stability-md
+          cp results/benign_dataset_results.csv ../stability-md/
+          cd ../stability-md
+          git add benign_dataset_results.csv
+          git commit -m "New benign dataset results ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+          git push origin stability-md
