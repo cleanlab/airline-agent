@@ -4,11 +4,11 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 27 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 25 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 23 | 18% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 11 | 17 | 39% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 11 | 17 | 39% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 28 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 26 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 6 | 23 | 21% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 11 | 18 | 38% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 11 | 18 | 38% |
 
 ---
 
@@ -58,7 +58,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 5 times
+**Failures:** 6 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -69,9 +69,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: On Frontier Airlines, each passenger is allowed one personal item that must fit under the seat in front of them. This personal item can be a purse, backpack, or similar item. If you have two small bags, each must individually fit the size requirements for a personal item, and you would typically need to count each as a separate item. Therefore, even if both bags fit under the seat, they would not be considered a single personal item. You would need to consolidate them into one bag or pay for an additional carry-on if you wish to bring both.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each must individually fit the size requirements for a personal item, and you would generally need to count each as a separate item. Therefore, if you have two bags, they would count as two personal items, and you would need to pay for the second one unless you consolidate them into one bag that fits the personal item size limit.
 
-Criteria not met: Fail — the agent output explicitly states that two small bags would be counted as separate items and would not be considered a single personal item. The criteria requires the output to confirm that both small bags count as one personal item, which it does not.
+Criteria not met: The agent output explicitly states that two small bags would count as two personal items and that the second would need to be paid for. It does not confirm that both small bags count as one personal item, so it fails the criterion.
 ```
 </details>
 
