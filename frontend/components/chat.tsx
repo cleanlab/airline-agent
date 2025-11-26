@@ -235,6 +235,7 @@ export function Chat({
       type="single"
       value={cleanlabEnabled ? 'cleanlab-enabled' : 'cleanlab-disabled'}
       onValueChange={value => {
+        if (!value) return
         const next = value === 'cleanlab-enabled'
         setCleanlabEnabled(next)
       }}
