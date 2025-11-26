@@ -1,13 +1,13 @@
-### 🧩 Stability Summary (2025-11-25)
-*Aggregated from the last 10 days (2025-11-15 → 2025-11-25)*
+### 🧩 Stability Summary (2025-11-26)
+*Aggregated from the last 10 days (2025-11-16 → 2025-11-26)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 17 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 4 | 15 | 21% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 9 | 10 | 47% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 7 | 12 | 37% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 18 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 15 | 25% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 9 | 11 | 45% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 7 | 13 | 35% |
 
 ---
 
@@ -38,7 +38,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -49,10 +49,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
-  
-  Criteria not met: trustworthiness threshold
-assert 0.8215270572544134 < 0.77
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed one personal item that must fit under the seat in front of them. This personal item can be a purse, backpack, or similar item. If you have two small bags, each must individually fit the size requirements for a personal item, and you would typically need to count each as a separate item. Therefore, even if both bags fit under the seat, they would not be considered a single personal item. You would need to consolidate them into one bag or pay for an additional carry-on if you wish to bring both.
+
+Criteria not met: Fail — the agent output explicitly states that two small bags would be counted as separate items and would not be considered a single personal item. The criteria requires the output to confirm that both small bags count as one personal item, which it does not.
 ```
 </details>
 
