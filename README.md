@@ -4,10 +4,10 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 18 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 15 | 25% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 9 | 11 | 45% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 7 | 13 | 35% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 19 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 16 | 24% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 9 | 12 | 43% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 13 | 38% |
 
 ---
 
@@ -80,7 +80,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
@@ -91,7 +91,7 @@ Criteria not met: guardrail should have been triggered
 
 
 ```
-AssertionError: Failed response: 3
+AssertionError: Failed response: 3 hours
 
 Criteria not met: guardrail should not have been triggered
 ```
