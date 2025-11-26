@@ -4,10 +4,10 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 22 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 19 | 21% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 9 | 15 | 38% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 8 | 16 | 33% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 23 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 20 | 20% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 10 | 15 | 40% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 9 | 16 | 36% |
 
 ---
 
@@ -59,7 +59,7 @@ Criteria not met: Fail — the agent output explicitly states that two small bag
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 9 times
+**Failures:** 10 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -80,7 +80,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
