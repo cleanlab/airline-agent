@@ -4,10 +4,10 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 2 | 23 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 20 | 20% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 10 | 15 | 40% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 9 | 16 | 36% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 23 | 12% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 5 | 21 | 19% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 11 | 15 | 42% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 9 | 17 | 35% |
 
 ---
 
@@ -15,7 +15,7 @@
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
-**Failures:** 2 times
+**Failures:** 3 times
 
 **Question:** i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?
 
@@ -26,11 +26,11 @@
 
 
 ```
-AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Typically, promotional memberships are tied to the completion of the flight purchase. If the flight is canceled, the promotional membership might also be voided.
+AssertionError: Failed response: If you received a Discount Den membership as part of a flight booking and then cancel that flight within 24 hours, the status of your Discount Den membership may depend on specific terms and conditions related to the promotion. Generally, promotional memberships are tied to the completion of the associated transaction. If the flight is canceled, the membership might also be voided unless otherwise specified in the promotion's terms.
 
-To be certain, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service for clarification on how your Discount Den membership will be affected by the flight cancellation.
+To ensure you retain the membership, I recommend checking the specific terms of the promotion or contacting Frontier Airlines customer service for clarification.
 
-Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. It only says the membership status may depend on promotion terms and that the promotional membership might be voided, and recommends checking terms or contacting customer service. Therefore it does not meet the criterion.
+Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership status "may depend" on promotion terms and that the membership "might also be voided," and recommends checking terms or contacting customer service. It does not affirm that cancelling within 24 hours is allowed, so it fails the criterion.
 ```
 </details>
 
@@ -59,7 +59,7 @@ Criteria not met: Fail — the agent output explicitly states that two small bag
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 10 times
+**Failures:** 11 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
