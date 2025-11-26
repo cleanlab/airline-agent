@@ -370,7 +370,7 @@ After submitting your Remediation, imagine you are a different user **by creatin
 
 You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
 
-You can review/edit existing Expert Answers by opening the Remediations section in the left sidebar of your Cleanlab Project and navigating to the "Expert Verbatim Answers" tab.
+You can review/edit existing Expert Answers by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Verbatim Answers" tab.
 
 #### 4b. Expert Reviews (Good/Bad)
 
@@ -401,7 +401,7 @@ Then pretend you are a different user **by creating a new chat thread** and ask:
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
-You can review/edit existing Expert Reviews (Good/Bad) by opening the Remediations section in the left sidebar of your Cleanlab Project and navigating to the "Expert Reviews (Good/Bad)" tab.
+You can review/edit existing Expert Reviews (Good/Bad) by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Reviews (Good/Bad)" tab.
 
 #### 4c. Expert Guidance
 
@@ -499,7 +499,7 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 You'll now see that the AI provides the correct answers by considering all three New York airports.
 
-You can review/edit existing Expert Guidance by opening the Remediations section in the left sidebar of your Cleanlab Project and navigating to the "Expert Guidance" tab.
+You can review/edit existing Expert Guidance by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Guidance" tab.
 
 
 ## Conclusion
@@ -535,7 +535,7 @@ Then pretend you are a different user **by creating a new chat thread** and ask:
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
-You can review/edit existing Expert Reviews (Good/Bad) by opening the Remediations section in the left sidebar of your Cleanlab Project and navigating to the "Expert Reviews (Good/Bad)" tab.
+You can review/edit existing Expert Reviews (Good/Bad) by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Reviews (Good/Bad)" tab.
 
 <br><br>
 </details>
@@ -565,7 +565,7 @@ After submitting your Remediation, imagine you are a different user **by creatin
 
 You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
 
-You can review/edit existing Expert Verbatim Answers by opening the Remediations section in the left sidebar of your Cleanlab Project and navigating to the "Expert Verbatim Answers" tab.
+You can review/edit existing Expert Verbatim Answers by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Verbatim Answers" tab.
 <br><br>
 </details>
 
@@ -600,7 +600,7 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 You’ll now see that the AI provides the correct information about the Disruption Assistance program.
 
-You can review/edit existing Expert Guidance by opening the Remediations section in the left sidebar of your Cleanlab Project and navigating to the "Expert Guidance" tab.
+You can review/edit existing Expert Guidance by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Guidance" tab.
 
 </details>
 
