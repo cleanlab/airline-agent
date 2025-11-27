@@ -4,12 +4,12 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 33 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 33 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 31 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 7 | 27 | 21% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 11 | 23 | 32% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 13 | 21 | 38% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 34 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 34 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 32 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 8 | 27 | 23% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 12 | 23 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 13 | 22 | 37% |
 
 ---
 
@@ -78,7 +78,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -89,10 +89,10 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, typically only one personal item is allowed per passenger, so you may need to consolidate your items into a single bag that meets these size requirements.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
   
   Criteria not met: trustworthiness threshold
-assert 0.8773184793690649 < 0.77
+assert 0.8454034018600078 < 0.77
 ```
 </details>
 
@@ -100,7 +100,7 @@ assert 0.8773184793690649 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 11 times
+**Failures:** 12 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
