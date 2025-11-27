@@ -4,12 +4,13 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 34 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 34 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 32 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 8 | 27 | 23% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 12 | 23 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 13 | 22 | 37% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 35 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 35 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 33 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 9 | 27 | 25% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 35 | 3% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 12 | 24 | 33% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 13 | 23 | 36% |
 
 ---
 
@@ -78,7 +79,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -89,10 +90,31 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to count as one might not be permissible unless they are contained within each other or otherwise consolidated to meet the size requirement.
+
+Criteria not met: The agent output does not unequivocally confirm that both small bags count as one personal item. It gives a conditional statement (“if... they would count”) and then contradicts that by saying combining two bags might not be permissible unless they are contained within each other. Because the response is conditional and uncertain rather than a clear confirmation, it does not meet the criterion.
+```
+</details>
+
+---
+
+##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
+
+**Failures:** 1 times
+
+**Question:** Do miles in family pool expire?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
   
   Criteria not met: trustworthiness threshold
-assert 0.8454034018600078 < 0.77
+assert 0.8773379302458094 < 0.77
 ```
 </details>
 
