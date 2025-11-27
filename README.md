@@ -4,13 +4,13 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 37 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 37 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 35 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 10 | 28 | 26% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 37 | 3% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 12 | 26 | 32% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 13 | 25 | 34% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 38 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 38 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 4 | 35 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 11 | 28 | 28% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 38 | 3% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 13 | 26 | 33% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 14 | 25 | 36% |
 
 ---
 
@@ -56,7 +56,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
-**Failures:** 3 times
+**Failures:** 4 times
 
 **Question:** i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?
 
@@ -67,11 +67,11 @@ httpx.ReadTimeout: The read operation timed out
 
 
 ```
-AssertionError: Failed response: If you received a Discount Den membership as part of a flight booking and then cancel that flight within 24 hours, the status of your Discount Den membership may depend on specific terms and conditions related to the promotion. Generally, promotional memberships are tied to the completion of the associated transaction. If the flight is canceled, the membership might also be voided unless otherwise specified in the promotion's terms.
+AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Typically, promotional memberships are tied to the completion of the associated transaction. Therefore, if the flight is canceled, the promotional membership might also be voided.
 
-To ensure you retain the membership, I recommend checking the specific terms of the promotion or contacting Frontier Airlines customer service for clarification.
+To ensure you have the most accurate information, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service directly for clarification.
 
-Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership status "may depend" on promotion terms and that the membership "might also be voided," and recommends checking terms or contacting customer service. It does not affirm that cancelling within 24 hours is allowed, so it fails the criterion.
+Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership status may depend on promotion terms and that cancellation might void the membership, and it recommends checking terms or contacting customer service. Therefore it does not meet the criterion.
 ```
 </details>
 
@@ -79,7 +79,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 10 times
+**Failures:** 11 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -90,10 +90,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
-  
-  Criteria not met: trustworthiness threshold
-assert 0.7759103190569886 < 0.77
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to count as one might not be accepted unless they are contained within each other or otherwise combined to meet the size requirement.
+
+Criteria not met: The agent output does not affirmatively confirm that both small bags count as one personal item. It gives a conditional statement ('would count ... if both fit and together do not exceed dimensions') and then adds a contradictory qualification that "combining two bags to count as one might not be accepted unless they are contained within each other." Because the response is hedged and not a clear confirmation, it does not meet the criterion requiring confirmation that both bags count as one personal item.
 ```
 </details>
 
@@ -123,7 +122,7 @@ assert 0.8773379302458094 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 12 times
+**Failures:** 13 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -134,7 +133,7 @@ assert 0.8773379302458094 < 0.77
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations.
 
 Criteria not met: guardrail should have been triggered
 ```
@@ -144,7 +143,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 13 times
+**Failures:** 14 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
