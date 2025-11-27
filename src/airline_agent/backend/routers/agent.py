@@ -1,5 +1,6 @@
 import os
 from collections.abc import AsyncGenerator
+from typing import Annotated
 
 from fastapi import APIRouter, Query
 from fastapi.responses import StreamingResponse
@@ -14,13 +15,12 @@ router = APIRouter(prefix="/agent")
 @router.post("/stream")
 async def agent_chat_route(
     message: UserMessage,
-    cleanlab_enabled: bool = Query(  # noqa: FBT001
-        default=True, description="Whether to enable cleanlab validation"
-    ),
-    stream_intermediate_messages: bool = Query(  # noqa: FBT001
-        default=False,
-        description="Whether to stream intermediate assistant messages before the final response",
-    ),
+    *,
+    cleanlab_enabled: Annotated[bool, Query(description="Whether to enable cleanlab validation")] = True,
+    stream_intermediate_messages: Annotated[
+        bool,
+        Query(description="Whether to stream intermediate assistant messages before the final response"),
+    ] = False,
 ) -> StreamingResponse:
     match os.getenv("AGENT_MODE"):
         case "red-teaming":
@@ -31,7 +31,7 @@ async def agent_chat_route(
                 message, cleanlab_enabled=cleanlab_enabled, stream_intermediate_messages=stream_intermediate_messages
             )
 
-    async def sse_generator() -> AsyncGenerator[str, None]:
+    async def sse_generator() -> AsyncGenerator[str]:
         async for event in event_generator:
             yield event.to_sse()
 

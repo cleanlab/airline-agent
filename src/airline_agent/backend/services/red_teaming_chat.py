@@ -41,7 +41,7 @@ async def red_teaming_chat_streaming(
     message: UserMessage,
     *,
     stream_intermediate_messages: bool,
-) -> AsyncGenerator[RunEvent, None]:
+) -> AsyncGenerator[RunEvent]:
     run_id = uuid.uuid4()
     thread_id = message.thread_id
 

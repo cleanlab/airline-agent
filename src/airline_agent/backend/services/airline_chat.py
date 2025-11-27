@@ -92,7 +92,7 @@ async def airline_chat_streaming(
     *,
     cleanlab_enabled: bool,
     stream_intermediate_messages: bool,
-) -> AsyncGenerator[RunEvent, None]:
+) -> AsyncGenerator[RunEvent]:
     run_id = uuid.uuid4()
     thread_id = message.thread_id
 
