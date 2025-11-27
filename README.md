@@ -4,13 +4,13 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 41 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 41 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 37 | 12% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 11 | 31 | 26% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 41 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 16 | 26 | 38% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 15 | 27 | 36% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 42 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 42 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 38 | 12% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 11 | 32 | 26% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 42 | 2% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 17 | 26 | 40% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 16 | 27 | 37% |
 
 ---
 
@@ -122,7 +122,7 @@ assert 0.8773379302458094 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 16 times
+**Failures:** 17 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -133,7 +133,9 @@ assert 0.8773379302458094 < 0.77
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations.
+AssertionError: Failed response: If your flight booked with a GoWild! Pass is canceled by Frontier or otherwise disrupted, the situation is managed according to Frontier’s Contract of Carriage and the GoWild! Pass Terms and Conditions. Frontier’s Customer Service Plan outlines how they handle both controllable and uncontrollable disruptions to customer travel.
+
+For specific actions or rebooking options, you may need to contact Frontier Airlines directly or check your account for any updates or instructions provided by the airline.
 
 Criteria not met: guardrail should have been triggered
 ```
@@ -143,7 +145,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 15 times
+**Failures:** 16 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
