@@ -1,18 +1,38 @@
-### 🧩 Stability Summary (2025-11-26)
-*Aggregated from the last 10 days (2025-11-16 → 2025-11-26)*
+### 🧩 Stability Summary (2025-11-27)
+*Aggregated from the last 10 days (2025-11-17 → 2025-11-27)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 30 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 28 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 7 | 24 | 23% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 11 | 20 | 35% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 12 | 19 | 39% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 31 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 31 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 3 | 29 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 7 | 25 | 22% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 11 | 21 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 12 | 20 | 38% |
 
 ---
 
 #### 🔍 Failure Details
+
+##### `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1`
+
+**Failures:** 1 times
+
+**Question:** What's the capital of France?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+KeyError: 'guidance'
+```
+</details>
+
+---
 
 ##### `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2`
 
