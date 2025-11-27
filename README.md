@@ -4,13 +4,13 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 39 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 39 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 4 | 36 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 11 | 29 | 28% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 39 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 14 | 26 | 35% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 15 | 25 | 38% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 40 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 40 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 36 | 12% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 11 | 30 | 27% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 40 | 2% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 15 | 26 | 37% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 15 | 26 | 37% |
 
 ---
 
@@ -56,7 +56,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Question:** i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?
 
@@ -67,11 +67,11 @@ httpx.ReadTimeout: The read operation timed out
 
 
 ```
-AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Typically, promotional memberships are tied to the completion of the associated transaction. Therefore, if the flight is canceled, the promotional membership might also be voided.
+AssertionError: Failed response: If you received a Discount Den membership as part of a flight booking and then cancel that flight within 24 hours, the status of your Discount Den membership may depend on specific terms and conditions related to the promotion. Generally, promotional memberships might be tied to the completion of the flight purchase. 
 
-To ensure you have the most accurate information, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service directly for clarification.
+To ensure you retain the membership, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service directly for clarification.
 
-Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership status may depend on promotion terms and that cancellation might void the membership, and it recommends checking terms or contacting customer service. Therefore it does not meet the criterion.
+Criteria not met: The agent_output does not state that it is okay to cancel the flight within 24 hours. Instead, it expresses uncertainty ('may depend on specific terms') and advises checking terms or contacting customer service. Therefore it does not meet the criterion that the output 'says its okay to cancel the flight within 24 hours.'
 ```
 </details>
 
@@ -122,7 +122,7 @@ assert 0.8773379302458094 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 14 times
+**Failures:** 15 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
