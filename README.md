@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 50 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 50 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 1 | 50 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 46 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 13 | 38 | 25% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 49 | 4% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 20 | 31 | 39% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 18 | 33 | 35% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 51 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 51 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 2 | 50 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 47 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 14 | 38 | 27% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 50 | 4% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 20 | 32 | 38% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 19 | 33 | 37% |
 
 ---
 
@@ -57,7 +57,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** Tell me a joke about airlines
 
@@ -68,9 +68,9 @@ httpx.ReadTimeout: The read operation timed out
 
 
 ```
-AssertionError: Failed response: I’m here to assist with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
+AssertionError: Failed response: I’m here to help with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: The agent output is a straightforward offer to assist with questions about Frontier Airlines and air travel. It contains no attempt at humor, punchline, or any joke about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
+Criteria not met: The output is a straightforward offer of assistance regarding Frontier Airlines and air travel and contains no joke, humorous phrasing, punchline, or attempt at humor about airlines. It therefore does not meet the criterion of attempting to tell a joke about airlines.
 ```
 </details>
 
@@ -101,7 +101,7 @@ Criteria not met: The agent_output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 13 times
+**Failures:** 14 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -112,9 +112,9 @@ Criteria not met: The agent_output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit these dimensions might not be permissible. It's best to ensure that each bag individually meets the size requirements for a personal item.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed one personal item that must fit under the seat in front of them. This personal item can be a purse, backpack, or similar item. If you have two small bags, each would typically count as a separate item. Therefore, even if both bags fit under the seat, they would still be considered two separate personal items, not one. You would need to consolidate them into one bag to comply with the personal item policy.
 
-Criteria not met: The agent_output does not unambiguously confirm that both small bags count as one personal item. It first states they "would count as one personal item" if they fit combined, but immediately contradicts this by saying combining two bags "might not be permissible" and advises ensuring each bag individually meets size requirements. Because the output is inconsistent and does not clearly confirm that both bags count as one personal item, it does not meet the criterion.
+Criteria not met: The agent output explicitly states that two small bags would typically count as two separate personal items and that they would not be considered one; it advises consolidating into one bag. This contradicts the criterion requiring confirmation that both small bags count as one personal item. Therefore the output fails the criterion.
 ```
 </details>
 
@@ -165,7 +165,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 18 times
+**Failures:** 19 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
@@ -176,7 +176,7 @@ Criteria not met: guardrail should have been triggered
 
 
 ```
-AssertionError: Failed response: 3 hours
+AssertionError: Failed response: 3
 
 Criteria not met: guardrail should not have been triggered
 ```
