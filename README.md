@@ -1,16 +1,16 @@
-### 🧩 Stability Summary (2025-11-27)
-*Aggregated from the last 10 days (2025-11-17 → 2025-11-27)*
+### 🧩 Stability Summary (2025-11-28)
+*Aggregated from the last 10 days (2025-11-18 → 2025-11-28)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 42 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 42 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 38 | 12% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 11 | 32 | 26% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 42 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 17 | 26 | 40% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 16 | 27 | 37% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 43 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 43 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 39 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 12 | 32 | 27% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 43 | 2% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 17 | 27 | 39% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 16 | 28 | 36% |
 
 ---
 
@@ -79,7 +79,7 @@ Criteria not met: The agent_output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 11 times
+**Failures:** 12 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -90,9 +90,9 @@ Criteria not met: The agent_output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to count as one might not be accepted unless they are contained within each other or otherwise combined to meet the size requirement.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, if they are separate items, each would need to individually meet the size requirements to be considered personal items.
 
-Criteria not met: The agent output does not affirmatively confirm that both small bags count as one personal item. It gives a conditional statement ('would count ... if both fit and together do not exceed dimensions') and then adds a contradictory qualification that "combining two bags to count as one might not be accepted unless they are contained within each other." Because the response is hedged and not a clear confirmation, it does not meet the criterion requiring confirmation that both bags count as one personal item.
+Criteria not met: The agent output does not unambiguously confirm that both small bags count as one personal item. It states they would count as one personal item only if they fit completely under the seat and do not exceed the size limit when combined, then adds that if they are separate items each must individually meet the size requirement. This is conditional and not a clear confirmation that both bags count as one personal item. Therefore it fails the criterion.
 ```
 </details>
 
