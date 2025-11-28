@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 47 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 47 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 1 | 47 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 43 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 13 | 35 | 27% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 1 | 47 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 20 | 28 | 42% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 18 | 30 | 38% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 48 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 48 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 1 | 48 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 5 | 44 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 13 | 36 | 27% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 2 | 47 | 4% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 20 | 29 | 41% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 18 | 31 | 37% |
 
 ---
 
@@ -122,7 +122,7 @@ Criteria not met: The agent_output does not unambiguously confirm that both smal
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 1 times
+**Failures:** 2 times
 
 **Question:** Do miles in family pool expire?
 
