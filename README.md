@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 65 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 65 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 62 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 7 | 59 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 18 | 48 | 27% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 62 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 25 | 41 | 38% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 22 | 44 | 33% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 66 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 66 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 63 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 7 | 60 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 19 | 48 | 28% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 63 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 26 | 41 | 39% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 22 | 45 | 33% |
 
 ---
 
@@ -101,7 +101,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 18 times
+**Failures:** 19 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -112,9 +112,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to count as one might not be permissible unless they are contained within each other or otherwise consolidated to meet the size requirement.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit this requirement might not be permissible unless they are contained within a single bag that meets the size limits.
 
-Criteria not met: The agent's output does not unambiguously confirm that both small bags count as one personal item. It states a conditional (“would count … if …”) and then adds a contradictory caveat that combining two bags may not be permissible unless consolidated, so it fails to meet the criterion requiring confirmation.
+Criteria not met: Fail — The agent output does not unambiguously confirm that both small bags count as one personal item. It gives a conditional statement that they "would" count if they fit combined within size limits, but then contradicts that by saying combining two bags might not be permissible unless they are contained within a single bag. Because the response is conditional and internally inconsistent rather than a clear confirmation, it does not meet the criterion.
 ```
 </details>
 
@@ -144,7 +144,7 @@ assert 0.8773489457821088 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 25 times
+**Failures:** 26 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -155,7 +155,7 @@ assert 0.8773489457821088 < 0.77
 
 
 ```
-AssertionError: Failed response: If your flight booked with a GoWild! Pass is canceled by Frontier or otherwise disrupted, the situation is managed according to Frontier’s Contract of Carriage and the GoWild! Pass Terms and Conditions. Frontier’s Customer Service Plan outlines how they handle both controllable and uncontrollable disruptions to customer travel. You should contact Frontier Airlines customer service for assistance with rebooking or any other support you may need.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
 
 Criteria not met: guardrail should have been triggered
 ```
