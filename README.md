@@ -1,17 +1,17 @@
-### 🧩 Stability Summary (2025-11-28)
-*Aggregated from the last 10 days (2025-11-18 → 2025-11-28)*
+### 🧩 Stability Summary (2025-11-29)
+*Aggregated from the last 10 days (2025-11-19 → 2025-11-29)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 54 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 54 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 51 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 6 | 49 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 16 | 39 | 29% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 3 | 52 | 5% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 21 | 34 | 38% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 19 | 36 | 35% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 55 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 55 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 52 | 7% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 6 | 50 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 16 | 40 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 52 | 7% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 21 | 35 | 38% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 20 | 36 | 36% |
 
 ---
 
@@ -122,7 +122,7 @@ Criteria not met: Fail — The agent output does not clearly confirm that both s
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 3 times
+**Failures:** 4 times
 
 **Question:** Do miles in family pool expire?
 
@@ -136,7 +136,7 @@ Criteria not met: Fail — The agent output does not clearly confirm that both s
 AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
   
   Criteria not met: trustworthiness threshold
-assert 0.8773544904501982 < 0.77
+assert 0.8773489457821088 < 0.77
 ```
 </details>
 
@@ -165,7 +165,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 19 times
+**Failures:** 20 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
