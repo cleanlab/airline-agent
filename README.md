@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 64 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 64 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 61 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 7 | 58 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 18 | 47 | 28% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 61 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 25 | 40 | 38% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 21 | 44 | 32% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 65 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 65 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 62 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 7 | 59 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 18 | 48 | 27% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 62 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 25 | 41 | 38% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 22 | 44 | 33% |
 
 ---
 
@@ -165,7 +165,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 21 times
+**Failures:** 22 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
