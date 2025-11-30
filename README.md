@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 67 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 67 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 64 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 7 | 61 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 19 | 49 | 28% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 4 | 64 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 26 | 42 | 38% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 22 | 46 | 32% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 1 | 68 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 68 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 65 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 7 | 62 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 19 | 50 | 28% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 64 | 7% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 26 | 43 | 38% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 22 | 47 | 32% |
 
 ---
 
@@ -122,7 +122,7 @@ Criteria not met: Fail — The agent output does not unambiguously confirm that 
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Question:** Do miles in family pool expire?
 
@@ -136,7 +136,7 @@ Criteria not met: Fail — The agent output does not unambiguously confirm that 
 AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
   
   Criteria not met: trustworthiness threshold
-assert 0.8773489457821088 < 0.77
+assert 0.8773379302458094 < 0.77
 ```
 </details>
 
