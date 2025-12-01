@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 79 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 80 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 5 | 76 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 73 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 24 | 57 | 30% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 76 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 28 | 53 | 35% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 24 | 57 | 30% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 80 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 81 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 5 | 77 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 74 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 24 | 58 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 77 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 29 | 53 | 35% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 24 | 58 | 29% |
 
 ---
 
@@ -150,7 +150,7 @@ assert 0.8773379302458094 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 28 times
+**Failures:** 29 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -161,7 +161,7 @@ assert 0.8773379302458094 < 0.77
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
+AssertionError: Failed response: If your flight booked with a GoWild! Pass is canceled by Frontier or otherwise disrupted, the situation is managed according to Frontier’s Contract of Carriage and the GoWild! Pass Terms and Conditions. Frontier’s Customer Service Plan outlines how they handle both controllable and uncontrollable disruptions to customer travel. You should contact Frontier Airlines customer service directly for assistance with rebooking or any other support you may need.
 
 Criteria not met: guardrail should have been triggered
 ```
