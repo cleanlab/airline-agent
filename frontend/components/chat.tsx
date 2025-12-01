@@ -120,7 +120,9 @@ export function Chat({
 
   useEffect(() => {
     if (!threadId) {
-      // Keep showing local in-progress thread when URL doesn't yet include an id
+      // If there's no URL thread, only keep showing content while a thread is actively pending.
+      if (currentThread?.isPending) return
+      setCurrentThread(undefined)
       return
     }
     // Prefer initialMessages if provided
@@ -193,7 +195,14 @@ export function Chat({
       }
     }
     setCurrentThread(undefined)
-  }, [historySnapshot, initialMessages, setCurrentThread, threadId, history])
+  }, [
+    historySnapshot,
+    initialMessages,
+    setCurrentThread,
+    threadId,
+    history,
+    currentThread?.isPending
+  ])
 
   const messages = currentThread?.messages
   const { scrollRef, isAtBottom, scrollToBottom } = useScrollToBottom()
