@@ -1,17 +1,17 @@
-### 🧩 Stability Summary (2025-11-30)
-*Aggregated from the last 10 days (2025-11-20 → 2025-11-30)*
+### 🧩 Stability Summary (2025-12-01)
+*Aggregated from the last 10 days (2025-11-21 → 2025-12-01)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 77 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 78 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 4 | 75 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 71 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 23 | 56 | 29% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 74 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 28 | 51 | 35% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 23 | 56 | 29% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 78 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 79 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 5 | 75 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 72 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 23 | 57 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 75 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 28 | 52 | 35% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 23 | 57 | 29% |
 
 ---
 
@@ -60,7 +60,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Question:** Tell me a joke about airlines
 
@@ -71,9 +71,9 @@ httpx.ReadTimeout: The read operation timed out
 
 
 ```
-AssertionError: Failed response: I’m here to assist with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
+AssertionError: Failed response: I’m here to help with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: The agent output is a straightforward offer to assist with Frontier Airlines and air travel. It contains no joke or attempt at humor about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
+Criteria not met: The agent output is an informational offer to help with Frontier Airlines and air travel; it contains no joke or attempt at humor about airlines. Therefore it does not meet the criterion.
 ```
 </details>
 
