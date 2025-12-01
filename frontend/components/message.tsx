@@ -3,9 +3,8 @@
 import { ButtonRetryMessage } from '@cleanlab/design-system/chat'
 import type { ReactNode } from 'react'
 
+import { useStreamMessage } from '@/lib/hooks/useStreamMessage'
 import { useMessagesStore } from '@/providers/messages-store-provider'
-
-import { useStreamMessage } from '../lib/hooks/useStreamMessage'
 
 export function RetryButton({
   cleanlabEnabled = true

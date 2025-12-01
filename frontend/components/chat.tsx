@@ -8,20 +8,18 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 import { ChatList } from '@/components/chat-list'
-import { EmptyScreen } from '@/components/empty-screen'
+import { PromptForm } from '@/components/prompt-form'
 import { getChatPath } from '@/lib/consts'
 import {
   scrollElementToBottom,
   useScrollToBottom
 } from '@/lib/hooks/use-scroll-to-bottom'
+import { CurrentThreadStatus } from '@/lib/hooks/useStreamMessage'
+import { getThreadBufferSnapshot } from '@/lib/hooks/useStreamMessage'
 import { useMessagesStore } from '@/providers/messages-store-provider'
 import { useAssistantHistory } from '@/providers/rag-app-store-provider'
 import type { StoreMessage } from '@/stores/messages-store'
-
-import { CurrentThreadStatus } from '../lib/hooks/useStreamMessage'
-import { getThreadBufferSnapshot } from '../lib/hooks/useStreamMessage'
-import type { CurrentThread } from '../stores/messages-store'
-import { PromptForm } from './prompt-form'
+import type { CurrentThread } from '@/stores/messages-store'
 export interface ChatProps {
   threadId?: string
   className?: string
@@ -311,7 +309,7 @@ export function Chat({
                 viewToolsEnabled={viewToolsEnabled}
               />
             ) : (
-              <EmptyScreen />
+              <div className="flex h-full grow flex-col items-center justify-center gap-8" />
             )}
             <div className="sticky bottom-0 flex shrink-0 flex-col justify-end">
               <ChatInputPanel

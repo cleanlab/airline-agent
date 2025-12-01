@@ -12,8 +12,3 @@ export function truncateString(str: string, maxLength: number) {
     return str.slice(0, maxLength - 3) + '...'
   }
 }
-
-export const getIsDefaultAssistant = (assistantSlug?: string | null) =>
-  assistantSlug === ''
-
-export const IS_PROD = process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'

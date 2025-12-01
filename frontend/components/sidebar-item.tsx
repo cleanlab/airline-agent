@@ -10,8 +10,7 @@ import { getChatPath } from '@/lib/consts'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { truncateString } from '@/lib/utils'
 import { useMessagesStore } from '@/providers/messages-store-provider'
-
-import type { HistoryThread } from '../stores/history-thread-store'
+import type { HistoryThread } from '@/stores/history-thread-store'
 
 interface SidebarItemProps {
   index: number
@@ -105,9 +104,7 @@ export function SidebarItem({ index, thread, children }: SidebarItemProps) {
           </div>
         </Link>
       </Tooltip>
-      <div
-        className="absolute right-3 top-1/2 hidden h-[20px] -translate-y-1/2 group-hover:block"
-      >
+      <div className="absolute right-3 top-1/2 hidden h-[20px] -translate-y-1/2 group-hover:block">
         {children}
       </div>
     </motion.div>

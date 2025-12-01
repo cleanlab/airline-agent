@@ -4,8 +4,8 @@ import type { Prettify } from '@/lib/ts/Prettify'
 import { produce } from 'immer'
 import { isNil, merge } from 'lodash'
 import { type StateCreator, createStore } from 'zustand'
-import { assertExhaustive } from '../lib/ts/assertExhaustive'
-import { sameByIdOrLocalId } from './history-thread-store'
+import { assertExhaustive } from '@/lib/ts/assertExhaustive'
+import { sameByIdOrLocalId } from '@/stores/history-thread-store'
 
 export type MessageMetadata = Record<string, any>
 

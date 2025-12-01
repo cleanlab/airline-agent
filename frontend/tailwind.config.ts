@@ -29,10 +29,6 @@ const config: Config = {
       normal: '0'
     },
     extend: {
-      backgroundImage: {
-        'bg-grid': "url('/static/bg-grid.png')",
-        'gradient-130': 'linear-gradient(177deg, var(--tw-gradient-stops))'
-      },
       fontFamily: {
         sans: ['var(--font-geist-sans)'],
         mono: ['var(--font-geist-mono)']
@@ -40,8 +36,7 @@ const config: Config = {
       animation: {},
       keyframes: {}
     }
-  },
-  safelist: [{ pattern: /^ag-/ }]
+  }
 }
 
 export default config

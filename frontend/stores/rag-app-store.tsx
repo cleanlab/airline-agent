@@ -2,14 +2,14 @@ import type { StateCreator } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
 import type { Prettify } from '@/lib/ts/Prettify'
-import type { ZustandPersist } from '../lib/ts/ZustandPersist'
+import type { ZustandPersist } from '@/lib/ts/ZustandPersist'
 import {
   type ThreadHistorySlice,
   createThreadHistorySlice,
   filterUnfinishedThreads
-} from './history-thread-store'
-import type { ResponseRatingsSlice } from './response-ratings-store'
-import { createRatingsSlice } from './response-ratings-store'
+} from '@/stores/history-thread-store'
+import type { ResponseRatingsSlice } from '@/stores/response-ratings-store'
+import { createRatingsSlice } from '@/stores/response-ratings-store'
 
 export type RagAppStore = Prettify<ThreadHistorySlice & ResponseRatingsSlice>
 

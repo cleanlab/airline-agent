@@ -3,10 +3,9 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useMemo } from 'react'
 
+import { SidebarActions } from '@/components/sidebar-actions'
 import { SidebarItem } from '@/components/sidebar-item'
-
-import type { HistoryThread } from '../stores/history-thread-store'
-import { SidebarActions } from './sidebar-actions'
+import type { HistoryThread } from '@/stores/history-thread-store'
 
 interface SidebarItemsProps {
   historyThreads?: HistoryThread[]

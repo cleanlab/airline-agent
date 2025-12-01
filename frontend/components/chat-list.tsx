@@ -9,15 +9,14 @@ import {
 import type { RefObject } from 'react'
 import { useEffect, useRef } from 'react'
 
+import { IconAirplane } from '@/components/icons'
+import { RetryButton } from '@/components/message'
+import { MessageAssistantTool } from '@/components/message-assistant-tool'
 import { RATE_LIMIT_WAIT_MS } from '@/lib/consts'
+import { useAutoScrollMessage } from '@/lib/hooks/use-auto-scroll-message'
 import { useRateLimitedValue } from '@/lib/hooks/useRateLimitedValue'
 import { useMessagesStore } from '@/providers/messages-store-provider'
 import type { MessageMetadata, StoreMessage } from '@/stores/messages-store'
-
-import { useAutoScrollMessage } from '../lib/hooks/use-auto-scroll-message'
-import { IconAirplane } from './icons'
-import { RetryButton } from './message'
-import { MessageAssistantTool } from './message-assistant-tool'
 
 export interface ChatListProps {
   threadId?: string
