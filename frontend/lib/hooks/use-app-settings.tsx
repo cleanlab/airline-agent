@@ -12,7 +12,7 @@ export const useAppSettings = () => {
   const [appSettings, setAppSettings] = useLocalStorage<AppSettings>(
     'appSettings',
     {
-      assistantId: '',
+      assistantId: 'default',
       orgName: null,
       iframeSrc: null
     }

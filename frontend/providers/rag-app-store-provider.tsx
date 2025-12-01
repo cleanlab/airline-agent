@@ -53,7 +53,11 @@ export const useBareRagAppStore = () => {
 
 export const useAssistantHistory = (assistantId?: string) => {
   return useRagAppStore(state => {
-    if (!assistantId) return undefined
-    return state.history?.[assistantId]
+    // Prefer provided assistantId; fall back to legacy '' key for backward compatibility
+    if (assistantId !== undefined) {
+      return state.history?.[assistantId] || state.history?.['']
+    }
+    // If no assistantId provided, return legacy '' key if present
+    return state.history?.['']
   })
 }
