@@ -468,7 +468,7 @@ class BookingTools:
 
         return booking
 
-    def cancel_flight(self, booking_id: str, waive_fee: bool = False) -> dict[str, Any]:
+    def cancel_flight(self, booking_id: str, *, waive_fee: bool = False) -> dict[str, Any]:
         """
         Cancel a flight booking. Optionally waive cancellation fees to provide a full refund.
 
@@ -493,10 +493,7 @@ class BookingTools:
         total_price = booking.total_price
 
         # Calculate refund: full refund if fee is waived, otherwise no refund
-        if waive_fee:
-            refund_amount = total_price
-        else:
-            refund_amount = 0.0
+        refund_amount = total_price if waive_fee else 0.0
 
         # Update booking status
         booking.status.status = "cancelled"
