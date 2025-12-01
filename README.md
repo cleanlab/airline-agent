@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 84 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 85 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 5 | 81 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 78 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 25 | 61 | 29% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 81 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 31 | 55 | 36% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 25 | 61 | 29% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 85 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 86 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 5 | 82 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 79 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 25 | 62 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 82 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 32 | 55 | 37% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 25 | 62 | 29% |
 
 ---
 
@@ -149,7 +149,7 @@ assert 0.8773379302458094 < 0.77
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 31 times
+**Failures:** 32 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
