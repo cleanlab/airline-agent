@@ -12,7 +12,8 @@ import {
 } from '@/providers/rag-app-store-provider'
 import {
   type HistoryThread,
-  idsMatchThread} from '@/stores/history-thread-store'
+  idsMatchThread
+} from '@/stores/history-thread-store'
 
 export function SidebarActions({ thread }: { thread: HistoryThread }) {
   const removeHistoryThread = useRagAppStore(state => state.removeHistoryThread)

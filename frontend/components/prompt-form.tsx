@@ -1,7 +1,7 @@
 'use client'
 
 import { InputMessage } from '@cleanlab/design-system/chat'
-import { type FormEvent,useEffect, useRef } from 'react'
+import { type FormEvent, useEffect, useRef } from 'react'
 
 import { useStreamMessage } from '@/lib/hooks/useStreamMessage'
 import { useMessageIsPending } from '@/providers/messages-store-provider'

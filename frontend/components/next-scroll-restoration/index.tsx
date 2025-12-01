@@ -4,7 +4,13 @@
 
 'use client'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { type ReactNode, Suspense, useLayoutEffect, useMemo, useState } from 'react'
+import {
+  type ReactNode,
+  Suspense,
+  useLayoutEffect,
+  useMemo,
+  useState
+} from 'react'
 
 import type { ScrollRestorationManager, ScrollState } from './types'
 
