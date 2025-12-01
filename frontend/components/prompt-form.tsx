@@ -1,10 +1,10 @@
 'use client'
 
-import * as React from 'react'
-import { useEffect } from 'react'
-import { useMessageIsPending } from '@/providers/messages-store-provider'
-import { useStreamMessage } from '@/lib/hooks/useStreamMessage'
 import { InputMessage } from '@cleanlab/design-system/chat'
+import { type FormEvent,useEffect, useRef } from 'react'
+
+import { useStreamMessage } from '@/lib/hooks/useStreamMessage'
+import { useMessageIsPending } from '@/providers/messages-store-provider'
 
 export function PromptForm({
   input,
@@ -19,8 +19,8 @@ export function PromptForm({
   threadId?: string
   cleanlabEnabled?: boolean
 }) {
-  const inputRef = React.useRef<HTMLTextAreaElement>(null)
-  const { sendMessage: sendMessage } = useStreamMessage(cleanlabEnabled)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
+  const { sendMessage } = useStreamMessage(cleanlabEnabled)
   const isPending = useMessageIsPending()
   const submitDisabled = isPending || !input
 
@@ -32,13 +32,18 @@ export function PromptForm({
 
   return (
     <form
-      onSubmit={async (e: any) => {
+      onSubmit={async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         if (!submitDisabled) {
           // Blur focus on mobile
           if (window.innerWidth < 600) {
-            e.target['message']?.blur()
+            const form = e.currentTarget
+            const messageEl = form.elements.namedItem('message') as
+              | HTMLTextAreaElement
+              | HTMLInputElement
+              | null
+            messageEl?.blur()
           }
 
           const value = input.trim()

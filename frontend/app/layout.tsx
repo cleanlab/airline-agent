@@ -1,11 +1,14 @@
 import '@/app/globals.css'
-import { Providers } from '@/components/providers'
-import { Toaster } from '@/components/ui/sonner'
+
+import { cn } from '@cleanlab/design-system/utils'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import type { Metadata } from 'next'
+
+import { Providers } from '@/components/providers'
+import { Toaster } from '@/components/ui/sonner'
+
 import { ScrollRestoration } from '../components/next-scroll-restoration'
-import { cn } from '@cleanlab/design-system/utils'
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = 'Support Agent'

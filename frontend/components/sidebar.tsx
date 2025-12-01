@@ -1,12 +1,11 @@
 'use client'
 
-import * as React from 'react'
-import { useSidebar } from '@/lib/hooks/use-sidebar'
 import { cn } from '@cleanlab/design-system/utils'
+import { type ComponentProps } from 'react'
 
-export interface SidebarProps extends React.ComponentProps<'div'> {}
+import { useSidebar } from '@/lib/hooks/use-sidebar'
 
-export function Sidebar({ className, children }: SidebarProps) {
+export function Sidebar({ className, children }: ComponentProps<'div'>) {
   const { isSidebarOpen, isLoading } = useSidebar()
 
   return (

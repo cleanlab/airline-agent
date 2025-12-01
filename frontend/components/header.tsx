@@ -1,5 +1,7 @@
-import { getChatPath } from '@/lib/consts'
 import Link from 'next/link'
+
+import { getChatPath } from '@/lib/consts'
+
 import { HeaderButtons } from './header-buttons'
 import { LogoLockup } from './logo-lockup'
 import { NewChatButton } from './new-chat-button'

@@ -1,6 +1,7 @@
 import { ChatCodeBlock } from '@cleanlab/design-system/chat'
 import { IconChevronDown } from '@cleanlab/design-system/icons'
 import { Collapsible } from 'radix-ui'
+
 import type { StoreMessage } from '@/stores/messages-store'
 
 export function MessageAssistantTool({ message }: { message: StoreMessage }) {
@@ -24,7 +25,7 @@ export function MessageAssistantTool({ message }: { message: StoreMessage }) {
   })()
 
   // Helper function to parse and pretty-print JSON strings or objects
-  const parseAndPrettyPrint = (data: any) => {
+  const parseAndPrettyPrint = (data: unknown) => {
     // If it's already an object, just stringify it
     if (typeof data === 'object' && data !== null) {
       return JSON.stringify(data, null, 2)
@@ -65,6 +66,7 @@ export function MessageAssistantTool({ message }: { message: StoreMessage }) {
       return JSON.stringify(parsed, null, 2)
     } catch (error) {
       // If all parsing fails, return the original string
+      console.error(error)
       return data
     }
   }
@@ -110,7 +112,7 @@ export function MessageAssistantTool({ message }: { message: StoreMessage }) {
             )}
 
             {toolCallData?.result && (
-              <div className="px-6 py-6">
+              <div className="p-6">
                 <div className="type-body-100 mb-1 font-medium">Result:</div>
                 {(() => {
                   const resultContent = parseAndPrettyPrint(toolCallData.result)
@@ -141,8 +143,8 @@ export function MessageAssistantTool({ message }: { message: StoreMessage }) {
                   } else {
                     // Use plain text for non-JSON results
                     return (
-                      <div className="max-h-32 max-w-full overflow-x-auto overflow-y-auto rounded-2 bg-surface-2 px-5 py-4">
-                        <pre className="type-caption whitespace-pre-wrap break-words break-all font-mono">
+                      <div className="max-h-32 max-w-full overflow-auto rounded-2 bg-surface-2 px-5 py-4">
+                        <pre className="type-caption whitespace-pre-wrap break-all font-mono">
                           {resultContent}
                         </pre>
                       </div>

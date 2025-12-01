@@ -1,6 +1,7 @@
 'use client'
 
 import { type RefObject, useCallback } from 'react'
+
 import { useIsomorphicLayoutEffect } from './use-isomorphic-layout-effect'
 
 const ResizeObserver = window.ResizeObserver

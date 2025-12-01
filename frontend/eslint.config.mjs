@@ -17,6 +17,15 @@ const compat = new FlatCompat({
 })
 
 export default [
+  // Ignore generated files
+  {
+    ignores: [
+      '**/*.gen.ts',
+      '**/*.gen.tsx',
+      'client/**/*.gen.ts',
+      'client/**/*.gen.tsx'
+    ]
+  },
   ...compat.extends(
     'next/core-web-vitals',
     'next/typescript',

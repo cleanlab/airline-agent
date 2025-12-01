@@ -2,12 +2,9 @@
 
 import { SidebarItems } from '@/components/sidebar-items'
 import { useAssistantHistory } from '@/providers/rag-app-store-provider'
-import { useAppSettings } from '@/lib/hooks/use-app-settings'
 
 export function SidebarList() {
-  const [appSettings] = useAppSettings()
-  const assistantId = appSettings.assistantId ?? ''
-  const history = useAssistantHistory(assistantId || undefined)
+  const history = useAssistantHistory()
 
   return (
     <div className="-ml-4 flex flex-1 flex-col">

@@ -1,15 +1,17 @@
 'use client'
 
-import Link from 'next/link'
-import { useMessagesStore } from '@/providers/messages-store-provider'
+import { Tooltip } from '@cleanlab/design-system/components'
+import { cn } from '@cleanlab/design-system/utils'
 import { motion } from 'motion/react'
+import Link from 'next/link'
+
+import { buttonVariants } from '@/components/ui/button'
 import { getChatPath } from '@/lib/consts'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import { truncateString } from '@/lib/utils'
-import { buttonVariants } from '@/components/ui/button'
+import { useMessagesStore } from '@/providers/messages-store-provider'
+
 import type { HistoryThread } from '../stores/history-thread-store'
-import { Tooltip } from '@cleanlab/design-system/components'
-import { cn } from '@cleanlab/design-system/utils'
 
 interface SidebarItemProps {
   index: number
@@ -104,9 +106,7 @@ export function SidebarItem({ index, thread, children }: SidebarItemProps) {
         </Link>
       </Tooltip>
       <div
-        className={cn(
-          'absolute right-3 top-1/2 hidden h-[20px] -translate-y-1/2 group-hover:block'
-        )}
+        className="absolute right-3 top-1/2 hidden h-[20px] -translate-y-1/2 group-hover:block"
       >
         {children}
       </div>

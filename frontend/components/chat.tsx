@@ -1,6 +1,12 @@
 'use client'
 
-import type { StoreMessage } from '@/stores/messages-store'
+import { ChatInputPanel } from '@cleanlab/design-system/chat'
+import { Tooltip } from '@cleanlab/design-system/components'
+import { cn } from '@cleanlab/design-system/utils'
+import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
+
 import { ChatList } from '@/components/chat-list'
 import { EmptyScreen } from '@/components/empty-screen'
 import { getChatPath } from '@/lib/consts'
@@ -9,18 +15,13 @@ import {
   useScrollToBottom
 } from '@/lib/hooks/use-scroll-to-bottom'
 import { useMessagesStore } from '@/providers/messages-store-provider'
-import { cn } from '@cleanlab/design-system/utils'
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { toast } from 'sonner'
+import { useAssistantHistory } from '@/providers/rag-app-store-provider'
+import type { StoreMessage } from '@/stores/messages-store'
+
 import { CurrentThreadStatus } from '../lib/hooks/useStreamMessage'
 import { getThreadBufferSnapshot } from '../lib/hooks/useStreamMessage'
 import type { CurrentThread } from '../stores/messages-store'
 import { PromptForm } from './prompt-form'
-import { ChatInputPanel } from '@cleanlab/design-system/chat'
-import { Tooltip } from '@cleanlab/design-system/components'
-import { useAssistantHistory } from '@/providers/rag-app-store-provider'
-import { useAppSettings } from '@/lib/hooks/use-app-settings'
-import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group'
 export interface ChatProps {
   threadId?: string
   className?: string
@@ -45,9 +46,7 @@ export function Chat({
   const [input, setInput] = useState('')
   const setCurrentThread = useMessagesStore(state => state.setCurrentThread)
   const currentThread = useMessagesStore(state => state.currentThread)
-  const [appSettings] = useAppSettings()
-  const assistantId = appSettings.assistantId ?? ''
-  const history = useAssistantHistory(assistantId || undefined)
+  const history = useAssistantHistory()
   const [cleanlabEnabled, setCleanlabEnabled] = useState<boolean>(() => {
     try {
       if (threadId) {
@@ -129,7 +128,7 @@ export function Chat({
     // Prefer initialMessages if provided
     if (initialMessages && initialMessages.length) {
       setCurrentThread({
-        threadId: threadId,
+        threadId,
         messages: initialMessages,
         status: CurrentThreadStatus.complete
       })
@@ -141,7 +140,7 @@ export function Chat({
     const inProgressBufferSnapshot = getThreadBufferSnapshot(threadId)
     if (inProgressBufferSnapshot && inProgressBufferSnapshot.length > 0) {
       setCurrentThread({
-        threadId: threadId,
+        threadId,
         messages: inProgressBufferSnapshot,
         isPending: true,
         status: CurrentThreadStatus.responsePending
@@ -166,7 +165,7 @@ export function Chat({
           error: msg.error
         }))
         setCurrentThread({
-          threadId: threadId,
+          threadId,
           messages: hydrated,
           status: CurrentThreadStatus.complete
         })
@@ -188,7 +187,7 @@ export function Chat({
           }
         ]
         setCurrentThread({
-          threadId: threadId,
+          threadId,
           messages: hydrated,
           status: CurrentThreadStatus.complete
         })
@@ -196,7 +195,7 @@ export function Chat({
       }
     }
     setCurrentThread(undefined)
-  }, [historySnapshot, initialMessages, setCurrentThread, threadId])
+  }, [historySnapshot, initialMessages, setCurrentThread, threadId, history])
 
   const messages = currentThread?.messages
   const { scrollRef, isAtBottom, scrollToBottom } = useScrollToBottom()
@@ -206,8 +205,6 @@ export function Chat({
       window.history.replaceState({}, '', getChatPath(currentThread?.threadId))
     }
   }, [currentThread?.threadId, messages?.length])
-
-  const messageIsLoading = false
 
   useLayoutEffect(() => {
     if (scrollRef.current) {
@@ -274,13 +271,13 @@ export function Chat({
     >
       <ToggleGroupItem
         value="debug-off"
-        className="first:border-r last:border-l border-border-1 py-1.5 px-3 text-xs flex items-center justify-center bg-surface-1 leading-3 hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
+        className="py-1.5 text-xs leading-3 flex items-center justify-center border-border-1 bg-surface-1 px-3 first:border-r last:border-l hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
       >
         Debug: Off
       </ToggleGroupItem>
       <ToggleGroupItem
         value="debug-on"
-        className="first:border-r last:border-l border-border-1 py-1.5 px-3 text-xs flex items-center justify-center bg-surface-1 leading-3 hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
+        className="py-1.5 text-xs leading-3 flex items-center justify-center border-border-1 bg-surface-1 px-3 first:border-r last:border-l hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
       >
         Debug: On
       </ToggleGroupItem>
@@ -288,11 +285,7 @@ export function Chat({
   )
 
   const content = (
-    <div
-      className={cn(
-        'group relative flex min-h-0 grow flex-col overflow-hidden bg-surface-0 pl-0 duration-300 ease-in-out'
-      )}
-    >
+    <div className="group relative flex min-h-0 grow flex-col overflow-hidden bg-surface-0 pl-0 duration-300 ease-in-out">
       <div
         ref={scrollRef}
         className={cn(
@@ -301,11 +294,7 @@ export function Chat({
         )}
       >
         <div className="flex min-h-full flex-col">
-          <div
-            className={cn(
-              'sm:rounded-t-xl mx-auto flex w-full max-w-[680px] grow flex-col px-8 md:px-9'
-            )}
-          >
+          <div className="sm:rounded-t-xl mx-auto flex w-full max-w-[680px] grow flex-col px-8 md:px-9">
             {disableToggleGroup ? (
               <Tooltip content="This setting can only be changed in an empty conversation thread">
                 {toggleGroupControl}

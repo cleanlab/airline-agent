@@ -4,7 +4,8 @@
 
 'use client'
 import { usePathname, useSearchParams } from 'next/navigation'
-import React, { Suspense } from 'react'
+import { type ReactNode, Suspense, useLayoutEffect, useMemo, useState } from 'react'
+
 import type { ScrollRestorationManager, ScrollState } from './types'
 
 // ./inline-script.ts will be minified in the prebuild step and the minified
@@ -129,7 +130,7 @@ function createScrollRestorationManager(): ScrollRestorationManager {
 }
 
 function useScrollRestoration() {
-  const [scrollRestorationManager] = React.useState(() =>
+  const [scrollRestorationManager] = useState(() =>
     createScrollRestorationManager()
   )
   const pathname = usePathname()
@@ -139,7 +140,7 @@ function useScrollRestoration() {
     searchParams.size > 0 ? `?${searchParams.toString()}` : ''
   }`
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     function onScroll(event: Event) {
       if (event.target === document || event.target === window) {
         return
@@ -190,7 +191,7 @@ function useScrollRestoration() {
     }
   }, [href, scrollRestorationManager])
 
-  const scroll = React.useMemo(() => {
+  const scroll = useMemo(() => {
     return (
       (
         {
@@ -217,7 +218,7 @@ function useScrollRestoration() {
     url.searchParams.size > 0 ? `?${url.searchParams.toString()}` : ''
   }`
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const scrollKey = `${url.pathname.split('/')[1] ?? ''}`
     scrollRestorationManager.restoreScroll(normalizedHref, scrollKey, scroll)
     if (hasScrollQuery) {
@@ -237,7 +238,13 @@ function useScrollRestoration() {
       // other libraries using Native History API. We should not remove them.
       history.replaceState(state, '', normalizedHref)
     }
-  }, [hasScrollQuery, normalizedHref, scroll, scrollRestorationManager])
+  }, [
+    hasScrollQuery,
+    normalizedHref,
+    scroll,
+    scrollRestorationManager,
+    url.pathname
+  ])
 }
 
 function ScrollRestorationInner() {
@@ -281,7 +288,7 @@ function ScrollRestorationBeforeHydration() {
   )
 }
 
-function ScrollRestoration({ children }: { children?: React.ReactNode }) {
+function ScrollRestoration({ children }: { children?: ReactNode }) {
   return (
     // Suspense is required because useSearchParams() can suspend in some cases
     // (e.g. SSG).
@@ -293,6 +300,6 @@ function ScrollRestoration({ children }: { children?: React.ReactNode }) {
 }
 
 export {
-  ScrollRestoration,
-  ScrollRestorationBeforeHydration as experimental_ScrollRestorationBeforeHydration
+  ScrollRestorationBeforeHydration as experimental_ScrollRestorationBeforeHydration,
+  ScrollRestoration
 }

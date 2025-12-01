@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+
 import useResizeObserver from './use-resize-observer'
 
 function isScrolledToBottom(
@@ -20,7 +21,7 @@ export function scrollElementToBottom(
 ) {
   element.scrollTo({
     top: element.scrollHeight,
-    behavior: behavior
+    behavior
   })
 }
 

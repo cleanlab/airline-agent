@@ -1,4 +1,9 @@
+import { useCallback, useMemo, useRef } from 'react'
+import type { SetOptional } from 'type-fest'
+
+import type { MessageMetadata, UserMessage } from '@/client/types.gen'
 import { getChatPath } from '@/lib/consts'
+import ENV_VARS from '@/lib/envVars'
 import { assertExhaustive } from '@/lib/ts/assertExhaustive'
 import { nanoid } from '@/lib/utils'
 import {
@@ -7,11 +12,6 @@ import {
 } from '@/providers/messages-store-provider'
 import { useRagAppStore } from '@/providers/rag-app-store-provider'
 import type { StoreMessage, ThreadError } from '@/stores/messages-store'
-import type { MessageMetadata, UserMessage } from '@/client/types.gen'
-import ENV_VARS from '@/lib/envVars'
-import { useCallback, useMemo, useRef } from 'react'
-import { useAppSettings } from './use-app-settings'
-import type { SetOptional } from 'type-fest'
 
 export const CurrentThreadStatus = {
   threadPending: 'threadPending',
@@ -71,7 +71,7 @@ const createInitialMessages = ({ content }: { content: string }) => {
     {
       localId: nanoid(),
       role: 'user',
-      content: content,
+      content,
       metadata: {},
       isPending: true
     },
@@ -208,7 +208,6 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
 
   const addHistoryThread = useRagAppStore(state => state.addHistoryThread)
   const updateHistoryThread = useRagAppStore(state => state.updateHistoryThread)
-  const [appSettings] = useAppSettings()
 
   // Always use latest cleanlabEnabled in callbacks
   const cleanlabRef = useRef(cleanlabEnabled)
@@ -222,7 +221,6 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         const buffered = threadBuffers.get(threadId) || []
         if (!buffered.length) return
         updateHistoryThread({
-          assistantId: appSettings.assistantId ?? '',
           threadId,
           thread: {
             messages: buffered.map(msg => ({
@@ -237,11 +235,12 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
             }))
           }
         })
-      } catch (e) {
+      } catch (error) {
         // best-effort; ignore persistence errors during streaming
+        console.error(error)
       }
     },
-    [updateHistoryThread, appSettings.assistantId]
+    [updateHistoryThread]
   )
 
   const setDone = useCallback(
@@ -259,7 +258,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
   const bareStore = useBareMessagesStore()
 
   const handleStreamChunk = useCallback(
-    ({ threadId, value }: { threadId: string; value: any }) => {
+    ({ threadId, value }: { threadId: string; value: StoreMessage }) => {
       // Handle different types of streaming chunks
       if (value.role === 'tool') {
         // Handle tool call messages
@@ -294,7 +293,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         // Don't set status to complete here - wait for thread.run.completed
       }
     },
-    [appendMessage, setThreadStatus, syncHistoryFromBuffer]
+    [appendMessage, syncHistoryFromBuffer]
   )
 
   const postMessage = useCallback(
@@ -392,7 +391,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                   threadId,
                   localThreadId,
                   status: CurrentThreadStatus.failed,
-                  error: error
+                  error
                 })
               }
               clearThreadBuffer(threadId)
@@ -427,6 +426,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                         handleStreamChunk({ threadId, value: messageData })
                       } else if (messageData.role === 'assistant') {
                         handleStreamChunk({ threadId, value: messageData })
+                        // Capture the latest assistant message for snapshot preference
                         finalAssistantMessage = {
                           localId: nanoid(),
                           role: 'assistant',
@@ -451,15 +451,16 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                         const firstUserMessage = sourceMessages.find(
                           m => m.role === 'user'
                         )
-                        const lastAssistantMessage = sourceMessages
-                          .filter(m => m.role === 'assistant')
-                          .pop()
+                        const lastAssistantMessage =
+                          finalAssistantMessage ||
+                          sourceMessages
+                            .filter(m => m.role === 'assistant')
+                            .pop()
 
                         if (firstUserMessage) {
                           addHistoryThread({
                             title: firstUserMessage.content || 'New thread',
-                            assistantId: appSettings.assistantId ?? '',
-                            thread: { id: threadId } as any,
+                            thread: { id: threadId },
                             cleanlabEnabled: cleanlabRef.current,
                             snapshot: lastAssistantMessage
                               ? {
@@ -508,11 +509,11 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                       clearThreadBuffer(threadId)
                       return
                     }
-                  } catch (e) {
+                  } catch (error) {
                     console.warn(
                       'Failed to parse streaming data:',
                       currentData,
-                      e
+                      error
                     )
                   }
 
@@ -530,22 +531,16 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         }
 
         pump()
-      } catch (e) {
+      } catch (error) {
         setDone({
           threadId,
           error: { message: 'Request failed', canRetry: true },
           status: CurrentThreadStatus.failed
         })
+        console.error(error)
       }
     },
-    [
-      setThreadStatus,
-      bareStore,
-      handleStreamChunk,
-      setDone,
-      addHistoryThread,
-      appSettings.assistantId
-    ]
+    [setThreadStatus, bareStore, handleStreamChunk, setDone, addHistoryThread]
   )
 
   const createThreadPending = false
@@ -556,18 +551,14 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
       const localThreadId = nanoid()
       addHistoryThread({
         title: messageContent || 'New thread',
-        assistantId: appSettings.assistantId ?? '',
-        thread: { id: localThreadId } as any,
+        thread: { id: localThreadId },
         cleanlabEnabled: cleanlabRef.current,
         snapshot: {
           user: { content: messageContent || '', metadata: {} },
           assistant: { content: '', metadata: {} }
         }
       })
-      const initialMessages = createInitialMessages({
-        threadId: localThreadId,
-        content: messageContent
-      })
+      const initialMessages = createInitialMessages({ content: messageContent })
       setCurrentThread({
         localThreadId,
         threadId: localThreadId,
@@ -582,11 +573,11 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
       postMessage({
         threadId: localThreadId,
         localThreadId,
-        messageContent: messageContent,
+        messageContent,
         cleanlabEnabled: cleanlabRef.current
       })
     },
-    [addHistoryThread, setCurrentThread, postMessage, bufferAppendUser]
+    [addHistoryThread, setCurrentThread, postMessage]
   )
 
   const sendMessage = useCallback(
@@ -635,7 +626,7 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         postMessage({
           threadId: threadIdToUse,
           localThreadId: currentThread?.localThreadId,
-          messageContent: messageContent,
+          messageContent,
           cleanlabEnabled: cleanlabRef.current
         })
       } else {

@@ -10,7 +10,6 @@ export const useLocalStorage = <T>(
     // Retrieve from localStorage
     const item = window.localStorage.getItem(key)
     if (item) {
-      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setStoredValue(JSON.parse(item))
     }
   }, [key])

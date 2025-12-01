@@ -1,21 +1,22 @@
 'use client'
 
+import {
+  MessageAssistant,
+  MessageAssistantStatus,
+  MessageError,
+  MessageUser
+} from '@cleanlab/design-system/chat'
+import type { RefObject } from 'react'
+import { useEffect, useRef } from 'react'
+
 import { RATE_LIMIT_WAIT_MS } from '@/lib/consts'
 import { useRateLimitedValue } from '@/lib/hooks/useRateLimitedValue'
 import { useMessagesStore } from '@/providers/messages-store-provider'
-import type { StoreMessage } from '@/stores/messages-store'
+import type { MessageMetadata, StoreMessage } from '@/stores/messages-store'
 
-import type { RefObject } from 'react'
-import { useEffect, useRef } from 'react'
 import { useAutoScrollMessage } from '../lib/hooks/use-auto-scroll-message'
-import { RetryButton } from './message'
-import {
-  MessageAssistant,
-  MessageError,
-  MessageAssistantStatus,
-  MessageUser
-} from '@cleanlab/design-system/chat'
 import { IconAirplane } from './icons'
+import { RetryButton } from './message'
 import { MessageAssistantTool } from './message-assistant-tool'
 
 export interface ChatListProps {
@@ -46,7 +47,7 @@ const ChatMessage = ({
     if (message.role === 'assistant' && !message.isPending) {
       console.info('Message:\n', message)
     }
-  }, [message.role, message.isPending])
+  }, [message.role, message.isPending, message])
 
   const display = (() => {
     switch (message.role) {
@@ -124,7 +125,7 @@ export function ChatList({
       }
       // Show assistant messages with metadata even if no content
       if (message.role === 'assistant') {
-        const md = message.metadata as any
+        const md = message.metadata as MessageMetadata
         return !!(
           md &&
           (md.guardrailed ||

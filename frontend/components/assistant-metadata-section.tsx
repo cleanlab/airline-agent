@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
 import { cn } from '@cleanlab/design-system/utils'
+import type { ReactNode } from 'react'
 
 export const AssistantMetadataSection = ({
   heading,

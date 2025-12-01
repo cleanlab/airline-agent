@@ -20,7 +20,42 @@ const persistState = (stateCreator: StateCreator<RagAppStore>) => {
       responseRatings: state.responseRatings
     }),
     name: 'ragApp',
-    storage: createJSONStorage(() => localStorage)
+    storage: createJSONStorage(() => localStorage),
+    version: 2,
+    migrate: (persisted: any, version: number) => {
+      try {
+        if (!persisted) return persisted
+        // v1 shape had history as a Record<string, HistoryThread[]>
+        if (
+          version < 2 &&
+          persisted.history &&
+          !Array.isArray(persisted.history)
+        ) {
+          const legacyHistoryObj = persisted.history as Record<string, any[]>
+          const flat: any[] = []
+          Object.values(legacyHistoryObj || {}).forEach(arr => {
+            if (Array.isArray(arr)) {
+              arr.forEach(item => {
+                if (item && typeof item === 'object') {
+                  // Drop assistantId from legacy items
+                  delete item.assistantId
+                  flat.push(item)
+                }
+              })
+            }
+          })
+          persisted.history = flat
+        }
+        // Always run cleanup on load
+        if (Array.isArray(persisted.history)) {
+          persisted.history = filterUnfinishedThreads(persisted.history)
+        }
+      } catch {
+        // Best-effort migration; if anything fails, return original state
+        return persisted
+      }
+      return persisted
+    }
   })
 }
 
