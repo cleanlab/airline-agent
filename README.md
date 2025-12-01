@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 88 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 89 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 6 | 84 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 82 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 26 | 64 | 29% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 85 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 33 | 57 | 37% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 27 | 63 | 30% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 89 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 90 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 7 | 84 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 83 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 26 | 65 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 86 | 5% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 33 | 58 | 36% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 27 | 64 | 30% |
 
 ---
 
@@ -60,7 +60,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
-**Failures:** 6 times
+**Failures:** 7 times
 
 **Question:** Tell me a joke about airlines
 
@@ -73,7 +73,7 @@ httpx.ReadTimeout: The read operation timed out
 ```
 AssertionError: Failed response: I’m here to assist with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: The agent output is a straightforward offer to assist with Frontier Airlines and air travel; it contains no attempt at humor or any joke about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
+Criteria not met: The output does not attempt to tell a joke about airlines. It is a straightforward offer to assist with questions about Frontier Airlines and air travel, with no humor or joke content. Therefore it fails the criterion.
 ```
 </details>
 
