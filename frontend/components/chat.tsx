@@ -120,7 +120,7 @@ export function Chat({
 
   useEffect(() => {
     if (!threadId) {
-      setCurrentThread(undefined)
+      // Keep showing local in-progress thread when URL doesn't yet include an id
       return
     }
     // Prefer initialMessages if provided
