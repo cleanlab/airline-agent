@@ -347,6 +347,17 @@ Try asking queries that reveal knowledge gaps in the Agent, such as this one:
 
 > *tell me about the bogo promo going on right now*
 
+<details>
+  <summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+
+I couldn't find specific information about a current BOGO (Buy One, Get One) promotion for Frontier Airlines. If you have more details or specific aspects of the promotion you're interested in, please let me know, and I can help further. Alternatively, you might want to check Frontier Airlines' official website or contact their customer service for the most up-to-date promotional offers.
+```
+<br><br>
+</details>
+
 The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries about this promotion. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
 
 ```text
@@ -359,8 +370,9 @@ After submitting your Remediation, imagine you are a different user **by creatin
 
 You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
 
+You can review/edit existing Expert Answers by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Verbatim Answers" tab.
 
-#### 4b. Expert Review
+#### 4b. Expert Reviews (Good/Bad)
 
 Beyond Expert Answers, Cleanlab supports other types of remediations, such as Expert Reviews.
 
@@ -389,9 +401,11 @@ Then pretend you are a different user **by creating a new chat thread** and ask:
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
-#### 4c. AI Guidance
+You can review/edit existing Expert Reviews (Good/Bad) by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Reviews (Good/Bad)" tab.
 
-While **Expert Answers** enable your SMEs to control your AI's exact answer to specific types of queries, Cleanlab’s **AI Guidance** enables SMEs to improve your AI across a broader range of related queries, where SMEs may not want to write an explicit answer to each one. If your AI is repeatedly using a tool incorrectly, retrieving the wrong article, or misunderstanding certain terminology or acronyms, then you can provide AI Guidance to teach your AI how to better handle these types of cases in the future.
+#### 4c. Expert Guidance
+
+While **Expert Answers** enable your SMEs to control your AI's exact answer to specific types of queries, Cleanlab’s **Expert Guidance** enables SMEs to improve your AI across a broader range of related queries, where SMEs may not want to write an explicit answer to each one. If your AI is repeatedly using a tool incorrectly, retrieving the wrong article, or misunderstanding certain terminology or acronyms, then you can provide Expert Guidance to teach your AI how to better handle these types of cases in the future.
 
 Try asking each of the example queries below (in new chats):
 
@@ -433,6 +447,7 @@ Relevant flight data excerpt:
   ]
 }
 ```
+<br><br>
 </details>
 
 In response to the second query, the AI assumes that NYC means JFK airport and reports back on the earliest flight out of JFK, when in fact there is an earlier flight out of EWR departing at **06:45**.
@@ -460,20 +475,21 @@ Relevant flight data excerpt:
     "carrier": "F9",
     "fares": [
 ```
+<br><br>
 </details>
 
-This misunderstanding reflects a systematic issue that you can fix with AI Guidance (imagining you are a SME who wants to teach the AI to do better).
+This misunderstanding reflects a systematic issue that you can fix with Expert Guidance (imagining you are a SME who wants to teach the AI to do better).
 To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above.
 Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
 
 > when the user uses NYC as an airport code, consider the three major New York area airports
 
-After you submit the SME feedback for this case, Cleanlab auto-generates a suggested AI Guidance based on your feedback, such as:
+After you submit the SME feedback for this case, Cleanlab auto-generates some proposed Expert Guidance based on your feedback, such as:
 
 > If the user refers to "NYC" as a destination or airport code, you should consider and include options for all three major New York City area airports (JFK, LGA, and EWR).
 
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
-Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+Once saved, this Expert Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
 Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
 
@@ -483,7 +499,7 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 You'll now see that the AI provides the correct answers by considering all three New York airports.
 
-You can review/edit existing Guidance by opening the `AI Guidance` section in the left sidebar of your Cleanlab Project.
+You can review/edit existing Expert Guidance by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Guidance" tab.
 
 
 ## Conclusion
@@ -496,7 +512,7 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 ### Additional Examples You Can Try
 
-#### To explore Expert Review
+#### To explore Expert Reviews
 
 > *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
 
@@ -519,78 +535,77 @@ Then pretend you are a different user **by creating a new chat thread** and ask:
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
 
+You can review/edit existing Expert Reviews (Good/Bad) by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Reviews (Good/Bad)" tab.
+
 <br><br>
 </details>
 
-#### To explore AI Guidance
+#### To explore Expert Answers
 
-> *can i bring a dog with me on a flight?*
+> *Is the viral promo code FLYFREE25 legitimate?*
 
-> *can i bring my emotional support dog with me on a domestic flight?*
+<details>
+<summary>Learn More</summary>
+
+```text
+AI Response without Cleanlab:
+
+I can't verify the legitimacy of specific promo codes like FLYFREE25. It's best to check directly on the official Frontier Airlines website or contact their customer service for confirmation. Be cautious of any codes that are not officially advertised by the airline.
+```
+
+The Agent gave an unhelpful IDK answer, so let's pretend to be a Frontier Airlines SME and remediate this issue. We can provide a better answer that the Agent should give for queries about this promotion. Click the "Expert Answer" section in the Cleanlab UI and enter a desired answer like:
+
+```text
+Yes, “FLYFREE25” is a legitimate promo code tied to our June 25, 2025 anniversary and is valid only on that day. The first 50 eligible domestic Economy round-trip bookings receive a $0 base fare (taxes apply).
+```
+
+After submitting your Remediation, imagine you are a different user **by creating a new chat thread** and asking a similar question:
+
+> *is your promo code FLYFREE25 legit?*
+
+You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
+
+You can review/edit existing Expert Verbatim Answers by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Verbatim Answers" tab.
+<br><br>
+</details>
+
+#### To explore Expert Guidance
+
+> *My flight got canceled how to use my Peace Pass benefit?*
+
+> *does peace pass still work if trip canceled due to weather?*
 
 <details>
   <summary>Learn More</summary>
 
-  > *can i bring a dog with me on a flight?*
+For demonstration purposes, suppose that Frontier Airlines' Disruption Assistance benefit is informally referred to by customers as the "Peace Pass".
 
-The AI references `/help/do-you-allow-pets-on-the-plane` and mentions that only service animals are allowed on international flights.
-However, this answer can be improved if the AI first clarified if the passenger is flying domestic or international.
-If the flight is international, the AI should also reference `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and explain the requirements for service animals.
+In both cases above, the AI might either give an “I don’t know” response or a fallback answer from Cleanlab because it does not know about the “Peace Pass” is (it may wrongly think this refers to Frontier's GoWild! Pass).
 
-> *can i bring my emotional support dog with me on a domestic flight?*
+This misunderstanding reflects a systematic issue that you can fix with Expert Guidance (imagining you are a SME who wants to teach the AI to do better).
+To provide Guidance for this case, expand the Log entry in your Cleanlab Project for the first query above.
+Select `No` under *Is this a good AI response?* and provide a short explanation in the `Reason` field:
 
-The AI references `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and answers accordingly that Frontier Airlines does not recognize emotional support animals as service animals.
-However, this answer can be improved if the AI also referenced the `/help/do-you-allow-pets-on-the-plane` article, which notes that the passenger may still bring their dog on board if they comply with Frontier’s Pet Policy.
+> Peace Pass is another term for Disruption Assistance
 
-To provide AI Guidance for such cases, expand the Log entry in your Cleanlab Project for the first query above.
-Select `No` under *Is this a good AI response?* and provide an explanation like the following in the `Reason` field:
-
-> Answer depends if flight is international and if it's a service animal. Should have clarified with user, and then used info from all relevant articles: always use the "do you allow pets on plane" article, then if international/service animal, also the "service animals" article
-
-After you submit the SME feedback for this case, Cleanlab auto-generates suggested AI Guidance based on your feedback.
+After you submit the SME feedback for this case, Cleanlab auto-generates a suggested Expert Guidance based on your feedback.
 Review the suggestion, make any edits if necessary, and click Submit to confirm.
-Once saved, this AI Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
+Once saved, this Expert Guidance is automatically supplied to your AI system the next time a similar situation is encountered, helping the AI better handle such situations going forward.
 
 Now pretend you're another user **by creating a new chat thread** and ask the same queries as above:
 
-> *can i bring a dog with me on a flight?*
+> My flight got canceled how to use my Peace Pass benefit?
 
-... after the Agent responds, you can then clarify ...
+> does peace pass still work if trip canceled due to weather?
 
-> *its an international flight. and its a service animal*
+You’ll now see that the AI provides the correct information about the Disruption Assistance program.
 
-You’ll now see that the AI also references `/help/may-i-bring-a-service-animal-or-an-emotional-support-animal-with-me-on-the-plane` and includes more details about service animal requirements.
-In contrast, if you instead followed up with:
+You can review/edit existing Expert Guidance by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Guidance" tab.
 
-> *its a domestic flight. and its a house pet*
-
-The AI will instead reference `/help/do-you-allow-pets-on-the-plane` and tailor its response accordingly.
-Your Guidance ensures the AI combines both articles when appropriate, to better serve users.
-
-> *can i bring my emotional support dog with me on a domestic flight?*
-
-In this case, because the user’s question already specifies both the type of flight and the kind of animal, the AI skips asking a clarifying question. You’ll also notice that the AI now adds information that domesticated pets are allowed on the flight. This helps clarify that while emotional support animals are not treated as service animals, pets may still travel under the standard Pet Policy.
-<br><br>
 </details>
 
 
 #### To explore Trust Scoring
-
-> *can i pack my prescription thc in my carry on so that its accessible to me during my flight? ill need it if i get an anxiety attack on take off.*
-
-<details>
-  <summary>Learn More</summary>
-
-```text
-AI Response (guardrailed and prevented by Cleanlab):
-
-You are allowed to bring medicine, including prescription THC, in your carry-on bag. This ensures you have access to it during the flight and protects it from temperature changes or delays that can occur with checked bags. Make sure to pack it in accordance with TSA regulations, and it should be properly labeled as a prescription. If you have any specific concerns, you might also want to check the TSA's guidelines or consult with them directly.
-```
-
-Here the AI responded incorrectly. The correct response is that under U.S. federal law, marijuana and all THC products is illegal to fly with, regardless of prescription status.
-
-<br><br>
-</details>
 
 
 > *i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?*

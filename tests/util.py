@@ -25,21 +25,21 @@ class Project:
         return list(self._sdk_client.projects.query_logs.list(self._project.id))
 
     def add_expert_answer(self, question: str, answer: str) -> None:
-        self._sdk_client.projects.remediations.create(self._project.id, question=question, answer=answer)
+        self._sdk_client.projects.remediations.expert_answers.create(self._project.id, query=question, answer=answer)
 
     def add_expert_review(self, log_id: str, *, is_good: bool, reason: str | None = None) -> str | None:
-        status = "good" if is_good else "bad"
-        body = {"status": status}
-        if not is_good:
-            body["explanation"] = reason if reason is not None else ""
-        response = self._sdk_client.post(
-            f"/api/projects/{self._project.id}/query_logs/{log_id}/expert_review?generate_guidance=true",
-            body=body,
-            cast_to=dict[str, Any],
+        self._sdk_client.projects.remediations.expert_reviews.create(
+            self._project.id,
+            original_query_log_id=log_id,
+            review_status="good" if is_good else "bad",
+            generate_guidance=True,
+            explanation=reason if reason is not None else "",
         )
-        return response.get("ai_guidance_id")
+        log = self._sdk_client.projects.query_logs.retrieve(log_id, project_id=self._project.id)
+        assert log is not None, "log not found"
+        return log.ai_guidance_id
 
-    def get_draft_guidance(self, guidance_id: str) -> str:
+    def get_guidance(self, guidance_id: str) -> str:
         while True:
             response = self._sdk_client.get(
                 f"/api/projects/{self._project.id}/guidance_remediations/{guidance_id}",
@@ -48,15 +48,11 @@ class Project:
             pending = response["pending"]
             assert isinstance(pending, bool)
             if not pending:
-                draft_guidance = response.get("draft_guidance")
-                assert isinstance(draft_guidance, str)
-                return draft_guidance
+                guidance = response.get("guidance")
+                assert guidance is not None, "guidance was not generated"
+                assert isinstance(guidance, str), "guidance is not a string"
+                return guidance
             time.sleep(0.5)
-
-    def publish_guidance(self, guidance_id: str) -> None:
-        self._sdk_client.patch(
-            f"/api/projects/{self._project.id}/guidance_remediations/{guidance_id}/publish", cast_to=dict[str, Any]
-        )
 
 
 def find[T](iterable: list[T], predicate: Callable[[T], bool]) -> T:
@@ -97,9 +93,7 @@ def wait_and_get_final_log_for(project: Project, log_id: str) -> QueryLogListRes
     return find(logs, lambda log: log.id == log_id)
 
 
-def assert_log_guardrail(project: Project, log_id: str | None, *, guardrailed: bool) -> QueryLogListResponse:
-    assert log_id is not None
-    log = wait_and_get_final_log_for(project, log_id)
+def assert_log_guardrail(log: QueryLogListResponse, *, guardrailed: bool) -> None:
     if guardrailed:
         assert log.guardrailed, ERROR_MESSAGE.format(
             log.original_assistant_response, "guardrail should have been triggered"
@@ -108,4 +102,3 @@ def assert_log_guardrail(project: Project, log_id: str | None, *, guardrailed: b
         assert not log.guardrailed, ERROR_MESSAGE.format(
             log.original_assistant_response, "guardrail should not have been triggered"
         )
-    return log

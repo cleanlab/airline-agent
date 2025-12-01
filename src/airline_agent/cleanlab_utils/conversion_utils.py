@@ -189,7 +189,7 @@ def convert_tools_to_openai_format(tools: list[ToolDefinition]) -> list[ChatComp
             function_spec["strict"] = tool.strict
 
         openai_tool = cast(
-            ChatCompletionFunctionToolParam,
+            "ChatCompletionFunctionToolParam",
             {
                 "type": "function",
                 "function": function_spec,
@@ -225,7 +225,7 @@ def convert_message_to_chat_completion(message: ChatCompletionMessageParam) -> C
     }
 
     return cast(
-        ChatCompletion,
+        "ChatCompletion",
         {
             "id": "chatcmpl-mock",
             "choices": [

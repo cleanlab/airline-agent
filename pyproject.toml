@@ -19,7 +19,7 @@ dependencies = [
   "pydantic>=2.11.9",
   "python-dotenv>=1.0.0",
   "tqdm>=4.67.1",
-  "cleanlab_codex>=1.0.33",   
+  "cleanlab-codex>=1.0.35",
   "selenium>=4.10.0",
   "fastapi[standard]>=0.116.2",
   "uvicorn>=0.38.0",
@@ -41,6 +41,7 @@ red-teaming-server = "python -m airline_agent.red_teaming.agent {args}"
 extra-dependencies = [
   "mypy>=1.18.2",
   "pytest",
+  "pandas-stubs",
   "types-requests>=2.32.4.20250913",
   "types-tqdm>=4.67.0.20250809",
 ]
@@ -55,6 +56,7 @@ markers = [
 ]
 
 [tool.hatch.envs.hatch-test]
+installer = "uv"
 extra-dependencies = [
   "pytest-json-report"
 ]

@@ -3,3 +3,4 @@ scratch/
 __pycache__
 .DS_Store
 .claude/settings.local.json
+airline_agent_benign_examples.csv

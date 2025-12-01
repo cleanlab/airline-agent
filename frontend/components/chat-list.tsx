@@ -22,6 +22,7 @@ export interface ChatListProps {
   threadId?: string
   scrollRef: RefObject<HTMLElement | null>
   cleanlabEnabled: boolean
+  viewToolsEnabled?: boolean
 }
 
 const ChatMessage = ({
@@ -98,7 +99,8 @@ const ChatMessage = ({
 export function ChatList({
   threadId,
   scrollRef,
-  cleanlabEnabled
+  cleanlabEnabled,
+  viewToolsEnabled = true
 }: ChatListProps) {
   const allMessages = useMessagesStore(state => state.currentThread?.messages)
   const error = useMessagesStore(state => state.currentThread?.error)
@@ -111,12 +113,13 @@ export function ChatList({
       if (message.role === 'user' && message.content) {
         return true
       }
+      // Filter out tool messages if viewToolsEnabled is false
+      if (message.role === 'tool') {
+        // Only show tool calls if viewToolsEnabled is true
+        return viewToolsEnabled && !!message.content
+      }
       // Show messages that have content and are not pending
       if (message?.content && !message.isPending) {
-        return true
-      }
-      // Show tool calls that have content
-      if (message.role === 'tool' && message.content) {
         return true
       }
       // Show assistant messages with metadata even if no content

@@ -72,6 +72,21 @@ export function Chat({
     }
   })
 
+  // Debug toggle state - defaults to true, globally persistent
+  const [viewToolsEnabled, setViewToolsEnabled] = useState<boolean>(() => {
+    try {
+      const key = 'debugEnabled'
+      const v = localStorage.getItem(key)
+      if (v !== null) {
+        return JSON.parse(v)
+      }
+      // Default to true (show tools by default)
+      return true
+    } catch {
+      return true
+    }
+  })
+
   const historySnapshot = useMemo(() => {
     if (!threadId) return undefined
     const item = history?.find(
@@ -97,6 +112,14 @@ export function Chat({
       if (v !== null) setCleanlabEnabled(JSON.parse(v))
     } catch {}
   }, [threadId, history])
+
+  // Persist debug toggle to localStorage when it changes (globally)
+  useEffect(() => {
+    try {
+      const key = 'debugEnabled'
+      localStorage.setItem(key, JSON.stringify(viewToolsEnabled))
+    } catch {}
+  }, [viewToolsEnabled])
 
   useEffect(() => {
     if (!threadId) {
@@ -209,6 +232,7 @@ export function Chat({
       type="single"
       value={cleanlabEnabled ? 'cleanlab-enabled' : 'cleanlab-disabled'}
       onValueChange={value => {
+        if (!value) return
         const next = value === 'cleanlab-enabled'
         setCleanlabEnabled(next)
       }}
@@ -233,6 +257,32 @@ export function Chat({
         )}
       >
         Cleanlab Enabled
+      </ToggleGroupItem>
+    </ToggleGroup>
+  )
+
+  // Debug toggle - subtle, positioned at bottom right
+  const viewToolsToggle = (
+    <ToggleGroup
+      type="single"
+      value={viewToolsEnabled ? 'debug-on' : 'debug-off'}
+      onValueChange={value => {
+        const next = value === 'debug-on'
+        setViewToolsEnabled(next)
+      }}
+      className="fixed bottom-4 right-4 z-40 inline-flex w-fit justify-center overflow-hidden rounded-2 border border-border-1 bg-surface-1 shadow-elev-1"
+    >
+      <ToggleGroupItem
+        value="debug-off"
+        className="first:border-r last:border-l border-border-1 py-1.5 px-3 text-xs flex items-center justify-center bg-surface-1 leading-3 hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
+      >
+        Debug: Off
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value="debug-on"
+        className="first:border-r last:border-l border-border-1 py-1.5 px-3 text-xs flex items-center justify-center bg-surface-1 leading-3 hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
+      >
+        Debug: On
       </ToggleGroupItem>
     </ToggleGroup>
   )
@@ -263,11 +313,13 @@ export function Chat({
             ) : (
               toggleGroupControl
             )}
+            {viewToolsToggle}
             {messages?.length ? (
               <ChatList
                 threadId={currentThread?.threadId}
                 scrollRef={scrollRef}
                 cleanlabEnabled={cleanlabEnabled}
+                viewToolsEnabled={viewToolsEnabled}
               />
             ) : (
               <EmptyScreen />
