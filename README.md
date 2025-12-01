@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 82 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 83 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 5 | 79 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 76 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 24 | 60 | 29% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 79 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 31 | 53 | 37% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 25 | 59 | 30% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 83 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 84 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 5 | 80 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 77 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 25 | 60 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 80 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 31 | 54 | 36% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 25 | 60 | 29% |
 
 ---
 
@@ -106,7 +106,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 24 times
+**Failures:** 25 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -117,10 +117,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
-  
-  Criteria not met: trustworthiness threshold
-assert 0.7809745345473634 < 0.77
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed one personal item that must fit under the seat in front of them. This personal item can be a purse, backpack, or similar item. If you have two small bags, each would be considered a separate personal item, even if they both fit under the seat. Therefore, you would need to consolidate them into one bag to count as a single personal item. Otherwise, the second bag would be considered a carry-on, which may incur additional fees.
+
+Criteria not met: The agent_output states that two small bags would be considered separate personal items and instructs the passenger to consolidate them; it does not confirm that both small bags count as one personal item. Therefore it does not meet the criterion.
 ```
 </details>
 
