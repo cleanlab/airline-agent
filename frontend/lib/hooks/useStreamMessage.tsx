@@ -495,6 +495,19 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
                               error: msg.error
                             }))
                           })
+                          // Ensure the UI immediately reflects the final messages
+                          try {
+                            const finalized = sourceMessages.map(msg => ({
+                              ...msg,
+                              isPending: false,
+                              isContentPending: false
+                            }))
+                            setCurrentThread({
+                              threadId,
+                              messages: finalized,
+                              status: CurrentThreadStatus.complete
+                            })
+                          } catch {}
                         }
                       }
                       clearThreadBuffer(threadId)

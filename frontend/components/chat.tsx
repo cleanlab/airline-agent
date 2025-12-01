@@ -45,6 +45,8 @@ export function Chat({
   const setCurrentThread = useMessagesStore(state => state.setCurrentThread)
   const currentThread = useMessagesStore(state => state.currentThread)
   const history = useAssistantHistory()
+  // Prefer live current thread id when URL param is not yet set (new chat)
+  const effectiveThreadId = threadId ?? currentThread?.threadId
   const [cleanlabEnabled, setCleanlabEnabled] = useState<boolean>(() => {
     try {
       if (threadId) {
@@ -85,12 +87,14 @@ export function Chat({
   })
 
   const historySnapshot = useMemo(() => {
-    if (!threadId) return undefined
+    if (!effectiveThreadId) return undefined
     const item = history?.find(
-      h => h.thread?.id === threadId || h.localThreadId === threadId
+      h =>
+        h.thread?.id === effectiveThreadId ||
+        h.localThreadId === effectiveThreadId
     )
     return item?.snapshot
-  }, [history, threadId])
+  }, [history, effectiveThreadId])
 
   // Hydrate per-thread cleanlabEnabled on thread change
   useEffect(() => {
@@ -119,7 +123,7 @@ export function Chat({
   }, [viewToolsEnabled])
 
   useEffect(() => {
-    if (!threadId) {
+    if (!effectiveThreadId) {
       // If there's no URL thread, only keep showing content while a thread is actively pending.
       if (currentThread?.isPending) return
       setCurrentThread(undefined)
@@ -128,7 +132,7 @@ export function Chat({
     // Prefer initialMessages if provided
     if (initialMessages && initialMessages.length) {
       setCurrentThread({
-        threadId,
+        threadId: effectiveThreadId,
         messages: initialMessages,
         status: CurrentThreadStatus.complete
       })
@@ -137,10 +141,10 @@ export function Chat({
     // If a stream is in progress for this thread, prefer hydrating from
     // the live buffer BEFORE falling back to snapshot. Snapshot at creation
     // time contains an empty assistant and would hide loading state.
-    const inProgressBufferSnapshot = getThreadBufferSnapshot(threadId)
+    const inProgressBufferSnapshot = getThreadBufferSnapshot(effectiveThreadId)
     if (inProgressBufferSnapshot && inProgressBufferSnapshot.length > 0) {
       setCurrentThread({
-        threadId,
+        threadId: effectiveThreadId,
         messages: inProgressBufferSnapshot,
         isPending: true,
         status: CurrentThreadStatus.responsePending
@@ -150,7 +154,9 @@ export function Chat({
     if (historySnapshot) {
       // Check if we have complete message history saved
       const historyItem = history?.find(
-        h => h.localThreadId === threadId || h.thread?.id === threadId
+        h =>
+          h.localThreadId === effectiveThreadId ||
+          h.thread?.id === effectiveThreadId
       )
       if (historyItem?.messages && historyItem.messages.length > 0) {
         // Use the complete message history including tool calls
@@ -165,7 +171,7 @@ export function Chat({
           error: msg.error
         }))
         setCurrentThread({
-          threadId,
+          threadId: effectiveThreadId,
           messages: hydrated,
           status: CurrentThreadStatus.complete
         })
@@ -187,19 +193,19 @@ export function Chat({
           }
         ]
         setCurrentThread({
-          threadId,
+          threadId: effectiveThreadId,
           messages: hydrated,
           status: CurrentThreadStatus.complete
         })
         return
       }
     }
-    setCurrentThread(undefined)
+    // No snapshot or buffer available; preserve currentThread instead of clearing to avoid flicker
   }, [
     historySnapshot,
     initialMessages,
     setCurrentThread,
-    threadId,
+    effectiveThreadId,
     history,
     currentThread?.isPending
   ])
@@ -312,7 +318,7 @@ export function Chat({
             {viewToolsToggle}
             {messages?.length ? (
               <ChatList
-                threadId={currentThread?.threadId}
+                threadId={currentThread?.threadId ?? effectiveThreadId}
                 scrollRef={scrollRef}
                 cleanlabEnabled={cleanlabEnabled}
                 viewToolsEnabled={viewToolsEnabled}
