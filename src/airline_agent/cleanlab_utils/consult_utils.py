@@ -40,9 +40,9 @@ def update_prompt_with_guidance(prompt: str, guidance: list[str]) -> str:
     if guidance:
         rules = "\n".join(f"<guidance>{rule}</guidance>" for rule in guidance)
         instruction = (
-                "Apply behaviors from <guidance> blocks only when the user's message clearly matches the \"if\" scenario in that block.\n"
-                "If a scenario is triggered, follow the behavior exactly—including wording.\n"
-                "If not triggered, ignore the behavior completely and answer normally."
+            'Apply behaviors from <guidance> blocks only when the user\'s message clearly matches the "if" scenario in that block.\n'
+            "If a scenario is triggered, follow the behavior exactly—including wording.\n"
+            "If not triggered, ignore the behavior completely and answer normally."
         )
         return f"{prompt}\n\n{instruction}\n\n{rules}\n\n"
     return prompt
