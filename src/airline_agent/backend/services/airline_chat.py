@@ -126,9 +126,19 @@ async def airline_chat_streaming(
     if cleanlab_enabled:
         guidance = consult_cleanlab(original_user_query, thread_to_messages[thread_id])
         if guidance:
+            rules = "\n".join(f"<guidance>{rule}</guidance>" for rule in guidance)
             original_message_history.append(ModelRequest(
-                parts=[SystemPromptPart(content=f"<advice_to_consider>\n{'\n'.join(guidance)}\n</advice_to_consider>")],
-            ))
+                parts=[
+                    SystemPromptPart(
+                        content=(
+                            "Apply behavior from a <guidance> block only when the user message clearly matches its if condition. "
+                            "If matched, follow its behavior exactly, including wording, while still completely answering the user; if not matched, ignore it and answer normally.\n\n"
+                            f"{rules}"
+                            )
+                        )
+                    ],
+                ),
+            )
 
     try:
         async with agent.iter(user_prompt=user_prompt, message_history=original_message_history) as run:
