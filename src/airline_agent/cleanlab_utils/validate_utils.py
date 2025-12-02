@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import warnings
@@ -14,14 +15,17 @@ from openai.types.chat import (
     ChatCompletionFunctionToolParam,
     ChatCompletionMessageParam,
 )
-from pydantic_ai.agent import Agent, AgentRunResult
+from pydantic_ai import Agent, ModelSettings
+from pydantic_ai.agent import AgentRunResult
 from pydantic_ai.messages import (
     ModelMessage,
     ModelRequest,
     ModelResponse,
     SystemPromptPart,
+    TextPart,
     UserPromptPart,
 )
+from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.tools import ToolDefinition
 
 from airline_agent.cleanlab_utils.conversion_utils import (
@@ -30,7 +34,7 @@ from airline_agent.cleanlab_utils.conversion_utils import (
     convert_to_openai_messages,
     convert_tools_to_openai_format,
 )
-from airline_agent.constants import CONTEXT_RETRIEVAL_TOOLS, FALLBACK_RESPONSE
+from airline_agent.constants import AGENT_MODEL, CONTEXT_RETRIEVAL_TOOLS, FALLBACK_RESPONSE
 
 logger = logging.getLogger(__name__)
 
@@ -351,3 +355,369 @@ def _get_final_metadata(thread_id: str | None, additional_metadata: dict[str, An
         return {"thread_id": thread_id}
 
     return None
+
+
+def validate_tool_call_request(
+    project: Project,
+    tool_call_id: str,
+    tool_name: str,
+    tool_arguments: dict[str, Any],
+    query: str,
+    message_history: list[ModelMessage],
+    new_messages: list[ModelMessage],
+    tools: list[ChatCompletionFunctionToolParam] | None = None,
+    thread_id: str | None = None,
+) -> tuple[bool, ProjectValidateResponse | None]:
+    """
+    Validate a tool call request (assistant's decision to call a tool) using Cleanlab.
+
+    Validates the assistant's tool call decision before the tool is executed.
+    Formats the tool call as an assistant message with tool_calls array and validates it.
+
+    Args:
+        project: Cleanlab Project instance
+        tool_call_id: The ID of the tool call
+        tool_name: Name of the tool being called
+        tool_arguments: The arguments being passed to the tool
+        query: The original user query that led to this tool call
+        message_history: Previous conversation message history (before this turn)
+        new_messages: New messages from this turn (user query, but NOT the tool call request)
+        tools: Optional list of tools in OpenAI function format for context
+        thread_id: Optional thread ID for metadata
+
+    Returns:
+        Tuple of (is_valid, validation_result)
+        - is_valid: True if validation passed (not should_guardrail), False otherwise
+        - validation_result: The validation result from Cleanlab, or None if validation failed
+    """
+    # Format the tool call as an assistant message with tool_calls array
+    # This represents the actual structured tool call decision
+    tool_call_assistant_message: dict[str, Any] = {
+        "role": "assistant",
+        "content": None,
+        "tool_calls": [
+            {
+                "id": tool_call_id,
+                "type": "function",
+                "function": {
+                    "name": tool_name,
+                    "arguments": json.dumps(tool_arguments) if isinstance(tool_arguments, dict) else str(tool_arguments),
+                },
+            }
+        ],
+    }
+    
+    # Convert the tool call message to a string representation for validation
+    # Cleanlab's validate() expects a string response, so we'll format the tool_calls as JSON
+    tool_call_response = json.dumps(tool_call_assistant_message["tool_calls"], indent=2)
+    
+    # Build messages structure consistent with final response validation
+    # Include system messages from full history (old + new)
+    all_messages = message_history + new_messages
+    messages = _get_system_messages(all_messages) + convert_to_openai_messages(message_history)
+    
+    # Add the new messages (user query) but NOT the tool call request being validated
+    openai_new_messages = convert_to_openai_messages(new_messages)
+    messages = messages + openai_new_messages
+    
+    # Add the tool call message to the messages array so Cleanlab sees it as the assistant's response
+    # This way Cleanlab can validate the structured tool_calls array
+    messages_with_tool_call = messages + [tool_call_assistant_message]
+    
+    # Get context from new messages only (consistent with final validation)
+    context = _get_context_as_string(openai_new_messages)
+
+    # Run validation on the tool call request
+    try:
+        logger.info(
+            "[cleanlab] Calling project.validate() for tool call request: %s (id: %s) with arguments: %s",
+            tool_name,
+            tool_call_id,
+            json.dumps(tool_arguments),
+        )
+        logger.info(
+            "[cleanlab] Tool call response being validated: %s",
+            tool_call_response,
+        )
+        validation_result = project.validate(
+            query=query,
+            response=tool_call_response,
+            messages=messages_with_tool_call,
+            context=context,
+            tools=tools,
+            metadata=_get_final_metadata(thread_id, {"tool_name": tool_name, "tool_arguments": str(tool_arguments), "validation_type": "tool_call_request", "tool_call_id": tool_call_id}),
+        )
+        logger.info(
+            "[cleanlab] Tool call request validation for %s: should_guardrail=%s, log_id=%s",
+            tool_name,
+            validation_result.should_guardrail,
+            validation_result.log_id if hasattr(validation_result, 'log_id') else None,
+        )
+
+        # Validation passes if should_guardrail is False
+        is_valid = not validation_result.should_guardrail
+        return is_valid, validation_result
+    except Exception as e:
+        logger.exception("[cleanlab] Error validating tool call request for %s: %s", tool_name, e)
+        # On error, assume validation failed for safety
+        return False, None
+
+
+def validate_tool_result(
+    project: Project,
+    tool_name: str,
+    tool_result: str,
+    tool_arguments: dict[str, Any],
+    query: str,
+    message_history: list[ModelMessage],
+    new_messages: list[ModelMessage],
+    tools: list[ChatCompletionFunctionToolParam] | None = None,
+    thread_id: str | None = None,
+) -> tuple[bool, ProjectValidateResponse | None]:
+    """
+    Validate a tool call result using Cleanlab.
+
+    Treats the tool result as if it were an assistant response and validates it
+    using Cleanlab's validation system. Structures messages consistently with
+    final response validation.
+
+    Args:
+        project: Cleanlab Project instance
+        tool_name: Name of the tool that was called
+        tool_result: The tool result as a string (JSON or text)
+        tool_arguments: The arguments that were passed to the tool
+        query: The original user query that led to this tool call
+        message_history: Previous conversation message history (before this turn)
+        new_messages: New messages from this turn (user query + tool call request, but NOT the tool return)
+        tools: Optional list of tools in OpenAI function format for context
+        thread_id: Optional thread ID for metadata
+
+    Returns:
+        Tuple of (is_valid, validation_result)
+        - is_valid: True if validation passed (not should_guardrail), False otherwise
+        - validation_result: The validation result from Cleanlab, or None if validation failed
+    """
+    # Build messages structure consistent with final response validation
+    # Include system messages from full history (old + new)
+    all_messages = message_history + new_messages
+    messages = _get_system_messages(all_messages) + convert_to_openai_messages(message_history)
+    
+    # Add the new messages (user query + tool call request) but NOT the tool return being validated
+    openai_new_messages = convert_to_openai_messages(new_messages)
+    messages = messages + openai_new_messages
+    
+    # Get context from new messages only (consistent with final validation)
+    context = _get_context_as_string(openai_new_messages)
+
+    # Run validation on the tool result
+    try:
+        # Log what messages are being passed
+        logger.info(
+            "[cleanlab] Calling project.validate() for tool %s",
+            tool_name,
+        )
+        logger.info(
+            "[cleanlab] Query: %s",
+            query[:200] if len(query) > 200 else query,
+        )
+        logger.info(
+            "[cleanlab] Response (tool_result) length: %d, preview: %s",
+            len(tool_result),
+            tool_result[:200] if len(tool_result) > 200 else tool_result,
+        )
+        logger.info(
+            "[cleanlab] Messages count: %d",
+            len(messages),
+        )
+        # Log the structure of messages to see what's included
+        for idx, msg in enumerate(messages):
+            role = msg.get("role", "unknown")
+            content_preview = ""
+            if "content" in msg and msg["content"]:
+                content_str = str(msg["content"])
+                content_preview = content_str[:100] if len(content_str) > 100 else content_str
+            tool_calls_info = ""
+            if "tool_calls" in msg and msg["tool_calls"]:
+                tool_calls_info = f", tool_calls: {[tc.get('function', {}).get('name', 'unknown') for tc in msg['tool_calls']]}"
+            logger.info(
+                "[cleanlab]   Message[%d]: role=%s, content_preview=%s%s",
+                idx,
+                role,
+                content_preview[:100],
+                tool_calls_info,
+            )
+        logger.info(
+            "[cleanlab] Context length: %d, preview: %s",
+            len(context),
+            context[:200] if len(context) > 200 else context,
+        )
+        
+        validation_result = project.validate(
+            query=query,
+            response=tool_result,
+            messages=messages,
+            context=context,
+            tools=tools,
+            metadata=_get_final_metadata(thread_id, {"tool_name": tool_name, "tool_arguments": str(tool_arguments)}),
+        )
+        logger.info(
+            "[cleanlab] Tool result validation for %s: should_guardrail=%s, log_id=%s",
+            tool_name,
+            validation_result.should_guardrail,
+            validation_result.log_id if hasattr(validation_result, 'log_id') else None,
+        )
+
+        # Validation passes if should_guardrail is False
+        is_valid = not validation_result.should_guardrail
+        return is_valid, validation_result
+    except Exception as e:
+        logger.exception("[cleanlab] Error validating tool result for %s: %s", tool_name, e)
+        # On error, assume validation failed for safety
+        return False, None
+
+
+async def generate_tool_fallback_response(
+    agent: Agent,
+    tool_name: str,
+    tool_arguments: dict[str, Any],
+    original_query: str,
+    message_history: list[ModelMessage],
+    validation_result: ProjectValidateResponse,
+) -> str:
+    """
+    Generate a natural fallback response when tool validation fails.
+
+    Uses a separate LLM call with a recovery assistant prompt to generate
+    a response that continues the conversation seamlessly without mentioning
+    the validation failure.
+
+    Args:
+        agent: The main agent (used to extract system prompt)
+        tool_name: Name of the tool that failed validation
+        tool_arguments: Arguments that were passed to the tool
+        original_query: The original user query
+        message_history: Current conversation message history
+        validation_result: The validation result from Cleanlab
+
+    Returns:
+        A JSON string representing the fallback tool result
+    """
+    # Extract system prompt from agent
+    system_prompt = agent.instructions if hasattr(agent, "instructions") else ""
+
+    # Format message history as text
+    message_history_text = "\n".join(
+        [
+            f"{'User' if isinstance(msg, ModelRequest) else 'Assistant'}: {_format_message_for_fallback(msg)}"
+            for msg in message_history[-10:]  # Last 10 messages for context
+        ]
+    )
+
+    # Get trustworthiness score and explanation
+    trust_score = None
+    trust_explanation = None
+    if validation_result.eval_scores and "trustworthiness" in validation_result.eval_scores:
+        trust_score_obj = validation_result.eval_scores["trustworthiness"]
+        trust_score = trust_score_obj.score if hasattr(trust_score_obj, "score") else None
+        if hasattr(trust_score_obj, "log") and trust_score_obj.log:
+            trust_explanation = (
+                trust_score_obj.log.explanation if hasattr(trust_score_obj.log, "explanation") else None
+            )
+
+    # Format the blocked assistant attempt (tool result)
+    blocked_attempt = f"Tool '{tool_name}' was called with arguments {json.dumps(tool_arguments)} and returned a result that was flagged as untrustworthy."
+
+    # Build the recovery assistant prompt
+    recovery_prompt = f"""You are the Recovery Assistant for the airline support agent.
+
+The previous assistant output was blocked as untrustworthy.
+
+SYSTEM PROMPT:
+{system_prompt}
+
+MESSAGE HISTORY:
+{message_history_text}
+
+USER MESSAGE:
+{original_query}
+
+BLOCKED ASSISTANT ATTEMPT:
+{blocked_attempt}
+
+CLEANLAB TRUST INFO:
+Score: {trust_score if trust_score is not None else 'N/A'}
+Explanation: {trust_explanation if trust_explanation else 'The tool result was flagged as untrustworthy'}
+
+Generate a clear explanation on why you weren't able to help initially with the user's request. Then, provide acorrected response that:
+- does NOT mention guardrails, validation, or internal checks
+- does NOT retry the blocked tool call or action
+- is empathetic, concise, and consistent with airline policy in the system prompt
+- guides the user to an appropriate next step
+
+Your response should be a natural continuation of the conversation that helps the user without revealing that a tool call was blocked."""
+
+    # Create a separate agent for fallback generation
+    # Use the same model but with a different prompt
+    # IMPORTANT: This agent should NOT have any tools or validation hooks
+    # We want it to generate a clean fallback without triggering guardrails
+    fallback_model = OpenAIChatModel(model_name=AGENT_MODEL, settings=ModelSettings(temperature=0.3))
+    # Create agent with NO toolsets to avoid any tool call validation
+    fallback_agent = Agent(model=fallback_model, instructions=recovery_prompt, toolsets=[])
+
+    try:
+        # Generate the fallback response
+        # This should not trigger any validation since it's a separate agent call
+        # and we're bypassing the normal airline_chat_streaming flow
+        result = await fallback_agent.run(user_prompt=original_query, message_history=[])
+        fallback_text = result.output
+        
+        logger.info(
+            "[cleanlab] Fallback generation for tool %s - Generated text: %s",
+            tool_name,
+            fallback_text,
+        )
+
+        # Format as JSON for tool result
+        # The fallback should be a JSON object that represents a safe tool result
+        # For most tools, we'll return an error-like structure or empty result
+        fallback_json = {
+            "error": False,
+            "message": fallback_text,
+            "tool_name": tool_name,
+            "note": "This is a fallback response generated when the original tool result was flagged as untrustworthy.",
+        }
+        
+        fallback_json_str = json.dumps(fallback_json)
+        logger.info(
+            "[cleanlab] Fallback generation for tool %s - Final JSON: %s",
+            tool_name,
+            fallback_json_str,
+        )
+
+        return fallback_json_str
+    except Exception as e:
+        logger.exception("[cleanlab] Error generating fallback response for tool %s: %s", tool_name, e)
+        # Return a default safe fallback
+        default_fallback = {
+            "error": False,
+            "message": FALLBACK_RESPONSE,
+            "tool_name": tool_name,
+        }
+        return json.dumps(default_fallback)
+
+
+def _format_message_for_fallback(message: ModelMessage) -> str:
+    """Format a message for inclusion in fallback prompt."""
+    if isinstance(message, ModelRequest):
+        for part in message.parts:
+            if isinstance(part, UserPromptPart):
+                if isinstance(part.content, str):
+                    return part.content
+                return str(part.content)
+    elif isinstance(message, ModelResponse):
+        texts = []
+        for part in message.parts:
+            if isinstance(part, TextPart):
+                texts.append(part.content)
+        return " ".join(texts)
+    return str(message)
