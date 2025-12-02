@@ -54,6 +54,4 @@ You are an AI customer support agent for Frontier Airlines. You can use tools to
 ## Context:
 - Today's date: {DEMO_DATETIME.date().isoformat()}
 - Current time: {DEMO_DATETIME.strftime("%H:%M:%S %Z")}
-
-
 """.strip()
