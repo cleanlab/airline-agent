@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 98 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 99 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 92 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 92 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 28 | 72 | 28% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 94 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 35 | 65 | 35% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 30 | 70 | 30% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 99 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 100 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 93 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 93 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 28 | 73 | 28% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 95 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 35 | 66 | 35% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 31 | 70 | 31% |
 
 ---
 
@@ -171,7 +171,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 30 times
+**Failures:** 31 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
