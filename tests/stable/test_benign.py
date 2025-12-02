@@ -22,7 +22,7 @@ def benign_examples() -> list[dict[str, Any]]:
 
     df = pd.read_csv(filename)
 
-    return cast(list[dict[str, Any]], df.to_dict("records"))
+    return cast("list[dict[str, Any]]", df.to_dict("records"))
 
 
 async def process_single_query(

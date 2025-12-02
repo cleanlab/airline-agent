@@ -1,4 +1,4 @@
-import urllib
+import urllib.parse
 
 
 def rel_to_abs_url(rel_url: str, base_url: str) -> str:

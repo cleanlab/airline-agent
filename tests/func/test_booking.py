@@ -64,7 +64,7 @@ def test_book_round_trip() -> None:
 def test_retrieve_booking() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Find a flight from SJC to JFK on November 12, 2025")
-    booking_response, _ = agent.chat("Book the first flight with basic fare")
+    agent.chat("Book the first flight with basic fare")
     answer, _ = agent.chat("Show me my bookings")
     assert_judge(
         [

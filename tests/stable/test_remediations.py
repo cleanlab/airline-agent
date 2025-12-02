@@ -162,7 +162,7 @@ def test_additional_expert_guidance_1(project: Project) -> None:
 
     print("QUESTION:", question1)  # noqa: T201
     agent1 = Agent()
-    answer1, log_id1 = agent1.chat(question1)
+    _, log_id1 = agent1.chat(question1)
     assert log_id1 is not None
     log1 = wait_and_get_final_log_for(project, log_id1)
     assert_log_guardrail(log1, guardrailed=True)

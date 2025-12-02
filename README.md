@@ -370,8 +370,9 @@ After submitting your Remediation, imagine you are a different user **by creatin
 
 You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
 
+You can review/edit existing Expert Answers by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Verbatim Answers" tab.
 
-#### 4b. Expert Review
+#### 4b. Expert Reviews (Good/Bad)
 
 Beyond Expert Answers, Cleanlab supports other types of remediations, such as Expert Reviews.
 
@@ -399,6 +400,8 @@ Then pretend you are a different user **by creating a new chat thread** and ask:
 > *Does Frontier have the right to cancel the miles program at any time? Could i risk losing all my miles?*
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
+
+You can review/edit existing Expert Reviews (Good/Bad) by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Reviews (Good/Bad)" tab.
 
 #### 4c. Expert Guidance
 
@@ -496,7 +499,7 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 You'll now see that the AI provides the correct answers by considering all three New York airports.
 
-You can review/edit existing Guidance by opening the `Expert Guidance` section in the left sidebar of your Cleanlab Project.
+You can review/edit existing Expert Guidance by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Guidance" tab.
 
 
 ## Conclusion
@@ -509,7 +512,7 @@ Check out our [documentation/tutorials](https://help.cleanlab.ai/codex/) to easi
 
 ### Additional Examples You Can Try
 
-#### To explore Expert Review
+#### To explore Expert Reviews
 
 > *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
 
@@ -531,6 +534,8 @@ Then pretend you are a different user **by creating a new chat thread** and ask:
 > *Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else*
 
 You'll see that Cleanlab now guardrails the AI, permanently preventing the response that was just deemed undesirable. This allows nontechnical SMEs to reduce false negatives in Guardrails (as well as false positives by clicking `Yes` under *Is this a good AI response?*).
+
+You can review/edit existing Expert Reviews (Good/Bad) by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Reviews (Good/Bad)" tab.
 
 <br><br>
 </details>
@@ -559,6 +564,8 @@ After submitting your Remediation, imagine you are a different user **by creatin
 > *is your promo code FLYFREE25 legit?*
 
 You should see the Agent now responds with the desired Expert Answer instead of saying "I don't know". The problem has instantly been fixed!
+
+You can review/edit existing Expert Verbatim Answers by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Verbatim Answers" tab.
 <br><br>
 </details>
 
@@ -593,7 +600,7 @@ Now pretend you're another user **by creating a new chat thread** and ask the sa
 
 You’ll now see that the AI provides the correct information about the Disruption Assistance program.
 
-You can review/edit existing Guidance by opening the `Expert Guidance` section in the left sidebar of your Cleanlab Project.
+You can review/edit existing Expert Guidance by opening the `Remediations` section in the left sidebar of your Cleanlab Project and navigating to the "Expert Guidance" tab.
 
 </details>
 

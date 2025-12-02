@@ -53,12 +53,12 @@ def _get_tool_result_as_text(messages: list[ChatCompletionMessageParam], tool_na
     tool_call_to_name = {}
     for msg in messages:
         if msg.get("role") == "assistant" and msg.get("tool_calls"):
-            assistant_msg = cast(ChatCompletionAssistantMessageParam, msg)
+            assistant_msg = cast("ChatCompletionAssistantMessageParam", msg)
             for tool_call in assistant_msg["tool_calls"]:
                 # Only handle function tool calls, skip custom tool calls
                 if tool_call.get("type") == "function":
                     # Type narrow to function tool call
-                    func_tool_call = cast(Any, tool_call)  # Use Any to avoid union issues
+                    func_tool_call = cast("Any", tool_call)  # Use Any to avoid union issues
                     if (
                         func_tool_call.get("function")
                         and func_tool_call["function"].get("name") in tool_names
@@ -70,7 +70,7 @@ def _get_tool_result_as_text(messages: list[ChatCompletionMessageParam], tool_na
     results = []
     for msg in messages:
         if msg.get("role") == "tool":
-            tool_msg = cast(Any, msg)  # Cast to avoid TypedDict union issues
+            tool_msg = cast("Any", msg)  # Cast to avoid TypedDict union issues
             if "tool_call_id" in tool_msg and tool_msg["tool_call_id"] in tool_call_to_name:
                 content = tool_msg.get("content", "")
                 if content:
@@ -166,7 +166,7 @@ def _get_system_messages(
             if hasattr(message, "instructions") and message.instructions and not instructions_added:
                 system_messages.append(
                     cast(
-                        ChatCompletionMessageParam,
+                        "ChatCompletionMessageParam",
                         {"role": "system", "content": message.instructions},
                     )
                 )
@@ -177,7 +177,7 @@ def _get_system_messages(
                 if isinstance(part, SystemPromptPart) and part.content not in system_prompts_seen:
                     system_messages.append(
                         cast(
-                            ChatCompletionMessageParam,
+                            "ChatCompletionMessageParam",
                             {"role": "system", "content": part.content},
                         )
                     )
