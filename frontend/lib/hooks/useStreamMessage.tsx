@@ -553,7 +553,14 @@ function useStreamMessage(cleanlabEnabled: boolean = true) {
         console.error(error)
       }
     },
-    [setThreadStatus, bareStore, handleStreamChunk, setDone, addHistoryThread]
+    [
+      setThreadStatus,
+      bareStore,
+      handleStreamChunk,
+      setDone,
+      addHistoryThread,
+      setCurrentThread
+    ]
   )
 
   const createThreadPending = false
