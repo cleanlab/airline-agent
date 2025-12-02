@@ -1,17 +1,17 @@
-### 🧩 Stability Summary (2025-12-01)
-*Aggregated from the last 10 days (2025-11-21 → 2025-12-01)*
+### 🧩 Stability Summary (2025-12-02)
+*Aggregated from the last 10 days (2025-11-22 → 2025-12-02)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 89 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 90 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 7 | 84 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 83 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 26 | 65 | 29% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 86 | 5% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 33 | 58 | 36% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 27 | 64 | 30% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 90 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 91 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 7 | 85 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 84 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 26 | 66 | 28% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 87 | 5% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 33 | 59 | 36% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 27 | 65 | 29% |
 
 ---
 
