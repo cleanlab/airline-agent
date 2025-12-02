@@ -73,8 +73,8 @@ export function MessageAssistantTool({ message }: { message: StoreMessage }) {
 
   return (
     <div className="rounded-4 border border-border-2 bg-surface-1">
-      <div className="flex items-start gap-4">
-        <Collapsible.Root className="group/collapsible group flex-1">
+      <div className="flex min-w-0 items-start gap-4">
+        <Collapsible.Root className="group/collapsible group min-w-0 flex-1">
           <Collapsible.Trigger className="type-body-200-semibold flex w-full items-center justify-between gap-5 rounded-4 px-6 py-7 hover:bg-surface-1-hover">
             <div className="type-body-200-semibold flex items-center gap-4">
               <span>🔧</span> Tool Call: {toolCallData?.tool_name || 'Unknown'}
@@ -84,11 +84,11 @@ export function MessageAssistantTool({ message }: { message: StoreMessage }) {
               className="text-text-disabled transition-transform group-data-[state=open]/collapsible:-scale-y-100"
             />
           </Collapsible.Trigger>
-          <Collapsible.Content className="overflow-hidden data-[state=closed]:animate-collapsible-close data-[state=open]:animate-collapsible-open">
+          <Collapsible.Content className="min-w-0 max-w-full overflow-x-auto overflow-y-hidden data-[state=closed]:animate-collapsible-close data-[state=open]:animate-collapsible-open">
             {toolCallData?.arguments && (
               <div className="px-6 pt-4">
                 <div className="type-body-100 mb-2 font-medium">Arguments:</div>
-                <div className="w-full max-w-full overflow-hidden">
+                <div className="min-w-0 max-w-full overflow-x-auto rounded-2">
                   <ChatCodeBlock
                     language="json"
                     code={(() => {
@@ -105,7 +105,7 @@ export function MessageAssistantTool({ message }: { message: StoreMessage }) {
                     })()}
                     showLineNumbers={false}
                     textSize="50"
-                    className="w-full max-w-full"
+                    className="inline-block"
                   />
                 </div>
               </div>
@@ -130,13 +130,13 @@ export function MessageAssistantTool({ message }: { message: StoreMessage }) {
                   if (isJson) {
                     // Use ChatCodeBlock for JSON results
                     return (
-                      <div className="w-full max-w-full overflow-hidden">
+                      <div className="min-w-0 max-w-full overflow-x-auto rounded-2">
                         <ChatCodeBlock
                           language="json"
                           code={resultContent}
                           showLineNumbers={false}
                           textSize="50"
-                          className="w-full max-w-full"
+                          className="inline-block"
                         />
                       </div>
                     )
@@ -155,8 +155,10 @@ export function MessageAssistantTool({ message }: { message: StoreMessage }) {
             )}
 
             {!toolCallData && (
-              <div className="type-caption max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
-                {message.content}
+              <div className="px-6 pb-6">
+                <div className="type-caption max-w-full overflow-x-auto whitespace-pre break-words rounded-2 bg-surface-2 px-5 py-4">
+                  {String(message.content)}
+                </div>
               </div>
             )}
           </Collapsible.Content>
