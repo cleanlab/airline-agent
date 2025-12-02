@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 90 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 91 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 7 | 85 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 84 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 26 | 66 | 28% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 5 | 87 | 5% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 33 | 59 | 36% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 27 | 65 | 29% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 2 | 91 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 92 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 7 | 86 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 85 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 27 | 66 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 87 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 33 | 60 | 35% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 27 | 66 | 29% |
 
 ---
 
@@ -106,7 +106,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 26 times
+**Failures:** 27 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -117,9 +117,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit these dimensions might not be permissible. It's best to ensure that each bag individually meets the personal item size requirements.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit these dimensions might not be permitted. It's best to ensure that your combined items fit within the size limits and are considered as one item.
 
-Criteria not met: The agent output does not definitively confirm that both small bags count as one personal item. It states a conditional possibility (they 'would' count if combined dimensions fit) but immediately contradicts this by saying combining two bags 'might not be permissible' and advising that each bag individually meet requirements. Because the response is ambiguous and does not clearly confirm that both bags count as one personal item, it fails the criterion.
+Criteria not met: The agent output does not definitively confirm that both small bags count as one personal item. It only states they "would count" if combined dimensions meet the limits, then immediately says combining two bags "might not be permitted," creating a contradiction/uncertainty. Because it fails to provide a clear confirmation, the output does not meet the criterion.
 ```
 </details>
 
@@ -127,7 +127,7 @@ Criteria not met: The agent output does not definitively confirm that both small
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 5 times
+**Failures:** 6 times
 
 **Question:** Do miles in family pool expire?
 
