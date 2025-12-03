@@ -38,11 +38,11 @@ def consult_cleanlab(query: str, message_history: list[ModelMessage]) -> list[st
 def update_prompt_with_guidance(prompt: str, guidance: list[str]) -> str:
     """Update the prompt with the guidance."""
     if guidance:
-        rules = "\n".join(f"<guidance>{rule}</guidance>" for rule in guidance)
+        guidance_str = "\n\n".join(f"<guidance>\n{rule}\n</guidance>" for rule in guidance)
         instruction = (
-            'Apply behaviors from <guidance> blocks only when the user\'s message clearly matches the "if" scenario in that block.\n'
-            "If a scenario is triggered, follow the behavior exactly—including wording.\n"
-            "If not triggered, ignore the behavior completely and answer normally."
+            'Consider the following guidance and whether each "if" scenario seems relevant here.\n'
+            'When the "if" scenario seems relevant, follow the guidance\'s specified behavior exactly (including any wording suggestions).\n'
+            "Otherwise ignore that guidance if it does not seem relevant here."
         )
-        return f"{prompt}\n\n{instruction}\n\n{rules}\n\n"
+        return f"{prompt}\n\n<advice_to_consider>\n{instruction}\n\n{guidance_str}\n\n</advice_to_consider>"
     return prompt
