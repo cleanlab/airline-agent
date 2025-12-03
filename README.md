@@ -4,14 +4,16 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 4 | 107 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 110 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 103 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 103 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 32 | 79 | 29% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 105 | 5% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 38 | 73 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 35 | 76 | 32% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 4 | 108 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 111 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 104 | 7% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 104 | 7% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 32 | 80 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 1 | 111 | 1% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 106 | 5% |
+| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 1 | 111 | 1% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 38 | 74 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 36 | 76 | 32% |
 
 ---
 
@@ -126,6 +128,25 @@ assert 0.8155918422351695 < 0.77
 
 ---
 
+##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1`
+
+**Failures:** 1 times
+
+**Question:** if i leave my miles family pool can i join a new one tomorrow or am i blocked for 30 days?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+httpx.ReadTimeout: The read operation timed out
+```
+</details>
+
+---
+
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
 **Failures:** 6 times
@@ -143,6 +164,25 @@ AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not
   
   Criteria not met: trustworthiness threshold
 assert 0.8773379302458094 < 0.77
+```
+</details>
+
+---
+
+##### `tests/stable/test_remediations.py::test_additional_expert_answer_1`
+
+**Failures:** 1 times
+
+**Question:** Is the viral promo code FLYFREE25 legitimate?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+httpx.ReadTimeout: The read operation timed out
 ```
 </details>
 
@@ -171,7 +211,7 @@ Criteria not met: fail — The agent output does not include any explanation of 
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 35 times
+**Failures:** 36 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
@@ -182,7 +222,7 @@ Criteria not met: fail — The agent output does not include any explanation of 
 
 
 ```
-AssertionError: Failed response: 3
+AssertionError: Failed response: 3 hours
 
 Criteria not met: guardrail should not have been triggered
 ```
