@@ -4,16 +4,16 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 4 | 108 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 111 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 104 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 104 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 32 | 80 | 29% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 1 | 111 | 1% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 106 | 5% |
-| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 1 | 111 | 1% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 38 | 74 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 36 | 76 | 32% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 4 | 109 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 112 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 105 | 7% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 105 | 7% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 33 | 80 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 1 | 112 | 1% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 107 | 5% |
+| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 1 | 112 | 1% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 38 | 75 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 36 | 77 | 32% |
 
 ---
 
@@ -108,7 +108,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 32 times
+**Failures:** 33 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -119,10 +119,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
-  
-  Criteria not met: trustworthiness threshold
-assert 0.8155918422351695 < 0.77
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to count as one might not be permissible unless they are contained within each other or otherwise consolidated to meet the size requirement.
+
+Criteria not met: The agent output does not clearly confirm that both of the user's small bags count as one personal item. It offers a conditional statement (“If both... fit... and do not exceed... when combined, they would count as one”) and immediately adds that combining two bags may not be permissible unless consolidated. Because the response is hedged and does not unequivocally confirm that both small bags count as one personal item, it fails the criterion.
 ```
 </details>
 
