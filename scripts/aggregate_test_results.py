@@ -65,9 +65,7 @@ def main() -> None:
         entry_question = extract_question(entry)
 
         if entry_question:
-            entry_time = datetime.datetime.strptime(entry["timestamp"], TIMESTAMP_FORMAT).replace(
-                tzinfo=datetime.UTC
-            )
+            entry_time = datetime.datetime.strptime(entry["timestamp"], TIMESTAMP_FORMAT).replace(tzinfo=datetime.UTC)
 
             if test_name not in latest_questions:
                 latest_questions[test_name] = (entry_question, entry_time)
@@ -78,7 +76,9 @@ def main() -> None:
 
     summary: dict[str, defaultdict[str, TestSummary]] = {
         "main": defaultdict(lambda: {"failures": 0, "passes": 0, "question": "", "test_names": [], "last_fail": None}),
-        "additional": defaultdict(lambda: {"failures": 0, "passes": 0, "question": "", "test_names": [], "last_fail": None}),
+        "additional": defaultdict(
+            lambda: {"failures": 0, "passes": 0, "question": "", "test_names": [], "last_fail": None}
+        ),
     }
 
     for entry in recent:
@@ -138,7 +138,7 @@ def main() -> None:
                         rate = (data["failures"] / total) * 100 if total else 0
                         display_question = data["question"] if data["question"] else question_key
                         if len(display_question) > MAX_QUESTION_DISPLAY_LENGTH:
-                            display_question = display_question[:MAX_QUESTION_DISPLAY_LENGTH - 3] + "..."
+                            display_question = display_question[: MAX_QUESTION_DISPLAY_LENGTH - 3] + "..."
                         md.write(f"| `{display_question}` | {data['failures']} | {data['passes']} | {rate:.0f}% |\n")
 
                     md.write("\n---\n\n#### 🔍 Main Test Failure Details\n\n")
@@ -177,7 +177,7 @@ def main() -> None:
                         rate = (data["failures"] / total) * 100 if total else 0
                         display_question = data["question"] if data["question"] else question_key
                         if len(display_question) > MAX_QUESTION_DISPLAY_LENGTH:
-                            display_question = display_question[:MAX_QUESTION_DISPLAY_LENGTH - 3] + "..."
+                            display_question = display_question[: MAX_QUESTION_DISPLAY_LENGTH - 3] + "..."
                         md.write(f"| `{display_question}` | {data['failures']} | {data['passes']} | {rate:.0f}% |\n")
 
                     md.write("\n---\n\n#### 🔍 Additional Test Failure Details\n\n")
