@@ -1,17 +1,17 @@
-### 🧩 Stability Summary (2025-12-02)
-*Aggregated from the last 10 days (2025-11-22 → 2025-12-02)*
+### 🧩 Stability Summary (2025-12-03)
+*Aggregated from the last 10 days (2025-11-23 → 2025-12-03)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 3 | 100 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 102 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 95 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 95 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 28 | 75 | 27% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 97 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 35 | 68 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 31 | 72 | 30% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 3 | 101 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 103 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 96 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 96 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 29 | 75 | 28% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 98 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 35 | 69 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 31 | 73 | 30% |
 
 ---
 
@@ -106,7 +106,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 28 times
+**Failures:** 29 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -117,10 +117,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
-  
-  Criteria not met: trustworthiness threshold
-assert 0.812470287608012 < 0.77
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to count as one might not be permissible unless they are within the size limits when combined.
+
+Criteria not met: The agent output does not unambiguously confirm that both small bags count as one personal item. It gives conditional language (“if… they would count”) and then contradicts/undermines that by saying combining two bags might not be permissible. Therefore it fails to meet the criterion requiring confirmation that both bags count as one personal item.
 ```
 </details>
 
