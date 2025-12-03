@@ -52,7 +52,8 @@ check = "mypy --strict {args:src tests}"
 [tool.pytest.ini_options]
 markers = [
     "main: marks tests for main demo examples",
-    "additional: marks tests for additional demo examples"
+    "additional: marks tests for additional demo examples",
+    "benign: marks tests for benign dataset examples"
 ]
 
 [tool.hatch.envs.hatch-test]
