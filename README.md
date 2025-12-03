@@ -4,14 +4,14 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 4 | 103 | 4% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 106 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 99 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 99 | 7% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 30 | 77 | 28% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 101 | 6% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 37 | 70 | 35% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 32 | 75 | 30% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 4 | 104 | 4% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 1 | 107 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 8 | 100 | 7% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 8 | 100 | 7% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 31 | 77 | 29% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 6 | 102 | 6% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 37 | 71 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 33 | 75 | 31% |
 
 ---
 
@@ -106,7 +106,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 30 times
+**Failures:** 31 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -117,9 +117,10 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit within the size limit might not be permissible unless they are contained within a single bag that meets the size requirements.
-
-Criteria not met: The agent output is ambiguous and self-contradictory. It first states that if both small bags fit under the seat and meet the size limit when combined, they would count as one personal item. It then contradicts that by noting typically only one personal item is allowed and combining two bags may not be permissible unless they are contained within a single bag. Because it does not clearly and unambiguously confirm that both small bags count as one personal item, it fails the criterion.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, typically only one personal item is allowed per passenger, so you may need to consolidate your items into a single bag that meets the size requirements.
+  
+  Criteria not met: trustworthiness threshold
+assert 0.8164856846284569 < 0.77
 ```
 </details>
 
@@ -168,7 +169,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 32 times
+**Failures:** 33 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
