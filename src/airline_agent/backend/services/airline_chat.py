@@ -121,8 +121,8 @@ async def airline_chat_streaming(
 
     original_user_query = message.content
     if cleanlab_enabled:
-        guidance = consult_cleanlab(original_user_query, thread_to_messages[thread_id])
-        user_prompt = update_prompt_with_guidance(original_user_query, guidance)
+        guidance_items = consult_cleanlab(original_user_query, thread_to_messages[thread_id])
+        user_prompt = update_prompt_with_guidance(original_user_query, guidance_items)
     else:
         user_prompt = original_user_query
 
@@ -181,8 +181,8 @@ async def airline_chat_streaming(
                     message_history=original_message_history,
                     tools=get_tools_in_openai_format(agent),
                     thread_id=thread_id,
-                    additional_metadata={f"applied_guidance_{i}": guidance for i, guidance in enumerate(guidance)}
-                    if guidance
+                    additional_metadata={f"applied_guidance_{i}": guidance for i, guidance in enumerate(guidance_items)}
+                    if guidance_items
                     else None,
                 )
                 yield RunEventThreadMessage(
