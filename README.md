@@ -4,25 +4,25 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 121 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 121 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 6 | 116 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 119 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 13 | 109 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 10 | 112 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 35 | 87 | 29% |
-| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 121 | 1% |
-| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 119 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 113 | 7% |
-| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 120 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 41 | 81 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 40 | 82 | 33% |
-| `tests/stable/test_remediations.py::test_expert_review` | 1 | 121 | 1% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 122 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 122 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 6 | 117 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 120 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 13 | 110 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 10 | 113 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 36 | 87 | 29% |
+| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 122 | 1% |
+| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 120 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 114 | 7% |
+| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 121 | 2% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 41 | 82 | 33% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 41 | 82 | 33% |
+| `tests/stable/test_remediations.py::test_expert_review` | 1 | 122 | 1% |
 
 ---
 
@@ -184,7 +184,7 @@ codex.InternalServerError: Error code: 500 - {'message': 'Internal server error'
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 35 times
+**Failures:** 36 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -195,7 +195,9 @@ codex.InternalServerError: Error code: 500 - {'message': 'Internal server error'
 
 
 ```
-codex.InternalServerError: Error code: 500 - {'message': 'Internal server error'}
+AssertionError: Failed response: According to airline policies, a personal item is typically defined as a single item that fits under the seat in front of you. If you have two small bags, even if they both fit under the seat, they would generally be considered two separate items. Frontier Airlines allows one personal item per passenger, so you would need to consolidate your belongings into one bag to comply with the personal item policy.
+
+Criteria not met: The agent's output explicitly states that two small bags would generally be considered two separate items and that you must consolidate into one bag; it does not confirm that both small bags count as one personal item. Therefore it does not meet the criterion.
 ```
 </details>
 
@@ -360,7 +362,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 40 times
+**Failures:** 41 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
