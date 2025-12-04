@@ -4,25 +4,25 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 116 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 117 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 117 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 6 | 112 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 115 | 3% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 12 | 106 | 10% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 116 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 10 | 108 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 35 | 83 | 30% |
-| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 116 | 2% |
-| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 117 | 1% |
-| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 116 | 2% |
-| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 116 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 115 | 3% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 8 | 110 | 7% |
-| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 116 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 40 | 78 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 38 | 80 | 32% |
-| `tests/stable/test_remediations.py::test_expert_review` | 1 | 117 | 1% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 117 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 118 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 118 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 6 | 113 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 116 | 3% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 12 | 107 | 10% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 117 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 10 | 109 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 35 | 84 | 29% |
+| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 117 | 2% |
+| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 118 | 1% |
+| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 117 | 2% |
+| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 117 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 116 | 3% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 110 | 8% |
+| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 117 | 2% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 40 | 79 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 38 | 81 | 32% |
+| `tests/stable/test_remediations.py::test_expert_review` | 1 | 118 | 1% |
 
 ---
 
@@ -298,7 +298,7 @@ codex.APITimeoutError: Request timed out.
 
 ##### `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Question:** Do miles in family pool expire?
 
@@ -309,7 +309,10 @@ codex.APITimeoutError: Request timed out.
 
 
 ```
-httpx.ReadTimeout: The read operation timed out
+AssertionError: Failed response: In a Family Pool with Frontier Airlines, the miles do not expire as long as there is accrual activity in the account every twelve months. This means that only one person in the pool needs to generate activity, such as earning miles through purchases or other eligible activities, to keep the entire pool's miles from expiring.
+  
+  Criteria not met: trustworthiness threshold
+assert 0.8165312027661051 < 0.77
 ```
 </details>
 
