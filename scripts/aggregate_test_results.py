@@ -33,11 +33,16 @@ def extract_question(entry: dict) -> str | None:
     return None
 
 
-def is_timeout_failure(entry: dict) -> bool:
-    """Check if entry represents a timeout/connection failure."""
+def is_failure_log(entry: dict) -> bool:
+    """Check if entry represents a timeout/connection failure or InternalServerError."""
     stdout = entry.get("stdout", "").lower()
     error_msg = entry.get("error_msg", "").lower()
-    return "timeout" in stdout or "timeout" in error_msg
+    return (
+        "timeout" in stdout
+        or "timeout" in error_msg
+        or "internalservererror" in stdout
+        or "internalservererror" in error_msg
+    )
 
 
 def main() -> None:
@@ -57,7 +62,7 @@ def main() -> None:
         if datetime.datetime.strptime(x["timestamp"], TIMESTAMP_FORMAT).replace(tzinfo=datetime.UTC).date() >= cutoff
     ]
 
-    recent = [x for x in recent if not is_timeout_failure(x)]
+    recent = [x for x in recent if not is_failure_log(x)]
 
     latest_questions: dict[str, tuple[str, datetime.datetime]] = {}
     for entry in recent:
