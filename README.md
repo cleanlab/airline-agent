@@ -4,26 +4,27 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 128 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 129 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 129 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 7 | 123 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 127 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 14 | 116 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 128 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 11 | 119 | 8% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 41 | 89 | 32% |
-| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 128 | 2% |
-| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 129 | 1% |
-| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 128 | 2% |
-| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 128 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 127 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 121 | 7% |
-| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 3 | 127 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 44 | 86 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 45 | 85 | 35% |
-| `tests/stable/test_remediations.py::test_expert_guidance` | 1 | 129 | 1% |
-| `tests/stable/test_remediations.py::test_expert_review` | 2 | 128 | 2% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 129 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 130 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 130 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 7 | 124 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 128 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 14 | 117 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 129 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 11 | 120 | 8% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 41 | 90 | 31% |
+| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 129 | 2% |
+| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 130 | 1% |
+| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 129 | 2% |
+| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 129 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 128 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 122 | 7% |
+| `tests/stable/test_observability.py::test_observability_2` | 1 | 130 | 1% |
+| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 3 | 128 | 2% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 45 | 86 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 45 | 86 | 34% |
+| `tests/stable/test_remediations.py::test_expert_guidance` | 1 | 130 | 1% |
+| `tests/stable/test_remediations.py::test_expert_review` | 2 | 129 | 2% |
 
 ---
 
@@ -328,6 +329,25 @@ assert 0.8165312027661051 < 0.77
 
 ---
 
+##### `tests/stable/test_observability.py::test_observability_2`
+
+**Failures:** 1 times
+
+**Question:** My flight got canceled, can I get a refund?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+httpx.ReadTimeout: The read operation timed out
+```
+</details>
+
+---
+
 ##### `tests/stable/test_remediations.py::test_additional_expert_answer_1`
 
 **Failures:** 3 times
@@ -349,7 +369,7 @@ httpx.ReadTimeout: The read operation timed out
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 44 times
+**Failures:** 45 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -360,7 +380,7 @@ httpx.ReadTimeout: The read operation timed out
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations.
 
 Criteria not met: guardrail should have been triggered
 ```
