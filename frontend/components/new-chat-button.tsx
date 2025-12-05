@@ -1,14 +1,14 @@
 'use client'
 
-import type { ButtonHTMLAttributes, ComponentProps } from 'react'
-import type Link from 'next/link'
-import { cn } from '@/lib/utils/tailwindUtils'
-import { useMessagesStore } from '@/providers/messages-store-provider'
+import { SlotChild, Tooltip } from '@cleanlab/design-system/components'
+import { cn } from '@cleanlab/design-system/utils'
+import { type AsChildProps } from '@cleanlab/design-system/utils'
 import { Slot } from '@radix-ui/react-slot'
+import type Link from 'next/link'
+import type { ButtonHTMLAttributes, ComponentProps } from 'react'
+
+import { useMessagesStore } from '@/providers/messages-store-provider'
 import { analytics } from '@/services/analytics'
-import { AsChildProps } from '@/lib/utils/AsChildProps'
-import { Tooltip } from './design-system-components/Tooltip'
-import { SlotChild } from './design-system-components/SlotChild'
 
 const IconEdit = () => {
   return (

@@ -1,14 +1,14 @@
 'use client'
 
 import { AnimatePresence, motion } from 'motion/react'
-import { SidebarItem } from '@/components/sidebar-item'
-import type { HistoryThread } from '../stores/history-thread-store'
 import { useMemo } from 'react'
-import { SidebarActions } from './sidebar-actions'
+
+import { SidebarActions } from '@/components/sidebar-actions'
+import { SidebarItem } from '@/components/sidebar-item'
+import type { HistoryThread } from '@/stores/history-thread-store'
 
 interface SidebarItemsProps {
   historyThreads?: HistoryThread[]
-  assistantId?: string
   assistantSlug?: string | null | undefined
 }
 

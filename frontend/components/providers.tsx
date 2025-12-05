@@ -1,14 +1,16 @@
 'use client'
 
-import { MessagesStoreProvider } from '@/providers/messages-store-provider'
-import { RagAppStoreProvider } from '@/providers/rag-app-store-provider'
+import {
+  ThemeProvider,
+  TooltipProvider
+} from '@cleanlab/design-system/components'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
-
 import type { ComponentProps } from 'react'
+
 import { SidebarProvider } from '@/lib/hooks/use-sidebar'
-import { ThemeProvider } from './design-system-components/ThemeProvider'
-import { TooltipProvider } from './design-system-components/Tooltip'
+import { MessagesStoreProvider } from '@/providers/messages-store-provider'
+import { RagAppStoreProvider } from '@/providers/rag-app-store-provider'
 type ThemeProviderProps = ComponentProps<typeof NextThemesProvider>
 
 export function Providers({ children, ...props }: ThemeProviderProps) {

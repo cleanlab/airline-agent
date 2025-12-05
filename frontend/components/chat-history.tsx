@@ -1,18 +1,20 @@
 'use client'
 
-import { Tooltip } from './design-system-components/Tooltip'
+import {
+  Button,
+  ModalAlertBasic,
+  Tooltip
+} from '@cleanlab/design-system/components'
+import { cn } from '@cleanlab/design-system/utils'
 import Link from 'next/link'
-import { useState, type ReactNode } from 'react'
+import { type ReactNode, useState } from 'react'
 import * as React from 'react'
-import { NewChatButton } from './new-chat-button'
-import { cn } from '@/lib/utils/tailwindUtils'
-import { SidebarList } from './sidebar-list'
-import { Button } from './design-system-components/Button'
-import { ModalAlertBasic } from './design-system-components/ModalAlertBasic'
+
 import { useClearHistory } from '@/lib/hooks/useClearHistory'
 import { useAssistantHistory } from '@/providers/rag-app-store-provider'
-import { useAppSettings } from '@/lib/hooks/use-app-settings'
-import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '@/lib/consts'
+
+import { NewChatButton } from './new-chat-button'
+import { SidebarList } from './sidebar-list'
 
 interface ChatHistoryProps {
   mobile?: boolean
@@ -52,9 +54,7 @@ export function UrlsList({ urls }: { urls?: string[] }) {
 
 export function ChatHistory({ mobile, logoLockup }: ChatHistoryProps) {
   const [showClearHistoryModal, setShowClearHistoryModal] = useState(false)
-  const [appSettings] = useAppSettings()
-  const appId = appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG
-  const history = useAssistantHistory(appId || undefined)
+  const history = useAssistantHistory()
 
   const clearHistory = useClearHistory()
   return (
@@ -87,7 +87,6 @@ export function ChatHistory({ mobile, logoLockup }: ChatHistoryProps) {
               <div className="flex flex-1 flex-col space-y-4">
                 {Array.from({ length: 10 }).map((_, i) => (
                   <div
-                    // eslint-disable-next-line @eslint-react/no-array-index-key
                     key={i}
                     className="h-6 w-full shrink-0 animate-pulse rounded-2 bg-zinc-200 dark:bg-zinc-800"
                   />

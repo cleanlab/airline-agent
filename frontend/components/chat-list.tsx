@@ -1,23 +1,22 @@
 'use client'
 
-import { RATE_LIMIT_WAIT_MS } from '@/lib/consts'
-import { useRateLimitedValue } from '@/lib/hooks/useRateLimitedValue'
-import { useMessagesStore } from '@/providers/messages-store-provider'
-import type { StoreMessage } from '@/stores/messages-store'
-
-import type { RefObject } from 'react'
-import { useEffect, useRef } from 'react'
-import { useAutoScrollMessage } from '../lib/hooks/use-auto-scroll-message'
-import { RetryButton } from './message'
-import { MessageUser } from './design-system-components/MessageUser'
 import {
   MessageAssistant,
-  MessageAssistantStatus
-} from './design-system-components/MessageAssistant'
-import { MessageError } from './design-system-components/MessageError'
-import { ChatCodeBlock } from './design-system-components/ChatCodeBlock'
-import { Collapsible } from 'radix-ui'
-import { IconAirplane, IconChevronDown } from './icons'
+  MessageAssistantStatus,
+  MessageError,
+  MessageUser
+} from '@cleanlab/design-system/chat'
+import type { RefObject } from 'react'
+import { useEffect, useRef } from 'react'
+
+import { IconAirplane } from '@/components/icons'
+import { RetryButton } from '@/components/message'
+import { MessageAssistantTool } from '@/components/message-assistant-tool'
+import { RATE_LIMIT_WAIT_MS } from '@/lib/consts'
+import { useAutoScrollMessage } from '@/lib/hooks/use-auto-scroll-message'
+import { useRateLimitedValue } from '@/lib/hooks/useRateLimitedValue'
+import { useMessagesStore } from '@/providers/messages-store-provider'
+import type { MessageMetadata, StoreMessage } from '@/stores/messages-store'
 
 export interface ChatListProps {
   threadId?: string
@@ -47,7 +46,7 @@ const ChatMessage = ({
     if (message.role === 'assistant' && !message.isPending) {
       console.info('Message:\n', message)
     }
-  }, [message.role, message.isPending])
+  }, [message.role, message.isPending, message])
 
   const display = (() => {
     switch (message.role) {
@@ -84,171 +83,7 @@ const ChatMessage = ({
           </div>
         )
       case 'tool':
-        // Display tool call messages
-        const toolCallData = (() => {
-          // If content is already an object, use it directly
-          if (typeof message.content === 'object' && message.content !== null) {
-            return message.content
-          }
-
-          // If content is a string, try to parse it as JSON
-          if (typeof message.content === 'string') {
-            try {
-              return JSON.parse(message.content)
-            } catch {
-              return null
-            }
-          }
-
-          return null
-        })()
-
-        // Helper function to parse and pretty-print JSON strings or objects
-        const parseAndPrettyPrint = (data: any) => {
-          // If it's already an object, just stringify it
-          if (typeof data === 'object' && data !== null) {
-            return JSON.stringify(data, null, 2)
-          }
-
-          // If it's not a string, return as-is
-          if (typeof data !== 'string') {
-            return String(data)
-          }
-
-          // Check if the string looks like JSON or double-encoded JSON
-          const trimmed = data.trim()
-          const looksLikeJson =
-            (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
-            (trimmed.startsWith('[') && trimmed.endsWith(']')) ||
-            (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
-            // Check for double-encoded JSON (starts with " and contains escaped quotes)
-            (trimmed.startsWith('"') && trimmed.includes('\\"'))
-
-          if (!looksLikeJson) {
-            return data
-          }
-
-          try {
-            // First try to parse as JSON
-            let parsed = JSON.parse(data)
-
-            // If the result is still a string, it might be double-encoded JSON
-            if (typeof parsed === 'string') {
-              try {
-                parsed = JSON.parse(parsed)
-              } catch {
-                // If second parse fails, use the first parsed result
-              }
-            }
-
-            // Pretty print the final result with better formatting
-            return JSON.stringify(parsed, null, 2)
-          } catch (error) {
-            // If all parsing fails, return the original string
-            return data
-          }
-        }
-
-        return (
-          <div className="rounded-4 border border-border-2 bg-surface-1">
-            <div className="flex items-start gap-4">
-              <Collapsible.Root className="group/collapsible group flex-1">
-                <Collapsible.Trigger className="type-body-200-semibold flex w-full items-center justify-between gap-5 rounded-4 px-6 py-7 hover:bg-surface-1-hover">
-                  <div className="type-body-200-semibold flex items-center gap-4">
-                    <span>🔧</span> Tool Call:{' '}
-                    {toolCallData?.tool_name || 'Unknown'}
-                  </div>
-                  <IconChevronDown
-                    size={16}
-                    className="text-text-disabled transition-transform group-data-[state=open]/collapsible:-scale-y-100"
-                  />
-                </Collapsible.Trigger>
-                <Collapsible.Content className="overflow-hidden data-[state=closed]:animate-collapsible-close data-[state=open]:animate-collapsible-open">
-                  {toolCallData?.arguments && (
-                    <div className="px-6 pt-4">
-                      <div className="type-body-100 mb-2 font-medium">
-                        Arguments:
-                      </div>
-                      <div className="w-full max-w-full overflow-hidden">
-                        <ChatCodeBlock
-                          language="json"
-                          code={(() => {
-                            // Handle arguments - they might be a string that needs parsing
-                            let argumentsData = toolCallData.arguments
-                            if (typeof argumentsData === 'string') {
-                              try {
-                                argumentsData = JSON.parse(argumentsData)
-                              } catch {
-                                // If parsing fails, use the string as-is
-                              }
-                            }
-                            return parseAndPrettyPrint(argumentsData)
-                          })()}
-                          showLineNumbers={false}
-                          textSize="50"
-                          className="w-full max-w-full"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {toolCallData?.result && (
-                    <div className="px-6 py-6">
-                      <div className="type-body-100 mb-1 font-medium">
-                        Result:
-                      </div>
-                      {(() => {
-                        const resultContent = parseAndPrettyPrint(
-                          toolCallData.result
-                        )
-
-                        // Check if the result is valid JSON
-                        const isJson = (() => {
-                          try {
-                            const parsed = JSON.parse(resultContent)
-                            return typeof parsed === 'object' && parsed !== null
-                          } catch {
-                            return false
-                          }
-                        })()
-
-                        if (isJson) {
-                          // Use ChatCodeBlock for JSON results
-                          return (
-                            <div className="w-full max-w-full overflow-hidden">
-                              <ChatCodeBlock
-                                language="json"
-                                code={resultContent}
-                                showLineNumbers={false}
-                                textSize="50"
-                                className="w-full max-w-full"
-                              />
-                            </div>
-                          )
-                        } else {
-                          // Use plain text for non-JSON results
-                          return (
-                            <div className="max-h-32 max-w-full overflow-x-auto overflow-y-auto rounded-2 bg-surface-2 px-5 py-4">
-                              <pre className="type-caption whitespace-pre-wrap break-words break-all font-mono">
-                                {resultContent}
-                              </pre>
-                            </div>
-                          )
-                        }
-                      })()}
-                    </div>
-                  )}
-
-                  {!toolCallData && (
-                    <div className="type-caption max-w-full overflow-x-auto whitespace-pre-wrap break-all rounded-2 bg-surface-2 px-5 py-4">
-                      {message.content}
-                    </div>
-                  )}
-                </Collapsible.Content>
-              </Collapsible.Root>
-            </div>
-          </div>
-        )
+        return <MessageAssistantTool message={message} />
       default:
         return null
     }
@@ -289,7 +124,7 @@ export function ChatList({
       }
       // Show assistant messages with metadata even if no content
       if (message.role === 'assistant') {
-        const md = message.metadata as any
+        const md = message.metadata as MessageMetadata
         return !!(
           md &&
           (md.guardrailed ||

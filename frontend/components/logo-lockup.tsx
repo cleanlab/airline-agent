@@ -2,9 +2,7 @@ import type { ComponentProps } from 'react'
 
 import { IconAirplane } from './icons'
 
-export const LogoLockup = async ({
-  ...props
-}: ComponentProps<'img'> & {
+export const LogoLockup = async ({}: ComponentProps<'img'> & {
   logoText?: string | null
 }) => {
   return (

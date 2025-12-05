@@ -1,29 +1,25 @@
 'use client'
 
-import type { StoreMessage } from '@/stores/messages-store'
+import { ChatInputPanel } from '@cleanlab/design-system/chat'
+import { Tooltip } from '@cleanlab/design-system/components'
+import { cn } from '@cleanlab/design-system/utils'
+import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
+
 import { ChatList } from '@/components/chat-list'
-import { EmptyScreen } from '@/components/empty-screen'
+import { PromptForm } from '@/components/prompt-form'
 import { getChatPath } from '@/lib/consts'
 import {
   scrollElementToBottom,
   useScrollToBottom
 } from '@/lib/hooks/use-scroll-to-bottom'
+import { CurrentThreadStatus } from '@/lib/hooks/useStreamMessage'
+import { getThreadBufferSnapshot } from '@/lib/hooks/useStreamMessage'
 import { useMessagesStore } from '@/providers/messages-store-provider'
-import { cn } from '@/lib/utils/tailwindUtils'
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { toast } from 'sonner'
-import { CurrentThreadStatus } from '../lib/hooks/useStreamMessage'
-import { getThreadBufferSnapshot } from '../lib/hooks/useStreamMessage'
-import type { CurrentThread } from '../stores/messages-store'
-import { PromptForm } from './prompt-form'
-import { ChatInputPanel } from './design-system-components/ChatInputPanel'
 import { useAssistantHistory } from '@/providers/rag-app-store-provider'
-import { useAppSettings } from '@/lib/hooks/use-app-settings'
-import { AGILITY_DEFAULT_ASSISTANT_SLUG } from '@/lib/consts'
-import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group'
-import { Tooltip } from './design-system-components/Tooltip'
-
-export type DemoMode = 'cleanlab-enabled' | 'cleanlab-disabled'
+import type { StoreMessage } from '@/stores/messages-store'
+import type { CurrentThread } from '@/stores/messages-store'
 export interface ChatProps {
   threadId?: string
   className?: string
@@ -48,9 +44,9 @@ export function Chat({
   const [input, setInput] = useState('')
   const setCurrentThread = useMessagesStore(state => state.setCurrentThread)
   const currentThread = useMessagesStore(state => state.currentThread)
-  const [appSettings] = useAppSettings()
-  const assistantId = appSettings.assistantId ?? AGILITY_DEFAULT_ASSISTANT_SLUG
-  const history = useAssistantHistory(assistantId || undefined)
+  const history = useAssistantHistory()
+  // Prefer live current thread id when URL param is not yet set (new chat)
+  const effectiveThreadId = threadId ?? currentThread?.threadId
   const [cleanlabEnabled, setCleanlabEnabled] = useState<boolean>(() => {
     try {
       if (threadId) {
@@ -91,12 +87,14 @@ export function Chat({
   })
 
   const historySnapshot = useMemo(() => {
-    if (!threadId) return undefined
+    if (!effectiveThreadId) return undefined
     const item = history?.find(
-      h => h.thread?.id === threadId || h.localThreadId === threadId
+      h =>
+        h.thread?.id === effectiveThreadId ||
+        h.localThreadId === effectiveThreadId
     )
     return item?.snapshot
-  }, [history, threadId])
+  }, [history, effectiveThreadId])
 
   // Hydrate per-thread cleanlabEnabled on thread change
   useEffect(() => {
@@ -125,14 +123,16 @@ export function Chat({
   }, [viewToolsEnabled])
 
   useEffect(() => {
-    if (!threadId) {
+    if (!effectiveThreadId) {
+      // If there's no URL thread, only keep showing content while a thread is actively pending.
+      if (currentThread?.isPending) return
       setCurrentThread(undefined)
       return
     }
     // Prefer initialMessages if provided
     if (initialMessages && initialMessages.length) {
       setCurrentThread({
-        threadId: threadId,
+        threadId: effectiveThreadId,
         messages: initialMessages,
         status: CurrentThreadStatus.complete
       })
@@ -141,10 +141,10 @@ export function Chat({
     // If a stream is in progress for this thread, prefer hydrating from
     // the live buffer BEFORE falling back to snapshot. Snapshot at creation
     // time contains an empty assistant and would hide loading state.
-    const inProgressBufferSnapshot = getThreadBufferSnapshot(threadId)
+    const inProgressBufferSnapshot = getThreadBufferSnapshot(effectiveThreadId)
     if (inProgressBufferSnapshot && inProgressBufferSnapshot.length > 0) {
       setCurrentThread({
-        threadId: threadId,
+        threadId: effectiveThreadId,
         messages: inProgressBufferSnapshot,
         isPending: true,
         status: CurrentThreadStatus.responsePending
@@ -154,7 +154,9 @@ export function Chat({
     if (historySnapshot) {
       // Check if we have complete message history saved
       const historyItem = history?.find(
-        h => h.localThreadId === threadId || h.thread?.id === threadId
+        h =>
+          h.localThreadId === effectiveThreadId ||
+          h.thread?.id === effectiveThreadId
       )
       if (historyItem?.messages && historyItem.messages.length > 0) {
         // Use the complete message history including tool calls
@@ -169,7 +171,7 @@ export function Chat({
           error: msg.error
         }))
         setCurrentThread({
-          threadId: threadId,
+          threadId: effectiveThreadId,
           messages: hydrated,
           status: CurrentThreadStatus.complete
         })
@@ -191,15 +193,22 @@ export function Chat({
           }
         ]
         setCurrentThread({
-          threadId: threadId,
+          threadId: effectiveThreadId,
           messages: hydrated,
           status: CurrentThreadStatus.complete
         })
         return
       }
     }
-    setCurrentThread(undefined)
-  }, [historySnapshot, initialMessages, setCurrentThread, threadId])
+    // No snapshot or buffer available; preserve currentThread instead of clearing to avoid flicker
+  }, [
+    historySnapshot,
+    initialMessages,
+    setCurrentThread,
+    effectiveThreadId,
+    history,
+    currentThread?.isPending
+  ])
 
   const messages = currentThread?.messages
   const { scrollRef, isAtBottom, scrollToBottom } = useScrollToBottom()
@@ -209,8 +218,6 @@ export function Chat({
       window.history.replaceState({}, '', getChatPath(currentThread?.threadId))
     }
   }, [currentThread?.threadId, messages?.length])
-
-  const messageIsLoading = false
 
   useLayoutEffect(() => {
     if (scrollRef.current) {
@@ -277,13 +284,13 @@ export function Chat({
     >
       <ToggleGroupItem
         value="debug-off"
-        className="first:border-r last:border-l border-border-1 py-1.5 px-3 text-xs flex items-center justify-center bg-surface-1 leading-3 hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
+        className="py-1.5 text-xs leading-3 flex items-center justify-center border-border-1 bg-surface-1 px-3 first:border-r last:border-l hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
       >
         Debug: Off
       </ToggleGroupItem>
       <ToggleGroupItem
         value="debug-on"
-        className="first:border-r last:border-l border-border-1 py-1.5 px-3 text-xs flex items-center justify-center bg-surface-1 leading-3 hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
+        className="py-1.5 text-xs leading-3 flex items-center justify-center border-border-1 bg-surface-1 px-3 first:border-r last:border-l hover:bg-surface-1-hover focus:z-10 focus:outline-none data-[state=on]:bg-surface-1-active data-[state=on]:text-text-strong"
       >
         Debug: On
       </ToggleGroupItem>
@@ -291,11 +298,7 @@ export function Chat({
   )
 
   const content = (
-    <div
-      className={cn(
-        'group relative flex min-h-0 grow flex-col overflow-hidden bg-surface-0 pl-0 duration-300 ease-in-out'
-      )}
-    >
+    <div className="group relative flex min-h-0 grow flex-col overflow-hidden bg-surface-0 pl-0 duration-300 ease-in-out">
       <div
         ref={scrollRef}
         className={cn(
@@ -304,11 +307,7 @@ export function Chat({
         )}
       >
         <div className="flex min-h-full flex-col">
-          <div
-            className={cn(
-              'sm:rounded-t-xl mx-auto flex w-full max-w-[680px] grow flex-col px-8 md:px-9'
-            )}
-          >
+          <div className="sm:rounded-t-xl mx-auto flex w-full max-w-[680px] grow flex-col px-8 md:px-9">
             {disableToggleGroup ? (
               <Tooltip content="This setting can only be changed in an empty conversation thread">
                 {toggleGroupControl}
@@ -317,17 +316,15 @@ export function Chat({
               toggleGroupControl
             )}
             {viewToolsToggle}
-            {messages?.length ? (
+            {messages?.length && (
               <ChatList
-                threadId={currentThread?.threadId}
+                threadId={currentThread?.threadId ?? effectiveThreadId}
                 scrollRef={scrollRef}
                 cleanlabEnabled={cleanlabEnabled}
                 viewToolsEnabled={viewToolsEnabled}
               />
-            ) : (
-              <EmptyScreen />
             )}
-            <div className="sticky bottom-0 flex shrink-0 flex-col justify-end">
+            <div className="sticky bottom-0 mt-auto flex shrink-0 flex-col justify-end">
               <ChatInputPanel
                 isAtBottom={isAtBottom}
                 onScrollToBottom={scrollToBottom}

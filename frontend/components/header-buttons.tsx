@@ -1,8 +1,10 @@
-import { cn } from '@/lib/utils/tailwindUtils'
-import { ThemeToggle } from './theme-toggle'
-import { NewChatButton } from './new-chat-button'
-import { getChatPath } from '@/lib/consts'
+import { cn } from '@cleanlab/design-system/utils'
 import Link from 'next/link'
+
+import { getChatPath } from '@/lib/consts'
+
+import { NewChatButton } from './new-chat-button'
+import { ThemeToggle } from './theme-toggle'
 
 export const HeaderButtons = async ({
   variant = 'horizontal',

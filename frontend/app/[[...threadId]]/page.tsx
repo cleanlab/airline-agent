@@ -1,14 +1,15 @@
+import { getMissingKeys } from '@/app/actions'
 import { Chat } from '@/components/chat'
 import { Header } from '@/components/header'
 import { HeaderChatWrapper } from '@/components/header-chat-wrapper'
-import { getMissingKeys } from '@/app/actions'
 import { SidebarDesktop } from '@/components/sidebar-desktop'
+import type { StoreMessage } from '@/stores/messages-store'
 type PageProps = {
   params: Promise<{
     threadId?: string[]
   }>
 }
-type MessageListMessagesRouteResponse = any
+type MessageListMessagesRouteResponse = StoreMessage[]
 
 export type ChatPageParams = {
   threadId?: string[]

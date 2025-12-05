@@ -2,11 +2,9 @@ type Thread = { id: string }
 import { produce } from 'immer'
 import type { StateCreator } from 'zustand'
 import type { Prettify } from '@/lib/ts/Prettify'
-import type { AssistantId } from './common'
 
 export type HistoryThread = {
   title: string
-  assistantId: AssistantId
   cleanlabEnabled?: boolean
   snapshot?: {
     user: {
@@ -36,18 +34,16 @@ export type HistoryThread = {
   | { localThreadId: string; thread?: Thread }
 )
 
-export type History = Record<AssistantId, HistoryThread[]>
+export type History = HistoryThread[]
 
 export type ThreadHistoryActions = {
   addHistoryThread: (historyThread: HistoryThread) => void
   updateHistoryThread: (options: {
-    assistantId: AssistantId
     threadId?: string
     localThreadId?: string
     thread: Partial<HistoryThread>
   }) => void
   removeHistoryThread: (options: {
-    assistantId: AssistantId
     threadId?: string
     localThreadId?: string
   }) => void
@@ -65,51 +61,44 @@ export const createThreadHistorySlice: StateCreator<ThreadHistorySlice> = (
   set,
   get
 ) => ({
-  history: {},
+  history: [],
   addHistoryThread: historyThread => {
     const history = get().history
-    const assistantId = historyThread.assistantId
     const nextHistory = produce(history, draft => {
-      const threads = (draft[assistantId] = draft[assistantId] || [])
-      const existingThreadIndex = threads.findIndex(thread =>
+      const existingThreadIndex = draft.findIndex(thread =>
         threadIdsMatch(thread, historyThread)
       )
       if (existingThreadIndex !== -1) {
-        threads[existingThreadIndex] = historyThread
+        draft[existingThreadIndex] = historyThread
       } else {
-        threads.push(historyThread)
+        draft.push(historyThread)
       }
     })
     set({ history: nextHistory })
   },
-  updateHistoryThread: ({
-    assistantId,
-    threadId,
-    localThreadId,
-    thread: threadUpdates
-  }) => {
+  updateHistoryThread: ({ threadId, localThreadId, thread: threadUpdates }) => {
     const history = get().history
     const nextHistory = produce(history, draft => {
-      const threads = (draft[assistantId] = draft[assistantId] || [])
-      const existingThreadIndex = threads.findIndex(thread =>
-        idsMatchThread({ thread, localThreadId, threadId })
-      )
-      threads[existingThreadIndex] = {
-        ...threads[existingThreadIndex],
-        ...threadUpdates
-      }
-    })
-    set({ history: nextHistory })
-  },
-  removeHistoryThread: ({ assistantId, threadId, localThreadId }) => {
-    const history = get().history
-    const nextHistory = produce(history, draft => {
-      const threads = (draft[assistantId] = draft[assistantId] || [])
-      const existingThreadIndex = threads.findIndex(thread =>
+      const existingThreadIndex = draft.findIndex(thread =>
         idsMatchThread({ thread, localThreadId, threadId })
       )
       if (existingThreadIndex !== -1) {
-        threads.splice(existingThreadIndex, 1)
+        draft[existingThreadIndex] = {
+          ...draft[existingThreadIndex],
+          ...threadUpdates
+        }
+      }
+    })
+    set({ history: nextHistory })
+  },
+  removeHistoryThread: ({ threadId, localThreadId }) => {
+    const history = get().history
+    const nextHistory = produce(history, draft => {
+      const existingThreadIndex = draft.findIndex(thread =>
+        idsMatchThread({ thread, localThreadId, threadId })
+      )
+      if (existingThreadIndex !== -1) {
+        draft.splice(existingThreadIndex, 1)
       }
     })
     set({ history: nextHistory })
@@ -157,8 +146,8 @@ export const idsMatchThread = ({
 /**
  * Filters out unfinished threads from the history.
  *
- * @param history - The current history object containing threads for each assistant.
- * @returns A new History object with unfinished threads removed.
+ * @param history - The current history array containing threads.
+ * @returns A new History array with unfinished threads removed.
  *
  * @remarks
  * This function uses Immer's `produce` to create a new immutable state.
@@ -167,15 +156,14 @@ export const idsMatchThread = ({
  */
 export const filterUnfinishedThreads = (history: History) => {
   return produce(history, draft => {
-    Object.keys(draft).forEach(assistantId => {
-      const threads = draft[assistantId]
-      threads.forEach((thread, index) => {
-        delete thread.localThreadId
-        if (!thread.thread?.id) {
-          const removedThread = threads.splice(index, 1)[0]
-          console.info('removedThread from history sync', removedThread)
-        }
-      })
-    })
+    // Remove local-only ids and drop any unfinished threads
+    for (let i = draft.length - 1; i >= 0; i--) {
+      const thread = draft[i]
+      delete thread.localThreadId
+      if (!thread.thread?.id) {
+        const removedThread = draft.splice(i, 1)[0]
+        console.info('removedThread from history sync', removedThread)
+      }
+    }
   })
 }

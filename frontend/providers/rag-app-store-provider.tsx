@@ -51,9 +51,6 @@ export const useBareRagAppStore = () => {
   return ragappStore
 }
 
-export const useAssistantHistory = (assistantId?: string) => {
-  return useRagAppStore(state => {
-    if (!assistantId) return undefined
-    return state.history?.[assistantId]
-  })
+export const useAssistantHistory = () => {
+  return useRagAppStore(state => state.history)
 }

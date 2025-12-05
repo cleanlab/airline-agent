@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react'
+
 import { screens } from '@/tailwind/screens'
+
 import useResizeObserver from './use-resize-observer'
 
 const sortedScreensDesc = Object.entries(screens)

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * A React hook that rate-limits the updates of a value by queuing changes and releasing them at a specified interval.
@@ -33,7 +33,7 @@ export const useRateLimitedValue = <V,>(v: V, wait: number) => {
     if (!queueHasValues) {
       setQueueHasValues(true)
     }
-  }, [v])
+  }, [v, limitedValue, queueHasValues])
 
   useEffect(() => {
     // If queue is Empty, no need to do anything
@@ -82,7 +82,7 @@ export const useRateLimitedValue = <V,>(v: V, wait: number) => {
     return () => {
       clearTimeout(timeout)
     }
-  }, [queueHasValues])
+  }, [queueHasValues, wait])
 
   return limitedValue
 }

@@ -1,11 +1,13 @@
 import '@/app/globals.css'
-import { Providers } from '@/components/providers'
-import { Toaster } from '@/components/ui/sonner'
+
+import { cn } from '@cleanlab/design-system/utils'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import type { Metadata } from 'next'
-import { ScrollRestoration } from '../components/next-scroll-restoration'
-import { cn } from '@/lib/utils/tailwindUtils'
+
+import { ScrollRestoration } from '@/components/next-scroll-restoration'
+import { Providers } from '@/components/providers'
+import { Toaster } from '@/components/ui/sonner'
 
 export async function generateMetadata(): Promise<Metadata> {
   const title = 'Support Agent'
@@ -56,9 +58,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <div className="flex h-dvh min-h-0 flex-col">
-            <main className="flex min-h-0 flex-1 flex-col bg-muted/50">
-              {children}
-            </main>
+            <main className="flex min-h-0 flex-1 flex-col">{children}</main>
           </div>
         </Providers>
       </body>

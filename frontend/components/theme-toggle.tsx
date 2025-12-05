@@ -1,8 +1,8 @@
 'use client'
 
+import { IconFrameButton } from '@cleanlab/design-system/components'
+import { IconMoon, IconSun } from '@cleanlab/design-system/icons'
 import { useTheme } from 'next-themes'
-import { IconMoon, IconSun } from './icons'
-import { IconFrameButton } from './design-system-components/IconFrameButton'
 
 export const ThemeToggle = () => {
   const { resolvedTheme, setTheme } = useTheme()

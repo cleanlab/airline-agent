@@ -1,7 +1,14 @@
 'use client'
 
-import * as React from 'react'
-import { useCallback } from 'react'
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 
 const LOCAL_STORAGE_KEY = 'sidebar'
 
@@ -11,12 +18,10 @@ interface SidebarContext {
   isLoading: boolean
 }
 
-const SidebarContext = React.createContext<SidebarContext | undefined>(
-  undefined
-)
+const SidebarContext = createContext<SidebarContext | undefined>(undefined)
 
 export function useSidebar() {
-  const context = React.useContext(SidebarContext)
+  const context = useContext(SidebarContext)
   if (!context) {
     throw new Error('useSidebarContext must be used within a SidebarProvider')
   }
@@ -24,20 +29,18 @@ export function useSidebar() {
 }
 
 interface SidebarProviderProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function SidebarProvider({ children }: SidebarProviderProps) {
-  const [isSidebarOpen, setSidebarOpen] = React.useState(true)
-  const [isLoading, setLoading] = React.useState(true)
+  const [isSidebarOpen, setSidebarOpen] = useState(true)
+  const [isLoading, setLoading] = useState(true)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const value = localStorage.getItem(LOCAL_STORAGE_KEY)
     if (value) {
-      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setSidebarOpen(JSON.parse(value))
     }
-    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setLoading(false)
   }, [])
 
@@ -48,7 +51,7 @@ export function SidebarProvider({ children }: SidebarProviderProps) {
       return newState
     })
   }, [])
-  const contextValue = React.useMemo(
+  const contextValue = useMemo(
     () => ({ isSidebarOpen, toggleSidebar, isLoading }),
     [isSidebarOpen, toggleSidebar, isLoading]
   )
