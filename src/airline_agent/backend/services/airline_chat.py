@@ -3,7 +3,7 @@ import logging
 import os
 import pathlib
 import uuid
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Callable
 
 from cleanlab_codex import Client, Project
 from codex.types import ProjectValidateResponse
@@ -14,6 +14,7 @@ from pydantic_ai import (
     CallToolsNode,
     ModelMessage,
     ModelRequestNode,
+    ModelResponse,
     ModelSettings,
     TextPart,
     ToolCallPart,
@@ -41,6 +42,9 @@ from airline_agent.backend.schemas.run_event import (
 from airline_agent.cleanlab_utils.consult_utils import (
     consult_cleanlab,
     update_prompt_with_guidance,
+)
+from airline_agent.cleanlab_utils.conversion_utils import (
+    convert_string_to_response_message,
 )
 from airline_agent.cleanlab_utils.validate_utils import (
     get_tools_in_openai_format,
@@ -96,6 +100,11 @@ async def airline_chat_streaming(
     run_id = uuid.uuid4()
     thread_id = message.thread_id
 
+    tool_fallback_formatters: dict[str, Callable[[str], str]] = {
+        **booking.tool_fallback_fmt,
+    }
+    mutate_tools = list(tool_fallback_formatters.keys())
+
     if thread_id not in cleanlab_enabled_by_thread:
         cleanlab_enabled_by_thread[thread_id] = cleanlab_enabled
     elif cleanlab_enabled_by_thread[thread_id] != cleanlab_enabled:
@@ -118,6 +127,7 @@ async def airline_chat_streaming(
         thread_to_messages[thread_id] = []
 
     current_tool_calls: dict[str, ToolCall] = {}
+    mutate_tool_fallback_response: list[str] = []
 
     original_user_query = message.content
     if cleanlab_enabled:
@@ -158,6 +168,16 @@ async def airline_chat_streaming(
                     request = node.request
                     for request_part in request.parts:
                         if isinstance(request_part, ToolReturnPart) and request_part.tool_call_id in current_tool_calls:
+                            tool_call = current_tool_calls[request_part.tool_call_id]
+
+                            if tool_call.tool_name in mutate_tools:
+                                tool_result_str = request_part.model_response_str()
+                                if tool_call.tool_name in tool_fallback_formatters:
+                                    formatted_result = tool_fallback_formatters[tool_call.tool_name](tool_result_str)
+                                    mutate_tool_fallback_response.append(formatted_result)
+                                else:
+                                    mutate_tool_fallback_response.append(tool_result_str)
+
                             yield RunEventThreadMessage(
                                 id=run_id,
                                 object=RunEventObject.THREAD_MESSAGE,
@@ -185,12 +205,25 @@ async def airline_chat_streaming(
                     if guidance_items
                     else None,
                 )
+
+                response_content = (
+                    "\n\n".join(mutate_tool_fallback_response)
+                    if validation_result.should_guardrail and mutate_tool_fallback_response
+                    else final_response
+                )
+                if (
+                    response_content != final_response
+                    and updated_message_history
+                    and isinstance(updated_message_history[-1], ModelResponse)
+                ):
+                    updated_message_history[-1] = convert_string_to_response_message(response_content)
+
                 yield RunEventThreadMessage(
                     id=run_id,
                     object=RunEventObject.THREAD_MESSAGE,
                     data=AssistantMessage(
                         thread_id=thread_id,
-                        content=final_response,
+                        content=response_content,
                         metadata=MessageMetadata(
                             original_llm_response=run.result.output,
                             is_expert_answer=validation_result.expert_answer is not None,
