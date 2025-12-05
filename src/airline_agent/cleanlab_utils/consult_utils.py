@@ -35,8 +35,14 @@ def consult_cleanlab(query: str, message_history: list[ModelMessage]) -> list[st
     return _consult(query, openai_messages)
 
 
-def update_prompt_with_guidance(prompt: str, guidance: list[str]) -> str:
+def update_prompt_with_guidance(prompt: str, guidance_items: list[str]) -> str:
     """Update the prompt with the guidance."""
-    if guidance:
-        return f"{prompt}\n\n<advice_to_consider>\n{'\n'.join(guidance)}\n</advice_to_consider>\n\n"
+    if guidance_items:
+        guidance_block = "\n\n".join(f"<guidance>\n{g}\n</guidance>" for g in guidance_items)
+        guidance_instruction = (
+            'Consider the following guidance and whether each "if" scenario seems relevant here. '
+            'When the "if" scenario seems relevant, follow the guidance\'s specified behavior exactly (including any wording suggestions). '
+            "Otherwise ignore that guidance if it does not seem relevant here."
+        )
+        return f"{prompt}\n\n<advice_to_consider>\n{guidance_instruction}\n\n{guidance_block}\n\n</advice_to_consider>"
     return prompt
