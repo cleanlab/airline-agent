@@ -316,17 +316,15 @@ export function Chat({
               toggleGroupControl
             )}
             {viewToolsToggle}
-            {messages?.length ? (
+            {messages?.length && (
               <ChatList
                 threadId={currentThread?.threadId ?? effectiveThreadId}
                 scrollRef={scrollRef}
                 cleanlabEnabled={cleanlabEnabled}
                 viewToolsEnabled={viewToolsEnabled}
               />
-            ) : (
-              <div className="flex h-full grow flex-col items-center justify-center gap-8" />
             )}
-            <div className="sticky bottom-0 flex shrink-0 flex-col justify-end">
+            <div className="sticky bottom-0 mt-auto flex shrink-0 flex-col justify-end">
               <ChatInputPanel
                 isAtBottom={isAtBottom}
                 onScrollToBottom={scrollToBottom}
