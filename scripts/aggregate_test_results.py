@@ -23,7 +23,7 @@ class TestSummary(TypedDict):
     last_fail: dict[str, Any] | None
 
 
-def extract_question(entry: dict) -> str | None:
+def extract_question(entry: dict[str, Any]) -> str | None:
     """Extract question from entry stdout, return None if not found."""
     if not entry.get("stdout"):
         return None
@@ -33,7 +33,7 @@ def extract_question(entry: dict) -> str | None:
     return None
 
 
-def is_failure_log(entry: dict) -> bool:
+def is_failure_log(entry: dict[str, Any]) -> bool:
     """Check if entry represents a timeout/connection failure or InternalServerError."""
     stdout = entry.get("stdout", "").lower()
     error_msg = entry.get("error_msg", "").lower()
