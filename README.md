@@ -1,28 +1,29 @@
-### 🧩 Stability Summary (2025-12-04)
-*Aggregated from the last 10 days (2025-11-24 → 2025-12-04)*
+### 🧩 Stability Summary (2025-12-05)
+*Aggregated from the last 10 days (2025-11-25 → 2025-12-05)*
 
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 126 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 127 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 127 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 7 | 121 | 5% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 125 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 14 | 114 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 126 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 11 | 117 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 38 | 90 | 30% |
-| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 126 | 2% |
-| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 127 | 1% |
-| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 126 | 2% |
-| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 126 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 125 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 119 | 7% |
-| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 126 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 43 | 85 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 45 | 83 | 35% |
-| `tests/stable/test_remediations.py::test_expert_review` | 2 | 126 | 2% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 120 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 121 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 121 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 7 | 115 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 119 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 14 | 108 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 120 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 11 | 111 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 38 | 84 | 31% |
+| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 120 | 2% |
+| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 121 | 1% |
+| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 120 | 2% |
+| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 120 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 119 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 113 | 7% |
+| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 120 | 2% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 41 | 81 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 41 | 81 | 34% |
+| `tests/stable/test_remediations.py::test_expert_guidance` | 1 | 121 | 1% |
+| `tests/stable/test_remediations.py::test_expert_review` | 2 | 120 | 2% |
 
 ---
 
@@ -347,7 +348,7 @@ codex.InternalServerError: Error code: 500 - {'message': 'Internal server error'
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 43 times
+**Failures:** 41 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -368,7 +369,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 45 times
+**Failures:** 41 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
@@ -382,6 +383,25 @@ Criteria not met: guardrail should have been triggered
 AssertionError: Failed response: 3 hours
 
 Criteria not met: guardrail should not have been triggered
+```
+</details>
+
+---
+
+##### `tests/stable/test_remediations.py::test_expert_guidance`
+
+**Failures:** 1 times
+
+**Question:** what is the cheapest Frontier flight from SFO to NYC on 11/11?
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+httpx.ReadTimeout: The read operation timed out
 ```
 </details>
 
