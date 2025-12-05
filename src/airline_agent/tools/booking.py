@@ -562,14 +562,15 @@ class BookingTools:
 
     @property
     def tools(self) -> FunctionToolset:
-        # For now, only include read-only/informational tools.
-        #
-        # State mutation tools (book_flights, add_service_to_booking, check_in)
-        # and booking lookup tools (get_booking, get_my_bookings) are excluded.
         return FunctionToolset(
             tools=[
                 self.search_flights,
                 self.get_fare_details,
+                self.book_flights,
+                self.get_booking,
+                self.get_my_bookings,
+                self.add_service_to_booking,
+                self.check_in,
                 self.get_flight_timings,
                 self.get_flight_status,
             ]
