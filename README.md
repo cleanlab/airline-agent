@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 7 | 123 | 5% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 2 | 130 | 2% |
+| `Do miles in family pool expire?` | 7 | 124 | 5% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 2 | 131 | 2% |
 
 ---
 
@@ -58,13 +58,13 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 40 | 90 | 31% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 44 | 87 | 34% |
-| `Tell me a joke about airlines` | 13 | 117 | 10% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 131 | 1% |
-| `What's the capital of France?` | 5 | 125 | 4% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 46 | 86 | 35% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 9 | 121 | 7% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 40 | 91 | 31% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 45 | 87 | 34% |
+| `Tell me a joke about airlines` | 13 | 118 | 10% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 132 | 1% |
+| `What's the capital of France?` | 5 | 126 | 4% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 46 | 87 | 35% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 9 | 122 | 7% |
 
 ---
 
@@ -93,7 +93,7 @@ Criteria not met: The criterion requires the output to confirm that both of the 
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 44 times
+**Failures:** 45 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
