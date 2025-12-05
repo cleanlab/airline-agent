@@ -4,26 +4,26 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 125 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 126 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 126 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 7 | 120 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 124 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 14 | 113 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 125 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 11 | 116 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 39 | 88 | 31% |
-| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 125 | 2% |
-| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 126 | 1% |
-| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 125 | 2% |
-| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 125 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 124 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 118 | 7% |
-| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 125 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 43 | 84 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 42 | 85 | 33% |
-| `tests/stable/test_remediations.py::test_expert_guidance` | 1 | 126 | 1% |
-| `tests/stable/test_remediations.py::test_expert_review` | 2 | 125 | 2% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 126 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 127 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 127 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 7 | 121 | 5% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 125 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 14 | 114 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 126 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 11 | 117 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 40 | 88 | 31% |
+| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 126 | 2% |
+| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 127 | 1% |
+| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 126 | 2% |
+| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 126 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 125 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 119 | 7% |
+| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 126 | 2% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 43 | 85 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 43 | 85 | 34% |
+| `tests/stable/test_remediations.py::test_expert_guidance` | 1 | 127 | 1% |
+| `tests/stable/test_remediations.py::test_expert_review` | 2 | 126 | 2% |
 
 ---
 
@@ -191,7 +191,7 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ##### `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
-**Failures:** 39 times
+**Failures:** 40 times
 
 **Question:** If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?
 
@@ -203,8 +203,9 @@ Criteria not met: The agent output does not state that it is okay to cancel the 
 
 ```
 AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
-
-Criteria not met: The agent's output states a conditional: that both small bags would count as one personal item only if they fit together under the seat and together do not exceed the stated dimensions. It does not definitively confirm that both of the user's small bags count as one personal item. Therefore it does not meet the criterion.
+  
+  Criteria not met: trustworthiness threshold
+assert 0.8157982476607752 < 0.77
 ```
 </details>
 
@@ -369,7 +370,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
-**Failures:** 42 times
+**Failures:** 43 times
 
 **Question:** Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else
 
