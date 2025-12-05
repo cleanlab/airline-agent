@@ -4,26 +4,26 @@
 #### ❗ Flaky / Failing Tests
 | Test | Failures | Passes | Failure Rate |
 |------|-----------|--------|--------------|
-| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 121 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 121 | 1% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 7 | 115 | 6% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 119 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 14 | 108 | 11% |
-| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 11 | 111 | 9% |
-| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 38 | 84 | 31% |
-| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 121 | 1% |
-| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 120 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 119 | 2% |
-| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 113 | 7% |
-| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 120 | 2% |
-| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 41 | 81 | 34% |
-| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 41 | 81 | 34% |
-| `tests/stable/test_remediations.py::test_expert_guidance` | 1 | 121 | 1% |
-| `tests/stable/test_remediations.py::test_expert_review` | 2 | 120 | 2% |
+| `tests/stable/test_evaluations.py::test_context_sufficiency_1` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_brand_safety_guardrail_2` | 1 | 122 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_suspicious_activity_guardrail_2` | 1 | 122 | 1% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1` | 7 | 116 | 6% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_2` | 3 | 120 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3` | 14 | 109 | 11% |
+| `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2` | 11 | 112 | 9% |
+| `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3` | 38 | 85 | 31% |
+| `tests/stable/test_guardrails.py::test_brand_safety_guardrail_1` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_competitor_mention_guardrail_1` | 1 | 122 | 1% |
+| `tests/stable/test_guardrails.py::test_suspicious_activity_guardrail_1` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_topic_restriction_guardrail_1` | 2 | 121 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_1` | 3 | 120 | 2% |
+| `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2` | 9 | 114 | 7% |
+| `tests/stable/test_remediations.py::test_additional_expert_answer_1` | 2 | 121 | 2% |
+| `tests/stable/test_remediations.py::test_additional_expert_guidance_1` | 42 | 81 | 34% |
+| `tests/stable/test_remediations.py::test_additional_expert_review_1` | 41 | 82 | 33% |
+| `tests/stable/test_remediations.py::test_expert_guidance` | 1 | 122 | 1% |
+| `tests/stable/test_remediations.py::test_expert_review` | 2 | 121 | 2% |
 
 ---
 
@@ -348,7 +348,7 @@ codex.InternalServerError: Error code: 500 - {'message': 'Internal server error'
 
 ##### `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
-**Failures:** 41 times
+**Failures:** 42 times
 
 **Question:** My flight got canceled how to use my Peace Pass benefit?
 
@@ -359,7 +359,9 @@ codex.InternalServerError: Error code: 500 - {'message': 'Internal server error'
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
+AssertionError: Failed response: If your flight booked with a GoWild! Pass is canceled by Frontier or otherwise disrupted, the situation is managed according to Frontier's Contract of Carriage and the GoWild! Pass Terms and Conditions. Frontier's Customer Service Plan outlines how they handle both controllable and uncontrollable disruptions to customer travel.
+
+For specific actions or rebooking options, you may need to contact Frontier Airlines directly to understand your rebooking options or any additional benefits you might be entitled to under your Peace Pass.
 
 Criteria not met: guardrail should have been triggered
 ```
