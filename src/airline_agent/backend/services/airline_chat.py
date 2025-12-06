@@ -207,7 +207,7 @@ async def airline_chat_streaming(
                 )
 
                 response_content = (
-                    "\n\n".join(mutate_tool_fallback_response)
+                    "I've completed the following for you:\n\n" + "\n\n".join(mutate_tool_fallback_response)
                     if validation_result.should_guardrail and mutate_tool_fallback_response
                     else final_response
                 )

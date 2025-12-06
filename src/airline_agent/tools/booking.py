@@ -208,11 +208,11 @@ class BookingTools:
                     f"{i}. Flight {flight_booking.flight_id} ({flight_booking.fare_type} fare) ({flight_booking.currency} ${flight_booking.price_total:.2f}){add_ons_text}"
                 )
 
-            flights_text = " ".join(flight_parts)
+            flights_text = "\n".join(flight_parts)
         except (json.JSONDecodeError, ValueError):
             return result
         else:
-            return f"Booking confirmed with booking ID {booking.booking_id} for a total price of {booking.currency} ${booking.total_price:.2f}. Flights: {flights_text}"
+            return f"Booking confirmed with booking ID {booking.booking_id} for a total price of {booking.currency} ${booking.total_price:.2f}.\n\nFlights:\n{flights_text}"
 
     def get_booking(self, booking_id: str) -> Booking:
         """
@@ -371,14 +371,14 @@ class BookingTools:
                     add_ons_text = ", ".join(add_ons_list)
                     price_text = f" ({booking.currency} ${latest_addon.price:.2f})" if latest_addon.price > 0 else ""
                     service_parts.append(
-                        f"Added {self._format_service_type(latest_addon.service_type)}{price_text} to flight {flight_booking.flight_id}. Add-ons for this flight: {add_ons_text}"
+                        f"Added {self._format_service_type(latest_addon.service_type)}{price_text} to flight {flight_booking.flight_id}.\nYour add-ons for this flight are: {add_ons_text}"
                     )
 
-            services_text = " ".join(service_parts)
+            services_text = "\n\n".join(service_parts)
         except (json.JSONDecodeError, ValueError):
             return result
         else:
-            return f"Service added to booking {booking.booking_id}. {services_text}"
+            return services_text
 
     def _assign_seat(self, flight_booking: FlightBooking, _flight_id: str) -> str:
         """Assign a seat to a flight booking based on preferences, fare type, or randomly."""
@@ -544,7 +544,7 @@ class BookingTools:
             )
             check_in_parts.append(f"Checked in for flight {flight_booking.flight_id}.{seat_text}")
 
-        return " ".join(check_in_parts) if check_in_parts else f"Checked in for booking {booking.booking_id}."
+        return "\n".join(check_in_parts) if check_in_parts else f"Checked in for booking {booking.booking_id}."
 
     def get_flight_timings(self, flight_id: str) -> dict[str, Any]:
         """
