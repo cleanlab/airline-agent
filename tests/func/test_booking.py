@@ -133,7 +133,7 @@ def test_add_service_to_booking_fallback() -> None:
 
 def test_check_in() -> None:
     agent = Agent(cleanlab_enabled=False)
-    agent.chat("Find flights from SFO to JFK on November 12, 2025")
+    agent.chat("Find flights from SFO to JFK on November 6, 2025")
     agent.chat("Book the first available flight")
     answer, _ = agent.chat("Check me in for my flight")
     assert_judge(
