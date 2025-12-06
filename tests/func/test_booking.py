@@ -1,16 +1,19 @@
 from contextlib import contextmanager
+from typing import Any, Iterator
 from unittest.mock import patch
 
 from airline_agent.cleanlab_utils.validate_utils import run_cleanlab_validation_logging_tools
 from airline_agent.util import TestAgent as Agent
+from codex.types.project_validate_response import ProjectValidateResponse
+from pydantic_ai.messages import ModelMessage
 from tests.judge import assert_judge
 
 
 @contextmanager
-def mock_cleanlab_validation_with_guardrail():
+def mock_cleanlab_validation_with_guardrail() -> Iterator[None]:
     """Context manager that mocks cleanlab validation to always set should_guardrail=True."""
 
-    def mock_validation(*args, **kwargs):
+    def mock_validation(*args: Any, **kwargs: Any) -> tuple[list[ModelMessage], str, ProjectValidateResponse]:
         updated_message_history, final_response, validation_result = run_cleanlab_validation_logging_tools(
             *args, **kwargs
         )
