@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 118 | 6% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 2 | 126 | 2% |
+| `Do miles in family pool expire?` | 8 | 119 | 6% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 2 | 127 | 2% |
 
 ---
 
@@ -58,13 +58,13 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 36 | 89 | 29% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 41 | 86 | 32% |
-| `Tell me a joke about airlines` | 13 | 113 | 10% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 127 | 1% |
-| `What's the capital of France?` | 5 | 121 | 4% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 44 | 84 | 34% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 7 | 119 | 6% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 36 | 90 | 29% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 41 | 87 | 32% |
+| `Tell me a joke about airlines` | 13 | 114 | 10% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 128 | 1% |
+| `What's the capital of France?` | 5 | 122 | 4% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 44 | 85 | 34% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 8 | 119 | 6% |
 
 ---
 
@@ -194,7 +194,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
