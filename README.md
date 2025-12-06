@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 114 | 7% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 2 | 122 | 2% |
+| `Do miles in family pool expire?` | 8 | 115 | 7% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 2 | 123 | 2% |
 
 ---
 
@@ -59,12 +59,12 @@ Criteria not met: guardrail should have been triggered
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
 | `If both of my small bags fit completely under the seat in front of me without...` | 36 | 86 | 30% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 39 | 84 | 32% |
-| `Tell me a joke about airlines` | 13 | 109 | 11% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 123 | 1% |
-| `What's the capital of France?` | 5 | 117 | 4% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 43 | 81 | 35% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 7 | 115 | 6% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 40 | 84 | 32% |
+| `Tell me a joke about airlines` | 13 | 110 | 11% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 124 | 1% |
+| `What's the capital of France?` | 5 | 118 | 4% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 43 | 82 | 34% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 7 | 116 | 6% |
 
 ---
 
@@ -93,7 +93,7 @@ Criteria not met: Fail — the agent output explicitly states that two small bag
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 39 times
+**Failures:** 40 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
