@@ -145,7 +145,10 @@ def test_check_in_fallback() -> None:
     agent.chat("book me the F9 707 flight from SFO to LGA on 11/11")
     with mock_cleanlab_validation_with_guardrail():
         answer, _ = agent.chat("Check me in for my flight")
-        assert answer == "I've completed the following for you:\n\nChecked in for flight F9-SFO-LGA-2025-11-11T17:00. Your seat assignment is 19F."
+        assert (
+            answer
+            == "I've completed the following for you:\n\nChecked in for flight F9-SFO-LGA-2025-11-11T17:00. Your seat assignment is 19F."
+        )
 
 
 def test_flight_status() -> None:
