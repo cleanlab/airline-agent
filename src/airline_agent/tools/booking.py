@@ -1,4 +1,6 @@
+import json
 import random
+from collections.abc import Callable
 from datetime import date, datetime, timedelta
 from typing import Any
 
@@ -185,6 +187,33 @@ class BookingTools:
 
         return booking
 
+    def _format_service_type(self, service_type: str) -> str:
+        """Format service type from snake_case to Title Case with spaces."""
+        return service_type.replace("_", " ").title()
+
+    def _book_flights_to_string(self, result: str) -> str:
+        """Format book_flights result for fallback response."""
+        try:
+            booking_data = json.loads(result)
+            booking = Booking.model_validate(booking_data)
+
+            flight_parts = []
+            for i, flight_booking in enumerate(booking.flights, 1):
+                add_ons_text = (
+                    f". You also have the following add ons: {', '.join(self._format_service_type(ao.service_type) for ao in flight_booking.add_ons)}"
+                    if flight_booking.add_ons
+                    else ""
+                )
+                flight_parts.append(
+                    f"{i}. Flight {flight_booking.flight_id} ({flight_booking.fare_type} fare) ({flight_booking.currency} ${flight_booking.price_total:.2f}){add_ons_text}"
+                )
+
+            flights_text = "\n".join(flight_parts)
+        except (json.JSONDecodeError, ValueError):
+            return result
+        else:
+            return f"Booking confirmed with booking ID {booking.booking_id} for a total price of {booking.currency} ${booking.total_price:.2f}.\n\nFlights:\n{flights_text}"
+
     def get_booking(self, booking_id: str) -> Booking:
         """
         Retrieve a booking by its booking ID.
@@ -324,6 +353,32 @@ class BookingTools:
         booking.status.updated_at = now
 
         return booking
+
+    def _add_service_to_booking_to_string(self, result: str) -> str:
+        """Format add_service_to_booking result for fallback response."""
+        try:
+            booking_data = json.loads(result)
+            booking = Booking.model_validate(booking_data)
+
+            # Find the flight that has the most recently added add-on
+            # (the one that was just modified)
+            service_parts = []
+            for flight_booking in booking.flights:
+                if flight_booking.add_ons:
+                    # Get the most recently added add-on
+                    latest_addon = max(flight_booking.add_ons, key=lambda ao: ao.added_at)
+                    add_ons_list = [self._format_service_type(ao.service_type) for ao in flight_booking.add_ons]
+                    add_ons_text = ", ".join(add_ons_list)
+                    price_text = f" ({booking.currency} ${latest_addon.price:.2f})" if latest_addon.price > 0 else ""
+                    service_parts.append(
+                        f"Added {self._format_service_type(latest_addon.service_type)}{price_text} to flight {flight_booking.flight_id}.\nYour add-ons for this flight are: {add_ons_text}"
+                    )
+
+            services_text = "\n\n".join(service_parts)
+        except (json.JSONDecodeError, ValueError):
+            return result
+        else:
+            return services_text
 
     def _assign_seat(self, flight_booking: FlightBooking, _flight_id: str) -> str:
         """Assign a seat to a flight booking based on preferences, fare type, or randomly."""
@@ -468,6 +523,29 @@ class BookingTools:
 
         return booking
 
+    def _check_in_to_string(self, result: str) -> str:
+        """Format check_in result for fallback response."""
+        try:
+            booking_data = json.loads(result)
+            booking = Booking.model_validate(booking_data)
+        except (json.JSONDecodeError, ValueError):
+            return result
+
+        # Find the flight that was checked in
+        checked_in_flights = [fb for fb in booking.flights if fb.checked_in]
+
+        if not checked_in_flights:
+            return f"Checked in for booking {booking.booking_id}."
+
+        check_in_parts = []
+        for flight_booking in checked_in_flights:
+            seat_text = (
+                f" Your seat assignment is {flight_booking.seat_assignment}." if flight_booking.seat_assignment else ""
+            )
+            check_in_parts.append(f"Checked in for flight {flight_booking.flight_id}.{seat_text}")
+
+        return "\n".join(check_in_parts) if check_in_parts else f"Checked in for booking {booking.booking_id}."
+
     def get_flight_timings(self, flight_id: str) -> dict[str, Any]:
         """
         Get all timing windows for a flight (check-in, boarding, doors close, etc.).
@@ -562,15 +640,25 @@ class BookingTools:
 
     @property
     def tools(self) -> FunctionToolset:
-        # For now, only include read-only/informational tools.
-        #
-        # State mutation tools (book_flights, add_service_to_booking, check_in)
-        # and booking lookup tools (get_booking, get_my_bookings) are excluded.
         return FunctionToolset(
             tools=[
                 self.search_flights,
                 self.get_fare_details,
+                self.book_flights,
+                self.get_booking,
+                self.get_my_bookings,
+                self.add_service_to_booking,
+                self.check_in,
                 self.get_flight_timings,
                 self.get_flight_status,
             ]
         )
+
+    @property
+    def tool_fallback_fmt(self) -> dict[str, Callable[[str], str]]:
+        """Return formatters for mutative tools in this toolset."""
+        return {
+            "book_flights": self._book_flights_to_string,
+            "add_service_to_booking": self._add_service_to_booking_to_string,
+            "check_in": self._check_in_to_string,
+        }
