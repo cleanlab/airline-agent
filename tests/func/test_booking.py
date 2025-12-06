@@ -1,7 +1,26 @@
-import pytest
+from contextlib import contextmanager
+from unittest.mock import patch
 
 from airline_agent.util import TestAgent as Agent
 from tests.judge import assert_judge
+
+
+@contextmanager
+def mock_cleanlab_validation_with_guardrail():
+    """Context manager that mocks cleanlab validation to always set should_guardrail=True."""
+    from airline_agent.cleanlab_utils.validate_utils import run_cleanlab_validation_logging_tools
+
+    def mock_validation(*args, **kwargs):
+        updated_message_history, final_response, validation_result = run_cleanlab_validation_logging_tools(
+            *args, **kwargs
+        )
+        validation_result.should_guardrail = True
+        return updated_message_history, final_response, validation_result
+
+    with patch(
+        "airline_agent.backend.services.airline_chat.run_cleanlab_validation_logging_tools", side_effect=mock_validation
+    ):
+        yield
 
 
 def test_search_flights() -> None:
@@ -29,7 +48,6 @@ def test_get_fare_details() -> None:
     )
 
 
-@pytest.mark.skip(reason="book_flights tool disabled")
 def test_book_single_flight() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("I need a flight from SFO to JFK on November 12, 2025")
@@ -44,7 +62,6 @@ def test_book_single_flight() -> None:
     )
 
 
-@pytest.mark.skip(reason="book_flights tool disabled")
 def test_book_round_trip() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Find flights from OAK to LGA on November 13, 2025")
@@ -60,7 +77,16 @@ def test_book_round_trip() -> None:
     )
 
 
-@pytest.mark.skip(reason="book_flights and get_my_bookings tools disabled")
+def test_book_flight_fallback() -> None:
+    with mock_cleanlab_validation_with_guardrail():
+        agent = Agent()
+        answer, _ = agent.chat("book me the F9 707 flight from SFO to LGA on 11/11")
+        assert (
+            answer
+            == "I've completed the following for you:\n\nBooking confirmed with booking ID BK-A3B1799D for a total price of USD $80.84.\n\nFlights:\n1. Flight F9-SFO-LGA-2025-11-11T17:00 (basic fare) (USD $80.84)"
+        )
+
+
 def test_retrieve_booking() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Find a flight from SJC to JFK on November 12, 2025")
@@ -75,7 +101,6 @@ def test_retrieve_booking() -> None:
     )
 
 
-@pytest.mark.skip(reason="book_flights and add_service_to_booking tools disabled")
 def test_add_service_to_booking() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Show me flights from SFO to EWR on November 14, 2025")
@@ -90,7 +115,17 @@ def test_add_service_to_booking() -> None:
     )
 
 
-@pytest.mark.skip(reason="book_flights and check_in tools disabled")
+def test_add_service_to_booking_fallback() -> None:
+    agent = Agent()
+    agent.chat("book me the F9 707 flight from SFO to LGA on 11/11")
+    with mock_cleanlab_validation_with_guardrail():
+        answer, _ = agent.chat("Add a checked bag to my booking")
+        assert (
+            answer
+            == "I've completed the following for you:\n\nAdded Checked Bag (USD $37.91) to flight F9-SFO-LGA-2025-11-11T17:00.\nYour add-ons for this flight are: Checked Bag"
+        )
+
+
 def test_check_in() -> None:
     agent = Agent(cleanlab_enabled=False)
     agent.chat("Find flights from SFO to JFK on November 12, 2025")
@@ -103,6 +138,14 @@ def test_check_in() -> None:
         ],
         answer,
     )
+
+
+def test_check_in_fallback() -> None:
+    agent = Agent()
+    agent.chat("book me the F9 707 flight from SFO to LGA on 11/11")
+    with mock_cleanlab_validation_with_guardrail():
+        answer, _ = agent.chat("Check me in for my flight")
+        assert answer == "I've completed the following for you:\n\nChecked in for flight F9-SFO-LGA-2025-11-11T17:00. Your seat assignment is 19F."
 
 
 def test_flight_status() -> None:
@@ -168,7 +211,6 @@ def test_no_date_provided() -> None:
     )
 
 
-@pytest.mark.skip(reason="get_my_bookings tool disabled")
 def test_no_existing_bookings() -> None:
     agent = Agent(cleanlab_enabled=False)
     answer, _ = agent.chat("Show me my bookings")
