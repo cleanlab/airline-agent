@@ -1,11 +1,13 @@
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import Any, Iterator
+from typing import Any
 from unittest.mock import patch
+
+from codex.types.project_validate_response import ProjectValidateResponse
+from pydantic_ai.messages import ModelMessage
 
 from airline_agent.cleanlab_utils.validate_utils import run_cleanlab_validation_logging_tools
 from airline_agent.util import TestAgent as Agent
-from codex.types.project_validate_response import ProjectValidateResponse
-from pydantic_ai.messages import ModelMessage
 from tests.judge import assert_judge
 
 
