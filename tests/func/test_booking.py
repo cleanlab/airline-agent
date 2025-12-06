@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 from unittest.mock import patch
 
+from airline_agent.cleanlab_utils.validate_utils import run_cleanlab_validation_logging_tools
 from airline_agent.util import TestAgent as Agent
 from tests.judge import assert_judge
 
@@ -8,7 +9,6 @@ from tests.judge import assert_judge
 @contextmanager
 def mock_cleanlab_validation_with_guardrail():
     """Context manager that mocks cleanlab validation to always set should_guardrail=True."""
-    from airline_agent.cleanlab_utils.validate_utils import run_cleanlab_validation_logging_tools
 
     def mock_validation(*args, **kwargs):
         updated_message_history, final_response, validation_result = run_cleanlab_validation_logging_tools(
