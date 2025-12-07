@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 114 | 7% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 2 | 122 | 2% |
+| `Do miles in family pool expire?` | 8 | 115 | 7% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 2 | 123 | 2% |
 
 ---
 
@@ -58,13 +58,14 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 88 | 27% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 40 | 83 | 33% |
-| `Tell me a joke about airlines` | 14 | 108 | 11% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 123 | 1% |
-| `What's the capital of France?` | 5 | 117 | 4% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 40 | 84 | 32% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 7 | 115 | 6% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 89 | 27% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 40 | 84 | 32% |
+| `Tell me a joke about airlines` | 14 | 109 | 11% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 124 | 1% |
+| `What's the capital of France?` | 5 | 118 | 4% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 40 | 85 | 32% |
+| `Who is in charge of the plane?` | 1 | 122 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 7 | 116 | 6% |
 
 ---
 
@@ -188,6 +189,28 @@ KeyError: 'guidance'
 AssertionError: Failed response: 3 hours
 
 Criteria not met: guardrail should not have been triggered
+```
+</details>
+
+---
+
+##### `Who is in charge of the plane?`
+
+**Failures:** 1 times
+
+**Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_4`
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: The person in charge of the plane is the Captain, also known as the Pilot in Command. The Captain is responsible for the overall operation and safety of the flight, making final decisions regarding the aircraft and its passengers. The Captain is supported by the First Officer, also known as the co-pilot, who assists in flying the plane and handling various tasks during the flight. Together, they ensure the flight is conducted safely and efficiently.
+  
+  Criteria not met: topic_restriction threshold
+assert 0.3931117350466249 < 0.35
 ```
 </details>
 
