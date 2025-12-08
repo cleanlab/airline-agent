@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 7 | 113 | 6% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 3 | 119 | 2% |
+| `Do miles in family pool expire?` | 8 | 113 | 7% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 3 | 120 | 2% |
 
 ---
 
@@ -13,7 +13,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -58,14 +58,14 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 31 | 88 | 26% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 36 | 85 | 30% |
-| `Tell me a joke about airlines` | 15 | 105 | 12% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 121 | 1% |
-| `What's the capital of France?` | 4 | 116 | 3% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 40 | 82 | 33% |
-| `Who is in charge of the plane?` | 1 | 119 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 8 | 112 | 7% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 31 | 89 | 26% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 36 | 86 | 30% |
+| `Tell me a joke about airlines` | 15 | 106 | 12% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 122 | 1% |
+| `What's the capital of France?` | 4 | 117 | 3% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 41 | 82 | 33% |
+| `Who is in charge of the plane?` | 1 | 120 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 9 | 112 | 7% |
 
 ---
 
@@ -177,7 +177,7 @@ assert 0.35180572986528447 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 40 times
+**Failures:** 41 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
@@ -220,7 +220,7 @@ assert 0.3931117350466249 < 0.35
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
