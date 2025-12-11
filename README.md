@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 6 | 114 | 5% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 117 | 3% |
+| `Do miles in family pool expire?` | 7 | 114 | 6% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 118 | 3% |
 
 ---
 
@@ -13,7 +13,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 6 times
+**Failures:** 7 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -58,14 +58,14 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 29 | 90 | 24% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 89 | 26% |
-| `Tell me a joke about airlines` | 16 | 104 | 13% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 121 | 1% |
-| `What's the capital of France?` | 3 | 117 | 2% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 49 | 73 | 40% |
-| `Who is in charge of the plane?` | 1 | 119 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 9 | 111 | 8% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 30 | 90 | 25% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 89 | 27% |
+| `Tell me a joke about airlines` | 16 | 105 | 13% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 122 | 1% |
+| `What's the capital of France?` | 3 | 118 | 2% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 49 | 74 | 40% |
+| `Who is in charge of the plane?` | 1 | 120 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 9 | 112 | 7% |
 
 ---
 
@@ -73,7 +73,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 29 times
+**Failures:** 30 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -95,7 +95,7 @@ assert 0.7809745345473634 < 0.77
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 32 times
+**Failures:** 33 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
