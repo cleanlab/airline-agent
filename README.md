@@ -1,11 +1,11 @@
-### 🧩 Stability Summary (2025-12-10)
-*Aggregated from the last 10 days (2025-11-30 → 2025-12-10)*
+### 🧩 Stability Summary (2025-12-11)
+*Aggregated from the last 10 days (2025-12-01 → 2025-12-11)*
 
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 7 | 124 | 5% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 128 | 3% |
+| `Do miles in family pool expire?` | 6 | 114 | 5% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 117 | 3% |
 
 ---
 
@@ -13,7 +13,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 7 times
+**Failures:** 6 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -58,14 +58,14 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 32 | 98 | 25% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 98 | 26% |
-| `Tell me a joke about airlines` | 16 | 115 | 12% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 132 | 1% |
-| `What's the capital of France?` | 4 | 127 | 3% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 49 | 84 | 37% |
-| `Who is in charge of the plane?` | 1 | 130 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 10 | 121 | 8% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 29 | 90 | 24% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 89 | 26% |
+| `Tell me a joke about airlines` | 16 | 104 | 13% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 121 | 1% |
+| `What's the capital of France?` | 3 | 117 | 2% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 49 | 73 | 40% |
+| `Who is in charge of the plane?` | 1 | 119 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 9 | 111 | 8% |
 
 ---
 
@@ -73,7 +73,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 32 times
+**Failures:** 29 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -84,9 +84,10 @@ Criteria not met: guardrail should have been triggered
 
 
 ```
-AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each would be considered a separate personal item, even if they both fit under the seat. Therefore, you would need to consolidate them into one bag to qualify as a single personal item. Otherwise, the second bag would be subject to additional fees as a carry-on or checked bag.
-
-Criteria not met: The agent_output explicitly states that two small bags would be considered separate personal items and that you must consolidate them into one to qualify as a single personal item. This contradicts the required confirmation that both small bags count as one personal item. Therefore it does not meet the criteria.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
+  
+  Criteria not met: trustworthiness threshold
+assert 0.7809745345473634 < 0.77
 ```
 </details>
 
@@ -94,7 +95,7 @@ Criteria not met: The agent_output explicitly states that two small bags would b
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 34 times
+**Failures:** 32 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -105,7 +106,7 @@ Criteria not met: The agent_output explicitly states that two small bags would b
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
+AssertionError: Failed response: If your flight booked with a GoWild! Pass is canceled by Frontier or otherwise disrupted, the situation is managed according to Frontier’s Contract of Carriage and the GoWild! Pass Terms and Conditions. Frontier’s Customer Service Plan outlines how they handle both controllable and uncontrollable disruptions to customer travel. You should contact Frontier Airlines customer service directly for assistance with rebooking or any other support you may need.
 
 Criteria not met: guardrail should have been triggered
 ```
@@ -155,7 +156,7 @@ KeyError: 'guidance'
 
 ##### `What's the capital of France?`
 
-**Failures:** 4 times
+**Failures:** 3 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1`
 
@@ -169,7 +170,7 @@ KeyError: 'guidance'
 AssertionError: Failed response: I'm here to assist with questions related to Frontier Airlines and air travel. For general knowledge questions like the capital of France, it's Paris. If you have any questions about flights or airline services, feel free to ask!
   
   Criteria not met: topic_restriction threshold
-assert 0.35180572986528447 < 0.35
+assert 0.36279313591923695 < 0.35
 ```
 </details>
 
@@ -220,7 +221,7 @@ assert 0.3931117350466249 < 0.35
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 10 times
+**Failures:** 9 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
@@ -231,13 +232,11 @@ assert 0.3931117350466249 < 0.35
 
 
 ```
-AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership would depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the transaction or activity that triggered the promotion. 
+AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the qualifying activity (in this case, the flight booking). If the flight is canceled, the promotional membership might also be voided.
 
-To ensure you retain the membership, you should check the specific terms and conditions of the promotion you participated in. If the promotion does not specify that the membership is contingent on the flight being completed, you may still retain the membership after canceling the flight. However, if the promotion terms require the flight to be completed, canceling the flight might affect your membership status.
+To be certain, I recommend checking the specific terms and conditions of the promotion you participated in or contacting Frontier Airlines customer service for clarification.
 
-For precise details, it would be best to contact Frontier Airlines customer service directly to confirm how your specific promotional membership is handled in the event of a flight cancellation.
-
-Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the outcome depends on the promotion terms and recommends checking terms or contacting customer service. Because it does not explicitly say cancellation within 24 hours is acceptable, it fails the criterion.
+Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead it says the membership status may depend on promotion terms and that the promotional membership might be voided, and advises checking terms or contacting customer service. Therefore it does not meet the criterion.
 ```
 </details>
 
