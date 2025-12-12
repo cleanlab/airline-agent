@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 117 | 6% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 123 | 3% |
+| `Do miles in family pool expire?` | 8 | 118 | 6% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 124 | 3% |
 
 ---
 
@@ -58,14 +58,14 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 91 | 27% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 94 | 26% |
-| `Tell me a joke about airlines` | 14 | 112 | 11% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 127 | 1% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 92 | 26% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 95 | 26% |
+| `Tell me a joke about airlines` | 14 | 113 | 11% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 128 | 1% |
 | `What's the capital of France?` | 4 | 122 | 3% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 56 | 72 | 44% |
-| `Who is in charge of the plane?` | 1 | 125 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 114 | 9% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 57 | 72 | 44% |
+| `Who is in charge of the plane?` | 1 | 126 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 115 | 9% |
 
 ---
 
@@ -177,7 +177,7 @@ assert 0.36279313591923695 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 56 times
+**Failures:** 57 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
