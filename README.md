@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 108 | 7% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 114 | 3% |
+| `Do miles in family pool expire?` | 8 | 109 | 7% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 115 | 3% |
 
 ---
 
@@ -58,13 +58,13 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 29 | 87 | 25% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 87 | 26% |
-| `Tell me a joke about airlines` | 13 | 104 | 11% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 118 | 1% |
-| `What's the capital of France?` | 4 | 113 | 3% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 49 | 70 | 41% |
-| `Who is in charge of the plane?` | 1 | 116 | 1% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 30 | 87 | 26% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 88 | 26% |
+| `Tell me a joke about airlines` | 13 | 105 | 11% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 119 | 1% |
+| `What's the capital of France?` | 4 | 114 | 3% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 70 | 42% |
+| `Who is in charge of the plane?` | 1 | 117 | 1% |
 | `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 10 | 107 | 9% |
 
 ---
@@ -73,7 +73,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 29 times
+**Failures:** 30 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -177,7 +177,7 @@ assert 0.36279313591923695 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 49 times
+**Failures:** 50 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
