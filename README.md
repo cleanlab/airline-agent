@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 110 | 7% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 116 | 3% |
+| `Do miles in family pool expire?` | 8 | 111 | 7% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 117 | 3% |
 
 ---
 
@@ -58,14 +58,14 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 31 | 87 | 26% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 89 | 26% |
-| `Tell me a joke about airlines` | 13 | 106 | 11% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 120 | 1% |
-| `What's the capital of France?` | 4 | 115 | 3% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 51 | 70 | 42% |
-| `Who is in charge of the plane?` | 1 | 118 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 10 | 108 | 8% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 31 | 88 | 26% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 90 | 26% |
+| `Tell me a joke about airlines` | 13 | 107 | 11% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 121 | 1% |
+| `What's the capital of France?` | 4 | 116 | 3% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 52 | 70 | 43% |
+| `Who is in charge of the plane?` | 1 | 119 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 10 | 109 | 8% |
 
 ---
 
@@ -177,7 +177,7 @@ assert 0.36279313591923695 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 51 times
+**Failures:** 52 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
