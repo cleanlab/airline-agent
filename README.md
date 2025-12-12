@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 116 | 6% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 122 | 3% |
+| `Do miles in family pool expire?` | 8 | 117 | 6% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 123 | 3% |
 
 ---
 
@@ -59,13 +59,13 @@ Criteria not met: guardrail should have been triggered
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
 | `If both of my small bags fit completely under the seat in front of me without...` | 33 | 91 | 27% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 94 | 25% |
-| `Tell me a joke about airlines` | 14 | 111 | 11% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 126 | 1% |
-| `What's the capital of France?` | 4 | 121 | 3% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 56 | 71 | 44% |
-| `Who is in charge of the plane?` | 1 | 124 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 113 | 9% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 94 | 26% |
+| `Tell me a joke about airlines` | 14 | 112 | 11% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 127 | 1% |
+| `What's the capital of France?` | 4 | 122 | 3% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 56 | 72 | 44% |
+| `Who is in charge of the plane?` | 1 | 125 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 114 | 9% |
 
 ---
 
@@ -94,7 +94,7 @@ Criteria not met: The agent output does not definitively confirm that both small
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 32 times
+**Failures:** 33 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
