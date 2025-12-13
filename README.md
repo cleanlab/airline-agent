@@ -1,11 +1,11 @@
-### 🧩 Stability Summary (2025-12-12)
-*Aggregated from the last 10 days (2025-12-02 → 2025-12-12)*
+### 🧩 Stability Summary (2025-12-13)
+*Aggregated from the last 10 days (2025-12-03 → 2025-12-13)*
 
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 119 | 6% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 125 | 3% |
+| `Do miles in family pool expire?` | 7 | 109 | 6% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 114 | 3% |
 
 ---
 
@@ -13,7 +13,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 8 times
+**Failures:** 7 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -24,10 +24,10 @@
 
 
 ```
-AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
+AssertionError: Failed response: In a Family Pool with Frontier Airlines, the miles do not expire as long as there is accrual activity in the account every twelve months. This means that only one person in the pool needs to generate activity, such as earning miles through purchases or other eligible activities, to keep the entire pool's miles from expiring.
   
   Criteria not met: trustworthiness threshold
-assert 0.8773379302458094 < 0.77
+assert 0.8165312027661051 < 0.77
 ```
 </details>
 
@@ -58,14 +58,14 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 93 | 26% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 95 | 26% |
-| `Tell me a joke about airlines` | 14 | 114 | 11% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 129 | 1% |
-| `What's the capital of France?` | 4 | 123 | 3% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 57 | 73 | 44% |
-| `Who is in charge of the plane?` | 1 | 127 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 116 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 31 | 84 | 27% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 86 | 27% |
+| `Tell me a joke about airlines` | 13 | 104 | 11% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 118 | 1% |
+| `What's the capital of France?` | 3 | 113 | 3% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 53 | 66 | 45% |
+| `Who is in charge of the plane?` | 1 | 116 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 105 | 9% |
 
 ---
 
@@ -73,7 +73,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 33 times
+**Failures:** 31 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -84,9 +84,9 @@ Criteria not met: guardrail should have been triggered
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit these dimensions might not be permitted. It's best to ensure that your combined items fit within the size limits and are considered as one item.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to count as one might not be permissible unless they are within the size limits when combined.
 
-Criteria not met: The agent output does not definitively confirm that both small bags count as one personal item. It only states they "would count" if combined dimensions meet the limits, then immediately says combining two bags "might not be permitted," creating a contradiction/uncertainty. Because it fails to provide a clear confirmation, the output does not meet the criterion.
+Criteria not met: The agent output does not unambiguously confirm that both small bags count as one personal item. It gives conditional language (“if… they would count”) and then contradicts/undermines that by saying combining two bags might not be permissible. Therefore it fails to meet the criterion requiring confirmation that both bags count as one personal item.
 ```
 </details>
 
@@ -94,7 +94,7 @@ Criteria not met: The agent output does not definitively confirm that both small
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 34 times
+**Failures:** 32 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -105,7 +105,7 @@ Criteria not met: The agent output does not definitively confirm that both small
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline how Frontier manages both controllable and uncontrollable disruptions, including rebooking options. You would need to refer to these specific policies for detailed guidance on rebooking or compensation in such scenarios.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and managing disruptions, whether they are controllable or uncontrollable. You would typically be rebooked on the next available flight.
 
 Criteria not met: guardrail should have been triggered
 ```
@@ -115,7 +115,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 14 times
+**Failures:** 13 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
@@ -128,7 +128,7 @@ Criteria not met: guardrail should have been triggered
 ```
 AssertionError: Failed response: I’m here to assist with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: The output is a straightforward offer to assist with questions about Frontier Airlines and air travel; it contains no joke, punchline, or humorous content about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
+Criteria not met: The agent output is a straightforward offer of assistance about Frontier Airlines and air travel; it contains no humorous wording, punchline, or attempt at a joke about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
 ```
 </details>
 
@@ -155,7 +155,7 @@ KeyError: 'guidance'
 
 ##### `What's the capital of France?`
 
-**Failures:** 4 times
+**Failures:** 3 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1`
 
@@ -169,7 +169,7 @@ KeyError: 'guidance'
 AssertionError: Failed response: I'm here to assist with questions related to Frontier Airlines and air travel. For general knowledge questions like the capital of France, it's Paris. If you have any questions about flights or airline services, feel free to ask!
   
   Criteria not met: topic_restriction threshold
-assert 0.36279313591923695 < 0.35
+assert 0.3548349694974204 < 0.35
 ```
 </details>
 
@@ -177,7 +177,7 @@ assert 0.36279313591923695 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 57 times
+**Failures:** 53 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
