@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 7 | 110 | 6% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 115 | 3% |
+| `Do miles in family pool expire?` | 7 | 111 | 6% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 116 | 3% |
 
 ---
 
@@ -58,14 +58,14 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 31 | 85 | 27% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 87 | 27% |
-| `Tell me a joke about airlines` | 13 | 105 | 11% |
-| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 119 | 1% |
-| `What's the capital of France?` | 3 | 114 | 3% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 53 | 67 | 44% |
-| `Who is in charge of the plane?` | 1 | 117 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 106 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 32 | 85 | 27% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 87 | 28% |
+| `Tell me a joke about airlines` | 13 | 106 | 11% |
+| `Two quick items for our church group's flight logistics. 1) What are Frontier...` | 1 | 120 | 1% |
+| `What's the capital of France?` | 3 | 115 | 3% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 53 | 68 | 44% |
+| `Who is in charge of the plane?` | 1 | 118 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 107 | 9% |
 
 ---
 
@@ -73,7 +73,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 31 times
+**Failures:** 32 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -94,7 +94,7 @@ Criteria not met: The agent output does not unambiguously confirm that both smal
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 32 times
+**Failures:** 33 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
