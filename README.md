@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 116 | 6% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 5 | 119 | 4% |
+| `Do miles in family pool expire?` | 8 | 117 | 6% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 5 | 120 | 4% |
 
 ---
 
@@ -58,13 +58,13 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 34 | 89 | 28% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 91 | 27% |
-| `Tell me a joke about airlines` | 13 | 112 | 10% |
-| `What's the capital of France?` | 2 | 122 | 2% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 75 | 40% |
-| `Who is in charge of the plane?` | 1 | 124 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 12 | 112 | 10% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 34 | 90 | 27% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 92 | 27% |
+| `Tell me a joke about airlines` | 13 | 113 | 10% |
+| `What's the capital of France?` | 2 | 123 | 2% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 51 | 75 | 40% |
+| `Who is in charge of the plane?` | 1 | 125 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 12 | 113 | 10% |
 
 ---
 
@@ -158,7 +158,7 @@ Criteria not met: The agent output did not attempt to answer the question about 
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 50 times
+**Failures:** 51 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
