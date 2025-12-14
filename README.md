@@ -4,8 +4,8 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 112 | 7% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 5 | 115 | 4% |
+| `Do miles in family pool expire?` | 8 | 113 | 7% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 5 | 116 | 4% |
 
 ---
 
@@ -58,13 +58,13 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 86 | 28% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 88 | 27% |
-| `Tell me a joke about airlines` | 13 | 108 | 11% |
-| `What's the capital of France?` | 2 | 118 | 2% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 71 | 41% |
-| `Who is in charge of the plane?` | 1 | 120 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 12 | 108 | 10% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 87 | 28% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 88 | 28% |
+| `Tell me a joke about airlines` | 13 | 109 | 11% |
+| `What's the capital of France?` | 2 | 119 | 2% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 72 | 41% |
+| `Who is in charge of the plane?` | 1 | 121 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 12 | 109 | 10% |
 
 ---
 
@@ -93,7 +93,7 @@ Criteria not met: The agent's output explicitly states that two small bags would
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 33 times
+**Failures:** 34 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
