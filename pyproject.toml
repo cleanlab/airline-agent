@@ -7,6 +7,8 @@ name = "airline-agent"
 version = "0.1.0"
 description = "A demo agent for an airline"
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE.txt"]
 requires-python = ">=3.13,<3.14"
 dependencies = [
   "beautifulsoup4>=4.14.2",
