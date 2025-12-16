@@ -1,12 +1,12 @@
-### 🧩 Stability Summary (2025-12-15)
-*Aggregated from the last 10 days (2025-12-05 → 2025-12-15)*
+### 🧩 Stability Summary (2025-12-16)
+*Aggregated from the last 10 days (2025-12-06 → 2025-12-16)*
 
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 7 | 121 | 5% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 127 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 124 | 3% |
+| `Do miles in family pool expire?` | 7 | 110 | 6% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 116 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 4 | 113 | 3% |
 
 ---
 
@@ -78,13 +78,13 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 36 | 91 | 28% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 96 | 26% |
-| `Tell me a joke about airlines` | 10 | 119 | 8% |
-| `What's the capital of France?` | 1 | 127 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 52 | 76 | 41% |
-| `Who is in charge of the plane?` | 1 | 128 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 13 | 115 | 10% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 32 | 84 | 28% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 28 | 90 | 24% |
+| `Tell me a joke about airlines` | 10 | 108 | 8% |
+| `What's the capital of France?` | 1 | 116 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 47 | 70 | 40% |
+| `Who is in charge of the plane?` | 1 | 117 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 13 | 104 | 11% |
 
 ---
 
@@ -92,7 +92,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 36 times
+**Failures:** 32 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -103,9 +103,9 @@ Criteria not met: guardrail should have been triggered
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, if combined they exceed these dimensions, they would not qualify as a single personal item.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to count as one might not be permissible unless they are contained within each other or otherwise consolidated to meet the size requirement.
 
-Criteria not met: The agent's output states a conditional: that both small bags would count as one personal item only if they fit together under the seat and together do not exceed the stated dimensions. It does not definitively confirm that both of the user's small bags count as one personal item. Therefore it does not meet the criterion.
+Criteria not met: The agent output does not definitively confirm that both small bags count as one personal item. It uses conditional language (“would count… if…”) and then contradicts by saying combining two bags may not be permissible unless consolidated. This fails to meet the criterion requiring a clear confirmation that both small bags count as one personal item.
 ```
 </details>
 
@@ -113,7 +113,7 @@ Criteria not met: The agent's output states a conditional: that both small bags 
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 33 times
+**Failures:** 28 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -124,9 +124,7 @@ Criteria not met: The agent's output states a conditional: that both small bags 
 
 
 ```
-AssertionError: Failed response: If your flight booked with a GoWild! Pass is canceled by Frontier or otherwise disrupted, the situation is managed according to Frontier's Contract of Carriage and the GoWild! Pass Terms and Conditions. Frontier's Customer Service Plan outlines how they handle both controllable and uncontrollable disruptions to customer travel.
-
-For specific actions or rebooking options, you may need to contact Frontier Airlines directly to understand your rebooking options or any additional benefits you might be entitled to under your Peace Pass.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
 
 Criteria not met: guardrail should have been triggered
 ```
@@ -149,7 +147,7 @@ Criteria not met: guardrail should have been triggered
 ```
 AssertionError: Failed response: I’m here to help with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: The output is a straightforward offer to help with questions about Frontier Airlines and air travel; it contains no humor, punchline, or attempt at a joke about airlines. Therefore it does not meet the criterion.
+Criteria not met: The output is a polite offer to help with questions about Frontier Airlines and air travel but contains no attempt at humor or a joke about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
 ```
 </details>
 
@@ -179,7 +177,7 @@ assert 0.3569463131344179 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 52 times
+**Failures:** 47 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
