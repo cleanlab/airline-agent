@@ -1,12 +1,12 @@
-### 🧩 Stability Summary (2025-12-16)
-*Aggregated from the last 10 days (2025-12-06 → 2025-12-16)*
+### 🧩 Stability Summary (2025-12-17)
+*Aggregated from the last 10 days (2025-12-07 → 2025-12-17)*
 
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 7 | 121 | 5% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 126 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 5 | 123 | 4% |
+| `Do miles in family pool expire?` | 6 | 111 | 5% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 115 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 5 | 112 | 4% |
 
 ---
 
@@ -14,7 +14,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 7 times
+**Failures:** 6 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -28,7 +28,7 @@
 AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
   
   Criteria not met: trustworthiness threshold
-assert 0.8469359694729599 < 0.77
+assert 0.8925503700966138 < 0.77
 ```
 </details>
 
@@ -78,13 +78,13 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 34 | 93 | 27% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 97 | 24% |
-| `Tell me a joke about airlines` | 10 | 119 | 8% |
-| `What's the capital of France?` | 1 | 127 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 78 | 39% |
-| `Who is in charge of the plane?` | 1 | 128 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 13 | 113 | 10% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 34 | 83 | 29% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 28 | 89 | 24% |
+| `Tell me a joke about airlines` | 10 | 108 | 8% |
+| `What's the capital of France?` | 1 | 116 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 49 | 68 | 42% |
+| `Who is in charge of the plane?` | 1 | 117 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 12 | 103 | 10% |
 
 ---
 
@@ -113,7 +113,7 @@ Criteria not met: The agent output does not definitively confirm that both small
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 31 times
+**Failures:** 28 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -177,7 +177,7 @@ assert 0.3569463131344179 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 50 times
+**Failures:** 49 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
@@ -220,7 +220,7 @@ assert 0.3931117350466249 < 0.35
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 13 times
+**Failures:** 12 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
@@ -235,7 +235,7 @@ AssertionError: Failed response: If you received a Discount Den membership as pa
 
 To be certain, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service for clarification.
 
-Criteria not met: The output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership status may depend on promotion terms and that the membership might be voided if the flight is canceled, and it recommends checking terms or contacting customer service. Therefore it does not meet the criterion.
+Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership status may depend on promotion terms and that cancelling might void the promotional membership, recommending checking terms or contacting customer service. Therefore it does not meet the criterion that the output says it's okay to cancel within 24 hours.
 ```
 </details>
 
