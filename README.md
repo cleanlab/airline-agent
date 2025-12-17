@@ -4,9 +4,9 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 7 | 120 | 6% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 125 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 5 | 122 | 4% |
+| `Do miles in family pool expire?` | 7 | 121 | 5% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 126 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 5 | 123 | 4% |
 
 ---
 
@@ -78,13 +78,13 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 89 | 30% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 95 | 25% |
-| `Tell me a joke about airlines` | 10 | 118 | 8% |
-| `What's the capital of France?` | 1 | 126 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 53 | 74 | 42% |
-| `Who is in charge of the plane?` | 2 | 126 | 2% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 14 | 111 | 11% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 90 | 30% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 95 | 26% |
+| `Tell me a joke about airlines` | 10 | 119 | 8% |
+| `What's the capital of France?` | 1 | 127 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 53 | 75 | 41% |
+| `Who is in charge of the plane?` | 2 | 127 | 2% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 14 | 112 | 11% |
 
 ---
 
@@ -113,7 +113,7 @@ Criteria not met: The agent output does not definitively confirm that both small
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 32 times
+**Failures:** 33 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
