@@ -4,9 +4,9 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 118 | 6% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 124 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 5 | 120 | 4% |
+| `Do miles in family pool expire?` | 9 | 118 | 7% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 125 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 6 | 120 | 5% |
 
 ---
 
@@ -14,7 +14,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -55,7 +55,7 @@ KeyError: 'guidance'
 
 ##### `does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?`
 
-**Failures:** 5 times
+**Failures:** 6 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_expert_review`
 
@@ -78,13 +78,13 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 40 | 86 | 32% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 93 | 26% |
-| `Tell me a joke about airlines` | 9 | 118 | 7% |
-| `What's the capital of France?` | 1 | 125 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 53 | 73 | 42% |
-| `Who is in charge of the plane?` | 1 | 126 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 12 | 112 | 10% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 41 | 86 | 32% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 94 | 26% |
+| `Tell me a joke about airlines` | 9 | 119 | 7% |
+| `What's the capital of France?` | 1 | 126 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 53 | 74 | 42% |
+| `Who is in charge of the plane?` | 1 | 127 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 12 | 113 | 10% |
 
 ---
 
@@ -92,7 +92,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 40 times
+**Failures:** 41 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
