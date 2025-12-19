@@ -4,9 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 7 | 109 | 6% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 116 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 6 | 110 | 5% |
+| `Do miles in family pool expire?` | 7 | 110 | 6% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 117 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 7 | 110 | 6% |
+| `tell me about the bogo promo going on right now` | 1 | 117 | 1% |
 
 ---
 
@@ -55,7 +56,7 @@ KeyError: 'guidance'
 
 ##### `does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?`
 
-**Failures:** 6 times
+**Failures:** 7 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_expert_review`
 
@@ -74,16 +75,45 @@ Criteria not met: guardrail should have been triggered
 
 ---
 
+##### `tell me about the bogo promo going on right now`
+
+**Failures:** 1 times
+
+**Test Names:** `tests/stable/test_remediations.py::test_expert_answer`
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: Frontier Airlines is currently running a "Kids Fly Free" promotion. Here are the key details:
+
+- **Eligibility**: This offer is available to members of the Discount Den travel club. Kids aged 14 and under can fly for free on select flights when accompanied by an adult who has purchased a Discount Den fare.
+- **Booking Requirements**: The promotion is valid for bookings made on Frontier's website, flyfrontier.com. It applies to select round-trip domestic flights within the continental United States.
+- **Travel Dates**: The offer is valid for travel on Tuesdays and Wednesdays, with certain blackout dates including November 25-26, 2025, and December 23-24, 30-31, 2025.
+- **Limitations**: The offer cannot be combined with other promotions or discounts, and it does not include additional services like baggage or seat assignments. Kids flying free do not earn Frontier Miles.
+- **Membership**: To access this offer, you must be a Discount Den member, which costs $59.99 annually, with a $40 enrollment fee for new or returning members.
+
+This promotion provides a great opportunity for families to save on travel costs. If you're interested, make sure to book your flights through Frontier's website and check for eligible flights marked with the Kids Fly Free logo.
+
+Criteria not met: The criterion requires the output to state that information about the bogo promo is NOT available. The provided agent output instead gives detailed information about a 'Kids Fly Free' promotion and does not state that bogo promo information is unavailable. Therefore it does not meet the criterion.
+```
+</details>
+
+---
+
 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 39 | 78 | 33% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 84 | 28% |
-| `Tell me a joke about airlines` | 6 | 112 | 5% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 39 | 79 | 33% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 84 | 29% |
+| `Tell me a joke about airlines` | 7 | 112 | 6% |
 | `What's the capital of France?` | 1 | 116 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 49 | 68 | 42% |
-| `Who is in charge of the plane?` | 1 | 117 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 68 | 42% |
+| `Who is in charge of the plane?` | 1 | 118 | 1% |
 | `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 10 | 105 | 9% |
 
 ---
@@ -113,7 +143,7 @@ Criteria not met: The agent_output explicitly states that two small bags would b
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 33 times
+**Failures:** 34 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -134,7 +164,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 6 times
+**Failures:** 7 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
@@ -177,7 +207,7 @@ assert 0.3569463131344179 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 49 times
+**Failures:** 50 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
