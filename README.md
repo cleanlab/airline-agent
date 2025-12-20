@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 6 | 113 | 5% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 119 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 108 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 119 | 1% |
+| `Do miles in family pool expire?` | 6 | 114 | 5% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 120 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 109 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 120 | 1% |
 
 ---
 
@@ -108,13 +108,13 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 41 | 79 | 34% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 90 | 25% |
-| `Tell me a joke about airlines` | 7 | 114 | 6% |
-| `What's the capital of France?` | 1 | 118 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 70 | 42% |
-| `Who is in charge of the plane?` | 1 | 120 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 106 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 42 | 79 | 35% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 91 | 25% |
+| `Tell me a joke about airlines` | 7 | 115 | 6% |
+| `What's the capital of France?` | 1 | 119 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 71 | 41% |
+| `Who is in charge of the plane?` | 1 | 121 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 107 | 9% |
 
 ---
 
@@ -122,7 +122,7 @@ Criteria not met: The criterion requires the output to state that information ab
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 41 times
+**Failures:** 42 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
