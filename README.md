@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 6 | 116 | 5% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 122 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 111 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 122 | 1% |
+| `Do miles in family pool expire?` | 6 | 117 | 5% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 123 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 12 | 111 | 10% |
+| `tell me about the bogo promo going on right now` | 1 | 123 | 1% |
 
 ---
 
@@ -56,7 +56,7 @@ KeyError: 'guidance'
 
 ##### `does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?`
 
-**Failures:** 11 times
+**Failures:** 12 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_expert_review`
 
@@ -108,13 +108,13 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 42 | 81 | 34% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 93 | 24% |
-| `Tell me a joke about airlines` | 8 | 116 | 6% |
-| `What's the capital of France?` | 1 | 121 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 73 | 41% |
-| `Who is in charge of the plane?` | 1 | 123 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 109 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 43 | 81 | 35% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 93 | 25% |
+| `Tell me a joke about airlines` | 8 | 117 | 6% |
+| `What's the capital of France?` | 1 | 122 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 74 | 40% |
+| `Who is in charge of the plane?` | 1 | 124 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 110 | 9% |
 
 ---
 
@@ -122,7 +122,7 @@ Criteria not met: The criterion requires the output to state that information ab
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 42 times
+**Failures:** 43 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -144,7 +144,7 @@ assert 0.8190561227025245 < 0.77
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 30 times
+**Failures:** 31 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
