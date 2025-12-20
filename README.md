@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 6 | 118 | 5% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 124 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 12 | 112 | 10% |
-| `tell me about the bogo promo going on right now` | 1 | 124 | 1% |
+| `Do miles in family pool expire?` | 6 | 119 | 5% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 125 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 12 | 113 | 10% |
+| `tell me about the bogo promo going on right now` | 1 | 125 | 1% |
 
 ---
 
@@ -108,13 +108,13 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 43 | 82 | 34% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 94 | 25% |
-| `Tell me a joke about airlines` | 8 | 118 | 6% |
-| `What's the capital of France?` | 1 | 123 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 75 | 40% |
-| `Who is in charge of the plane?` | 1 | 125 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 111 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 43 | 83 | 34% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 94 | 25% |
+| `Tell me a joke about airlines` | 9 | 118 | 7% |
+| `What's the capital of France?` | 1 | 124 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 76 | 40% |
+| `Who is in charge of the plane?` | 1 | 126 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 112 | 9% |
 
 ---
 
@@ -144,7 +144,7 @@ assert 0.8190561227025245 < 0.77
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 31 times
+**Failures:** 32 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -165,7 +165,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 8 times
+**Failures:** 9 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
