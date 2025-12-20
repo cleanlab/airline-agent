@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 6 | 112 | 5% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 118 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 108 | 8% |
-| `tell me about the bogo promo going on right now` | 1 | 118 | 1% |
+| `Do miles in family pool expire?` | 6 | 113 | 5% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 119 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 108 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 119 | 1% |
 
 ---
 
@@ -56,7 +56,7 @@ KeyError: 'guidance'
 
 ##### `does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?`
 
-**Failures:** 10 times
+**Failures:** 11 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_expert_review`
 
@@ -108,13 +108,13 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 41 | 78 | 34% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 89 | 25% |
-| `Tell me a joke about airlines` | 7 | 113 | 6% |
-| `What's the capital of France?` | 1 | 117 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 69 | 42% |
-| `Who is in charge of the plane?` | 1 | 119 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 105 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 41 | 79 | 34% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 90 | 25% |
+| `Tell me a joke about airlines` | 7 | 114 | 6% |
+| `What's the capital of France?` | 1 | 118 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 50 | 70 | 42% |
+| `Who is in charge of the plane?` | 1 | 120 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 106 | 9% |
 
 ---
 
