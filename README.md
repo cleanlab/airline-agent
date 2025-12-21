@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 6 | 115 | 5% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 121 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 110 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 121 | 1% |
+| `Do miles in family pool expire?` | 6 | 116 | 5% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 122 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 111 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 122 | 1% |
 
 ---
 
@@ -108,13 +108,13 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 39 | 83 | 32% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 89 | 27% |
-| `Tell me a joke about airlines` | 9 | 114 | 7% |
-| `What's the capital of France?` | 1 | 120 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 49 | 73 | 40% |
-| `Who is in charge of the plane?` | 1 | 122 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 12 | 107 | 10% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 39 | 84 | 32% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 90 | 27% |
+| `Tell me a joke about airlines` | 9 | 115 | 7% |
+| `What's the capital of France?` | 1 | 121 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 49 | 74 | 40% |
+| `Who is in charge of the plane?` | 1 | 123 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 12 | 108 | 10% |
 
 ---
 
