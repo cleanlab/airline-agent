@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 4 | 119 | 3% |
+| `Do miles in family pool expire?` | 4 | 120 | 3% |
 | `List 3 downsides of flying Frontier Airlines` | 1 | 122 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 111 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 122 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 112 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 123 | 1% |
 
 ---
 
@@ -108,11 +108,11 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 86 | 30% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 86 | 31% |
 | `My flight got canceled how to use my Peace Pass benefit?` | 32 | 91 | 26% |
-| `Tell me a joke about airlines` | 9 | 115 | 7% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 44 | 79 | 36% |
-| `Who is in charge of the plane?` | 1 | 123 | 1% |
+| `Tell me a joke about airlines` | 10 | 115 | 8% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 45 | 79 | 36% |
+| `Who is in charge of the plane?` | 1 | 124 | 1% |
 | `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 109 | 9% |
 
 ---
@@ -121,7 +121,7 @@ Criteria not met: The criterion requires the output to state that information ab
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 37 times
+**Failures:** 38 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -163,7 +163,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 9 times
+**Failures:** 10 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
@@ -184,7 +184,7 @@ Criteria not met: The output is a straightforward offer of assistance about Fron
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 44 times
+**Failures:** 45 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
