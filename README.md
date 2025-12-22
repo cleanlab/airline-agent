@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 4 | 121 | 3% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 123 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 113 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 124 | 1% |
+| `Do miles in family pool expire?` | 5 | 121 | 4% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 124 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 114 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 125 | 1% |
 
 ---
 
@@ -15,7 +15,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 4 times
+**Failures:** 5 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -108,12 +108,12 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 87 | 30% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 92 | 26% |
-| `Tell me a joke about airlines` | 10 | 116 | 8% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 45 | 80 | 36% |
-| `Who is in charge of the plane?` | 1 | 125 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 110 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 88 | 30% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 93 | 26% |
+| `Tell me a joke about airlines` | 10 | 117 | 8% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 45 | 81 | 36% |
+| `Who is in charge of the plane?` | 1 | 126 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 111 | 9% |
 
 ---
 
