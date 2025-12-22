@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 5 | 122 | 4% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 125 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 115 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 126 | 1% |
+| `Do miles in family pool expire?` | 5 | 123 | 4% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 126 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 116 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 127 | 1% |
 
 ---
 
@@ -108,12 +108,12 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 89 | 30% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 94 | 25% |
-| `Tell me a joke about airlines` | 10 | 118 | 8% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 46 | 81 | 36% |
-| `Who is in charge of the plane?` | 1 | 127 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 112 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 90 | 30% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 95 | 25% |
+| `Tell me a joke about airlines` | 10 | 119 | 8% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 47 | 81 | 37% |
+| `Who is in charge of the plane?` | 1 | 128 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 113 | 9% |
 
 ---
 
@@ -184,7 +184,7 @@ Criteria not met: The output is a straightforward offer of assistance about Fron
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 46 times
+**Failures:** 47 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
