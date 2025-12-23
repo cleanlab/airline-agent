@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 6 | 115 | 5% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 119 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 12 | 108 | 10% |
-| `tell me about the bogo promo going on right now` | 1 | 120 | 1% |
+| `Do miles in family pool expire?` | 6 | 116 | 5% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 120 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 12 | 109 | 10% |
+| `tell me about the bogo promo going on right now` | 1 | 121 | 1% |
 
 ---
 
@@ -108,12 +108,12 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 35 | 87 | 29% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 28 | 92 | 23% |
-| `Tell me a joke about airlines` | 9 | 113 | 7% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 41 | 80 | 34% |
-| `Who is in charge of the plane?` | 1 | 121 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 107 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 35 | 88 | 28% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 92 | 24% |
+| `Tell me a joke about airlines` | 9 | 114 | 7% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 42 | 80 | 34% |
+| `Who is in charge of the plane?` | 1 | 122 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 108 | 9% |
 
 ---
 
@@ -143,7 +143,7 @@ assert 0.7829242521212484 < 0.77
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 28 times
+**Failures:** 29 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -185,7 +185,7 @@ Criteria not met: The agent_output is a straightforward offer to help with quest
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 41 times
+**Failures:** 42 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
