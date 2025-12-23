@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 6 | 117 | 5% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 121 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 12 | 110 | 10% |
-| `tell me about the bogo promo going on right now` | 1 | 122 | 1% |
+| `Do miles in family pool expire?` | 6 | 118 | 5% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 122 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 12 | 111 | 10% |
+| `tell me about the bogo promo going on right now` | 1 | 123 | 1% |
 
 ---
 
@@ -108,12 +108,12 @@ Criteria not met: The criterion requires the output to state that information ab
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 36 | 88 | 29% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 93 | 24% |
-| `Tell me a joke about airlines` | 10 | 114 | 8% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 42 | 81 | 34% |
-| `Who is in charge of the plane?` | 1 | 123 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 109 | 9% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 36 | 89 | 29% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 94 | 24% |
+| `Tell me a joke about airlines` | 10 | 115 | 8% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 42 | 82 | 34% |
+| `Who is in charge of the plane?` | 1 | 124 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 11 | 110 | 9% |
 
 ---
 
