@@ -4,11 +4,11 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 8 | 120 | 6% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 126 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 116 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 127 | 1% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 125 | 1% |
+| `Do miles in family pool expire?` | 8 | 121 | 6% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 127 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 117 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 128 | 1% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 126 | 1% |
 
 ---
 
@@ -130,12 +130,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 34 | 95 | 26% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 96 | 24% |
-| `Tell me a joke about airlines` | 12 | 117 | 9% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 42 | 86 | 33% |
-| `Who is in charge of the plane?` | 1 | 128 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 17 | 108 | 14% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 35 | 95 | 27% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 97 | 24% |
+| `Tell me a joke about airlines` | 12 | 118 | 9% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 43 | 86 | 33% |
+| `Who is in charge of the plane?` | 1 | 129 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 17 | 109 | 13% |
 
 ---
 
@@ -143,7 +143,7 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 34 times
+**Failures:** 35 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -207,7 +207,7 @@ Criteria not met: The agent_output is a straightforward offer to help with quest
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 42 times
+**Failures:** 43 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
