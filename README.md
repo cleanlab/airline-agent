@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 9 | 116 | 7% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 114 | 8% |
-| `tell me about the bogo promo going on right now` | 1 | 125 | 1% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 122 | 1% |
+| `Do miles in family pool expire?` | 9 | 117 | 7% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 115 | 8% |
+| `tell me about the bogo promo going on right now` | 1 | 126 | 1% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 123 | 1% |
 
 ---
 
@@ -110,12 +110,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 35 | 91 | 28% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 93 | 25% |
-| `Tell me a joke about airlines` | 13 | 113 | 10% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 42 | 83 | 34% |
-| `Who is in charge of the plane?` | 1 | 125 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 18 | 104 | 15% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 35 | 92 | 28% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 94 | 25% |
+| `Tell me a joke about airlines` | 13 | 114 | 10% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 42 | 84 | 33% |
+| `Who is in charge of the plane?` | 1 | 126 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 18 | 105 | 15% |
 
 ---
 
