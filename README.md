@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 9 | 109 | 8% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 107 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 118 | 1% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 115 | 1% |
+| `Do miles in family pool expire?` | 9 | 110 | 8% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 108 | 8% |
+| `tell me about the bogo promo going on right now` | 1 | 119 | 1% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 116 | 1% |
 
 ---
 
@@ -110,12 +110,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 32 | 87 | 27% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 88 | 25% |
-| `Tell me a joke about airlines` | 12 | 107 | 10% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 39 | 79 | 33% |
-| `Who is in charge of the plane?` | 1 | 118 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 16 | 99 | 14% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 32 | 88 | 27% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 88 | 25% |
+| `Tell me a joke about airlines` | 12 | 108 | 10% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 39 | 80 | 33% |
+| `Who is in charge of the plane?` | 1 | 119 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 16 | 100 | 14% |
 
 ---
 
@@ -145,7 +145,7 @@ assert 0.8922122683121138 < 0.77
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 29 times
+**Failures:** 30 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
