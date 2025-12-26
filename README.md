@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 9 | 112 | 7% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 109 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 121 | 1% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 119 | 1% |
+| `Do miles in family pool expire?` | 10 | 112 | 8% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 110 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 122 | 1% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 120 | 1% |
 
 ---
 
@@ -15,7 +15,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 9 times
+**Failures:** 10 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -110,12 +110,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 32 | 90 | 26% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 91 | 24% |
-| `Tell me a joke about airlines` | 12 | 110 | 10% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 36 | 86 | 30% |
-| `Who is in charge of the plane?` | 1 | 121 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 18 | 100 | 15% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 90 | 27% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 91 | 25% |
+| `Tell me a joke about airlines` | 12 | 111 | 10% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 36 | 87 | 29% |
+| `Who is in charge of the plane?` | 1 | 122 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 18 | 101 | 15% |
 
 ---
 
@@ -123,7 +123,7 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 32 times
+**Failures:** 33 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -145,7 +145,7 @@ assert 0.8916197392308775 < 0.77
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 29 times
+**Failures:** 30 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
