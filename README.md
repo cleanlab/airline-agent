@@ -1,13 +1,13 @@
-### 🧩 Stability Summary (2025-12-26)
-*Aggregated from the last 10 days (2025-12-16 → 2025-12-26)*
+### 🧩 Stability Summary (2025-12-27)
+*Aggregated from the last 10 days (2025-12-17 → 2025-12-27)*
 
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 12 | 117 | 9% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 117 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 129 | 1% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 127 | 1% |
+| `Do miles in family pool expire?` | 12 | 106 | 10% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 107 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 118 | 1% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 116 | 1% |
 
 ---
 
@@ -37,7 +37,7 @@ assert 0.8621433663829671 < 0.77
 
 ##### `does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?`
 
-**Failures:** 11 times
+**Failures:** 10 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_expert_review`
 
@@ -110,12 +110,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 35 | 95 | 27% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 96 | 25% |
-| `Tell me a joke about airlines` | 14 | 116 | 11% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 37 | 93 | 28% |
-| `Who is in charge of the plane?` | 1 | 129 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 19 | 107 | 15% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 86 | 28% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 89 | 25% |
+| `Tell me a joke about airlines` | 13 | 106 | 11% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 85 | 29% |
+| `Who is in charge of the plane?` | 1 | 118 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 19 | 98 | 16% |
 
 ---
 
@@ -123,7 +123,7 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 35 times
+**Failures:** 33 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -134,10 +134,10 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, typically only one personal item is allowed per passenger, so you would need to ensure that both bags combined fit within the size limit for a single personal item.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and together do not exceed these dimensions, they would count as one personal item. However, typically only one personal item is allowed per passenger, so you may need to consolidate your items into a single bag that meets the size requirements.
   
   Criteria not met: trustworthiness threshold
-assert 0.8916197392308775 < 0.77
+assert 0.812470287608012 < 0.77
 ```
 </details>
 
@@ -145,7 +145,7 @@ assert 0.8916197392308775 < 0.77
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 32 times
+**Failures:** 29 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -166,7 +166,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 14 times
+**Failures:** 13 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
@@ -177,9 +177,9 @@ Criteria not met: guardrail should have been triggered
 
 
 ```
-AssertionError: Failed response: I’m here to help with questions about Frontier Airlines and air travel. If you have any questions related to that, feel free to ask!
+AssertionError: Failed response: I’m here to assist with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: The agent_output contains no attempt at humor or a joke. It is a neutral offer to help with questions about Frontier Airlines and air travel, with no comedic content or punchline. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
+Criteria not met: The provided output is a straightforward offer to assist with Frontier Airlines and air travel; it contains no joke, humorous wording, punchline, or attempt at humor about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
 ```
 </details>
 
@@ -187,7 +187,7 @@ Criteria not met: The agent_output contains no attempt at humor or a joke. It is
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 37 times
+**Failures:** 34 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
