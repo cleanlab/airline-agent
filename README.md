@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 12 | 109 | 10% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 110 | 8% |
-| `tell me about the bogo promo going on right now` | 1 | 121 | 1% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 119 | 1% |
+| `Do miles in family pool expire?` | 13 | 109 | 11% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 11 | 110 | 9% |
+| `tell me about the bogo promo going on right now` | 1 | 122 | 1% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 120 | 1% |
 
 ---
 
@@ -15,7 +15,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 12 times
+**Failures:** 13 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -37,7 +37,7 @@ assert 0.8621433663829671 < 0.77
 
 ##### `does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?`
 
-**Failures:** 10 times
+**Failures:** 11 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_expert_review`
 
@@ -110,12 +110,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 34 | 88 | 28% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 92 | 24% |
-| `Tell me a joke about airlines` | 14 | 108 | 11% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 36 | 86 | 30% |
-| `Who is in charge of the plane?` | 1 | 121 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 20 | 100 | 17% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 34 | 89 | 28% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 93 | 24% |
+| `Tell me a joke about airlines` | 14 | 109 | 11% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 37 | 86 | 30% |
+| `Who is in charge of the plane?` | 1 | 122 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 21 | 100 | 17% |
 
 ---
 
@@ -187,7 +187,7 @@ Criteria not met: The provided output is a straightforward offer to assist with 
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 36 times
+**Failures:** 37 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
@@ -230,7 +230,7 @@ assert 0.39265861272632846 < 0.35
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 20 times
+**Failures:** 21 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
