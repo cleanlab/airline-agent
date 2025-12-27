@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 12 | 106 | 10% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 107 | 9% |
-| `tell me about the bogo promo going on right now` | 1 | 118 | 1% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 116 | 1% |
+| `Do miles in family pool expire?` | 12 | 107 | 10% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 108 | 8% |
+| `tell me about the bogo promo going on right now` | 1 | 119 | 1% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 117 | 1% |
 
 ---
 
@@ -110,12 +110,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 86 | 28% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 89 | 25% |
-| `Tell me a joke about airlines` | 13 | 106 | 11% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 85 | 29% |
-| `Who is in charge of the plane?` | 1 | 118 | 1% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 19 | 98 | 16% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 87 | 28% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 90 | 24% |
+| `Tell me a joke about airlines` | 13 | 107 | 11% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 35 | 85 | 29% |
+| `Who is in charge of the plane?` | 1 | 119 | 1% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 20 | 98 | 17% |
 
 ---
 
@@ -187,7 +187,7 @@ Criteria not met: The provided output is a straightforward offer to assist with 
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 34 times
+**Failures:** 35 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
@@ -230,7 +230,7 @@ assert 0.39265861272632846 < 0.35
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 19 times
+**Failures:** 20 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
