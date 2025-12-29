@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 14 | 113 | 11% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 117 | 8% |
-| `tell me about the bogo promo going on right now` | 1 | 126 | 1% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 124 | 2% |
+| `Do miles in family pool expire?` | 15 | 113 | 12% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 118 | 8% |
+| `tell me about the bogo promo going on right now` | 1 | 127 | 1% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 125 | 2% |
 
 ---
 
@@ -15,7 +15,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 14 times
+**Failures:** 15 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -110,11 +110,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 90 | 29% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 95 | 25% |
-| `Tell me a joke about airlines` | 18 | 110 | 14% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 39 | 89 | 30% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 20 | 106 | 16% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 91 | 29% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 95 | 25% |
+| `Tell me a joke about airlines` | 18 | 111 | 14% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 39 | 90 | 30% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 20 | 107 | 16% |
 
 ---
 
@@ -143,7 +143,7 @@ Criteria not met: The agent output does not definitively confirm that both small
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 31 times
+**Failures:** 32 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
