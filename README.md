@@ -4,9 +4,9 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 16 | 113 | 12% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 120 | 6% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 126 | 2% |
+| `Do miles in family pool expire?` | 16 | 114 | 12% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 121 | 6% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 127 | 2% |
 
 ---
 
@@ -80,11 +80,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 90 | 30% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 95 | 25% |
-| `Tell me a joke about airlines` | 20 | 109 | 16% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 37 | 92 | 29% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 21 | 107 | 16% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 91 | 29% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 96 | 25% |
+| `Tell me a joke about airlines` | 20 | 110 | 15% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 37 | 93 | 28% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 21 | 108 | 16% |
 
 ---
 
