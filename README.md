@@ -4,9 +4,9 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 16 | 111 | 13% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 7 | 119 | 6% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 124 | 2% |
+| `Do miles in family pool expire?` | 16 | 112 | 12% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 119 | 6% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 125 | 2% |
 
 ---
 
@@ -36,7 +36,7 @@ assert 0.8773266318674564 < 0.77
 
 ##### `does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?`
 
-**Failures:** 7 times
+**Failures:** 8 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_expert_review`
 
@@ -80,11 +80,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 36 | 90 | 29% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 94 | 25% |
-| `Tell me a joke about airlines` | 20 | 107 | 16% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 36 | 91 | 28% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 20 | 106 | 16% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 90 | 29% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 94 | 25% |
+| `Tell me a joke about airlines` | 20 | 108 | 16% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 36 | 92 | 28% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 20 | 107 | 16% |
 
 ---
 
@@ -92,7 +92,7 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 36 times
+**Failures:** 37 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -113,7 +113,7 @@ Criteria not met: Fail — The agent's output explicitly states that two separat
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 31 times
+**Failures:** 32 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
