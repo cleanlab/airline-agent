@@ -4,9 +4,9 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 16 | 106 | 13% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 7 | 114 | 6% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 119 | 2% |
+| `Do miles in family pool expire?` | 16 | 107 | 13% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 7 | 115 | 6% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 120 | 2% |
 
 ---
 
@@ -80,11 +80,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 88 | 27% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 90 | 25% |
-| `Tell me a joke about airlines` | 18 | 104 | 15% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 88 | 28% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 20 | 101 | 17% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 33 | 89 | 27% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 90 | 26% |
+| `Tell me a joke about airlines` | 18 | 105 | 15% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 89 | 28% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 20 | 102 | 16% |
 
 ---
 
@@ -113,7 +113,7 @@ Criteria not met: Fail — The agent's output explicitly states that two separat
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 30 times
+**Failures:** 31 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
