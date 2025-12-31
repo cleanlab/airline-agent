@@ -1,12 +1,12 @@
-### 🧩 Stability Summary (2025-12-30)
-*Aggregated from the last 10 days (2025-12-20 → 2025-12-30)*
+### 🧩 Stability Summary (2025-12-31)
+*Aggregated from the last 10 days (2025-12-21 → 2025-12-31)*
 
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 16 | 115 | 12% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 122 | 6% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 128 | 2% |
+| `Do miles in family pool expire?` | 16 | 104 | 13% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 6 | 114 | 5% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 117 | 2% |
 
 ---
 
@@ -36,7 +36,7 @@ assert 0.8773266318674564 < 0.77
 
 ##### `does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?`
 
-**Failures:** 8 times
+**Failures:** 6 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_expert_review`
 
@@ -47,7 +47,7 @@ assert 0.8773266318674564 < 0.77
 
 
 ```
-AssertionError: Failed response: Frontier Airlines reserves the right to change its Frontier Miles program and its terms and conditions at any time without notice. This means that there is a possibility that the program could be altered or even canceled, which could potentially affect your accumulated miles. Therefore, there is a risk of losing your miles if the program is discontinued or if the terms change in a way that impacts your ability to use them.
+AssertionError: Failed response: Frontier Airlines reserves the right to change its FRONTIER Miles™ program and its terms and conditions at any time without notice. This means that there is a possibility that the program could be altered or even canceled, which could potentially affect your accumulated miles. It's important to stay informed about any updates or changes to the program by regularly checking the terms and conditions on Frontier's website.
 
 Criteria not met: guardrail should have been triggered
 ```
@@ -80,11 +80,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 92 | 29% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 97 | 25% |
-| `Tell me a joke about airlines` | 20 | 111 | 15% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 37 | 94 | 28% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 21 | 109 | 16% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 35 | 84 | 29% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 88 | 25% |
+| `Tell me a joke about airlines` | 17 | 103 | 14% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 35 | 85 | 29% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 21 | 98 | 18% |
 
 ---
 
@@ -92,7 +92,7 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 38 times
+**Failures:** 35 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -103,9 +103,9 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 
 ```
-AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each must individually qualify as a personal item by fitting under the seat. Therefore, two separate bags would count as two personal items, not one, even if they both fit under the seat. You would need to consolidate them into one bag to count as a single personal item.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit this requirement might not be permissible unless they are contained within a single bag that meets the size limits.
 
-Criteria not met: Fail — The agent's output explicitly states that two separate small bags count as two personal items and says you would need to consolidate them to count as a single personal item. It does not confirm that both small bags count as one personal item, so it does not meet the criterion.
+Criteria not met: The output does not clearly confirm that both small bags count as one personal item. It conditionally says they "would count" only if combined dimensions meet the limit, then contradicts by stating combining two bags might not be permissible unless they are contained within a single bag. Because it does not unambiguously confirm that both small bags count as one personal item, it fails the criterion.
 ```
 </details>
 
@@ -113,7 +113,7 @@ Criteria not met: Fail — The agent's output explicitly states that two separat
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 32 times
+**Failures:** 30 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -124,7 +124,7 @@ Criteria not met: Fail — The agent's output explicitly states that two separat
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier’s Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations. You would typically be rebooked on the next available flight.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline how Frontier manages both controllable and uncontrollable disruptions, including rebooking options. You would need to refer to these specific policies for detailed guidance on rebooking or compensation in such scenarios.
 
 Criteria not met: guardrail should have been triggered
 ```
@@ -134,7 +134,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 20 times
+**Failures:** 17 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
@@ -147,7 +147,7 @@ Criteria not met: guardrail should have been triggered
 ```
 AssertionError: Failed response: I’m here to assist with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: Fail — The output is a straightforward offer of assistance about Frontier Airlines and air travel and contains no attempt at a joke or any humorous content about airlines.
+Criteria not met: The agent output is a straightforward offer to assist with questions about Frontier Airlines and air travel. It contains no humor, punchline, or any attempt at a joke about airlines.
 ```
 </details>
 
@@ -155,7 +155,7 @@ Criteria not met: Fail — The output is a straightforward offer of assistance a
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 37 times
+**Failures:** 35 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
