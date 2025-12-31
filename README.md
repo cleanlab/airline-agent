@@ -4,9 +4,9 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 16 | 106 | 13% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 6 | 116 | 5% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 119 | 2% |
+| `Do miles in family pool expire?` | 16 | 107 | 13% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 6 | 117 | 5% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 120 | 2% |
 
 ---
 
@@ -80,11 +80,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 35 | 86 | 29% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 90 | 25% |
-| `Tell me a joke about airlines` | 18 | 104 | 15% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 35 | 87 | 29% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 22 | 99 | 18% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 36 | 86 | 30% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 91 | 25% |
+| `Tell me a joke about airlines` | 18 | 105 | 15% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 35 | 88 | 28% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 22 | 100 | 18% |
 
 ---
 
@@ -92,7 +92,7 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 35 times
+**Failures:** 36 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
