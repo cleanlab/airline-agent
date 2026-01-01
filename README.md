@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 19 | 105 | 15% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 122 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 116 | 6% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 121 | 2% |
+| `Do miles in family pool expire?` | 19 | 106 | 15% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 123 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 117 | 6% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 122 | 2% |
 
 ---
 
@@ -100,11 +100,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 40 | 83 | 33% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 91 | 25% |
-| `Tell me a joke about airlines` | 21 | 103 | 17% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 35 | 89 | 28% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 23 | 100 | 19% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 40 | 84 | 32% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 92 | 25% |
+| `Tell me a joke about airlines` | 22 | 103 | 18% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 36 | 89 | 29% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 23 | 101 | 19% |
 
 ---
 
@@ -154,7 +154,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 21 times
+**Failures:** 22 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
@@ -175,7 +175,7 @@ Criteria not met: The agent output offers help regarding Frontier Airlines and a
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 35 times
+**Failures:** 36 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
