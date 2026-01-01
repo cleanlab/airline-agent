@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 18 | 102 | 15% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 118 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 6 | 114 | 5% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 117 | 2% |
+| `Do miles in family pool expire?` | 18 | 103 | 15% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 119 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 7 | 114 | 6% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 118 | 2% |
 
 ---
 
@@ -56,7 +56,7 @@ KeyError: 'guidance'
 
 ##### `does frontier reserve the right to cancel the miles program at any time. if so, do i risk losing all my miles?`
 
-**Failures:** 6 times
+**Failures:** 7 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_expert_review`
 
@@ -100,11 +100,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 81 | 32% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 89 | 25% |
-| `Tell me a joke about airlines` | 21 | 99 | 18% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 86 | 28% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 22 | 97 | 18% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 82 | 32% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 90 | 24% |
+| `Tell me a joke about airlines` | 21 | 100 | 17% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 35 | 86 | 29% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 23 | 97 | 19% |
 
 ---
 
@@ -175,7 +175,7 @@ Criteria not met: The agent output offers help regarding Frontier Airlines and a
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 34 times
+**Failures:** 35 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
@@ -196,7 +196,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 22 times
+**Failures:** 23 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
