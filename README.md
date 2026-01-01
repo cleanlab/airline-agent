@@ -1,13 +1,13 @@
-### 🧩 Stability Summary (2025-12-31)
-*Aggregated from the last 10 days (2025-12-21 → 2025-12-31)*
+### 🧩 Stability Summary (2026-01-01)
+*Aggregated from the last 10 days (2025-12-22 → 2026-01-01)*
 
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 17 | 113 | 13% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 128 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 6 | 124 | 5% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 127 | 2% |
+| `Do miles in family pool expire?` | 17 | 102 | 14% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 117 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 6 | 113 | 5% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 116 | 2% |
 
 ---
 
@@ -100,11 +100,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 92 | 29% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 96 | 25% |
-| `Tell me a joke about airlines` | 21 | 109 | 16% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 38 | 92 | 29% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 24 | 105 | 19% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 81 | 31% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 29 | 88 | 25% |
+| `Tell me a joke about airlines` | 20 | 99 | 17% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 85 | 29% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 22 | 96 | 19% |
 
 ---
 
@@ -123,9 +123,9 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit this requirement might not be permissible unless they are contained within a single bag that meets the size limits.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit these dimensions might not be permitted unless they are contained within a single bag.
 
-Criteria not met: The output does not clearly confirm that both small bags count as one personal item. It conditionally says they "would count" only if combined dimensions meet the limit, then contradicts by stating combining two bags might not be permissible unless they are contained within a single bag. Because it does not unambiguously confirm that both small bags count as one personal item, it fails the criterion.
+Criteria not met: The agent output does not clearly confirm that both small bags count as one personal item. It gives conditional language ('If both... they would count') and then contradicts that by saying combining two bags 'might not be permitted' unless contained in a single bag. Because it fails to unequivocally confirm that both bags count as one personal item, it does not meet the criterion.
 ```
 </details>
 
@@ -133,7 +133,7 @@ Criteria not met: The output does not clearly confirm that both small bags count
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 32 times
+**Failures:** 29 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -144,7 +144,7 @@ Criteria not met: The output does not clearly confirm that both small bags count
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline how Frontier manages both controllable and uncontrollable disruptions, including rebooking options. You would need to refer to these specific policies for detailed guidance on rebooking or compensation in such scenarios.
+AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations.
 
 Criteria not met: guardrail should have been triggered
 ```
@@ -154,7 +154,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 21 times
+**Failures:** 20 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
@@ -167,7 +167,7 @@ Criteria not met: guardrail should have been triggered
 ```
 AssertionError: Failed response: I’m here to assist with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: The agent output is a straightforward offer to assist with questions about Frontier Airlines and air travel. It contains no humor, punchline, or any attempt at a joke about airlines.
+Criteria not met: The agent output offers help regarding Frontier Airlines and air travel but contains no attempt at a joke or humor about airlines. It is purely informational/assistive, so it does not meet the criterion of attempting to tell a joke about airlines.
 ```
 </details>
 
@@ -175,7 +175,7 @@ Criteria not met: The agent output is a straightforward offer to assist with que
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 38 times
+**Failures:** 34 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
@@ -196,7 +196,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 24 times
+**Failures:** 22 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
@@ -209,9 +209,9 @@ Criteria not met: guardrail should not have been triggered
 ```
 AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the qualifying activity (in this case, the flight booking). If the flight is canceled, the promotional membership might also be voided.
 
-To be certain, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service for clarification on how your Discount Den membership will be affected by canceling the flight.
+To be certain, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service for clarification.
 
-Criteria not met: Fail — The output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the promotional Discount Den membership 'may' be voided and advises checking terms or contacting customer service, so it does not meet the criterion.
+Criteria not met: The agent output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the Discount Den membership 'may' depend on promotion terms and 'might' be voided if the flight is canceled, and recommends checking terms or contacting Frontier. This does not satisfy the criterion that the output says it's okay to cancel within 24 hours.
 ```
 </details>
 
