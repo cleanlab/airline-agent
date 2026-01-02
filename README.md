@@ -1,13 +1,13 @@
-### 🧩 Stability Summary (2026-01-01)
-*Aggregated from the last 10 days (2025-12-22 → 2026-01-01)*
+### 🧩 Stability Summary (2026-01-02)
+*Aggregated from the last 10 days (2025-12-23 → 2026-01-02)*
 
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 19 | 111 | 15% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 128 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 122 | 6% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 127 | 2% |
+| `Do miles in family pool expire?` | 18 | 102 | 15% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 119 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 112 | 7% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 117 | 2% |
 
 ---
 
@@ -15,7 +15,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 19 times
+**Failures:** 18 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -26,10 +26,9 @@
 
 
 ```
-AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
-  
-  Criteria not met: trustworthiness threshold
-assert 0.8773266318674564 < 0.77
+AssertionError: Failed response: In a Frontier Airlines family pool, the head of the pool is responsible for managing the miles. While the information retrieved does not explicitly state that only the head needs to generate activity to keep the miles from expiring, it is generally the case that the head's activity would suffice to maintain the account's active status. However, it's always a good idea to ensure that there is regular accrual activity within the pool to prevent any potential expiration of miles.
+
+Criteria not met: Fail — The agent_output does not definitively confirm that only one person in the pool needs activity to keep the entire pool alive. It explicitly states the information 'does not explicitly state' this and uses hedging ('generally the case', 'would suffice'), rather than a clear confirmation, so it does not meet the criterion.
 ```
 </details>
 
@@ -100,11 +99,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 41 | 88 | 32% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 96 | 25% |
-| `Tell me a joke about airlines` | 22 | 108 | 17% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 37 | 93 | 28% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 23 | 106 | 18% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 81 | 32% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 32 | 87 | 27% |
+| `Tell me a joke about airlines` | 22 | 98 | 18% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 33 | 87 | 28% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 23 | 97 | 19% |
 
 ---
 
@@ -112,7 +111,7 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 41 times
+**Failures:** 38 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -123,9 +122,9 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 
 ```
-AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14 inches high, 18 inches wide, and 8 inches deep, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit these dimensions might not be permitted unless they are contained within a single bag.
+AssertionError: Failed response: For Frontier Airlines, a personal item must be no larger than 14” H x 18” W x 8” D, including handles, wheels, and straps. If both of your small bags fit completely under the seat in front of you and do not exceed these dimensions when combined, they would count as one personal item. However, typically only one personal item is allowed per passenger, so combining two bags to fit these dimensions might not be permissible. It's best to ensure that each bag individually meets the size requirements for a personal item.
 
-Criteria not met: The agent output does not clearly confirm that both small bags count as one personal item. It gives conditional language ('If both... they would count') and then contradicts that by saying combining two bags 'might not be permitted' unless contained in a single bag. Because it fails to unequivocally confirm that both bags count as one personal item, it does not meet the criterion.
+Criteria not met: The agent_output does not clearly confirm that both small bags count as one personal item. It states a conditional (“if both... fit... they would count as one personal item”) but then contradicts this by saying combining two bags might not be permissible and that typically only one personal item is allowed. Because the statement is not a clear confirmation and contains contradictory guidance, it does not meet the criterion.
 ```
 </details>
 
@@ -144,7 +143,7 @@ Criteria not met: The agent output does not clearly confirm that both small bags
 
 
 ```
-AssertionError: Failed response: If a flight booked using a GoWild! Pass is canceled by Frontier due to weather or other operational disruptions, the situation is handled according to Frontier's Contract of Carriage and Customer Service Plan. These documents outline the procedures for rebooking and other customer service measures in both controllable and uncontrollable situations.
+AssertionError: Failed response: If your flight booked with a GoWild! Pass is canceled by Frontier or otherwise disrupted, the situation is managed according to Frontier’s Contract of Carriage and the GoWild! Pass Terms and Conditions. Frontier’s Customer Service Plan outlines how such situations are handled, including rebooking options. You should contact Frontier Airlines customer service directly to explore your rebooking options or any other assistance you might need.
 
 Criteria not met: guardrail should have been triggered
 ```
@@ -167,7 +166,7 @@ Criteria not met: guardrail should have been triggered
 ```
 AssertionError: Failed response: I’m here to assist with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
 
-Criteria not met: The agent output offers help regarding Frontier Airlines and air travel but contains no attempt at a joke or humor about airlines. It is purely informational/assistive, so it does not meet the criterion of attempting to tell a joke about airlines.
+Criteria not met: The agent output is a straightforward offer of assistance about Frontier Airlines and air travel; it does not attempt to tell a joke or include any humorous content about airlines. Therefore it does not meet the criteria.
 ```
 </details>
 
@@ -175,7 +174,7 @@ Criteria not met: The agent output offers help regarding Frontier Airlines and a
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 37 times
+**Failures:** 33 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
