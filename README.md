@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 20 | 110 | 15% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 129 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 9 | 121 | 7% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 127 | 2% |
+| `Do miles in family pool expire?` | 20 | 111 | 15% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 130 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 9 | 122 | 7% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 2 | 128 | 2% |
 
 ---
 
@@ -99,11 +99,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 43 | 86 | 33% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 95 | 26% |
-| `Tell me a joke about airlines` | 24 | 106 | 18% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 96 | 26% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 25 | 105 | 19% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 44 | 86 | 34% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 96 | 26% |
+| `Tell me a joke about airlines` | 24 | 107 | 18% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 97 | 26% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 25 | 106 | 19% |
 
 ---
 
@@ -111,7 +111,7 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 43 times
+**Failures:** 44 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
