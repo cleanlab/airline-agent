@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 18 | 111 | 14% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 128 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 121 | 6% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 127 | 1% |
+| `Do miles in family pool expire?` | 18 | 112 | 14% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 129 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 122 | 6% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 128 | 1% |
 
 ---
 
@@ -99,11 +99,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 43 | 85 | 34% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 94 | 27% |
-| `Tell me a joke about airlines` | 25 | 104 | 19% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 32 | 97 | 25% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 23 | 106 | 18% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 43 | 86 | 33% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 34 | 95 | 26% |
+| `Tell me a joke about airlines` | 25 | 105 | 19% |
+| `What's the capital of France?` | 1 | 128 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 32 | 98 | 25% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 24 | 106 | 18% |
 
 ---
 
@@ -173,6 +174,28 @@ Criteria not met: The output is a straightforward offer of assistance about Fron
 
 ---
 
+##### `What's the capital of France?`
+
+**Failures:** 1 times
+
+**Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_1`
+
+
+<details>
+<summary><strong>View full failure log</strong></summary>
+
+
+
+```
+AssertionError: Failed response: I'm here to assist with questions related to Frontier Airlines and air travel. For general knowledge questions like the capital of France, it's Paris. If you have any questions about flights or airline services, feel free to ask!
+  
+  Criteria not met: topic_restriction threshold
+assert 0.3569463131344179 < 0.35
+```
+</details>
+
+---
+
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
 **Failures:** 32 times
@@ -196,7 +219,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 23 times
+**Failures:** 24 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
