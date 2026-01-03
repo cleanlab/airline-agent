@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 17 | 106 | 14% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 122 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 115 | 7% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 121 | 1% |
+| `Do miles in family pool expire?` | 17 | 107 | 14% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 123 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 116 | 6% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 122 | 1% |
 
 ---
 
@@ -99,11 +99,11 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 43 | 79 | 35% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 91 | 25% |
-| `Tell me a joke about airlines` | 23 | 100 | 19% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 31 | 92 | 25% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 23 | 100 | 19% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 43 | 80 | 35% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 31 | 92 | 25% |
+| `Tell me a joke about airlines` | 23 | 101 | 19% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 31 | 93 | 25% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 23 | 101 | 19% |
 
 ---
 
