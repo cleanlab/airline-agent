@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 21 | 107 | 16% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 127 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 9 | 119 | 7% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 126 | 1% |
+| `Do miles in family pool expire?` | 21 | 108 | 16% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 128 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 9 | 120 | 7% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 127 | 1% |
 
 ---
 
@@ -100,12 +100,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 41 | 86 | 32% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 94 | 26% |
-| `Tell me a joke about airlines` | 24 | 104 | 19% |
-| `What's the capital of France?` | 1 | 126 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 33 | 95 | 26% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 19 | 109 | 15% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 41 | 87 | 32% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 33 | 95 | 26% |
+| `Tell me a joke about airlines` | 24 | 105 | 19% |
+| `What's the capital of France?` | 1 | 127 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 33 | 96 | 26% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 20 | 109 | 16% |
 
 ---
 
@@ -219,7 +219,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 19 times
+**Failures:** 20 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
