@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 23 | 101 | 19% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 123 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 114 | 8% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 122 | 1% |
+| `Do miles in family pool expire?` | 23 | 102 | 18% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 124 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 115 | 8% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 123 | 1% |
 
 ---
 
@@ -100,12 +100,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 85 | 31% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 93 | 24% |
-| `Tell me a joke about airlines` | 23 | 101 | 19% |
-| `What's the capital of France?` | 1 | 122 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 31 | 93 | 25% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 19 | 105 | 15% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 86 | 31% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 94 | 24% |
+| `Tell me a joke about airlines` | 23 | 102 | 18% |
+| `What's the capital of France?` | 1 | 123 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 32 | 93 | 26% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 19 | 106 | 15% |
 
 ---
 
@@ -198,7 +198,7 @@ assert 0.3569463131344179 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 31 times
+**Failures:** 32 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
