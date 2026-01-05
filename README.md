@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 23 | 107 | 18% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 129 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 120 | 8% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 128 | 1% |
+| `Do miles in family pool expire?` | 23 | 108 | 18% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 130 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 10 | 121 | 8% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 129 | 1% |
 
 ---
 
@@ -100,12 +100,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 40 | 89 | 31% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 99 | 23% |
-| `Tell me a joke about airlines` | 23 | 107 | 18% |
-| `What's the capital of France?` | 1 | 128 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 96 | 26% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 19 | 111 | 15% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 40 | 90 | 31% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 30 | 100 | 23% |
+| `Tell me a joke about airlines` | 23 | 108 | 18% |
+| `What's the capital of France?` | 1 | 129 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 97 | 26% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 19 | 112 | 15% |
 
 ---
 
