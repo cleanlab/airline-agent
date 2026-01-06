@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 20 | 104 | 16% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 123 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 9 | 115 | 7% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 122 | 1% |
+| `Do miles in family pool expire?` | 20 | 105 | 16% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 124 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 9 | 116 | 7% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 123 | 1% |
 
 ---
 
@@ -99,12 +99,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 39 | 84 | 32% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 27 | 96 | 22% |
-| `Tell me a joke about airlines` | 22 | 102 | 18% |
-| `What's the capital of France?` | 1 | 122 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 33 | 91 | 27% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 17 | 107 | 14% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 39 | 85 | 31% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 28 | 96 | 23% |
+| `Tell me a joke about airlines` | 22 | 103 | 18% |
+| `What's the capital of France?` | 1 | 123 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 33 | 92 | 26% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 17 | 108 | 14% |
 
 ---
 
@@ -133,7 +133,7 @@ Criteria not met: The agent output does not clearly confirm that both small bags
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 27 times
+**Failures:** 28 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
