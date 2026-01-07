@@ -4,10 +4,10 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 18 | 103 | 15% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 120 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 113 | 7% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 119 | 1% |
+| `Do miles in family pool expire?` | 18 | 104 | 15% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 121 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 114 | 7% |
+| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 120 | 1% |
 
 ---
 
@@ -99,12 +99,12 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 40 | 80 | 33% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 26 | 94 | 22% |
-| `Tell me a joke about airlines` | 21 | 100 | 17% |
-| `What's the capital of France?` | 1 | 119 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 33 | 88 | 27% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 17 | 104 | 14% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 40 | 81 | 33% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 26 | 95 | 21% |
+| `Tell me a joke about airlines` | 22 | 100 | 18% |
+| `What's the capital of France?` | 1 | 120 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 34 | 88 | 28% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 17 | 105 | 14% |
 
 ---
 
@@ -154,7 +154,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 21 times
+**Failures:** 22 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
@@ -197,7 +197,7 @@ assert 0.3569463131344179 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 33 times
+**Failures:** 34 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
