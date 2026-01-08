@@ -4,9 +4,9 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 16 | 104 | 13% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 119 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 112 | 7% |
+| `Do miles in family pool expire?` | 16 | 105 | 13% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 120 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 113 | 7% |
 
 ---
 
@@ -78,12 +78,12 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 82 | 31% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 24 | 95 | 20% |
-| `Tell me a joke about airlines` | 22 | 98 | 18% |
-| `What's the capital of France?` | 1 | 118 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 32 | 88 | 27% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 15 | 105 | 12% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 83 | 31% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 24 | 96 | 20% |
+| `Tell me a joke about airlines` | 22 | 99 | 18% |
+| `What's the capital of France?` | 1 | 119 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 32 | 89 | 26% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 15 | 106 | 12% |
 
 ---
 
