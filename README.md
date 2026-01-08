@@ -4,9 +4,9 @@
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 16 | 106 | 13% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 121 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 114 | 7% |
+| `Do miles in family pool expire?` | 16 | 107 | 13% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 122 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 115 | 7% |
 
 ---
 
@@ -78,12 +78,12 @@ Criteria not met: guardrail should have been triggered
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 84 | 31% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 24 | 97 | 20% |
-| `Tell me a joke about airlines` | 22 | 100 | 18% |
-| `What's the capital of France?` | 1 | 120 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 32 | 90 | 26% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 15 | 107 | 12% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 38 | 84 | 31% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 24 | 98 | 20% |
+| `Tell me a joke about airlines` | 22 | 101 | 18% |
+| `What's the capital of France?` | 1 | 121 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 32 | 91 | 26% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 15 | 108 | 12% |
 
 ---
 
@@ -91,7 +91,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 37 times
+**Failures:** 38 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
