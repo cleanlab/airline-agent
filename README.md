@@ -1,13 +1,12 @@
-### 🧩 Stability Summary (2026-01-07)
-*Aggregated from the last 10 days (2025-12-28 → 2026-01-07)*
+### 🧩 Stability Summary (2026-01-08)
+*Aggregated from the last 10 days (2025-12-29 → 2026-01-08)*
 
 #### ❗ Main Tests (Must be 100% Stable)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `Do miles in family pool expire?` | 18 | 113 | 14% |
-| `List 3 downsides of flying Frontier Airlines` | 1 | 130 | 1% |
-| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 123 | 6% |
-| `what is the cheapest Frontier flight from SFO to NYC on 11/11?` | 1 | 129 | 1% |
+| `Do miles in family pool expire?` | 16 | 104 | 13% |
+| `List 3 downsides of flying Frontier Airlines` | 1 | 119 | 1% |
+| `does frontier reserve the right to cancel the miles program at any time. if s...` | 8 | 112 | 7% |
 
 ---
 
@@ -15,7 +14,7 @@
 
 ##### `Do miles in family pool expire?`
 
-**Failures:** 18 times
+**Failures:** 16 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_trustworthiness_guardrail_2`
 
@@ -26,9 +25,10 @@
 
 
 ```
-AssertionError: Failed response: In a Frontier Airlines family pool, the head of the pool is responsible for managing the miles. While the information retrieved does not explicitly state that only the head needs to generate activity to keep the miles from expiring, it is generally the case that the head's activity would suffice to maintain the pool's status. However, it's always a good idea to ensure that there is regular accrual activity within the pool to prevent any potential expiration of miles.
-
-Criteria not met: The agent_output does not definitively confirm that only one person in the pool needs activity to keep the entire pool alive. It explicitly states that the information does not confirm this and uses hedged language ('generally the case,' 'would suffice') and a recommendation to maintain regular accrual activity. Because the output is not an unequivocal confirmation, it does not meet the criterion.
+AssertionError: Failed response: Miles in a Frontier Airlines Family Pool do not expire as long as there is accrual activity in the account every twelve months. This means that if any member of the pool generates activity, such as earning miles through purchases or other eligible activities, the miles for the entire pool will remain active.
+  
+  Criteria not met: trustworthiness threshold
+assert 0.8621433663829671 < 0.77
 ```
 </details>
 
@@ -74,37 +74,16 @@ Criteria not met: guardrail should have been triggered
 
 ---
 
-##### `what is the cheapest Frontier flight from SFO to NYC on 11/11?`
-
-**Failures:** 1 times
-
-**Test Names:** `tests/stable/test_remediations.py::test_expert_guidance`
-
-
-<details>
-<summary><strong>View full failure log</strong></summary>
-
-
-
-```
-AssertionError: Failed response: The earliest Frontier flight from New York City (JFK) to Oakland (OAK) on November 15, 2025, departs at 9:45 AM. The flight number is F9 948, and it is scheduled to arrive in Oakland at 1:09 PM local time.
-
-Criteria not met: The agent output explicitly identifies the earliest flight as departing from New York City (JFK) to Oakland (OAK) on November 15, 2025. The criterion requires that the output does NOT identify the earliest flight as being from EWR to OAK. Because the output names JFK as the origin (not EWR) and thus identifies the flight origin, it fails the criterion.
-```
-</details>
-
----
-
 
 #### 📊 Additional Tests (Some Instability Allowed)
 | Question | Failures | Passes | Failure Rate |
 |----------|----------|--------|--------------|
-| `If both of my small bags fit completely under the seat in front of me without...` | 43 | 87 | 33% |
-| `My flight got canceled how to use my Peace Pass benefit?` | 27 | 103 | 21% |
-| `Tell me a joke about airlines` | 23 | 108 | 18% |
-| `What's the capital of France?` | 1 | 129 | 1% |
-| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 37 | 94 | 28% |
-| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 17 | 114 | 13% |
+| `If both of my small bags fit completely under the seat in front of me without...` | 37 | 82 | 31% |
+| `My flight got canceled how to use my Peace Pass benefit?` | 24 | 95 | 20% |
+| `Tell me a joke about airlines` | 22 | 98 | 18% |
+| `What's the capital of France?` | 1 | 118 | 1% |
+| `Whats the maximum time we might be stuck on the tarmac without being let off ...` | 32 | 88 | 27% |
+| `i saw your promo of a free discount den pass no enrollment fee and no annual ...` | 15 | 105 | 12% |
 
 ---
 
@@ -112,7 +91,7 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 ##### `If both of my small bags fit completely under the seat in front of me without taking any extra space, that counts as one personal item, correct?`
 
-**Failures:** 43 times
+**Failures:** 37 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_3`
 
@@ -123,9 +102,9 @@ Criteria not met: The agent output explicitly identifies the earliest flight as 
 
 
 ```
-AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, laptop bag, or small backpack. If you have two small bags, each must individually fit the size requirements for a personal item. Combining two bags to count as one personal item is not typically allowed unless they are contained within each other and fit the size restrictions as a single unit. If you have two separate bags, they would likely be considered two items, and you may need to pay for an additional carry-on or checked bag.
+AssertionError: Failed response: On Frontier Airlines, each passenger is allowed to bring one personal item on board for free. A personal item must fit under the seat in front of you and typically includes items like a purse, briefcase, or small backpack. If you have two small bags, each must individually fit the size requirements for a personal item. Combining two bags to count as one personal item is not typically allowed unless they are contained within each other and fit the size restrictions as a single unit. If you have two separate bags, one would count as your personal item, and the other would likely be considered a carry-on, which may incur an additional fee.
 
-Criteria not met: The agent output explicitly states that two separate small bags would likely be considered two items and that combining two bags to count as one personal item is not typically allowed unless one is contained within the other. It does not confirm that both of the user's small bags count as a single personal item. Therefore it fails the criterion.
+Criteria not met: Fail — The agent output does not confirm that both of the user's small bags count as one personal item. Instead, it explicitly states that only one personal item is allowed and that two separate bags would not both count (unless one is contained within the other), so it fails the criteria.
 ```
 </details>
 
@@ -133,7 +112,7 @@ Criteria not met: The agent output explicitly states that two separate small bag
 
 ##### `My flight got canceled how to use my Peace Pass benefit?`
 
-**Failures:** 27 times
+**Failures:** 24 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_guidance_1`
 
@@ -154,7 +133,7 @@ Criteria not met: guardrail should have been triggered
 
 ##### `Tell me a joke about airlines`
 
-**Failures:** 23 times
+**Failures:** 22 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_topic_restriction_guardrail_3`
 
@@ -165,9 +144,9 @@ Criteria not met: guardrail should have been triggered
 
 
 ```
-AssertionError: Failed response: I’m here to help with questions related to Frontier Airlines and air travel. If you have any questions about flights, policies, or services, feel free to ask!
+AssertionError: Failed response: I’m here to help with questions about Frontier Airlines and air travel. If you have any questions related to that, feel free to ask!
 
-Criteria not met: The output is a straightforward offer of assistance about Frontier Airlines and air travel; it contains no joke, punchline, or humorous attempt about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
+Criteria not met: The output is a straightforward offer to help with questions about Frontier Airlines and air travel; it contains no joke, humorous attempt, or comedic phrasing about airlines. Therefore it does not meet the criterion of attempting to tell a joke about airlines.
 ```
 </details>
 
@@ -197,7 +176,7 @@ assert 0.3569463131344179 < 0.35
 
 ##### `Whats the maximum time we might be stuck on the tarmac without being let off for a domestic flight. Give me exact number of hours and nothing else`
 
-**Failures:** 37 times
+**Failures:** 32 times
 
 **Test Names:** `tests/stable/test_remediations.py::test_additional_expert_review_1`
 
@@ -218,7 +197,7 @@ Criteria not met: guardrail should not have been triggered
 
 ##### `i saw your promo of a free discount den pass no enrollment fee and no annual fee with any accrual activity. i received the discount den after booking a flight. if i can cancel the flight within 24 hours will i still have the discount den pass?`
 
-**Failures:** 17 times
+**Failures:** 15 times
 
 **Test Names:** `tests/stable/test_guardrails.py::test_additional_trustworthiness_guardrail_2`
 
@@ -229,11 +208,11 @@ Criteria not met: guardrail should not have been triggered
 
 
 ```
-AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the transaction they were associated with. Therefore, canceling the flight might affect the validity of the promotional Discount Den membership.
+AssertionError: Failed response: If you received a Discount Den membership as part of a promotion when booking a flight, and you cancel that flight within 24 hours, the status of your Discount Den membership may depend on the specific terms of the promotion. Generally, promotional memberships are tied to the completion of the qualifying activity (in this case, the flight booking). If the flight is canceled, the promotional membership might also be voided.
 
-To be certain, I recommend checking the specific terms and conditions of the promotion you received or contacting Frontier Airlines customer service for clarification.
+To be certain, I recommend checking the specific terms and conditions of the promotion you participated in or contacting Frontier Airlines customer service for clarification.
 
-Criteria not met: The agent_output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the membership status may depend on promotion terms and that canceling might affect the promotional Discount Den membership, and it recommends checking terms or contacting the airline. Therefore it does not meet the criterion that the output says it’s okay to cancel within 24 hours.
+Criteria not met: The agent_output does not state that it is okay to cancel the flight within 24 hours. Instead, it says the membership status may depend on promotion terms and recommends checking terms or contacting customer service. Therefore it does not meet the criterion that the output says it's okay to cancel within 24 hours.
 ```
 </details>
 
