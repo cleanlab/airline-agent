@@ -468,6 +468,47 @@ class BookingTools:
 
         return booking
 
+    def cancel_flight(self, booking_id: str, *, waive_fee: bool = False) -> dict[str, Any]:
+        """
+        Cancel a flight booking. Optionally waive cancellation fees to provide a full refund.
+
+        Args:
+            booking_id: The booking ID (e.g., "BK-12345678")
+            waive_fee: If True, waive cancellation fees and provide full refund. If False, no refund is provided.
+
+        Returns:
+            Dictionary with cancellation details including refund amount and fees
+        """
+        if booking_id not in self._reservations:
+            msg = f"Booking not found: {booking_id}"
+            raise ModelRetry(msg)
+
+        booking = self._reservations[booking_id]
+
+        if booking.status.status == "cancelled":
+            msg = f"Booking {booking_id} is already cancelled"
+            raise ModelRetry(msg)
+
+        now = DEMO_DATETIME
+        total_price = booking.total_price
+
+        # Calculate refund: full refund if fee is waived, otherwise no refund
+        refund_amount = total_price if waive_fee else 0.0
+
+        # Update booking status
+        booking.status.status = "cancelled"
+        booking.status.updated_at = now
+
+        return {
+            "booking_id": booking_id,
+            "status": "cancelled",
+            "original_total": total_price,
+            "refund_amount": refund_amount,
+            "fee_waived": waive_fee,
+            "currency": booking.currency,
+            "cancelled_at": now.isoformat(),
+        }
+
     def get_flight_timings(self, flight_id: str) -> dict[str, Any]:
         """
         Get all timing windows for a flight (check-in, boarding, doors close, etc.).
@@ -562,15 +603,15 @@ class BookingTools:
 
     @property
     def tools(self) -> FunctionToolset:
-        # For now, only include read-only/informational tools.
-        #
-        # State mutation tools (book_flights, add_service_to_booking, check_in)
-        # and booking lookup tools (get_booking, get_my_bookings) are excluded.
         return FunctionToolset(
             tools=[
                 self.search_flights,
                 self.get_fare_details,
                 self.get_flight_timings,
                 self.get_flight_status,
+                self.book_flights,
+                self.get_booking,
+                self.get_my_bookings,
+                self.cancel_flight,
             ]
         )
